@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<!--
+  Template: slideless deck v2 (visual-explainer-grade)
+  Como usar:
+    1. Substituir o marker /* SLIDELESS:THEME */ pelo conteúdo de assets/temas/{itau,neutro}.css
+    2. Cada <section class="slide"> = um slide. PRESERVAR 100% do conteúdo da fonte.
+    3. Variar layouts (hero, big-num, metrics, list, two-col, split, table, diagram, quote,
+       full-bleed, encerramento) — não repetir o mesmo template dois slides seguidos.
+    4. data-anim com style="--i: N" para stagger; data-fragment para reveal por click.
+
+  Padrões novos:
+    - Hero com filter:blur(16px)→0 (heroIn)
+    - Stagger universal via --i CSS variable
+    - Glow radial atmosférico via ::before do .slide
+    - Depth tiers (tier-hero, tier-default, tier-recessed)
+    - Color variants (var-accent, var-info, var-success, var-sage, var-teal, var-plum)
+-->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TÍTULO — Deck</title>
+
+  <script>
+    (function() {
+      try {
+        var t = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800;9..144,900&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* SLIDELESS:THEME — substituir por assets/temas/itau.css ou neutro.css */
+
+    /* ─── Específico do deck v2 ──────────────────────────────────── */
+    html, body { height: 100%; overflow: hidden; }
+    body { overscroll-behavior: none; }
+
+    .deck { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+
+    /* Glow radial atmosférico no body (vive atrás dos slides) */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background: var(--glow-hero);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.7;
+    }
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background: var(--glow-cool);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    .slide {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 7vh 8vw;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(60px) scale(0.98);
+      transition: opacity var(--duration-fade) var(--ease-out),
+                  transform var(--duration-slide) var(--ease-emphatic);
+      overflow: hidden;
+      z-index: 1;
+    }
+    .slide.is-prev { transform: translateX(-60px) scale(0.98); }
+    .slide.is-active { opacity: 1; transform: translateX(0) scale(1); pointer-events: auto; }
+
+    /* Vignette opcional para slides full-bleed */
+    .slide--vignette::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: var(--vignette);
+      pointer-events: none;
+    }
+
+    /* Stagger universal via --i */
+    .slide [data-anim] {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 800ms var(--ease-out), transform 800ms var(--ease-out);
+    }
+    .slide.is-active [data-anim] {
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: calc(var(--i, 0) * 70ms + 250ms);
+    }
+
+    /* Hero blur unblur */
+    .slide.is-active [data-anim="hero"] {
+      animation: heroIn var(--duration-hero) var(--ease-emphatic) 100ms both;
+    }
+    @keyframes heroIn {
+      from { opacity: 0; filter: blur(16px); transform: translateY(28px) scale(0.96); }
+      to   { opacity: 1; filter: blur(0);    transform: translateY(0) scale(1); }
+    }
+
+    /* Fragments */
+    .slide [data-fragment] {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 500ms var(--ease-out), transform 500ms var(--ease-out);
+    }
+    .slide [data-fragment].is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .slide, .slide [data-anim], .slide [data-fragment] {
+        transition: none !important; animation: none !important;
+        opacity: 1; transform: none !important; filter: none !important;
+      }
+    }
+
+    /* ─── Tipografia deck — clamp() fluido viewport ──────────────── */
+    .kicker {
+      display: inline-flex; align-items: center; gap: 14px;
+      font-family: var(--font-mono);
+      font-size: clamp(0.78rem, 0.7rem + 0.25vw, 0.95rem);
+      font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-fg-muted);
+      margin: 0 0 var(--space-7);
+    }
+    .kicker__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--color-fg-subtle); }
+    .kicker--accent { color: var(--color-accent); }
+    .kicker--accent .kicker__dot { background: var(--color-accent); box-shadow: 0 0 16px var(--color-accent); }
+    .kicker__num {
+      font-family: var(--font-mono);
+      color: var(--color-accent);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+    }
+
+    .title-xl, .title-mega {
+      font-family: var(--font-display);
+      font-weight: 800;
+      line-height: 1.0;
+      letter-spacing: -0.035em;
+      margin: 0 0 var(--space-6);
+      color: var(--color-fg);
+    }
+    .title-xl   { font-size: var(--size-mega); max-width: 18ch; }
+    .title-mega { font-size: var(--size-giga); max-width: 12ch; line-height: 0.92; }
+    .title-xl em, .title-mega em {
+      color: var(--color-accent);
+      font-style: italic;
+      font-weight: 800;
+    }
+
+    .title-lg {
+      font-family: var(--font-display);
+      font-size: var(--size-display);
+      line-height: 1.05;
+      font-weight: 700;
+      letter-spacing: -0.028em;
+      margin: 0 0 var(--space-5);
+      max-width: 24ch;
+      color: var(--color-fg);
+    }
+    .title-lg em { color: var(--color-accent); font-style: italic; }
+
+    .title-md {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 1.2rem + 1.5vw, 2.5rem);
+      line-height: 1.1; font-weight: 700;
+      letter-spacing: -0.022em;
+      margin: 0 0 var(--space-5);
+      color: var(--color-fg);
+    }
+    .title-md em { color: var(--color-accent); font-style: italic; }
+
+    .lead-deck {
+      font-size: clamp(1.05rem, 0.95rem + 0.6vw, 1.5rem);
+      line-height: 1.45;
+      color: var(--color-fg-muted);
+      max-width: 55ch;
+      margin: 0 0 var(--space-7);
+      font-weight: 400;
+    }
+
+    .footnote {
+      font-family: var(--font-mono);
+      font-size: clamp(0.7rem, 0.65rem + 0.15vw, 0.8125rem);
+      color: var(--color-fg-subtle);
+      letter-spacing: 0.02em;
+      margin: var(--space-7) 0 0;
+      max-width: 90ch;
+      line-height: 1.55;
+    }
+
+    /* ─── Layout: HERO ───────────────────────────────────────────── */
+    .layout-hero {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 100%;
+      gap: var(--space-3);
+    }
+    .layout-hero .meta {
+      display: flex; gap: var(--space-7);
+      margin-top: var(--space-8);
+      font-size: 0.875rem;
+      color: var(--color-fg-subtle);
+    }
+    .layout-hero .meta strong {
+      display: block;
+      color: var(--color-fg);
+      font-weight: 700;
+      font-family: var(--font-display);
+      margin-bottom: 4px;
+    }
+
+    /* ─── Layout: BIG-NUM ────────────────────────────────────────── */
+    .big-num {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; gap: var(--space-5);
+    }
+    .big-num__val {
+      font-family: var(--font-display);
+      font-size: var(--size-giga);
+      line-height: 0.88; font-weight: 800;
+      letter-spacing: -0.055em;
+      color: var(--color-fg);
+      margin: 0;
+    }
+    .big-num__val span { color: var(--color-accent); }
+    .big-num__label {
+      font-size: clamp(1.05rem, 0.95rem + 0.5vw, 1.4rem);
+      color: var(--color-fg-muted);
+      margin: 0;
+      max-width: 36ch;
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    /* ─── Layout: METRICS (1, 2, 3, 4 colunas) ───────────────────── */
+    .metrics-deck {
+      display: grid;
+      gap: 4vw;
+      margin: var(--space-7) 0 0;
+    }
+    .metrics-deck--2 { grid-template-columns: repeat(2, 1fr); max-width: 70vw; }
+    .metrics-deck--3 { grid-template-columns: repeat(3, 1fr); }
+    .metrics-deck--4 { grid-template-columns: repeat(4, 1fr); gap: 2.5vw; }
+    .metric-d {
+      border-top: 3px solid currentColor;
+      padding-top: var(--space-4);
+      color: var(--color-fg);
+    }
+    .metric-d.var-accent  { color: var(--color-accent); }
+    .metric-d.var-info    { color: var(--color-info); }
+    .metric-d.var-success { color: var(--color-success); }
+    .metric-d.var-sage    { color: var(--color-sage); }
+    .metric-d.var-teal    { color: var(--color-teal); }
+    .metric-d.var-plum    { color: var(--color-plum); }
+
+    .metric-d__val {
+      font-family: var(--font-display);
+      font-size: clamp(2.25rem, 1.5rem + 3vw, 4.5rem);
+      line-height: 0.95; font-weight: 800;
+      letter-spacing: -0.035em;
+      margin: 0 0 var(--space-3);
+      color: var(--color-fg);
+    }
+    .metric-d__val span { color: currentColor; }
+    .metric-d__label {
+      font-size: clamp(0.9rem, 0.85rem + 0.3vw, 1.1rem);
+      color: var(--color-fg-muted);
+      margin: 0; max-width: 24ch;
+      line-height: 1.4;
+    }
+    .metric-d__sub {
+      font-size: 0.8125rem; color: var(--color-fg-subtle);
+      margin: var(--space-1) 0 0;
+    }
+
+    /* ─── Layout: SPLIT (two-col com balance) ────────────────────── */
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5vw;
+      align-items: center;
+    }
+    .split--top { align-items: start; }
+    .split--start { grid-template-columns: 5fr 4fr; }
+
+    /* ─── Layout: LIST numerada ──────────────────────────────────── */
+    .list-deck {
+      list-style: none;
+      padding: 0;
+      margin: var(--space-6) 0 0;
+      display: flex; flex-direction: column;
+      gap: var(--space-5);
+      max-width: 50ch;
+    }
+    .list-deck__item {
+      display: flex; gap: var(--space-5);
+      font-size: clamp(1.05rem, 1rem + 0.45vw, 1.4rem);
+      line-height: 1.4;
+      color: var(--color-fg);
+    }
+    .list-deck__num {
+      flex-shrink: 0;
+      width: 36px; height: 36px;
+      display: grid; place-items: center;
+      border-radius: 50%;
+      background: var(--color-accent);
+      color: var(--color-accent-fg);
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+    .list-deck__body strong { display: block; font-weight: 700; margin-bottom: 4px; }
+    .list-deck__body span { color: var(--color-fg-muted); font-size: 0.92em; line-height: 1.5; display: block; }
+
+    /* ─── Layout: CARDS / GRID (color-coded) ─────────────────────── */
+    .grid-cards {
+      display: grid;
+      gap: var(--space-5);
+      margin: var(--space-6) 0 0;
+    }
+    .grid-cards--2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-cards--3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-cards--4 { grid-template-columns: repeat(4, 1fr); gap: var(--space-4); }
+    .grid-cards--6 { grid-template-columns: repeat(6, 1fr); gap: var(--space-3); }
+
+    .card-d {
+      padding: var(--space-5);
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      transition: all var(--duration-fast) var(--ease-out);
+    }
+    .card-d--accent { border-top: 3px solid var(--color-accent); }
+    .card-d--info   { border-top: 3px solid var(--color-info); }
+    .card-d--success{ border-top: 3px solid var(--color-success); }
+    .card-d--sage   { border-top: 3px solid var(--color-sage); }
+    .card-d--teal   { border-top: 3px solid var(--color-teal); }
+    .card-d--plum   { border-top: 3px solid var(--color-plum); }
+
+    .card-d__label {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--color-fg-muted);
+      margin: 0 0 var(--space-2);
+    }
+    .card-d__label .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    .card-d--accent .card-d__label  { color: var(--color-accent); }
+    .card-d--info .card-d__label    { color: var(--color-info); }
+    .card-d--success .card-d__label { color: var(--color-success); }
+    .card-d--sage .card-d__label    { color: var(--color-sage); }
+    .card-d--teal .card-d__label    { color: var(--color-teal); }
+    .card-d--plum .card-d__label    { color: var(--color-plum); }
+
+    .card-d__title {
+      font-family: var(--font-display);
+      font-size: clamp(1.1rem, 1rem + 0.5vw, 1.5rem);
+      font-weight: 700; line-height: 1.15;
+      letter-spacing: -0.018em;
+      margin: 0 0 var(--space-2);
+      color: var(--color-fg);
+    }
+    .card-d__desc {
+      font-size: clamp(0.85rem, 0.8rem + 0.25vw, 1rem);
+      color: var(--color-fg-muted);
+      margin: 0;
+      line-height: 1.5;
+    }
+    .card-d__num {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 1.2rem + 1vw, 2.5rem);
+      font-weight: 800;
+      color: var(--color-accent);
+      line-height: 1; margin: 0 0 var(--space-2);
+      letter-spacing: -0.025em;
+    }
+
+    /* ─── Layout: DIVIDER (capítulo separador) ───────────────────── */
+    .divider-deck {
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: flex-start;
+      min-height: 100%;
+    }
+    .divider-deck__num {
+      font-family: var(--font-mono);
+      font-size: clamp(1rem, 0.85rem + 0.5vw, 1.3rem);
+      color: var(--color-accent);
+      letter-spacing: 0.12em;
+      margin: 0 0 var(--space-6);
+      font-weight: 600;
+    }
+
+    /* ─── Layout: QUOTE ──────────────────────────────────────────── */
+    .quote-deck {
+      max-width: 26ch;
+    }
+    .quote-deck__text {
+      font-family: var(--font-display);
+      font-size: clamp(1.75rem, 1.2rem + 2.5vw, 3.25rem);
+      line-height: 1.18;
+      letter-spacing: -0.022em;
+      font-weight: 600;
+      color: var(--color-fg);
+      margin: 0 0 var(--space-6);
+    }
+    .quote-deck__text::before {
+      content: '“';
+      color: var(--color-accent);
+      font-size: 1.4em;
+      line-height: 0;
+      vertical-align: -0.15em;
+      margin-right: 0.05em;
+      font-family: var(--font-display);
+    }
+    .quote-deck__cite {
+      font-size: clamp(0.9rem, 0.85rem + 0.3vw, 1.05rem);
+      color: var(--color-fg-muted);
+      font-style: normal;
+      display: block;
+    }
+    .quote-deck__cite strong { color: var(--color-fg); font-weight: 700; display: block; font-family: var(--font-display); }
+
+    /* ─── Layout: TIMELINE horizontal ────────────────────────────── */
+    .timeline-h {
+      display: grid;
+      grid-template-columns: repeat(var(--cols, 4), 1fr);
+      gap: var(--space-5);
+      margin-top: var(--space-7);
+      position: relative;
+    }
+    .timeline-h::before {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; top: 18px;
+      height: 2px;
+      background: linear-gradient(to right,
+        var(--color-accent) 0%,
+        var(--color-border) 8%,
+        var(--color-border) 92%,
+        var(--color-accent) 100%);
+    }
+    .timeline-h__item { position: relative; padding-top: 52px; }
+    .timeline-h__item::before {
+      content: '';
+      position: absolute;
+      top: 11px; left: 0;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: var(--color-accent);
+      box-shadow: 0 0 0 4px var(--color-bg), 0 0 16px var(--color-accent);
+    }
+    .timeline-h__date {
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      color: var(--color-accent);
+      letter-spacing: 0.06em;
+      margin: 0 0 var(--space-1);
+      font-weight: 700;
+    }
+    .timeline-h__title {
+      font-family: var(--font-display);
+      font-size: clamp(0.9rem, 0.85rem + 0.3vw, 1.05rem);
+      font-weight: 700;
+      margin: 0 0 var(--space-1);
+      color: var(--color-fg);
+      line-height: 1.25;
+    }
+    .timeline-h__desc {
+      font-size: 0.8125rem;
+      color: var(--color-fg-muted);
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    /* ─── Tabelas em slide ───────────────────────────────────────── */
+    .table-deck {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: clamp(0.85rem, 0.8rem + 0.25vw, 1rem);
+      margin-top: var(--space-5);
+    }
+    .table-deck thead th {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-fg-subtle);
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--color-border-strong);
+    }
+    .table-deck tbody td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-fg);
+    }
+    .table-deck tbody tr:hover { background: var(--color-bg-elevated); }
+    .table-deck tbody td strong { font-family: var(--font-display); color: var(--color-fg); }
+
+    /* Status badges em tabelas */
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+    }
+    .badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    .badge--accent  { background: var(--color-accent-dim);  color: var(--color-accent); }
+    .badge--info    { background: var(--color-info-dim);    color: var(--color-info); }
+    .badge--success { background: var(--color-success-dim); color: var(--color-success); }
+    .badge--sage    { background: var(--color-sage-dim);    color: var(--color-sage); }
+    .badge--teal    { background: var(--color-teal-dim);    color: var(--color-teal); }
+    .badge--plum    { background: var(--color-plum-dim);    color: var(--color-plum); }
+
+    /* ─── HUD bottom + progress ──────────────────────────────────── */
+    .deck-progress {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--color-border);
+      z-index: 60;
+    }
+    .deck-progress__bar {
+      height: 100%;
+      background: linear-gradient(to right, var(--color-accent), var(--color-accent-hover));
+      box-shadow: 0 0 12px var(--color-accent);
+      width: 0%;
+      transition: width var(--duration) var(--ease-out);
+    }
+
+    .hud {
+      position: fixed; bottom: 16px; left: 0; right: 0;
+      display: flex; justify-content: center; align-items: center;
+      gap: 14px; z-index: 50; pointer-events: none;
+    }
+    .hud > * { pointer-events: auto; }
+    .hud__btn, .hud__fs, .theme-toggle {
+      width: 38px; height: 38px;
+      display: grid; place-items: center;
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: 999px;
+      cursor: pointer; color: var(--color-fg);
+      transition: all var(--duration-fast) var(--ease-out);
+      font: inherit;
+      box-shadow: var(--shadow-sm);
+    }
+    .hud__btn:hover, .hud__fs:hover, .theme-toggle:hover {
+      border-color: var(--color-accent);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+    .hud__counter {
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      color: var(--color-fg-muted);
+      min-width: 64px;
+      text-align: center;
+      font-weight: 600;
+    }
+    .hud__counter span { color: var(--color-fg); font-weight: 700; }
+
+    /* ─── Logo brand-mark ────────────────────────────────────────── */
+    .brand-mark {
+      position: fixed;
+      top: 24px; right: 28px;
+      display: flex; align-items: center; gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--color-fg-subtle);
+      z-index: 40;
+    }
+    .brand-mark__dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--color-accent);
+      box-shadow: 0 0 12px var(--color-accent);
+    }
+
+    /* ─── Slide number badge ─────────────────────────────────────── */
+    .slide-num {
+      position: absolute;
+      top: 24px; left: 28px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      color: var(--color-fg-subtle);
+    }
+    .slide-num span { color: var(--color-accent); }
+
+    /* ─── Print ──────────────────────────────────────────────────── */
+    @media print {
+      @page { size: A4 landscape; margin: 0; }
+      body::before, body::after { display: none; }
+      .hud, .deck-progress { display: none; }
+      .deck { width: auto; height: auto; overflow: visible; }
+      .slide {
+        position: relative; inset: auto;
+        width: 100vw; height: 100vh;
+        page-break-after: always;
+        opacity: 1 !important; transform: none !important;
+      }
+      .slide [data-fragment], .slide [data-anim] {
+        opacity: 1 !important; transform: none !important; filter: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="brand-mark" aria-hidden="true">
+    <span class="brand-mark__dot"></span>
+    <span>BRAND</span>
+  </div>
+
+  <div class="deck">
+    <!-- Slide 1 — HERO -->
+    <section class="slide is-active" data-slide="1">
+      <span class="slide-num"><span>01</span> · 03</span>
+      <div class="layout-hero">
+        <p class="kicker kicker--accent" data-anim style="--i: 0"><span class="kicker__dot"></span>CAPÍTULO 01</p>
+        <h1 class="title-mega" data-anim="hero">Título <em>chave</em> do deck</h1>
+        <p class="lead-deck" data-anim style="--i: 2">Subtítulo descrevendo o pitch em uma ou duas frases.</p>
+        <div class="meta" data-anim style="--i: 3">
+          <span><strong>Apresentador</strong>Cargo · Equipe</span>
+          <span><strong>Data</strong>AAAA-MM-DD</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 2 — METRICS 3-up -->
+    <section class="slide" data-slide="2">
+      <span class="slide-num"><span>02</span> · 03</span>
+      <p class="kicker" data-anim style="--i: 0"><span class="kicker__dot"></span>VISÃO GERAL</p>
+      <h2 class="title-lg" data-anim style="--i: 1">Os <em>números-âncora</em></h2>
+      <div class="metrics-deck metrics-deck--3" data-anim style="--i: 2">
+        <div class="metric-d var-accent">
+          <p class="metric-d__val"><span>N</span>X</p>
+          <p class="metric-d__label">descrição da métrica</p>
+        </div>
+        <div class="metric-d var-info">
+          <p class="metric-d__val"><span>N</span>%</p>
+          <p class="metric-d__label">descrição da métrica</p>
+        </div>
+        <div class="metric-d var-sage">
+          <p class="metric-d__val">N</p>
+          <p class="metric-d__label">descrição da métrica</p>
+        </div>
+      </div>
+      <p class="footnote">Fonte: ...</p>
+    </section>
+
+    <!-- Slide 3 — BIG-NUM -->
+    <section class="slide" data-slide="3">
+      <span class="slide-num"><span>03</span> · 03</span>
+      <p class="kicker kicker--accent" data-anim style="--i: 0"><span class="kicker__dot"></span>UM NÚMERO</p>
+      <div class="big-num">
+        <p class="big-num__val" data-anim style="--i: 1">+<span>N</span>%</p>
+        <p class="big-num__label" data-anim style="--i: 2">Descrição do número-âncora em uma frase curta.</p>
+      </div>
+    </section>
+  </div>
+
+  <div class="deck-progress" aria-hidden="true"><div class="deck-progress__bar" id="progress-bar"></div></div>
+
+  <nav class="hud" aria-label="Controles do deck">
+    <button class="hud__btn hud__prev" type="button" aria-label="Slide anterior">◀</button>
+    <span class="hud__counter"><span id="cur">1</span> / <span id="tot">3</span></span>
+    <button class="hud__btn hud__next" type="button" aria-label="Próximo slide">▶</button>
+    <button class="hud__fs" type="button" aria-label="Alternar fullscreen">⛶</button>
+    <button class="theme-toggle" type="button" aria-label="Alternar tema"><span aria-hidden="true">◐</span></button>
+  </nav>
+
+  <script>
+    const slides = [...document.querySelectorAll('.slide')];
+    const fragmentsByIdx = slides.map(s => [...s.querySelectorAll('[data-fragment]')]);
+    const fragShownByIdx = slides.map(() => 0);
+    let idx = 0;
+
+    function updateProgress() {
+      const pct = ((idx + 1) / slides.length) * 100;
+      document.getElementById('progress-bar').style.width = pct + '%';
+    }
+
+    function goto(n) {
+      n = Math.max(0, Math.min(slides.length - 1, n));
+      slides.forEach((s, i) => {
+        s.classList.toggle('is-active', i === n);
+        s.classList.toggle('is-prev', i < n);
+      });
+      idx = n;
+      document.getElementById('cur').textContent = n + 1;
+      document.getElementById('tot').textContent = slides.length;
+      history.replaceState(null, '', '#s' + (n + 1));
+      updateProgress();
+    }
+
+    function nextFragment() {
+      const frags = fragmentsByIdx[idx];
+      if (fragShownByIdx[idx] < frags.length) {
+        frags[fragShownByIdx[idx]].classList.add('is-visible');
+        fragShownByIdx[idx]++;
+        return true;
+      }
+      return false;
+    }
+
+    function next() { if (!nextFragment()) goto(idx + 1); }
+    function prev() { goto(idx - 1); }
+
+    addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); next(); }
+      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prev(); }
+      else if (e.key === 'Home') goto(0);
+      else if (e.key === 'End') goto(slides.length - 1);
+      else if (e.key === 'Escape' && document.fullscreenElement) document.exitFullscreen();
+      else if (e.key === 'f' || e.key === 'F') document.documentElement.requestFullscreen?.();
+    });
+
+    document.querySelector('.hud__prev').addEventListener('click', prev);
+    document.querySelector('.hud__next').addEventListener('click', next);
+    document.querySelector('.hud__fs').addEventListener('click', () => {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else document.documentElement.requestFullscreen?.();
+    });
+
+    document.querySelector('.theme-toggle').addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme');
+      const nx = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', nx);
+      try { localStorage.setItem('theme', nx); } catch {}
+    });
+
+    const fromHash = parseInt((location.hash.match(/^#s(\d+)$/) || [])[1], 10);
+    goto(fromHash ? fromHash - 1 : 0);
+  </script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<!--
+  Template: slideless site (SPA single-file, vazio)
+  Como usar:
+    1. Substituir o marker /* SLIDELESS:THEME */
+    2. Cada <article class="view"> = uma página. Adicionar/remover conforme escopo.
+    3. Cada link de .topnav aponta para #id de uma view.
+-->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TÍTULO — Site</title>
+
+  <script>
+    (function() {
+      try {
+        var t = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* SLIDELESS:THEME */
+
+    .topbar { position: sticky; top: 0; z-index: 100; height: var(--header-h); background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--color-border); display: flex; align-items: center; padding: 0 var(--space-5); gap: var(--space-5); }
+    [data-theme="dark"] .topbar { background: rgba(20,17,13,0.85); }
+    .topbar__brand { font-weight: 600; font-size: 0.9375rem; text-decoration: none; color: var(--color-fg); }
+    .topnav { display: flex; gap: var(--space-1); }
+    .topnav__link { padding: var(--space-2) var(--space-3); font-size: var(--size-small); color: var(--color-fg-muted); text-decoration: none; border-radius: var(--radius-sm); transition: all var(--duration-fast); }
+    .topnav__link:hover { color: var(--color-fg); background: var(--color-bg-elevated); }
+    .topnav__link.is-active { color: var(--color-accent); font-weight: 500; background: var(--color-bg-elevated); }
+    .topbar__spacer { flex: 1; }
+
+    .view { display: none; opacity: 0; transition: opacity 200ms var(--ease-out); max-width: 1000px; margin: 0 auto; padding: var(--space-10) var(--space-6) var(--space-12); }
+    .view.is-active { display: block; opacity: 1; }
+
+    .view__hero { margin-bottom: var(--space-8); }
+
+    @media print {
+      .topnav, .theme-toggle { display: none; }
+      .view, .view[hidden] { display: block !important; opacity: 1 !important; }
+      .view + .view { page-break-before: always; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a href="#home" class="topbar__brand">BRAND</a>
+    <nav class="topnav" aria-label="Navegação principal">
+      <a href="#home" class="topnav__link">Home</a>
+      <a href="#sobre" class="topnav__link">Sobre</a>
+      <a href="#recursos" class="topnav__link">Recursos</a>
+    </nav>
+    <span class="topbar__spacer"></span>
+    <button class="theme-toggle" type="button" aria-label="Alternar tema"><span aria-hidden="true">◐</span></button>
+  </header>
+
+  <main>
+    <article class="view is-active" id="home">
+      <section class="view__hero">
+        <h1>TÍTULO — Home</h1>
+        <p class="lead">Hero curto da home.</p>
+      </section>
+      <section data-reveal>
+        <h2>Seção</h2>
+        <p>Conteúdo.</p>
+      </section>
+    </article>
+
+    <article class="view" id="sobre" hidden>
+      <section class="view__hero">
+        <h1>Sobre</h1>
+        <p class="lead">Quem somos.</p>
+      </section>
+      <section data-reveal>
+        <h2>História</h2>
+        <p>Conteúdo.</p>
+      </section>
+    </article>
+
+    <article class="view" id="recursos" hidden>
+      <section class="view__hero">
+        <h1>Recursos</h1>
+        <p class="lead">O que oferecemos.</p>
+      </section>
+      <section data-reveal>
+        <h2>Lista</h2>
+        <p>Conteúdo.</p>
+      </section>
+    </article>
+  </main>
+
+  <script>
+    document.querySelector('.theme-toggle')?.addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme');
+      const next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch {}
+    });
+
+    function route() {
+      const id = (location.hash || '#home').slice(1);
+      let found = false;
+      document.querySelectorAll('.view').forEach(v => {
+        const on = v.id === id;
+        v.classList.toggle('is-active', on);
+        v.hidden = !on;
+        if (on) found = true;
+      });
+      if (!found) {
+        const first = document.querySelector('.view');
+        if (first) { first.classList.add('is-active'); first.hidden = false; }
+      }
+      document.querySelectorAll('.topnav__link').forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === '#' + id));
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      requestAnimationFrame(() => {
+        document.querySelectorAll('.view.is-active [data-reveal]').forEach(el => el.classList.add('is-visible'));
+      });
+    }
+    addEventListener('hashchange', route);
+    addEventListener('DOMContentLoaded', route);
+
+    const rio = new IntersectionObserver(es => {
+      es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); rio.unobserve(e.target); } });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('[data-reveal]').forEach(el => rio.observe(el));
+  </script>
+</body>
+</html>
