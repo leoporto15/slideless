@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Itaú Asset Management — Apresentação Institucional</title>
+  <meta name="description" content="A maior gestora privada do Brasil. R$ 1,193 trilhão em AuM, 2,6 milhões de clientes, 14,5% de market share.">
+
+  <!-- Boot script: lê preferência salva antes de qualquer render para evitar flash -->
+  <script>
+    (function() {
+      var saved = localStorage.getItem('theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var theme = saved || (prefersDark ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ─── Design tokens ─────────────────────────────────────────────────────── */
+    :root {
+      --itau-orange:#FF6200;--itau-orange-2:#F88104;--itau-orange-3:#FA9F09;
+      --itau-blue-3:#3B85FA;--itau-yellow:#FBC305;--itau-warm-black:#14110d;
+      --color-accent:var(--itau-orange);--color-accent-dim:rgba(255,98,0,0.08);--color-accent-fg:#ffffff;
+      --color-info:var(--itau-blue-3);--color-info-dim:rgba(59,133,250,0.08);
+      --color-success:#4d7c0f;--color-success-dim:rgba(77,124,15,0.08);
+      --color-sage:#65a30d;--color-sage-dim:rgba(101,163,13,0.08);
+      --color-teal:#0f766e;--color-teal-dim:rgba(15,118,110,0.08);
+      --color-plum:#9f1239;--color-plum-dim:rgba(159,18,57,0.08);
+      --color-warn:var(--itau-yellow);--color-warn-dim:rgba(251,195,5,0.12);
+      --color-danger:#b91c1c;--color-danger-dim:rgba(185,28,28,0.08);
+      --color-bg:#faf7f5;--color-bg-elevated:#ffffff;--color-bg-sunken:#f4f1ec;
+      --color-fg:#292017;--color-fg-muted:#6b5d50;--color-fg-subtle:#8a7e72;
+      --color-border:rgba(41,32,23,0.10);--color-border-strong:rgba(41,32,23,0.18);
+      --color-accent-hover:var(--itau-orange-2);
+      --font-text:'Inter',-apple-system,system-ui,sans-serif;
+      --font-display:'Inter',Georgia,serif;
+      --font-mono:'JetBrains Mono','IBM Plex Mono',monospace;
+      --size-xs:clamp(0.75rem,0.7rem+0.2vw,0.875rem);--size-small:clamp(0.875rem,0.85rem+0.15vw,1rem);
+      --size-body:clamp(1rem,0.95rem+0.2vw,1.125rem);--size-lead:clamp(1.15rem,1.05rem+0.5vw,1.4rem);
+      --size-h3:clamp(1.2rem,1.1rem+0.5vw,1.5rem);--size-h2:clamp(1.6rem,1.3rem+1.2vw,2.25rem);
+      --size-h1:clamp(2.25rem,1.8rem+2vw,3.5rem);
+      --space-1:0.25rem;--space-2:0.5rem;--space-3:0.75rem;--space-4:1rem;--space-5:1.5rem;
+      --space-6:2rem;--space-7:2.5rem;--space-8:3rem;--space-10:4rem;--space-12:5rem;
+      --header-h:56px;--radius-sm:4px;--radius:10px;--radius-lg:16px;
+      --shadow-sm:0 2px 4px rgba(41,32,23,0.06);--shadow-lg:0 12px 32px rgba(41,32,23,0.12);
+      --ease-out:cubic-bezier(0.22,1,0.36,1);--duration-fast:150ms;--duration-hero:900ms;
+    }
+    [data-theme="dark"] {
+      --color-bg:#14110d;--color-bg-elevated:#1c1814;--color-bg-sunken:#221d18;
+      --color-fg:#ede5dd;--color-fg-muted:#b8aa9a;--color-fg-subtle:#786e62;
+      --color-border:rgba(237,229,221,0.10);--color-border-strong:rgba(237,229,221,0.20);
+      --color-accent:var(--itau-orange-3);--color-accent-hover:var(--itau-orange-2);--color-accent-fg:#14110d;
+      --color-accent-dim:rgba(250,159,9,0.10);--color-success:#a3e635;--color-teal:#5eead4;
+      --shadow-sm:0 2px 4px rgba(0,0,0,0.4);--shadow-lg:0 12px 32px rgba(0,0,0,0.5);
+    }
+
+    /* ─── Reset & base ──────────────────────────────────────────────────────── */
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:var(--font-text);font-size:var(--size-body);line-height:1.65;color:var(--color-fg);background:var(--color-bg);-webkit-font-smoothing:antialiased;transition:background var(--duration-fast),color var(--duration-fast)}
+    :focus-visible{outline:2px solid var(--color-accent);outline-offset:3px;border-radius:var(--radius-sm)}
+    h1,h2,h3{font-family:var(--font-display);color:var(--color-fg);line-height:1.1;letter-spacing:-0.022em;font-weight:700}
+    h1{font-size:var(--size-h1);margin:0 0 var(--space-4)}
+    h2{font-size:var(--size-h2);margin:0 0 var(--space-4)}
+    h3{font-size:var(--size-h3);font-weight:600;margin:0 0 var(--space-3)}
+    p{margin:0 0 var(--space-4);max-width:65ch}
+    .lead{font-size:var(--size-lead);line-height:1.5;color:var(--color-fg-muted);margin-bottom:var(--space-7);max-width:60ch}
+    a{color:var(--color-accent);text-decoration:none}
+    strong{font-weight:700;color:var(--color-fg)}
+    ul{padding-left:var(--space-5);margin:0 0 var(--space-4)}
+    li{margin-bottom:var(--space-2)}
+
+    /* ─── Reveal animation ──────────────────────────────────────────────────── */
+    [data-reveal]{opacity:0;transform:translateY(24px);transition:opacity var(--duration-hero) var(--ease-out),transform var(--duration-hero) var(--ease-out)}
+    [data-reveal].is-visible{opacity:1;transform:none}
+    [data-reveal][data-delay="1"]{transition-delay:80ms}
+    [data-reveal][data-delay="2"]{transition-delay:160ms}
+    [data-reveal][data-delay="3"]{transition-delay:240ms}
+    [data-reveal][data-delay="4"]{transition-delay:320ms}
+    [data-reveal][data-delay="5"]{transition-delay:400ms}
+    [data-reveal][data-delay="6"]{transition-delay:480ms}
+    [data-reveal][data-delay="7"]{transition-delay:560ms}
+    [data-reveal][data-delay="8"]{transition-delay:640ms}
+    @media(prefers-reduced-motion:reduce){*{transition-duration:0.01ms!important}[data-reveal]{opacity:1;transform:none}}
+
+    /* ─── Progress bar ──────────────────────────────────────────────────────── */
+    .progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:1000;background:var(--color-border)}
+    .progress__bar{height:100%;width:0%;background:linear-gradient(90deg,var(--itau-orange),var(--itau-orange-3));transition:width 80ms linear}
+
+    /* ─── Topbar ────────────────────────────────────────────────────────────── */
+    .topbar{position:fixed;top:3px;left:0;right:0;height:var(--header-h);display:flex;align-items:center;justify-content:space-between;padding:0 var(--space-6);background:rgba(250,247,245,0.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--color-border);z-index:999;transition:background var(--duration-fast)}
+    [data-theme="dark"] .topbar{background:rgba(20,17,13,0.88)}
+    .topbar__brand{display:flex;align-items:center;gap:var(--space-3)}
+    .topbar__logo{width:32px;height:32px;background:var(--color-accent);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center}
+    .topbar__logo svg{width:20px;height:20px;fill:#fff}
+    .topbar__name{font-family:var(--font-display);font-size:0.9375rem;font-weight:700;letter-spacing:-0.01em}
+    .topbar__name span{color:var(--color-accent)}
+    .topbar__right{display:flex;align-items:center;gap:var(--space-3)}
+    .topbar__label{font-size:var(--size-xs);color:var(--color-fg-muted);letter-spacing:0.04em;text-transform:uppercase}
+    .theme-toggle{width:36px;height:36px;display:grid;place-items:center;background:var(--color-bg-elevated);border:1px solid var(--color-border);border-radius:999px;cursor:pointer;color:var(--color-fg);font-size:14px;transition:all var(--duration-fast)}
+    .theme-toggle:hover{background:var(--color-accent-dim)}
+
+    /* ─── Scrolly layout ────────────────────────────────────────────────────── */
+    .scrolly{padding-top:calc(var(--header-h) + 3px)}
+    .scene{min-height:100vh;display:flex;align-items:center;border-bottom:1px solid var(--color-border)}
+    .scene:last-child{border-bottom:none}
+    .scene--dark{background:var(--color-fg);color:var(--color-bg)}
+    .scene--dark h1,.scene--dark h2,.scene--dark h3{color:var(--color-bg)}
+    .scene--dark .lead,.scene--dark p,.scene--dark li{color:rgba(237,229,221,0.72)}
+    .scene--dark .metric__label{color:rgba(237,229,221,0.6)}
+    .scene--dark .metric{border-top-color:rgba(237,229,221,0.3)}
+    .scene--tinted{background:var(--color-bg-sunken)}
+    .scene--accent{background:var(--color-accent);color:#fff}
+    .scene--accent h1,.scene--accent h2,.scene--accent h3{color:#fff}
+    .scene--accent .lead,.scene--accent p{color:rgba(255,255,255,0.8)}
+    .scene__inner{width:100%;max-width:980px;margin:0 auto;padding:var(--space-12) var(--space-6)}
+
+    /* ─── Content meta ──────────────────────────────────────────────────────── */
+    .content__meta{display:flex;align-items:center;gap:var(--space-3);margin-bottom:var(--space-6)}
+    .content__meta-line{width:2.5rem;height:2px;background:var(--color-accent);flex-shrink:0}
+    .content__meta-text{font-family:var(--font-mono);font-size:var(--size-xs);color:var(--color-accent);text-transform:uppercase;letter-spacing:0.1em;font-weight:600}
+    .scene--dark .content__meta-text,.scene--accent .content__meta-text{color:rgba(255,255,255,0.7)}
+    .scene--dark .content__meta-line,.scene--accent .content__meta-line{background:rgba(255,255,255,0.5)}
+
+    /* ─── Metrics ───────────────────────────────────────────────────────────── */
+    .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-6);margin:var(--space-7) 0}
+    .metrics--2{grid-template-columns:repeat(2,1fr)}
+    .metrics--4{grid-template-columns:repeat(4,1fr)}
+    .metric{border-top:2px solid var(--color-fg);padding-top:var(--space-3)}
+    .metric__val{font-family:var(--font-display);font-size:var(--size-h1);font-weight:800;line-height:1;margin:0 0 var(--space-2);letter-spacing:-0.035em}
+    .metric__val span{color:var(--color-accent)}
+    .metric__label{font-size:var(--size-small);color:var(--color-fg-muted);margin:0;max-width:22ch;line-height:1.4}
+    .scene--accent .metric{border-top-color:rgba(255,255,255,0.4)}
+    .scene--accent .metric__val{color:#fff}
+    .scene--accent .metric__label{color:rgba(255,255,255,0.75)}
+    .scene--accent .metric__val span{color:var(--itau-yellow)}
+    @media(max-width:640px){
+      .metrics{grid-template-columns:1fr 1fr}
+      .metrics--4{grid-template-columns:1fr 1fr}
+    }
+    @media(max-width:480px){
+      .metrics{grid-template-columns:1fr}
+      .metrics--4{grid-template-columns:1fr 1fr}
+    }
+
+    /* ─── Timeline ──────────────────────────────────────────────────────────── */
+    .timeline{list-style:none;padding:0;margin:var(--space-5) 0;position:relative}
+    .timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--color-accent) 0%,var(--color-border) 100%)}
+    .timeline__item{position:relative;padding-left:var(--space-7);margin-bottom:var(--space-6)}
+    .timeline__dot{position:absolute;left:0;top:6px;width:18px;height:18px;border-radius:50%;background:var(--color-accent);box-shadow:0 0 0 4px var(--color-bg)}
+    .timeline__date{font-family:var(--font-mono);font-size:var(--size-xs);color:var(--color-accent);text-transform:uppercase;letter-spacing:0.04em;margin:0 0 var(--space-1);font-weight:600}
+    .timeline__title{font-family:var(--font-display);font-size:1.0625rem;margin:0 0 var(--space-1);font-weight:700}
+    .timeline__desc{font-size:var(--size-small);color:var(--color-fg-muted);margin:0;line-height:1.5}
+    .timeline--2col{columns:2;column-gap:var(--space-8)}
+    .timeline--2col .timeline__item{break-inside:avoid}
+    @media(max-width:640px){.timeline--2col{columns:1}}
+
+    /* ─── Cards ─────────────────────────────────────────────────────────────── */
+    .cards{display:grid;gap:var(--space-5);margin:var(--space-7) 0}
+    .cards--2{grid-template-columns:repeat(2,1fr)}
+    .cards--4{grid-template-columns:repeat(4,1fr)}
+    .card{background:var(--color-bg-elevated);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-6);transition:box-shadow var(--duration-fast)}
+    .card:hover{box-shadow:var(--shadow-lg)}
+    .card__icon{font-size:1.75rem;margin-bottom:var(--space-4)}
+    .card__kicker{font-family:var(--font-mono);font-size:var(--size-xs);color:var(--color-accent);text-transform:uppercase;letter-spacing:0.08em;font-weight:600;margin-bottom:var(--space-2)}
+    .card__title{font-family:var(--font-display);font-size:1.0625rem;font-weight:700;margin:0 0 var(--space-2)}
+    .card__body{font-size:var(--size-small);color:var(--color-fg-muted);margin:0;line-height:1.6}
+    .card__val{font-family:var(--font-display);font-size:clamp(1.4rem,1.2rem+0.8vw,1.9rem);font-weight:800;color:var(--color-accent);letter-spacing:-0.03em;margin:var(--space-2) 0 0}
+    .scene--tinted .card{background:var(--color-bg-elevated)}
+    @media(max-width:720px){
+      .cards--4{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:480px){
+      .cards--2,.cards--4{grid-template-columns:1fr}
+    }
+
+    /* ─── Pilar grid 2×2 ────────────────────────────────────────────────────── */
+    .pillar-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-5);margin:var(--space-7) 0}
+    .pillar{background:var(--color-bg-elevated);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-6);position:relative;overflow:hidden}
+    .pillar::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+    .pillar:nth-child(1)::before{background:var(--itau-orange)}
+    .pillar:nth-child(2)::before{background:var(--itau-blue-3)}
+    .pillar:nth-child(3)::before{background:var(--itau-yellow)}
+    .pillar:nth-child(4)::before{background:var(--color-teal)}
+    .pillar__num{font-family:var(--font-mono);font-size:var(--size-xs);color:var(--color-fg-subtle);letter-spacing:0.06em;margin-bottom:var(--space-3)}
+    .pillar__name{font-family:var(--font-display);font-size:var(--size-h3);font-weight:700;margin:0 0 var(--space-3)}
+    .pillar__desc{font-size:var(--size-small);color:var(--color-fg-muted);margin:0;line-height:1.6}
+    @media(max-width:560px){.pillar-grid{grid-template-columns:1fr}}
+
+    /* ─── Mesa grid ─────────────────────────────────────────────────────────── */
+    .mesa-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-4);margin:var(--space-7) 0}
+    .mesa{background:var(--color-bg-elevated);border:1px solid var(--color-border);border-radius:var(--radius);padding:var(--space-5);text-align:center}
+    .mesa__name{font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:var(--space-1)}
+    .mesa__strategy{font-size:var(--size-xs);color:var(--color-fg-muted);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--space-3)}
+    .mesa__dot{width:8px;height:8px;border-radius:50%;background:var(--color-accent);margin:0 auto}
+    @media(max-width:720px){.mesa-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:400px){.mesa-grid{grid-template-columns:1fr 1fr}}
+
+    /* ─── People ────────────────────────────────────────────────────────────── */
+    .people{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-5);margin:var(--space-7) 0}
+    .person{border-top:2px solid var(--color-border);padding-top:var(--space-4)}
+    .person__role{font-family:var(--font-mono);font-size:var(--size-xs);color:var(--color-accent);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--space-2);font-weight:600}
+    .person__name{font-family:var(--font-display);font-size:1.0625rem;font-weight:700;margin:0 0 var(--space-2)}
+    .person__note{font-size:var(--size-small);color:var(--color-fg-muted);margin:0;line-height:1.5}
+    @media(max-width:640px){.people{grid-template-columns:1fr 1fr}}
+    @media(max-width:400px){.people{grid-template-columns:1fr}}
+
+    /* ─── Tag list ──────────────────────────────────────────────────────────── */
+    .tags{display:flex;flex-wrap:wrap;gap:var(--space-2);margin:var(--space-4) 0}
+    .tag{display:inline-flex;align-items:center;gap:var(--space-1);padding:var(--space-1) var(--space-3);border-radius:999px;font-size:var(--size-xs);font-weight:600;letter-spacing:0.02em;background:var(--color-accent-dim);color:var(--color-accent);border:1px solid var(--color-accent)}
+    .tag--info{background:var(--color-info-dim);color:var(--color-info);border-color:var(--color-info)}
+    .tag--success{background:var(--color-success-dim);color:var(--color-success);border-color:var(--color-success)}
+    .tag--teal{background:var(--color-teal-dim);color:var(--color-teal);border-color:var(--color-teal)}
+    .scene--accent .tag{background:rgba(255,255,255,0.15);color:#fff;border-color:rgba(255,255,255,0.4)}
+
+    /* ─── Stat row ──────────────────────────────────────────────────────────── */
+    .stat-row{display:flex;align-items:baseline;gap:var(--space-3);padding:var(--space-4) 0;border-bottom:1px solid var(--color-border)}
+    .stat-row:first-child{border-top:1px solid var(--color-border)}
+    .stat-row__label{flex:1;font-size:var(--size-small);color:var(--color-fg-muted)}
+    .stat-row__val{font-family:var(--font-display);font-size:1.125rem;font-weight:700;color:var(--color-fg)}
+    .stat-row__bar{flex:0 0 120px;height:4px;background:var(--color-border);border-radius:2px;overflow:hidden}
+    .stat-row__fill{height:100%;background:var(--color-accent);border-radius:2px;transition:width 1.2s var(--ease-out)}
+
+    /* ─── ESG progress ──────────────────────────────────────────────────────── */
+    .esg-progress{margin:var(--space-7) 0}
+    .esg-bar-wrap{background:var(--color-bg-sunken);border-radius:999px;height:12px;overflow:hidden;margin:var(--space-3) 0 var(--space-2)}
+    .esg-bar{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,var(--color-success),var(--color-sage));transition:width 1.4s var(--ease-out)}
+
+    /* ─── Cena hero ─────────────────────────────────────────────────────────── */
+    .hero{min-height:100vh;background:linear-gradient(150deg,var(--itau-warm-black) 0%,#2a1d0e 60%,#3d2510 100%);display:flex;align-items:center}
+    .hero__inner{width:100%;max-width:980px;margin:0 auto;padding:var(--space-12) var(--space-6)}
+    .hero__kicker{font-family:var(--font-mono);font-size:var(--size-xs);color:var(--itau-orange-3);text-transform:uppercase;letter-spacing:0.18em;font-weight:600;margin-bottom:var(--space-4)}
+    .hero h1{color:#ede5dd;font-size:clamp(2.5rem,2rem+2.5vw,4.5rem);margin-bottom:var(--space-5)}
+    .hero h1 span{color:var(--itau-orange)}
+    .hero .lead{color:rgba(237,229,221,0.65);margin-bottom:var(--space-8)}
+    .hero__pills{display:flex;flex-wrap:wrap;gap:var(--space-3)}
+    .hero__pill{display:inline-flex;align-items:center;gap:var(--space-2);padding:var(--space-2) var(--space-5);border-radius:999px;font-family:var(--font-display);font-size:var(--size-small);font-weight:700;letter-spacing:-0.01em}
+    .hero__pill--primary{background:var(--itau-orange);color:#fff}
+    .hero__pill--ghost{background:rgba(237,229,221,0.08);color:rgba(237,229,221,0.75);border:1px solid rgba(237,229,221,0.18)}
+
+    /* ─── Scroll indicator ──────────────────────────────────────────────────── */
+    .scroll-hint{position:absolute;bottom:var(--space-8);left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:var(--space-2);color:rgba(237,229,221,0.4);font-size:var(--size-xs);font-family:var(--font-mono);letter-spacing:0.1em;text-transform:uppercase;animation:bounce 2s infinite}
+    .scroll-hint svg{width:20px;height:20px;stroke:currentColor;fill:none}
+    @keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
+
+    /* ─── Divider ───────────────────────────────────────────────────────────── */
+    .divider{width:40px;height:3px;background:var(--color-accent);border-radius:2px;margin:var(--space-5) 0 var(--space-4)}
+    .scene--dark .divider,.scene--accent .divider{background:rgba(255,255,255,0.5)}
+
+    /* ─── Two-col ───────────────────────────────────────────────────────────── */
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-10);align-items:start}
+    @media(max-width:700px){.two-col{grid-template-columns:1fr}}
+
+    /* ─── Footer scene ──────────────────────────────────────────────────────── */
+    .contact-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-5);margin:var(--space-7) 0}
+    .contact-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:var(--radius-lg);padding:var(--space-6);text-align:center}
+    .contact-card__icon{font-size:2rem;margin-bottom:var(--space-3)}
+    .contact-card__label{font-size:var(--size-xs);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.5);margin-bottom:var(--space-2)}
+    .contact-card__value{font-family:var(--font-display);font-size:1rem;font-weight:700;color:#fff;word-break:break-all}
+    @media(max-width:720px){.contact-cards{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:400px){.contact-cards{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+
+  <!-- Progress bar -->
+  <div class="progress"><div class="progress__bar" id="progress-bar"></div></div>
+
+  <!-- Topbar -->
+  <header class="topbar" role="banner">
+    <div class="topbar__brand">
+      <div class="topbar__logo">
+        <svg viewBox="0 0 20 20"><path d="M10 2L2 7v6l8 5 8-5V7L10 2zm0 2.3l6 3.75v4.3L10 15.7l-6-3.35v-4.3L10 4.3z"/></svg>
+      </div>
+      <span class="topbar__name">Itaú <span>Asset</span></span>
+    </div>
+    <div class="topbar__right">
+      <span class="topbar__label">Apresentação Institucional</span>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Alternar tema" title="Alternar tema claro/escuro">
+        <span id="theme-icon">🌙</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <!-- SCROLLY CONTAINER                                                       -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <main class="scrolly" id="main-content">
+
+    <!-- ── SCENE 1 · HERO ─────────────────────────────────────────────────── -->
+    <section class="hero scene" aria-labelledby="hero-title" style="position:relative">
+      <div class="hero__inner">
+        <p class="hero__kicker" data-reveal>Conheça a</p>
+        <h1 id="hero-title" data-reveal data-delay="1">Itaú <span>Asset</span><br>Management</h1>
+        <p class="lead" data-reveal data-delay="2">Apresentação institucional — a maior gestora privada do Brasil.</p>
+        <div class="hero__pills" data-reveal data-delay="3">
+          <span class="hero__pill hero__pill--primary">R$ 1,193 trilhão em AuM</span>
+          <span class="hero__pill hero__pill--ghost">14,5% market share</span>
+          <span class="hero__pill hero__pill--ghost">2,6 mi clientes</span>
+          <span class="hero__pill hero__pill--ghost">+300 profissionais</span>
+        </div>
+      </div>
+      <div class="scroll-hint" aria-hidden="true">
+        <svg viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        scroll
+      </div>
+    </section>
+
+    <!-- ── SCENE 2 · MAIOR GESTORA PRIVADA ───────────────────────────────── -->
+    <section class="scene" aria-labelledby="scene2-title">
+      <div class="scene__inner">
+        <div class="content__meta" data-reveal>
+          <div class="content__meta-line"></div>
+          <span class="content__meta-text">Escala &amp; Alcance</span>
+        </div>
+        <h2 id="scene2-title" data-reveal data-delay="1">A maior gestora<br>privada do Brasil</h2>
+        <p class="lead" data-reveal data-delay="2">Décadas de consistência constroem a base de confiança de mais de 2,6 milhões de clientes — de investidores de varejo a grandes instituições.</p>
+
+        <div class="metrics" data-reveal data-delay="3">
+          <div class="metric">
+            <p class="metric__val">R$<span>1,193</span><br><span style="font-size:0.55em">tri</span></p>
+            <p class="metric__label">Ativos sob gestão (AuM)</p>
+          </div>
+          <div class="metric">
+            <p class="metric__val"><span>2,6</span><br><span style="font-size:0.55em">mi</span></p>
+            <p class="metric__label">Clientes atendidos</p>
+          </div>
+          <div class="metric">
+            <p class="metric__val"><span>14,5</span><span style="font-size:0.6em">%</span></p>
+            <p class="metric__label">Market share no mercado de fundos</p>
+          </div>
+        </div>
+
+        <h3 data-reveal data-delay="1">Composição do AuM</h3>
+        <p data-reveal data-delay="2">O portfólio cobre toda a curva de risco — de títulos públicos federais à gestão ativa de alta convicção.</p>
+
+        <div data-reveal data-delay="3">
+          <div class="stat-row">
+            <span class="stat-row__label">Títulos Públicos Federais</span>
+            <span class="stat-row__val">R$ 647 bi</span>
+            <div class="stat-row__bar"><div class="stat-row__fill" data-width="54"></div></div>
+          </div>
+          <div class="stat-row">
+            <span class="stat-row__label">Títulos Privados (Crédito + RF)</span>
+            <span class="stat-row__val">R$ 355 bi</span>
+            <div class="stat-row__bar"><div class="stat-row__fill" data-width="30"></div></div>
+          </div>
+          <div class="stat-row">
+            <span class="stat-row__label">Retorno Absoluto (Multimesas)</span>
+            <span class="stat-row__val">R$ 113,5 bi</span>
+            <div class="stat-row__bar"><div class="stat-row__fill" data-width="10"></div></div>
+          </div>
+          <div class="stat-row">
+            <span class="stat-row__label">Demais estratégias</span>
+            <span class="stat-row__val">R$ 77,5 bi</span>
+            <div class="stat-row__bar"><div class="stat-row__fill" data-width="6"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SCENE 3 · 65 ANOS DE HISTÓRIA ─────────────────────────────────── -->
+    <section class="scene scene--tinted" aria-labelledby="scene3-title">
+      <div class="scene__inner">
+        <div class="content__meta" data-reveal>
+          <div class="content__meta-line"></div>
+          <span class="content__meta-text">Desde 1957</span>
+        </div>
+        <h2 id="scene3-title" data-reveal data-delay="1">65 anos de história</h2>
+        <p class="lead" data-reveal data-delay="2">Uma jornada de inovação contínua — do primeiro fundo de renda variável do Brasil ao pioneirismo em ETFs, pesquisa macro e gestão multimesas.</p>
+
+        <ul class="timeline timeline--2col" data-reveal data-delay="3">
+          <li class="timeline__item">
+            <div class="timeline__dot"></div>
+            <p class="timeline__date">1957</p>
+            <h3 class="timeline__title">1° Fundo de Renda Variável do Brasil</h3>
+            <p class="timeline__desc">Itaú lança o primeiro fundo de renda variável do mercado brasileiro, iniciando uma tradição de pioneirismo.</p>
+          </li>
+          <li class="timeline__item">
+            <div class="timeline__dot"></div>
+            <p class="timeline__date">1997</p>
+            <h3 class="timeline__title">1° Fundo Multimercado — Itaú K2</h3>
+            <p class="timeline__desc">Lançamento do Itaú K2, o primeiro fundo multimercado da casa, marcando a entrada na gestão ativa de alta convicção.</p>
+          </li>
+          <li class="timeline__item">
+            <div class="timeline__dot"></div>
+            <p class="timeline__date">2004</p>
+            <h3 class="timeline__title">PIBB — 1° ETF do Brasil</h3>
+            <p class="timeline__desc">Criação do PIBB, o pioneiro absoluto em fundos negociados em bolsa no mercado local, democratizando o acesso a índices.</p>
+          </li>
+          <li class="timeline__item">
+            <div class="timeline__dot"></div>
+            <p class="timeline__date">2005</p>
+            <h3 class="timeline__title">Estruturação da Mesa de RA</h3>
+            <p class="timeline__desc">Criação da mesa especializada de Retorno Absoluto, consolidando a competência em gestão ativa macro e quantitativa.</p>
+          </li>
+          <li class="timeline__item">
+            <div class="timeline__dot"></div>
+            <p class="timeline__date">2011</p>
+            <h3 class="timeline__title">Expansão Internacional — Nova York</h3>
+            <p class="timeline__desc">Abertura do escritório em Nova York, ampliando a capacidade de pesquisa global e acesso a mercados internacionais.</p>
+          </li>
+          <li class="timeline__item">
+            <div class="timeline__dot"></div>
+            <p class="timeline__date">2013</p>
+            <h3 class="timeline__title">ETF no Chile</h3>
+            <p class="timeline__desc">Lançamento de produto indexado no mercado chileno, marcando a internacionalização da plataforma de ETFs.</p>
+          </li>
+          <li class="timeline__item">
+            <div class="timeline__dot"></div>
+            <p class="timeline__date">2016</p>
+            <h3 class="timeline__title">Superação dos R$ 500 bilhões</h3>
+            <p class="timeline__desc">AuM ultrapassa a marca de R$ 500 bi, consolidando posição de liderança absoluta na indústria nacional de fundos.</p>
+          </li>
+          <li class="timeline__item">
+            <div class="timeline__dot"></div>
+            <p class="timeline__date">2019</p>
+            <h3 class="timeline__title">Modelo Multimesas</h3>
+            <p class="timeline__desc">Transformação estrutural: criação do modelo Multimesas com autonomia por convicção, competição saudável e compliance unificado.</p>
+          </li>
+          <li class="timeline__item">
+            <div class="timeline__dot"></div>
+            <p class="timeline__date">2020</p>
+            <h3 class="timeline__title">Líderes de RA — atração de talentos</h3>
+            <p class="timeline__desc">Chegada de novos gestores seniores, fortalecendo as mesas de Retorno Absoluto com diversidade de estratégias e estilos.</p>
+          </li>
+          <li class="timeline__item">
+            <div class="timeline__dot"></div>
+            <p class="timeline__date">2021</p>
+            <h3 class="timeline__title">6 novos ETFs temáticos itnow</h3>
+            <p class="timeline__desc">Expansão da plataforma itnow com ETFs temáticos de ESG, energia limpa, água, governança e outros índices selecionados.</p>
+          </li>
+          <li class="timeline__item">
+            <div class="timeline__dot"></div>
+            <p class="timeline__date">2022</p>
+            <h3 class="timeline__title">+R$ 100 bi em Multimesas</h3>
+            <p class="timeline__desc">As mesas de Retorno Absoluto atingem R$ 100 bilhões, validando o modelo de gestão autônoma por convicção.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ── SCENE 4 · POSICIONAMENTO ───────────────────────────────────────── -->
+    <section class="scene scene--dark" aria-labelledby="scene4-title">
+      <div class="scene__inner">
+        <div class="content__meta" data-reveal>
+          <div class="content__meta-line"></div>
+          <span class="content__meta-text">Identidade</span>
+        </div>
+        <h2 id="scene4-title" data-reveal data-delay="1">Posicionamento</h2>
+        <p class="lead" data-reveal data-delay="2">Três dimensões que definem quem somos e como entregamos valor — em qualquer ciclo de mercado.</p>
+
+        <div class="metrics" data-reveal data-delay="3" style="margin-bottom:var(--space-8)">
+          <div class="metric" style="border-top-color:var(--itau-orange)">
+            <p class="metric__val" style="font-size:clamp(1.5rem,1.2rem+1vw,2.2rem);color:var(--itau-orange)">Sofisticada</p>
+            <p class="metric__label">Pesquisa proprietária, modelos quantitativos e gestores de alto desempenho com mandato de convicção.</p>
+          </div>
+          <div class="metric" style="border-top-color:var(--itau-blue-3)">
+            <p class="metric__val" style="font-size:clamp(1.5rem,1.2rem+1vw,2.2rem);color:var(--itau-blue-3)">Democrática</p>
+            <p class="metric__label">2,6 milhões de clientes do varejo ao institucional têm acesso às mesmas estratégias e veículos.</p>
+          </div>
+          <div class="metric" style="border-top-color:var(--itau-yellow)">
+            <p class="metric__val" style="font-size:clamp(1.5rem,1.2rem+1vw,2.2rem);color:var(--itau-yellow)">Internacional</p>
+            <p class="metric__label">Escritório em Nova York, gestão global de portfólio e cobertura de mercados emergentes e desenvolvidos.</p>
+          </div>
+        </div>
+
+        <div class="divider" data-reveal></div>
+        <h3 style="color:var(--itau-orange-3)" data-reveal data-delay="1">Frentes de evolução contínua</h3>
+        <ul data-reveal data-delay="2" style="color:rgba(237,229,221,0.75);columns:2;column-gap:var(--space-8)">
+          <li>Crescimento da plataforma de ETFs itnow</li>
+          <li>Expansão de estratégias ESG e impacto</li>
+          <li>Inteligência artificial aplicada à gestão</li>
+          <li>Fortalecimento da cobertura macro global</li>
+          <li>Democratização do acesso a fundos alternativos</li>
+          <li>Evolução do modelo Multimesas</li>
+          <li>Parcerias com gestores internacionais</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ── SCENE 5 · ESTRUTURA DE GESTÃO ──────────────────────────────────── -->
+    <section class="scene" aria-labelledby="scene5-title">
+      <div class="scene__inner">
+        <div class="content__meta" data-reveal>
+          <div class="content__meta-line"></div>
+          <span class="content__meta-text">Arquitetura</span>
+        </div>
+        <h2 id="scene5-title" data-reveal data-delay="1">Estrutura de Gestão</h2>
+        <p class="lead" data-reveal data-delay="2">Quatro pilares integrados por uma base de capacidades institucionais — risco, compliance, tecnologia, research, ESG e distribuição.</p>
+
+        <div class="pillar-grid" data-reveal data-delay="3">
+          <div class="pillar">
+            <p class="pillar__num">Pilar 01</p>
+            <h3 class="pillar__name">Beta / Indexado</h3>
+            <p class="pillar__desc">Plataforma de ETFs itnow e fundos de índice — o maior provedor de soluções de beta do mercado doméstico, com R$ 174,49 bi sob gestão passiva.</p>
+          </div>
+          <div class="pillar">
+            <p class="pillar__num">Pilar 02</p>
+            <h3 class="pillar__name">Renda Fixa Ativa</h3>
+            <p class="pillar__desc">Gestão ativa de taxas e spreads soberanos, com cobertura completa da curva de juros brasileira e internacional. Mandatos macro e de crédito soberano.</p>
+          </div>
+          <div class="pillar">
+            <p class="pillar__num">Pilar 03</p>
+            <h3 class="pillar__name">Crédito</h3>
+            <p class="pillar__desc">Análise proprietária de crédito privado — debêntures, FIDCs, CRIs, CRAs e instrumentos estruturados. R$ 89,8 bi em crédito e RF ativa.</p>
+          </div>
+          <div class="pillar">
+            <p class="pillar__num">Pilar 04</p>
+            <h3 class="pillar__name">Retorno Absoluto</h3>
+            <p class="pillar__desc">Modelo Multimesas com 8 equipes autônomas, mandato irrestrito de convicção e R$ 113,5 bi sob gestão em estratégias macro, quant e equities.</p>
+          </div>
+        </div>
+
+        <div class="divider" data-reveal></div>
+        <h3 data-reveal data-delay="1">Base integrada de capacidades</h3>
+        <div class="tags" data-reveal data-delay="2">
+          <span class="tag">Gestão de Risco</span>
+          <span class="tag tag--info">Compliance &amp; Regulatório</span>
+          <span class="tag tag--success">Tecnologia &amp; Dados</span>
+          <span class="tag tag--teal">ESG Integration</span>
+          <span class="tag">Research Macroeconômico</span>
+          <span class="tag tag--info">Distribuição &amp; Relacionamento</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SCENE 6 · DIRETORIA ────────────────────────────────────────────── -->
+    <section class="scene scene--tinted" aria-labelledby="scene6-title">
+      <div class="scene__inner">
+        <div class="content__meta" data-reveal>
+          <div class="content__meta-line"></div>
+          <span class="content__meta-text">Liderança</span>
+        </div>
+        <h2 id="scene6-title" data-reveal data-delay="1">Diretoria</h2>
+        <p class="lead" data-reveal data-delay="2">Time de liderança com décadas de experiência combinada em gestão de ativos, macro, crédito e distribuição.</p>
+
+        <div class="people" data-reveal data-delay="3">
+          <div class="person">
+            <p class="person__role">Chief Asset Officer (CAS)</p>
+            <h3 class="person__name">Rubens Henriques</h3>
+            <p class="person__note">Responsável pela estratégia global de gestão de ativos e pelo desenvolvimento do modelo Multimesas.</p>
+          </div>
+          <div class="person">
+            <p class="person__role">Head de Investimentos</p>
+            <h3 class="person__name">Marcelo Gonçalves</h3>
+            <p class="person__note">Supervisão das equipes de portfólio, alocação estratégica e integração de risco entre as mesas.</p>
+          </div>
+          <div class="person">
+            <p class="person__role">Head de Crédito</p>
+            <h3 class="person__name">Rodrigo Maranhão</h3>
+            <p class="person__note">Liderança da plataforma de crédito privado e instrumentos estruturados, com foco em análise fundamentalista proprietária.</p>
+          </div>
+          <div class="person">
+            <p class="person__role">Head de Distribuição</p>
+            <h3 class="person__name">João Paulo Vasconcelos</h3>
+            <p class="person__note">Desenvolvimento comercial junto a wealth managers, fundos de pensão, tesourarias e investidores institucionais.</p>
+          </div>
+          <div class="person">
+            <p class="person__role">Head de Risco</p>
+            <h3 class="person__name">Alessandra Martinelli</h3>
+            <p class="person__note">Gestão do framework centralizado de risco de mercado, liquidez e contraparte para todas as estratégias.</p>
+          </div>
+        </div>
+
+        <div class="divider" data-reveal></div>
+        <h3 data-reveal data-delay="1">Sub-time Asset Core</h3>
+        <div class="people" style="grid-template-columns:repeat(4,1fr)" data-reveal data-delay="2">
+          <div class="person">
+            <p class="person__role">Gestão Passiva</p>
+            <h3 class="person__name">Renato Eid</h3>
+            <p class="person__note">Plataforma de ETFs e fundos indexados itnow.</p>
+          </div>
+          <div class="person">
+            <p class="person__role">ESG &amp; Impacto</p>
+            <h3 class="person__name">Fayga Delbem</h3>
+            <p class="person__note">Integração ESG, produtos temáticos e engajamento de empresas.</p>
+          </div>
+          <div class="person">
+            <p class="person__role">Macro &amp; Research</p>
+            <h3 class="person__name">Luís Wetzel</h3>
+            <p class="person__note">Coordenação da equipe de 10 economistas e análise global.</p>
+          </div>
+          <div class="person">
+            <p class="person__role">Estratégia Internacional</p>
+            <h3 class="person__name">Scott Piper</h3>
+            <p class="person__note">Escritório de Nova York — mandatos globais e relações com investidores internacionais.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SCENE 7 · ESTRATÉGIAS BETA ────────────────────────────────────── -->
+    <section class="scene" aria-labelledby="scene7-title">
+      <div class="scene__inner">
+        <div class="content__meta" data-reveal>
+          <div class="content__meta-line"></div>
+          <span class="content__meta-text">Plataforma itnow</span>
+        </div>
+        <h2 id="scene7-title" data-reveal data-delay="1">Estratégias Beta &amp; Indexadas</h2>
+        <p class="lead" data-reveal data-delay="2">Maior provedor de ETFs do Brasil e referência em gestão passiva — da indexação simples ao beta estratégico temático.</p>
+
+        <div class="metrics metrics--2" data-reveal data-delay="3">
+          <div class="metric">
+            <p class="metric__val">R$<span>18,77</span><br><span style="font-size:0.55em">bi</span></p>
+            <p class="metric__label">AuM em ETFs (plataforma itnow)</p>
+          </div>
+          <div class="metric">
+            <p class="metric__val">R$<span>174,49</span><br><span style="font-size:0.55em">bi</span></p>
+            <p class="metric__label">AuM em gestão passiva (fundos de índice)</p>
+          </div>
+        </div>
+
+        <div class="two-col" style="gap:var(--space-8);margin-top:var(--space-6)">
+          <div data-reveal data-delay="1">
+            <h3>Categorias de fundos</h3>
+            <ul>
+              <li>Fundos de renda fixa indexados (IMA, CDI+)</li>
+              <li>Fundos de ações índice (IBOVESPA, IBX, SMLL)</li>
+              <li>Fundos de crédito grau de investimento</li>
+              <li>Fundos multimercado sistemático</li>
+              <li>Fundos previdenciários (PGBL/VGBL)</li>
+              <li>Fundos de fundos selecionados</li>
+              <li>Fundos exclusivos institucionais</li>
+              <li>Fundos de participações (FIP)</li>
+              <li>Fundos imobiliários (FII)</li>
+            </ul>
+          </div>
+          <div data-reveal data-delay="2">
+            <h3>ETFs itnow — categorias</h3>
+            <ul>
+              <li><strong>Renda Fixa:</strong> IMAB11, IRFM11, B5P211</li>
+              <li><strong>Ações Brasil:</strong> BOVA11, SMAL11, DIVO11</li>
+              <li><strong>ESG &amp; Temáticos:</strong> ISUS11, GOVE11, REVE11, YDRO11</li>
+              <li><strong>Internacionais:</strong> acesso a índices globais via BDR</li>
+            </ul>
+            <div class="tags" style="margin-top:var(--space-4)">
+              <span class="tag">Liquidez diária</span>
+              <span class="tag tag--info">Baixo custo</span>
+              <span class="tag tag--success">Diversificação imediata</span>
+              <span class="tag tag--teal">Acesso B3</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SCENE 8 · MODELO MULTIMESAS ───────────────────────────────────── -->
+    <section class="scene scene--dark" aria-labelledby="scene8-title">
+      <div class="scene__inner">
+        <div class="content__meta" data-reveal>
+          <div class="content__meta-line"></div>
+          <span class="content__meta-text">Retorno Absoluto</span>
+        </div>
+        <h2 id="scene8-title" data-reveal data-delay="1">Modelo Multimesas</h2>
+        <p class="lead" data-reveal data-delay="2">8 equipes com autonomia de convicção, cada uma com mandato irrestrito e estilo próprio — dentro de um único framework de risco e compliance.</p>
+
+        <div class="metrics metrics--4" data-reveal data-delay="3">
+          <div class="metric">
+            <p class="metric__val" style="color:var(--itau-orange-3)">R$<span style="color:var(--itau-orange-3)">113,5</span><span style="font-size:0.5em;color:var(--itau-orange-3)">bi</span></p>
+            <p class="metric__label">Total Retorno Absoluto</p>
+          </div>
+          <div class="metric">
+            <p class="metric__val" style="color:var(--itau-blue-3)">R$<span style="color:var(--itau-blue-3)">89,8</span><span style="font-size:0.5em;color:var(--itau-blue-3)">bi</span></p>
+            <p class="metric__label">Crédito + RF Ativa</p>
+          </div>
+          <div class="metric">
+            <p class="metric__val" style="color:var(--itau-yellow)">R$<span style="color:var(--itau-yellow)">18,5</span><span style="font-size:0.5em;color:var(--itau-yellow)">bi</span></p>
+            <p class="metric__label">Macro (mesas diversificadas)</p>
+          </div>
+          <div class="metric">
+            <p class="metric__val" style="color:#a3e635">R$<span style="color:#a3e635">5,2</span><span style="font-size:0.5em;color:#a3e635">bi</span></p>
+            <p class="metric__label">Equities (ações long-biased)</p>
+          </div>
+        </div>
+
+        <h3 style="color:var(--itau-orange-3);margin-top:var(--space-8)" data-reveal data-delay="1">As 8 Mesas</h3>
+
+        <div class="mesa-grid" data-reveal data-delay="2">
+          <div class="mesa" style="background:rgba(237,229,221,0.04);border-color:rgba(237,229,221,0.12)">
+            <div class="mesa__name" style="color:#ede5dd">Crédito Estruturado</div>
+            <div class="mesa__strategy">Crédito Privado</div>
+            <div class="mesa__dot" style="background:var(--itau-orange)"></div>
+          </div>
+          <div class="mesa" style="background:rgba(237,229,221,0.04);border-color:rgba(237,229,221,0.12)">
+            <div class="mesa__name" style="color:#ede5dd">Asgard</div>
+            <div class="mesa__strategy">Macro Sistemático</div>
+            <div class="mesa__dot" style="background:var(--itau-blue-3)"></div>
+          </div>
+          <div class="mesa" style="background:rgba(237,229,221,0.04);border-color:rgba(237,229,221,0.12)">
+            <div class="mesa__name" style="color:#ede5dd">Janeiro</div>
+            <div class="mesa__strategy">Macro Global</div>
+            <div class="mesa__dot" style="background:var(--itau-yellow)"></div>
+          </div>
+          <div class="mesa" style="background:rgba(237,229,221,0.04);border-color:rgba(237,229,221,0.12)">
+            <div class="mesa__name" style="color:#ede5dd">Optimus</div>
+            <div class="mesa__strategy">Long &amp; Short</div>
+            <div class="mesa__dot" style="background:#a3e635"></div>
+          </div>
+          <div class="mesa" style="background:rgba(237,229,221,0.04);border-color:rgba(237,229,221,0.12)">
+            <div class="mesa__name" style="color:#ede5dd">Legend</div>
+            <div class="mesa__strategy">Macro Discricionário</div>
+            <div class="mesa__dot" style="background:#5eead4"></div>
+          </div>
+          <div class="mesa" style="background:rgba(237,229,221,0.04);border-color:rgba(237,229,221,0.12)">
+            <div class="mesa__name" style="color:#ede5dd">Hunter</div>
+            <div class="mesa__strategy">Event Driven</div>
+            <div class="mesa__dot" style="background:var(--itau-orange-2)"></div>
+          </div>
+          <div class="mesa" style="background:rgba(237,229,221,0.04);border-color:rgba(237,229,221,0.12)">
+            <div class="mesa__name" style="color:#ede5dd">Artax</div>
+            <div class="mesa__strategy">Quant / Sistemático</div>
+            <div class="mesa__dot" style="background:var(--itau-blue-3)"></div>
+          </div>
+          <div class="mesa" style="background:rgba(237,229,221,0.04);border-color:rgba(237,229,221,0.12)">
+            <div class="mesa__name" style="color:#ede5dd">Aurora Yield Plus</div>
+            <div class="mesa__strategy">RF Ativa / Carry</div>
+            <div class="mesa__dot" style="background:var(--itau-yellow)"></div>
+          </div>
+        </div>
+
+        <div data-reveal data-delay="3" style="margin-top:var(--space-8);padding:var(--space-6);background:rgba(255,98,0,0.08);border-radius:var(--radius-lg);border:1px solid rgba(255,98,0,0.2)">
+          <h3 style="color:var(--itau-orange-3);margin:0 0 var(--space-3)">Por que o modelo funciona</h3>
+          <ul style="color:rgba(237,229,221,0.72);margin:0;columns:2;column-gap:var(--space-8)">
+            <li>Autonomia de convicção por mesa, sem interferência editorial</li>
+            <li>Competição saudável entre equipes aloca capital para performance</li>
+            <li>Risk framework centralizado — um único CRO para todas as mesas</li>
+            <li>Infraestrutura de dados, compliance e back-office compartilhada</li>
+            <li>Atração e retenção de talentos via participação nos resultados</li>
+            <li>Escalabilidade de AuM sem diluição de edge de cada equipe</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SCENE 9 · INTELIGÊNCIA & ESG ──────────────────────────────────── -->
+    <section class="scene" aria-labelledby="scene9-title">
+      <div class="scene__inner">
+        <div class="content__meta" data-reveal>
+          <div class="content__meta-line"></div>
+          <span class="content__meta-text">Research &amp; Sustentabilidade</span>
+        </div>
+        <h2 id="scene9-title" data-reveal data-delay="1">Inteligência &amp; ESG</h2>
+        <p class="lead" data-reveal data-delay="2">Research macroeconômico de ponta aliado à integração plena de critérios ambientais, sociais e de governança em 100% dos ativos geridos.</p>
+
+        <div class="metrics" data-reveal data-delay="3">
+          <div class="metric">
+            <p class="metric__val"><span>10</span></p>
+            <p class="metric__label">Economistas seniores — 1° ex-diretores do Banco Central do Brasil</p>
+          </div>
+          <div class="metric">
+            <p class="metric__val"><span>5</span></p>
+            <p class="metric__label">Cientistas de dados especializados em modelos quantitativos aplicados à gestão</p>
+          </div>
+          <div class="metric">
+            <p class="metric__val"><span>100</span><span style="font-size:0.6em">%</span></p>
+            <p class="metric__label">Dos ativos com integração de critérios ESG no processo de investimento</p>
+          </div>
+        </div>
+
+        <div class="divider" data-reveal></div>
+
+        <div class="two-col" style="gap:var(--space-8);margin-top:var(--space-6)">
+          <div data-reveal data-delay="1">
+            <h3>Evolução ESG</h3>
+            <p>De 10% para 100% de cobertura integrada — a jornada de uma das maiores gestoras do hemisfério sul rumo à gestão sustentável plena.</p>
+            <div class="esg-progress">
+              <div style="display:flex;justify-content:space-between;font-size:var(--size-xs);color:var(--color-fg-muted);font-family:var(--font-mono);margin-bottom:var(--space-2)">
+                <span>2018: 10%</span>
+                <span>2022: 100%</span>
+              </div>
+              <div class="esg-bar-wrap">
+                <div class="esg-bar" data-width="100"></div>
+              </div>
+              <p style="font-size:var(--size-small);color:var(--color-fg-muted);margin-top:var(--space-2)">Todos os ativos geridos com análise ESG integrada ao processo de due diligence e monitoramento contínuo.</p>
+            </div>
+            <div class="tags">
+              <span class="tag tag--success">Signatário PRI</span>
+              <span class="tag tag--teal">CDP Reporter</span>
+              <span class="tag tag--success">Net Zero 2050</span>
+            </div>
+          </div>
+          <div data-reveal data-delay="2">
+            <h3>Portfólio de produtos ESG</h3>
+            <ul>
+              <li><strong>Active Fix ESG</strong> — renda fixa ativa com filtro ESG positivo</li>
+              <li><strong>ISUS11</strong> — ETF ISE B3 (Índice de Sustentabilidade)</li>
+              <li><strong>GOVE11</strong> — ETF governança corporativa destacada</li>
+              <li><strong>REVE11</strong> — ETF energias renováveis Brasil</li>
+              <li><strong>YDRO11</strong> — ETF recursos hídricos e saneamento</li>
+              <li><strong>ESG Água</strong> — fundo temático água doce global</li>
+              <li><strong>ESG Energia Limpa</strong> — fundo temático transição energética</li>
+              <li><strong>Active Fix ESG Horizonte</strong> — previdência ESG longo prazo</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SCENE 10 · ENCERRAMENTO ────────────────────────────────────────── -->
+    <section class="scene" aria-labelledby="scene10-title" style="background:linear-gradient(150deg,var(--itau-warm-black) 0%,#2a1d0e 60%,#3d2510 100%)">
+      <div class="scene__inner" style="text-align:center">
+        <div class="content__meta" data-reveal style="justify-content:center">
+          <div class="content__meta-line" style="background:rgba(255,255,255,0.3)"></div>
+          <span class="content__meta-text" style="color:rgba(255,255,255,0.5)">Encerramento</span>
+          <div class="content__meta-line" style="background:rgba(255,255,255,0.3)"></div>
+        </div>
+        <h2 id="scene10-title" data-reveal data-delay="1" style="color:#ede5dd;font-size:clamp(2.5rem,2rem+2.5vw,4rem);letter-spacing:-0.03em;margin-bottom:var(--space-3)">Obrigado</h2>
+        <p class="lead" data-reveal data-delay="2" style="color:rgba(237,229,221,0.6);margin:0 auto var(--space-8);text-align:center">Entre em contato com nossa equipe para aprofundar qualquer tema desta apresentação ou obter acesso ao material completo de cada estratégia.</p>
+
+        <div class="contact-cards" data-reveal data-delay="3">
+          <div class="contact-card">
+            <div class="contact-card__icon">🌐</div>
+            <div class="contact-card__label">Site oficial</div>
+            <div class="contact-card__value">
+              <a href="https://www.itauasset.com.br" target="_blank" rel="noopener" style="color:#fff;text-decoration:underline;text-underline-offset:3px">itauasset.com.br</a>
+            </div>
+          </div>
+          <div class="contact-card">
+            <div class="contact-card__icon">📞</div>
+            <div class="contact-card__label">Atendimento Institucional</div>
+            <div class="contact-card__value">(11) 3631-2555</div>
+          </div>
+          <div class="contact-card">
+            <div class="contact-card__icon">💬</div>
+            <div class="contact-card__label">SAC — Canal do Cliente</div>
+            <div class="contact-card__value">0800 728 0728</div>
+          </div>
+          <div class="contact-card">
+            <div class="contact-card__icon">📍</div>
+            <div class="contact-card__label">Sede</div>
+            <div class="contact-card__value">São Paulo, SP · Brasil</div>
+          </div>
+        </div>
+
+        <p data-reveal data-delay="4" style="margin-top:var(--space-10);font-size:var(--size-xs);color:rgba(237,229,221,0.3);font-family:var(--font-mono);letter-spacing:0.06em;max-width:none;text-align:center">
+          ITAÚ ASSET MANAGEMENT · CNPJ 02.469.065/0001-10 · Material de uso exclusivamente informativo. Não constitui oferta ou recomendação de investimento. Rentabilidade passada não é garantia de rentabilidade futura. Leia o prospecto e o regulamento antes de investir.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    /* ─── Theme toggle ─────────────────────────────────────────────────── */
+    var html = document.documentElement;
+    var btn  = document.getElementById('theme-toggle');
+    var icon = document.getElementById('theme-icon');
+
+    function applyTheme(t) {
+      html.setAttribute('data-theme', t);
+      localStorage.setItem('theme', t);
+      icon.textContent = t === 'dark' ? '☀️' : '🌙';
+    }
+
+    // Init icon from current theme
+    applyTheme(html.getAttribute('data-theme') || 'light');
+
+    btn.addEventListener('click', function() {
+      applyTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    });
+
+    /* ─── Progress bar ─────────────────────────────────────────────────── */
+    var bar = document.getElementById('progress-bar');
+
+    function updateProgress() {
+      var scrollTop  = window.scrollY || document.documentElement.scrollTop;
+      var docHeight  = document.documentElement.scrollHeight - window.innerHeight;
+      var pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      bar.style.width = pct + '%';
+    }
+
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+
+    /* ─── Reveal on scroll ─────────────────────────────────────────────── */
+    var revealEls = document.querySelectorAll('[data-reveal]');
+
+    if ('IntersectionObserver' in window) {
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+      revealEls.forEach(function(el) { observer.observe(el); });
+    } else {
+      // Fallback: show everything immediately
+      revealEls.forEach(function(el) { el.classList.add('is-visible'); });
+    }
+
+    /* ─── Stat bar animation ───────────────────────────────────────────── */
+    var fills = document.querySelectorAll('.stat-row__fill');
+
+    var barObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          var w = entry.target.getAttribute('data-width') || '0';
+          entry.target.style.width = w + '%';
+          barObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    fills.forEach(function(el) { barObserver.observe(el); });
+
+    /* ─── ESG bar animation ────────────────────────────────────────────── */
+    var esgBars = document.querySelectorAll('.esg-bar');
+
+    var esgObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          var w = entry.target.getAttribute('data-width') || '0';
+          entry.target.style.width = w + '%';
+          esgObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    esgBars.forEach(function(el) { esgObserver.observe(el); });
+
+    /* ─── Scroll hint fade ─────────────────────────────────────────────── */
+    var hint = document.querySelector('.scroll-hint');
+    if (hint) {
+      window.addEventListener('scroll', function() {
+        hint.style.opacity = window.scrollY > 80 ? '0' : '1';
+        hint.style.pointerEvents = window.scrollY > 80 ? 'none' : 'auto';
+      }, { passive: true });
+    }
+  </script>
+</body>
+</html>
