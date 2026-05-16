@@ -628,26 +628,227 @@ body { background: var(--color-bg); }
 
 ---
 
+## Features do engine v3 (reveal.js + slidev inspired)
+
+### 1. Wake Lock
+Impede tela de dormir durante apresentações. Automático — sem input do autor.
+```js
+// Já ativo no engine — não precisa fazer nada
+// Re-adquire ao retornar ao foco (visibilitychange)
+```
+
+### 4. Overview Mode — tecla `O`
+Grade miniaturizada de todos os slides. Clicar navega e fecha.
+```
+O           → abrir/fechar overview
+ESC         → fechar overview (ou sair de fullscreen)
+Click slide → navegar + fechar
+```
+CSS: `body.is-overview .slide { font-size: 0.35em; }` — miniaturiza tudo proporcionalmente.
+
+### 5. Auto-Animate — FLIP entre slides
+Marcar slides adjacentes com `data-auto-animate`. Elementos com mesmo `data-id` animam suavemente entre posições via WAAPI FLIP.
+```html
+<!-- Slide A -->
+<section class="slide" data-auto-animate>
+  <h2 data-id="titulo" class="title-md">Resultado Q1</h2>
+  <p data-id="valor" class="big-num__val">R$ 1,1 tri</p>
+</section>
+
+<!-- Slide B — o título encolhe, o valor cresce -->
+<section class="slide" data-auto-animate>
+  <h2 data-id="titulo" class="kicker">Resultado Q2</h2>
+  <p data-id="valor" class="title-mega">R$ 1,19 tri</p>
+</section>
+```
+Sem `data-auto-animate` nos slides → transição normal. Respeita `prefers-reduced-motion`.
+
+### 6. Tipos de fragmento expandidos
+
+| `data-fragment="..."` | Comportamento |
+|---|---|
+| *(sem valor)* | fade-in (padrão) |
+| `current-visible` | aparece, fica em 30% opacity no próximo step |
+| `highlight-current` | texto fica accent no step ativo, muted depois |
+| `grow` | escala de 0.7→1 ao aparecer |
+| `shrink` | escala de 1.3→1 ao aparecer |
+| `fade-in-then-out` | aparece e some no próximo step |
+| `strike` | text-decoration: line-through ao aparecer |
+
+```html
+<!-- Spotlight: um item por vez em destaque -->
+<ul>
+  <li data-fragment="current-visible">Ponto A</li>
+  <li data-fragment="current-visible">Ponto B</li>
+  <li data-fragment="current-visible">Ponto C</li>
+</ul>
+
+<!-- Destaque sequencial em linha de tabela -->
+<tr data-fragment="highlight-current">
+  <td>Asgard</td><td>RV Unconstrained</td><td>R$ 18,5 bi</td>
+</tr>
+```
+
+### 7. Rough Notation — marcações manuais
+CDN: `rough-notation@0.6.1` (já no template). Ativa ao entrar no slide ou via `data-mark-at`.
+
+```html
+<!-- Anota imediatamente ao entrar no slide -->
+<p>AuM cresceu <strong data-mark="circle">R$ 1,19 tri</strong> em 2023</p>
+
+<!-- Anota no fragmento de índice 2 -->
+<p data-mark="highlight" data-mark-at="2" data-mark-color="#FF6200">
+  Meta superada em todos os trimestres
+</p>
+```
+
+Tipos: `underline` · `box` · `circle` · `highlight` · `strike-through` · `crossed-off` · `bracket`
+
+### 9. AutoFitText
+Escala o font-size para preencher o container. Ideal para títulos de comprimento variável.
+```html
+<h1 class="title-xl" data-fit-text>Título Que Pode Ser Qualquer Tamanho</h1>
+```
+Aplica ResizeObserver — re-calcula ao redimensionar viewport.
+
+### 10. Scroll View — `?view=scroll`
+Adicionar `?view=scroll` à URL converte o deck em página scrollável com `scroll-snap`.
+```
+arquivo.html?view=scroll
+```
+- Ativa automaticamente em viewports estreitas (`< 600px`)
+- Fragmentos e navegação continuam funcionando
+- Ideal para compartilhar link para leitura em mobile
+
+### 11. Posicionamento relativo de fragmentos
+`data-fragment-index` com valores relativos: `+1`, `+2` em vez de índice absoluto.
+```html
+<!-- Absoluto (frágil ao reordenar) -->
+<li data-fragment-index="1">Item A</li>
+<li data-fragment-index="2">Item B</li>
+
+<!-- Relativo (robusto) -->
+<li data-fragment-index="1">Item A</li>
+<li data-fragment-index="+1">Item B — sempre depois do anterior</li>
+<li data-fragment-index="+1">Item C — sempre depois do B</li>
+```
+
+### 12. Layouts semânticos
+
+| Classe | Uso | Estrutura |
+|---|---|---|
+| `layout-two-cols` | Comparativo, before/after | `.col-left` + `.col-right` |
+| `layout-image-left` | Visual + texto | imagem à esq, texto à dir |
+| `layout-image-right` | Texto + visual | texto à esq, imagem à dir |
+| `layout-fact` | KPI gigante | `.fact-val` + `.fact-label` |
+| `layout-quote` | Citação | `<blockquote>` + `<cite>` |
+| `layout-statement` | One-liner de impacto | `.statement-text` |
+
+```html
+<!-- Two cols com fragmentos -->
+<div class="layout-two-cols">
+  <div class="col-left" data-fragment>
+    <h3>Antes</h3><p>Conteúdo A</p>
+  </div>
+  <div class="col-right" data-fragment>
+    <h3>Depois</h3><p>Conteúdo B</p>
+  </div>
+</div>
+
+<!-- Fact — KPI gigante -->
+<div class="layout-fact">
+  <p class="fact-val" data-fit-text>14,5%</p>
+  <p class="fact-label">market share da gestora</p>
+</div>
+
+<!-- Quote -->
+<div class="layout-quote">
+  <blockquote>"Democrática no acesso, sofisticada no modelo."</blockquote>
+  <cite>— Carlos Augusto Salamonde, CIO</cite>
+</div>
+```
+
+### 13. Code Stepping — `data-line-numbers`
+Destaca grupos de linhas progressivamente. Cada `|` = um step (fragmento).
+```html
+<pre><code data-line-numbers="1-3|5-7|10">
+aum      = 1_193_000_000_000  # linha 1
+clientes = 2_600_000           # linha 2
+share    = 14.5                # linha 3
+
+def calc_share(aum, total):    # linha 5
+    return aum / total * 100   # linha 6
+    # retorna float             # linha 7
+
+print(f"{share}%")             # linha 10
+</code></pre>
+```
+`data-ln-start-from="10"` → numeração começa em 10 (útil para excerpts).
+
+### 14. Background layers por slide
+Cada `<section>` pode ter background próprio, animado independentemente do conteúdo.
+```html
+<!-- Slide de seção — fundo laranja sólido -->
+<section class="slide" data-background-color="var(--itau-orange)">
+  <p class="kicker" style="color:#fff">PARTE 02</p>
+  <h2 class="title-xl" style="color:#fff">Modelo <em style="color:#fff">Multimesas</em></h2>
+</section>
+
+<!-- Slide com gradiente escuro atmosférico -->
+<section class="slide" data-background-gradient="linear-gradient(135deg,#0d0a07,#1c1814)">
+  <!-- conteúdo -->
+</section>
+
+<!-- Slide com imagem de fundo -->
+<section class="slide" data-background-image="data:image/..." data-background-opacity="0.3">
+  <!-- conteúdo sobre imagem esmaecida -->
+</section>
+```
+
+---
+
+## Atalhos de teclado (engine v3)
+
+| Tecla | Ação |
+|---|---|
+| `→` / `Space` / `PageDown` | Próximo slide / fragmento |
+| `←` / `PageUp` | Slide anterior |
+| `Home` / `End` | Primeiro / último slide |
+| `O` | Overview (grade de slides) |
+| `F` | Fullscreen |
+| `Escape` | Fechar overview / sair de fullscreen |
+| `?` | Mostrar lista de atalhos |
+
+---
+
 ## Regras do deck
 
 1. **Tipografia gigante** — `clamp()` obrigatório (nunca px fixo). `.slide__display` = `clamp(48px, 10vw, 110px)`.
 2. **Variar spatial approach** — a cada 3 slides centered, forçar um off-axis (split/left-heavy/full-bleed).
 3. **Expansão vs compactação** — se fonte tem 10 slides com 4 elementos cada, gerar 14-18 slides slideless (não 1:1).
-4. **Fragmentos** — elementos `[data-fragment]` revelam por click (Space/→ em fragmentos antes de avançar slide).
+4. **Fragmentos** — usar `data-fragment` para revelar itens sequencialmente. Preferir `current-visible` para listas onde o contexto de cada item importa.
 5. **Nenhum slide em branco** — cada slide carrega informação real da fonte. 0 slides de "logo" ou "encerramento" sem conteúdo.
 6. **Gráfico quando há dado** — se o slide cita número que evoluiu no tempo, adicionar Chart.js. Se compara categorias, adicionar bar/donut.
 7. **Tabela quando há lista comparativa** — mesas, fundos, diretoria, produtos → `<table>` com `.data-table`, nunca lista de bullets.
+8. **Auto-Animate em slides de evolução** — usar `data-auto-animate` + `data-id` quando o mesmo elemento muda de tamanho/posição entre slides consecutivos.
+9. **Rough Notation em KPIs** — `data-mark="circle"` em números-âncora e `data-mark="underline"` em termos-chave de slides de quote/statement.
+10. **Background por slide de seção** — slides divisores usam `data-background-color="var(--itau-orange)"` (tema itaú) em vez de só mudar tipografia.
 
 ---
 
 ## Checklist deck
 
 - [ ] Slide engine funciona (navegação teclado, dots, counter, fullscreen)?
+- [ ] Wake Lock ativo (tela não dorme)?
+- [ ] Overview mode funciona (tecla O)?
 - [ ] Progress bar atualiza?
 - [ ] Tipografia usa `clamp()`?
-- [ ] Variedade de layouts (pelo menos 5 tipos diferentes)?
-- [ ] Fragments onde há itens sequenciais?
+- [ ] Variedade de layouts (pelo menos 5 tipos, incluindo semânticos)?
+- [ ] Fragments onde há itens sequenciais — com tipos corretos (current-visible em listas)?
+- [ ] Auto-Animate em slides de evolução numérica?
+- [ ] Rough Notation em KPIs e citações-chave?
 - [ ] Dark mode sem flash?
+- [ ] Scroll view funciona em mobile (`?view=scroll`)?
 - [ ] Conteúdo 100% da fonte (nada omitido)?
 - [ ] Gráficos onde há dados temporais/comparativos?
 - [ ] Tabelas onde há listas de itens com atributos?
