@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<!--
+  Template: slideless handbook (vazio)
+  Como usar:
+    1. Substituir o marker /* SLIDELESS:THEME */ pelo conteúdo de assets/temas/{itau,neutro}.css
+    2. Popular sidebar com links para cada <h2> do conteúdo
+    3. Popular conteúdo nas <section> existentes (manter id e data-reveal)
+    4. TOC é gerada dinamicamente a partir dos <h2> (já tem JS abaixo)
+-->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TÍTULO — Handbook</title>
+
+  <script>
+    (function() {
+      try {
+        var t = localStorage.getItem('theme') ||
+                (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* SLIDELESS:THEME — substituir por conteúdo de assets/temas/itau.css ou neutro.css */
+
+    /* ─── Específico do handbook ───────────────────────────────────── */
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      height: var(--header-h);
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--color-border);
+      display: flex; align-items: center;
+      padding: 0 var(--space-5);
+      gap: var(--space-5);
+    }
+    [data-theme="dark"] .topbar { background: rgba(20,17,13,0.85); }
+    .topbar__brand { display: flex; align-items: center; gap: var(--space-3); font-weight: 600; font-size: 0.9375rem; text-decoration: none; color: var(--color-fg); }
+    .topbar__logo { width: 28px; height: 28px; border-radius: 6px; flex-shrink: 0; background: var(--color-accent); }
+    .topbar__divider { width: 1px; height: 20px; background: var(--color-border); }
+    .topbar__breadcrumb { display: flex; align-items: center; gap: var(--space-2); font-size: var(--size-small); color: var(--color-fg-muted); }
+    .topbar__breadcrumb a { color: inherit; text-decoration: none; }
+    .topbar__breadcrumb strong { color: var(--color-fg); font-weight: 500; }
+    .topbar__sep { color: var(--color-fg-subtle); }
+    .topbar__spacer { flex: 1; }
+
+    .layout { display: grid; grid-template-columns: var(--sidebar-w) 1fr var(--toc-w); max-width: 1400px; margin: 0 auto; }
+
+    .sidebar { position: sticky; top: var(--header-h); height: calc(100vh - var(--header-h)); overflow-y: auto; padding: var(--space-6) var(--space-3) var(--space-8) var(--space-5); border-right: 1px solid var(--color-border); }
+    .sidebar__group { margin-bottom: var(--space-5); }
+    .sidebar__heading { font-size: var(--size-xs); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--color-fg-subtle); padding: 0 var(--space-3); margin: 0 0 var(--space-2); }
+    .sidebar__list { list-style: none; padding: 0; margin: 0; }
+    .sidebar__list a { display: block; padding: var(--space-2) var(--space-3); font-size: var(--size-small); color: var(--color-fg-muted); text-decoration: none; border-radius: var(--radius-sm); border-left: 2px solid transparent; margin-left: -2px; transition: all var(--duration-fast); }
+    .sidebar__list a:hover { color: var(--color-fg); background: var(--color-bg-elevated); }
+    .sidebar__list a.is-active { color: var(--color-accent); font-weight: 500; border-left-color: var(--color-accent); background: var(--color-bg-elevated); }
+
+    .content { padding: var(--space-8) var(--space-8) var(--space-12); max-width: 100%; min-width: 0; }
+    .content__inner { max-width: var(--content-max); }
+    .content__meta { display: flex; gap: var(--space-3); align-items: center; font-size: var(--size-xs); color: var(--color-fg-subtle); margin-bottom: var(--space-5); letter-spacing: 0.02em; }
+
+    h2::before, h3::before {
+      content: '#';
+      position: absolute;
+      left: -1.4em;
+      color: var(--color-accent);
+      opacity: 0;
+      transition: opacity var(--duration-fast);
+      font-weight: 400;
+    }
+    h2:hover::before, h3:hover::before { opacity: 0.6; }
+
+    .toc { position: sticky; top: calc(var(--header-h) + var(--space-5)); align-self: start; padding: var(--space-6) var(--space-4); font-size: var(--size-small); }
+    .toc__heading { font-size: var(--size-xs); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--color-fg-subtle); margin: 0 0 var(--space-2); }
+    .toc__list { list-style: none; padding: 0; margin: 0; }
+    .toc__list a { display: block; padding: var(--space-1) var(--space-2); color: var(--color-fg-muted); text-decoration: none; border-left: 2px solid transparent; margin-left: -2px; transition: all var(--duration-fast); }
+    .toc__list a:hover { color: var(--color-fg); }
+    .toc__list a.is-active { color: var(--color-accent); border-left-color: var(--color-accent); }
+    @media (max-width: 1024px) { .toc { display: none; } .layout { grid-template-columns: var(--sidebar-w) 1fr; } }
+
+    @media print {
+      .topbar, .sidebar, .toc, .theme-toggle { display: none; }
+      .layout { display: block; }
+      .content { padding: 0; max-width: 100%; }
+      h2 { page-break-after: avoid; }
+      .callout, .code, .toggle { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a href="#" class="topbar__brand">
+      <span class="topbar__logo" aria-hidden="true"></span>
+      <span>BRAND · Handbook</span>
+    </a>
+    <span class="topbar__divider"></span>
+    <nav class="topbar__breadcrumb" aria-label="Localização">
+      <a href="#">Categoria</a>
+      <span class="topbar__sep">/</span>
+      <strong>TÍTULO</strong>
+    </nav>
+    <span class="topbar__spacer"></span>
+    <button class="theme-toggle" type="button" aria-label="Alternar tema"><span aria-hidden="true">◐</span></button>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="Navegação principal">
+      <nav class="sidebar__group">
+        <p class="sidebar__heading">Categoria</p>
+        <ul class="sidebar__list">
+          <li><a href="#secao-1" class="is-active">Seção 1</a></li>
+          <li><a href="#secao-2">Seção 2</a></li>
+          <li><a href="#secao-3">Seção 3</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <div class="content__inner">
+        <p class="content__meta">CATEGORIA · Última atualização AAAA-MM-DD</p>
+        <h1>TÍTULO DO HANDBOOK</h1>
+        <p class="lead">Subtítulo descrevendo o propósito deste documento em uma a duas frases.</p>
+
+        <section id="secao-1" data-reveal>
+          <h2>Seção 1</h2>
+          <p>Conteúdo da seção.</p>
+        </section>
+
+        <section id="secao-2" data-reveal>
+          <h2>Seção 2</h2>
+          <p>Conteúdo da seção.</p>
+        </section>
+
+        <section id="secao-3" data-reveal>
+          <h2>Seção 3</h2>
+          <p>Conteúdo da seção.</p>
+        </section>
+      </div>
+    </main>
+
+    <aside class="toc" aria-label="Nesta página">
+      <p class="toc__heading">Nesta página</p>
+      <ul class="toc__list" id="toc-list"></ul>
+    </aside>
+  </div>
+
+  <script>
+    // Theme toggle
+    document.querySelector('.theme-toggle')?.addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme');
+      const next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch {}
+    });
+
+    // TOC gerada dos <h2> do conteúdo
+    const tocList = document.getElementById('toc-list');
+    document.querySelectorAll('.content h2[id]').forEach(h => {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = '#' + h.id;
+      a.textContent = h.textContent;
+      li.appendChild(a);
+      tocList.appendChild(li);
+    });
+
+    // Scrollspy compartilhada sidebar + TOC
+    const links = document.querySelectorAll('.sidebar__list a, .toc__list a');
+    const targets = [...new Set([...links].map(a => a.getAttribute('href')))].map(h => document.querySelector(h)).filter(Boolean);
+    const spy = new IntersectionObserver(es => {
+      es.forEach(e => {
+        if (!e.isIntersecting) return;
+        const id = '#' + e.target.id;
+        links.forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === id));
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    targets.forEach(t => spy.observe(t));
+
+    // Reveal on scroll
+    const rio = new IntersectionObserver(es => {
+      es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); rio.unobserve(e.target); } });
+    }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+    document.querySelectorAll('[data-reveal]').forEach(el => rio.observe(el));
+  </script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<!--
+  Template: slideless hub (vazio)
+  Como usar:
+    1. Substituir o marker /* SLIDELESS:THEME */
+    2. Popular cards (.grid > .card) com data-category e data-target
+    3. Popular painéis (.panel) com mesmo id apontado por data-target
+-->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TÍTULO — Hub</title>
+
+  <script>
+    (function() {
+      try {
+        var t = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* SLIDELESS:THEME */
+
+    .topbar { position: sticky; top: 0; z-index: 100; height: var(--header-h); background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--color-border); display: flex; align-items: center; padding: 0 var(--space-5); gap: var(--space-5); }
+    [data-theme="dark"] .topbar { background: rgba(20,17,13,0.85); }
+    .topbar__brand { display: flex; align-items: center; gap: var(--space-3); font-weight: 600; font-size: 0.9375rem; text-decoration: none; color: var(--color-fg); }
+    .topbar__spacer { flex: 1; }
+
+    .page { max-width: 1200px; margin: 0 auto; padding: var(--space-10) var(--space-6) var(--space-12); }
+    .hero { margin-bottom: var(--space-8); }
+
+    .filters { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: var(--space-6) 0 var(--space-7); }
+    .filter { padding: var(--space-2) var(--space-4); background: transparent; border: 1px solid var(--color-border); border-radius: 999px; font: inherit; font-size: var(--size-small); color: var(--color-fg-muted); cursor: pointer; transition: all var(--duration-fast); }
+    .filter:hover { color: var(--color-fg); border-color: var(--color-border-strong); }
+    .filter.is-active { background: var(--color-accent); color: var(--color-accent-fg); border-color: var(--color-accent); }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--space-5); }
+
+    .panel { display: none; margin-top: var(--space-8); padding: var(--space-7); background: var(--color-bg-elevated); border: 1px solid var(--color-border); border-radius: var(--radius-lg); }
+    .panel.is-open { display: block; }
+    .panel__close { float: right; padding: var(--space-2) var(--space-3); background: transparent; border: 1px solid var(--color-border); border-radius: var(--radius-sm); cursor: pointer; font: inherit; color: var(--color-fg-muted); }
+
+    @media print {
+      .filters, .theme-toggle, .panel__close, .card__cta { display: none; }
+      .panel { display: block !important; page-break-before: always; }
+      .grid { display: block; }
+      .card { break-inside: avoid; margin-bottom: var(--space-5); }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a href="#" class="topbar__brand">BRAND · Hub</a>
+    <span class="topbar__spacer"></span>
+    <button class="theme-toggle" type="button" aria-label="Alternar tema"><span aria-hidden="true">◐</span></button>
+  </header>
+
+  <main class="page">
+    <section class="hero">
+      <h1>TÍTULO DO HUB</h1>
+      <p class="lead">Subtítulo descrevendo o portal de recursos.</p>
+    </section>
+
+    <nav class="filters" role="tablist" aria-label="Filtros">
+      <button class="filter is-active" type="button" data-filter="all">Todos</button>
+      <button class="filter" type="button" data-filter="categoria-a">Categoria A</button>
+      <button class="filter" type="button" data-filter="categoria-b">Categoria B</button>
+    </nav>
+
+    <div class="grid">
+      <a class="card" href="#panel-1" data-category="categoria-a" data-target="panel-1">
+        <div class="card__icon" aria-hidden="true">▣</div>
+        <h3 class="card__title">Card 1</h3>
+        <p class="card__desc">Descrição curta.</p>
+        <span class="card__cta">Abrir →</span>
+      </a>
+      <a class="card" href="#panel-2" data-category="categoria-b" data-target="panel-2">
+        <div class="card__icon" aria-hidden="true">◆</div>
+        <h3 class="card__title">Card 2</h3>
+        <p class="card__desc">Descrição curta.</p>
+        <span class="card__cta">Abrir →</span>
+      </a>
+    </div>
+
+    <section class="panel" id="panel-1">
+      <button class="panel__close" type="button">✕ Fechar</button>
+      <h2>Card 1</h2>
+      <p class="lead">Detalhes do recurso.</p>
+      <p>Conteúdo.</p>
+    </section>
+
+    <section class="panel" id="panel-2">
+      <button class="panel__close" type="button">✕ Fechar</button>
+      <h2>Card 2</h2>
+      <p>Conteúdo.</p>
+    </section>
+  </main>
+
+  <script>
+    document.querySelector('.theme-toggle')?.addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme');
+      const next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch {}
+    });
+
+    document.querySelectorAll('.filter').forEach(f => f.addEventListener('click', e => {
+      const cat = e.currentTarget.dataset.filter;
+      document.querySelectorAll('.filter').forEach(x => x.classList.toggle('is-active', x === e.currentTarget));
+      document.querySelectorAll('.card').forEach(c => {
+        c.style.display = (cat === 'all' || c.dataset.category === cat) ? '' : 'none';
+      });
+    }));
+
+    document.querySelectorAll('.card[data-target]').forEach(card => card.addEventListener('click', e => {
+      e.preventDefault();
+      const tgt = document.getElementById(card.dataset.target);
+      if (!tgt) return;
+      document.querySelectorAll('.panel').forEach(p => p.classList.toggle('is-open', p === tgt));
+      tgt.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }));
+    document.querySelectorAll('.panel__close').forEach(b => b.addEventListener('click', e => {
+      e.currentTarget.closest('.panel').classList.remove('is-open');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }));
+  </script>
+</body>
+</html>

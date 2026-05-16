@@ -1,0 +1,24 @@
+{
+  "name": "slideless",
+  "version": "0.2.0",
+  "description": "Documentos web interativos single-file (handbook, hub, scrollytelling, site, deck) com design system Itaú e validador determinístico — substitui PPT para comunicação interna.",
+  "author": {
+    "name": "Itaú — Comunicação Interna"
+  },
+  "keywords": [
+    "html",
+    "handbook",
+    "deck",
+    "pitch",
+    "documentation",
+    "single-file",
+    "dark-mode",
+    "itau",
+    "internal-comms"
+  ],
+  "entry": "SKILL.md",
+  "commands": "commands/",
+  "references": "references/",
+  "assets": "assets/",
+  "scripts": "scripts/"
+}
