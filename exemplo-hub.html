@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Central de Recursos — Plataforma de Dados</title>
+
+  <script>
+    (function() {
+      try {
+        var t = localStorage.getItem('theme') ||
+                (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --itau-orange: #FF6200;
+      --itau-orange-2: #F88104;
+      --itau-orange-3: #FA9F09;
+      --itau-blue-3: #3B85FA;
+      --itau-yellow: #FBC305;
+
+      --color-bg: #ffffff;
+      --color-bg-elevated: #faf8f5;
+      --color-bg-sunken: #f4f1ec;
+      --color-fg: #1a1a1a;
+      --color-fg-muted: #525252;
+      --color-fg-subtle: #8a8a8a;
+      --color-border: #e8e4dd;
+      --color-border-strong: #d4cec3;
+      --color-accent: var(--itau-orange);
+      --color-accent-hover: var(--itau-orange-2);
+      --color-accent-fg: #ffffff;
+
+      --font-text: 'Itau Text', 'Inter', -apple-system, system-ui, sans-serif;
+      --font-display: 'Itau Display', 'Inter', -apple-system, system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+
+      --size-h1: 2.75rem; --size-h2: 1.625rem; --size-h3: 1.25rem;
+      --size-lead: 1.1875rem; --size-body: 1rem; --size-small: 0.9375rem; --size-xs: 0.8125rem;
+      --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem;
+      --space-4: 1rem; --space-5: 1.5rem; --space-6: 2rem;
+      --space-7: 2.5rem; --space-8: 3rem; --space-10: 4rem; --space-12: 5rem;
+      --radius-sm: 4px; --radius: 8px; --radius-lg: 12px; --radius-xl: 16px;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+      --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
+      --shadow-lg: 0 4px 6px rgba(0,0,0,0.05), 0 10px 24px rgba(0,0,0,0.08);
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --duration-fast: 150ms; --duration: 250ms;
+    }
+
+    [data-theme="dark"] {
+      --color-bg: #14110d;
+      --color-bg-elevated: #1c1814;
+      --color-bg-sunken: #221d18;
+      --color-fg: #e8eaed;
+      --color-fg-muted: #a8a39a;
+      --color-fg-subtle: #6e6a62;
+      --color-border: #2f2a23;
+      --color-border-strong: #403a32;
+      --color-accent: var(--itau-orange-3);
+      --color-accent-hover: var(--itau-orange-2);
+      --color-accent-fg: #14110d;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
+      --shadow: 0 1px 3px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.3);
+      --shadow-lg: 0 4px 6px rgba(0,0,0,0.4), 0 10px 24px rgba(0,0,0,0.5);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--font-text);
+      font-size: var(--size-body);
+      line-height: 1.65;
+      color: var(--color-fg);
+      background: var(--color-bg);
+      -webkit-font-smoothing: antialiased;
+      transition: background var(--duration-fast), color var(--duration-fast);
+    }
+
+    .page { max-width: 1200px; margin: 0 auto; padding: var(--space-6) var(--space-6) var(--space-12); }
+
+    /* ─── Header ──────────────────────────────────── */
+    .hero {
+      padding: var(--space-8) 0 var(--space-7);
+      border-bottom: 1px solid var(--color-border);
+      margin-bottom: var(--space-8);
+    }
+    .hero__top {
+      display: flex; align-items: center; gap: var(--space-3);
+      margin-bottom: var(--space-6);
+    }
+    .hero__logo { width: 32px; height: 32px; border-radius: 6px; }
+    .hero__brand { font-weight: 600; font-size: 0.9375rem; }
+    .hero__spacer { flex: 1; }
+    .theme-toggle {
+      width: 36px; height: 36px; display: grid; place-items: center;
+      background: transparent; border: 1px solid var(--color-border);
+      border-radius: var(--radius); cursor: pointer; color: var(--color-fg);
+      font-size: 15px; transition: all var(--duration-fast);
+    }
+    .theme-toggle:hover { background: var(--color-bg-elevated); border-color: var(--color-border-strong); }
+
+    .hero__title {
+      font-family: var(--font-display); font-weight: 700;
+      font-size: var(--size-h1); line-height: 1.1; letter-spacing: -0.02em;
+      margin: 0 0 var(--space-3); max-width: 18ch;
+    }
+    .hero__lead {
+      font-size: var(--size-lead); line-height: 1.5;
+      color: var(--color-fg-muted); margin: 0; max-width: 55ch;
+    }
+    .hero__meta {
+      display: flex; gap: var(--space-5); margin-top: var(--space-6);
+      font-size: var(--size-small); color: var(--color-fg-muted);
+    }
+    .hero__meta strong { color: var(--color-fg); font-weight: 600; }
+
+    /* ─── Filtros ─────────────────────────────────── */
+    .filters {
+      display: flex; gap: var(--space-2); flex-wrap: wrap;
+      margin-bottom: var(--space-6);
+    }
+    .filters__btn {
+      padding: var(--space-2) var(--space-4);
+      font: inherit; font-size: var(--size-small);
+      background: transparent; color: var(--color-fg-muted);
+      border: 1px solid var(--color-border);
+      border-radius: 999px; cursor: pointer;
+      transition: all var(--duration-fast);
+    }
+    .filters__btn:hover { color: var(--color-fg); border-color: var(--color-border-strong); }
+    .filters__btn.is-active {
+      background: var(--color-fg); color: var(--color-bg);
+      border-color: var(--color-fg); font-weight: 500;
+    }
+    .filters__count { color: var(--color-fg-subtle); margin-left: var(--space-1); font-size: var(--size-xs); }
+
+    /* ─── Grid de cards ───────────────────────────── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--space-4);
+      margin-bottom: var(--space-12);
+    }
+    .card {
+      display: flex; flex-direction: column;
+      padding: var(--space-5);
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      text-decoration: none; color: inherit;
+      transition: all var(--duration) var(--ease);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .card:hover {
+      border-color: var(--color-border-strong);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+    .card.is-hidden { display: none; }
+    .card__cat {
+      font-size: var(--size-xs);
+      color: var(--color-fg-subtle);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-bottom: var(--space-3);
+    }
+    .card__title {
+      font-family: var(--font-display);
+      font-size: 1.0625rem; font-weight: 600;
+      margin: 0 0 var(--space-2); color: var(--color-fg);
+      line-height: 1.3;
+    }
+    .card__desc {
+      font-size: var(--size-small);
+      color: var(--color-fg-muted);
+      margin: 0 0 var(--space-4); flex: 1;
+      line-height: 1.55;
+    }
+    .card__foot {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: auto;
+      padding-top: var(--space-3);
+      border-top: 1px solid var(--color-border);
+    }
+    .card__tag {
+      font-size: var(--size-xs);
+      color: var(--color-fg-subtle);
+      font-family: var(--font-mono);
+    }
+    .card__arrow {
+      color: var(--color-accent); font-weight: 600;
+      transition: transform var(--duration) var(--ease);
+    }
+    .card:hover .card__arrow { transform: translateX(4px); }
+
+    /* ─── Painéis ─────────────────────────────────── */
+    .panels { display: grid; gap: var(--space-8); }
+    .panel {
+      padding: var(--space-8);
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      scroll-margin-top: var(--space-6);
+    }
+    .panel__head {
+      display: flex; align-items: center; gap: var(--space-3);
+      margin-bottom: var(--space-5);
+      padding-bottom: var(--space-4);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .panel__cat {
+      font-size: var(--size-xs);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-accent); font-weight: 600;
+    }
+    .panel__title {
+      font-family: var(--font-display);
+      font-size: var(--size-h2); font-weight: 700;
+      margin: var(--space-1) 0 0; line-height: 1.2;
+      letter-spacing: -0.015em;
+    }
+    .panel__back {
+      margin-left: auto;
+      padding: 6px 12px;
+      font: inherit; font-size: var(--size-xs);
+      background: transparent;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm); cursor: pointer;
+      color: var(--color-fg-muted);
+      transition: all var(--duration-fast);
+    }
+    .panel__back:hover { color: var(--color-fg); border-color: var(--color-border-strong); }
+    .panel p { color: var(--color-fg); margin: 0 0 var(--space-3); max-width: 65ch; }
+    .panel ul { padding-left: var(--space-5); margin: 0 0 var(--space-4); }
+    .panel li { margin-bottom: var(--space-2); max-width: 65ch; }
+
+    .panel__metrics {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: var(--space-3); margin: var(--space-4) 0;
+    }
+    .metric {
+      padding: var(--space-4);
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+    }
+    .metric__label {
+      font-size: var(--size-xs); color: var(--color-fg-subtle);
+      letter-spacing: 0.04em; text-transform: uppercase;
+      margin: 0 0 var(--space-1);
+    }
+    .metric__value {
+      font-family: var(--font-display);
+      font-size: 1.625rem; font-weight: 700;
+      margin: 0; letter-spacing: -0.02em;
+    }
+
+    .panel__links { display: flex; flex-direction: column; gap: var(--space-2); }
+    .panel__link {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: var(--space-3) var(--space-4);
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      color: var(--color-fg); text-decoration: none;
+      font-size: var(--size-small);
+      transition: all var(--duration-fast);
+    }
+    .panel__link:hover {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+    }
+    .panel__link__arrow { color: var(--color-fg-subtle); }
+    .panel__link:hover .panel__link__arrow { color: var(--color-accent); }
+
+    code:not(pre code) {
+      font-family: var(--font-mono); font-size: 0.875em;
+      background: var(--color-bg-sunken); padding: 0.15em 0.4em;
+      border-radius: var(--radius-sm); border: 1px solid var(--color-border);
+    }
+
+    .empty-state {
+      padding: var(--space-12) var(--space-6);
+      text-align: center; color: var(--color-fg-muted);
+      font-size: var(--size-small);
+      background: var(--color-bg-elevated);
+      border: 1px dashed var(--color-border);
+      border-radius: var(--radius-lg);
+      display: none;
+    }
+    .empty-state.is-visible { display: block; }
+
+    @media (max-width: 768px) {
+      .page { padding: var(--space-4); }
+      .hero__title { font-size: 2rem; }
+      .grid { grid-template-columns: 1fr; }
+      .panel { padding: var(--space-5); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page">
+
+    <header class="hero">
+      <div class="hero__top">
+        <img src="../logos/itau.png" alt="" class="hero__logo">
+        <span class="hero__brand">Plataforma de Dados</span>
+        <div class="hero__spacer"></div>
+        <button class="theme-toggle" data-theme-toggle aria-label="Alternar tema">
+          <span data-theme-icon>☾</span>
+        </button>
+      </div>
+      <h1 class="hero__title">Central de Recursos</h1>
+      <p class="hero__lead">
+        Tudo que o time precisa pra produzir e consumir dados na plataforma —
+        do primeiro tópico ao incidente de madrugada.
+      </p>
+      <div class="hero__meta">
+        <span><strong>12</strong> recursos</span>
+        <span><strong>4</strong> categorias</span>
+        <span>Atualizado em <strong>15 de outubro de 2025</strong></span>
+      </div>
+    </header>
+
+    <nav class="filters" data-filters>
+      <button class="filters__btn is-active" data-filter="all">Tudo <span class="filters__count">12</span></button>
+      <button class="filters__btn" data-filter="onboarding">Onboarding <span class="filters__count">3</span></button>
+      <button class="filters__btn" data-filter="ferramentas">Ferramentas <span class="filters__count">4</span></button>
+      <button class="filters__btn" data-filter="praticas">Práticas</button>
+      <button class="filters__btn" data-filter="suporte">Suporte</button>
+    </nav>
+
+    <section class="grid" id="grid">
+
+      <a class="card" data-category="onboarding" data-panel="painel-primeiro-passo">
+        <div class="card__cat">Onboarding</div>
+        <h3 class="card__title">Seu primeiro tópico em 15 minutos</h3>
+        <p class="card__desc">Do <code>npm install</code> ao primeiro evento publicado em produção. Caminho recomendado para times novos.</p>
+        <div class="card__foot">
+          <span class="card__tag">/onboarding/quickstart</span>
+          <span class="card__arrow">→</span>
+        </div>
+      </a>
+
+      <a class="card" data-category="onboarding" data-panel="painel-setup">
+        <div class="card__cat">Onboarding</div>
+        <h3 class="card__title">Configuração do ambiente local</h3>
+        <p class="card__desc">SSO, proxy corporativo, certificados. O setup que todo dev precisa fazer uma única vez.</p>
+        <div class="card__foot">
+          <span class="card__tag">/onboarding/setup</span>
+          <span class="card__arrow">→</span>
+        </div>
+      </a>
+
+      <a class="card" data-category="onboarding" data-panel="painel-conceitos">
+        <div class="card__cat">Onboarding</div>
+        <h3 class="card__title">Conceitos fundamentais</h3>
+        <p class="card__desc">Tópico, schema, materialização, replay. O vocabulário compartilhado entre todos os times.</p>
+        <div class="card__foot">
+          <span class="card__tag">/onboarding/conceitos</span>
+          <span class="card__arrow">→</span>
+        </div>
+      </a>
+
+      <a class="card" data-category="ferramentas" data-panel="painel-sdk">
+        <div class="card__cat">Ferramentas</div>
+        <h3 class="card__title">SDK — TypeScript, Python, Java</h3>
+        <p class="card__desc">Três linguagens de primeira classe. Mesma interface, idioma do seu stack. Versão atual: 2.4.</p>
+        <div class="card__foot">
+          <span class="card__tag">@itau/dados-sdk</span>
+          <span class="card__arrow">→</span>
+        </div>
+      </a>
+
+      <a class="card" data-category="ferramentas" data-panel="painel-cli">
+        <div class="card__cat">Ferramentas</div>
+        <h3 class="card__title">CLI <code>dados</code></h3>
+        <p class="card__desc">Interface de linha de comando para criar tópicos, gerenciar schemas, fazer replay e inspecionar streams.</p>
+        <div class="card__foot">
+          <span class="card__tag">dados --help</span>
+          <span class="card__arrow">→</span>
+        </div>
+      </a>
+
+      <a class="card" data-category="ferramentas" data-panel="painel-portal">
+        <div class="card__cat">Ferramentas</div>
+        <h3 class="card__title">Portal web</h3>
+        <p class="card__desc">Interface gráfica para descoberta de tópicos, controle de acesso e visualização de métricas em tempo real.</p>
+        <div class="card__foot">
+          <span class="card__tag">dados.cloud.itau</span>
+          <span class="card__arrow">→</span>
+        </div>
+      </a>
+
+      <a class="card" data-category="ferramentas" data-panel="painel-conectores">
+        <div class="card__cat">Ferramentas</div>
+        <h3 class="card__title">Conectores</h3>
+        <p class="card__desc">Conectores oficiais para data warehouse, CDC de bancos legados, S3 e sistemas analíticos terceiros.</p>
+        <div class="card__foot">
+          <span class="card__tag">8 conectores</span>
+          <span class="card__arrow">→</span>
+        </div>
+      </a>
+
+      <a class="card" data-category="praticas" data-panel="painel-schemas">
+        <div class="card__cat">Práticas</div>
+        <h3 class="card__title">Design de schemas</h3>
+        <p class="card__desc">Como nomear campos, decidir entre opcional e obrigatório, e evoluir schemas sem quebrar consumidores.</p>
+        <div class="card__foot">
+          <span class="card__tag">/praticas/schemas</span>
+          <span class="card__arrow">→</span>
+        </div>
+      </a>
+
+      <a class="card" data-category="praticas" data-panel="painel-versionamento">
+        <div class="card__cat">Práticas</div>
+        <h3 class="card__title">Versionamento e compatibilidade</h3>
+        <p class="card__desc">Quando subir minor vs major. O que pode mudar em backward-compatible. Como conviver com várias versões.</p>
+        <div class="card__foot">
+          <span class="card__tag">/praticas/versoes</span>
+          <span class="card__arrow">→</span>
+        </div>
+      </a>
+
+      <a class="card" data-category="praticas" data-panel="painel-testes">
+        <div class="card__cat">Práticas</div>
+        <h3 class="card__title">Testes de contrato</h3>
+        <p class="card__desc">Garantir que produtores e consumidores continuem compatíveis ao longo do tempo. Em CI, sem precisar de ambiente.</p>
+        <div class="card__foot">
+          <span class="card__tag">/praticas/testes</span>
+          <span class="card__arrow">→</span>
+        </div>
+      </a>
+
+      <a class="card" data-category="suporte" data-panel="painel-oncall">
+        <div class="card__cat">Suporte</div>
+        <h3 class="card__title">Como acionar o on-call</h3>
+        <p class="card__desc">Quando acionar, o que incluir no chamado, e o que esperar como SLA. Para incidentes em produção.</p>
+        <div class="card__foot">
+          <span class="card__tag">#plat-dados-oncall</span>
+          <span class="card__arrow">→</span>
+        </div>
+      </a>
+
+      <a class="card" data-category="suporte" data-panel="painel-runbook">
+        <div class="card__cat">Suporte</div>
+        <h3 class="card__title">Runbooks de incidentes comuns</h3>
+        <p class="card__desc">Diagnóstico passo-a-passo de lag de consumo, schema rejection, throughput throttled e quedas regionais.</p>
+        <div class="card__foot">
+          <span class="card__tag">/runbooks</span>
+          <span class="card__arrow">→</span>
+        </div>
+      </a>
+
+    </section>
+
+    <div class="empty-state" id="empty-state">Nenhum recurso encontrado para essa categoria.</div>
+
+    <section class="panels">
+
+      <article class="panel" id="painel-primeiro-passo">
+        <header class="panel__head">
+          <div>
+            <p class="panel__cat">Onboarding</p>
+            <h2 class="panel__title">Seu primeiro tópico em 15 minutos</h2>
+          </div>
+          <button class="panel__back" data-back>↑ Voltar ao topo</button>
+        </header>
+        <p>O caminho recomendado para qualquer time novo. Esses 5 passos colocam você operando em produção em uma sessão.</p>
+        <ol>
+          <li>Instalar o SDK no projeto: <code>npm install @itau/dados-sdk</code></li>
+          <li>Autenticar via SSO corporativo: <code>dados auth login</code></li>
+          <li>Listar tópicos disponíveis na sua área para confirmar o setup</li>
+          <li>Definir um schema YAML para o seu primeiro tópico</li>
+          <li>Registrar e publicar o primeiro evento</li>
+        </ol>
+        <div class="panel__metrics">
+          <div class="metric"><p class="metric__label">Tempo médio</p><p class="metric__value">15 min</p></div>
+          <div class="metric"><p class="metric__label">Times completaram</p><p class="metric__value">47</p></div>
+          <div class="metric"><p class="metric__label">Taxa de sucesso</p><p class="metric__value">96%</p></div>
+        </div>
+      </article>
+
+      <article class="panel" id="painel-setup">
+        <header class="panel__head">
+          <div>
+            <p class="panel__cat">Onboarding</p>
+            <h2 class="panel__title">Configuração do ambiente local</h2>
+          </div>
+          <button class="panel__back" data-back>↑ Voltar ao topo</button>
+        </header>
+        <p>Setup necessário em qualquer máquina que vai produzir ou consumir dados. Faz uma vez, vale para sempre.</p>
+        <div class="panel__links">
+          <a href="#" class="panel__link">Configurar SSO via Azure AD <span class="panel__link__arrow">→</span></a>
+          <a href="#" class="panel__link">Proxy corporativo (proxynew.itau:8443) <span class="panel__link__arrow">→</span></a>
+          <a href="#" class="panel__link">Certificados internos (chain.itau.crt) <span class="panel__link__arrow">→</span></a>
+          <a href="#" class="panel__link">Configuração do CLI (~/.dados/config.yaml) <span class="panel__link__arrow">→</span></a>
+        </div>
+      </article>
+
+      <article class="panel" id="painel-conceitos">
+        <header class="panel__head">
+          <div>
+            <p class="panel__cat">Onboarding</p>
+            <h2 class="panel__title">Conceitos fundamentais</h2>
+          </div>
+          <button class="panel__back" data-back>↑ Voltar ao topo</button>
+        </header>
+        <p>Vocabulário compartilhado por todos os times que usam a plataforma. Vale a leitura antes de qualquer integração.</p>
+        <ul>
+          <li><strong>Tópico:</strong> stream nomeado de eventos com schema associado.</li>
+          <li><strong>Schema:</strong> contrato versionado em Avro que define a estrutura de eventos.</li>
+          <li><strong>Materialização:</strong> visão derivada (tabela, índice, agregação) calculada a partir de tópicos.</li>
+          <li><strong>Replay:</strong> reprocessamento de eventos passados dentro da janela de retenção.</li>
+          <li><strong>Conector:</strong> ponte entre a plataforma e sistemas externos (warehouse, S3, DBs).</li>
+        </ul>
+      </article>
+
+      <article class="panel" id="painel-sdk">
+        <header class="panel__head">
+          <div>
+            <p class="panel__cat">Ferramentas</p>
+            <h2 class="panel__title">SDK — TypeScript, Python, Java</h2>
+          </div>
+          <button class="panel__back" data-back>↑ Voltar ao topo</button>
+        </header>
+        <p>Três linguagens de primeira classe. Mesma interface, escolha a que combina com o seu stack. Outras linguagens via gateway HTTP.</p>
+        <div class="panel__metrics">
+          <div class="metric"><p class="metric__label">Versão atual</p><p class="metric__value">2.4.1</p></div>
+          <div class="metric"><p class="metric__label">Latência p95</p><p class="metric__value">8ms</p></div>
+          <div class="metric"><p class="metric__label">Cobertura de testes</p><p class="metric__value">94%</p></div>
+        </div>
+        <div class="panel__links">
+          <a href="#" class="panel__link">Guia TypeScript <span class="panel__link__arrow">→</span></a>
+          <a href="#" class="panel__link">Guia Python <span class="panel__link__arrow">→</span></a>
+          <a href="#" class="panel__link">Guia Java <span class="panel__link__arrow">→</span></a>
+          <a href="#" class="panel__link">Changelog <span class="panel__link__arrow">→</span></a>
+        </div>
+      </article>
+
+      <article class="panel" id="painel-cli">
+        <header class="panel__head">
+          <div>
+            <p class="panel__cat">Ferramentas</p>
+            <h2 class="panel__title">CLI <code style="font-size: 0.8em;">dados</code></h2>
+          </div>
+          <button class="panel__back" data-back>↑ Voltar ao topo</button>
+        </header>
+        <p>Interface de linha de comando para todas as operações da plataforma. Útil para automação, scripts de CI e exploração rápida.</p>
+        <div class="panel__links">
+          <a href="#" class="panel__link"><code>dados topics</code> — listar, criar, descrever tópicos <span class="panel__link__arrow">→</span></a>
+          <a href="#" class="panel__link"><code>dados schemas</code> — registrar, validar, evoluir schemas <span class="panel__link__arrow">→</span></a>
+          <a href="#" class="panel__link"><code>dados replay</code> — reprocessar eventos de uma janela <span class="panel__link__arrow">→</span></a>
+          <a href="#" class="panel__link"><code>dados consume</code> — consumir um stream em modo interativo <span class="panel__link__arrow">→</span></a>
+        </div>
+      </article>
+
+      <article class="panel" id="painel-portal">
+        <header class="panel__head">
+          <div>
+            <p class="panel__cat">Ferramentas</p>
+            <h2 class="panel__title">Portal web</h2>
+          </div>
+          <button class="panel__back" data-back>↑ Voltar ao topo</button>
+        </header>
+        <p>Interface gráfica em <code>dados.cloud.itau</code> para descoberta, administração e observabilidade. Para quem prefere clicar a digitar.</p>
+        <ul>
+          <li>Catálogo navegável de tópicos com filtros por área, owner e tags</li>
+          <li>Diagrama de fluxo: quais produtores alimentam quais consumidores</li>
+          <li>Métricas em tempo real com drill-down até a partição</li>
+          <li>Solicitação de acesso a tópicos privados via workflow integrado ao SSO</li>
+        </ul>
+      </article>
+
+      <article class="panel" id="painel-conectores">
+        <header class="panel__head">
+          <div>
+            <p class="panel__cat">Ferramentas</p>
+            <h2 class="panel__title">Conectores</h2>
+          </div>
+          <button class="panel__back" data-back>↑ Voltar ao topo</button>
+        </header>
+        <p>Conectores oficiais mantidos pelo time de Plataforma. Você liga, configura, e os dados fluem.</p>
+        <div class="panel__links">
+          <a href="#" class="panel__link">Snowflake (warehouse principal) <span class="panel__link__arrow">→</span></a>
+          <a href="#" class="panel__link">Oracle CDC (legado de risco e crédito) <span class="panel__link__arrow">→</span></a>
+          <a href="#" class="panel__link">Postgres CDC (sistemas de produto) <span class="panel__link__arrow">→</span></a>
+          <a href="#" class="panel__link">S3 Sink (archive e exportação) <span class="panel__link__arrow">→</span></a>
+          <a href="#" class="panel__link">Elastic (busca full-text) <span class="panel__link__arrow">→</span></a>
+          <a href="#" class="panel__link">Webhooks genéricos <span class="panel__link__arrow">→</span></a>
+        </div>
+      </article>
+
+      <article class="panel" id="painel-schemas">
+        <header class="panel__head">
+          <div>
+            <p class="panel__cat">Práticas</p>
+            <h2 class="panel__title">Design de schemas</h2>
+          </div>
+          <button class="panel__back" data-back>↑ Voltar ao topo</button>
+        </header>
+        <p>Boas práticas extraídas de 18 meses de uso real. Aplicar evita 80% das dores de evolução.</p>
+        <ul>
+          <li>Nomes em <code>snake_case</code> consistentes entre tópicos (<code>cliente_id</code>, não <code>idCliente</code>).</li>
+          <li>Campos novos sempre opcionais — facilita evolução backward-compatible.</li>
+          <li>Valores monetários em <code>long</code> de centavos (<code>valor_cents</code>), nunca <code>float</code>.</li>
+          <li>Timestamps em UTC, em <code>timestamp</code> ISO 8601.</li>
+          <li>Enums fechados quando o domínio é estável, strings livres quando ele evolui.</li>
+        </ul>
+      </article>
+
+      <article class="panel" id="painel-versionamento">
+        <header class="panel__head">
+          <div>
+            <p class="panel__cat">Práticas</p>
+            <h2 class="panel__title">Versionamento e compatibilidade</h2>
+          </div>
+          <button class="panel__back" data-back>↑ Voltar ao topo</button>
+        </header>
+        <p>Schema é contrato. Versionar bem evita comunicação dolorosa com consumidores quando o domínio muda.</p>
+        <ul>
+          <li><strong>Minor:</strong> adicionar campo opcional, adicionar enum value, frouxar restrição.</li>
+          <li><strong>Major (v2):</strong> remover campo obrigatório, mudar tipo de um campo, renomear campo.</li>
+          <li>Versões coexistem por padrão. Consumidores migram no próprio ritmo.</li>
+          <li>Schemas com 0 consumidores podem ser depreciados após aviso.</li>
+        </ul>
+      </article>
+
+      <article class="panel" id="painel-testes">
+        <header class="panel__head">
+          <div>
+            <p class="panel__cat">Práticas</p>
+            <h2 class="panel__title">Testes de contrato</h2>
+          </div>
+          <button class="panel__back" data-back>↑ Voltar ao topo</button>
+        </header>
+        <p>Compatibilidade não pode ser garantida no review humano. Use o CI.</p>
+        <ul>
+          <li>Cada PR roda <code>dados schemas validate</code> contra o registry atual.</li>
+          <li>Mudanças breaking são bloqueadas no PR, com explicação do que mudou.</li>
+          <li>Consumidores podem registrar "expectativas" — campos que usam ativamente.</li>
+          <li>Mudanças que afetam expectativas geram alerta nos owners dos consumidores.</li>
+        </ul>
+      </article>
+
+      <article class="panel" id="painel-oncall">
+        <header class="panel__head">
+          <div>
+            <p class="panel__cat">Suporte</p>
+            <h2 class="panel__title">Como acionar o on-call</h2>
+          </div>
+          <button class="panel__back" data-back>↑ Voltar ao topo</button>
+        </header>
+        <p>O on-call existe para <strong>incidentes em produção</strong>. Para dúvidas e troubleshoot de dev/staging, use o canal de suporte regular.</p>
+        <div class="panel__metrics">
+          <div class="metric"><p class="metric__label">SLA primeiro contato</p><p class="metric__value">15 min</p></div>
+          <div class="metric"><p class="metric__label">SLA mitigação</p><p class="metric__value">1h</p></div>
+          <div class="metric"><p class="metric__label">Cobertura</p><p class="metric__value">24/7</p></div>
+        </div>
+        <p>Inclua no acionamento: tópico ou área afetada, sintoma observado, link para painel Grafana, e horário em que o problema começou.</p>
+      </article>
+
+      <article class="panel" id="painel-runbook">
+        <header class="panel__head">
+          <div>
+            <p class="panel__cat">Suporte</p>
+            <h2 class="panel__title">Runbooks de incidentes comuns</h2>
+          </div>
+          <button class="panel__back" data-back>↑ Voltar ao topo</button>
+        </header>
+        <p>Diagnóstico passo-a-passo para os incidentes mais frequentes. Cobre 80% dos casos sem precisar acionar o on-call.</p>
+        <div class="panel__links">
+          <a href="#" class="panel__link">Lag de consumo crescendo <span class="panel__link__arrow">→</span></a>
+          <a href="#" class="panel__link">Eventos rejeitados por schema <span class="panel__link__arrow">→</span></a>
+          <a href="#" class="panel__link">Throughput throttled <span class="panel__link__arrow">→</span></a>
+          <a href="#" class="panel__link">Queda regional (SP fora, RJ ativo) <span class="panel__link__arrow">→</span></a>
+        </div>
+      </article>
+
+    </section>
+
+  </div>
+
+  <script>
+    // ─── Theme toggle ────────────────────────────────
+    (function() {
+      const root = document.documentElement;
+      const updateIcon = () => {
+        const isDark = root.getAttribute('data-theme') === 'dark';
+        document.querySelectorAll('[data-theme-icon]').forEach(i => i.textContent = isDark ? '☀' : '☾');
+      };
+      updateIcon();
+      document.querySelectorAll('[data-theme-toggle]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          root.setAttribute('data-theme', next);
+          try { localStorage.setItem('theme', next); } catch (e) {}
+          updateIcon();
+        });
+      });
+    })();
+
+    // ─── Filtros ─────────────────────────────────────
+    (function() {
+      const filters = document.querySelectorAll('[data-filters] .filters__btn');
+      const cards = document.querySelectorAll('.card');
+      const empty = document.getElementById('empty-state');
+
+      filters.forEach(btn => btn.addEventListener('click', () => {
+        const cat = btn.dataset.filter;
+        filters.forEach(b => b.classList.toggle('is-active', b === btn));
+        let visible = 0;
+        cards.forEach(card => {
+          const match = cat === 'all' || card.dataset.category === cat;
+          card.classList.toggle('is-hidden', !match);
+          if (match) visible++;
+        });
+        empty.classList.toggle('is-visible', visible === 0);
+      }));
+    })();
+
+    // ─── Card → painel ───────────────────────────────
+    document.querySelectorAll('.card[data-panel]').forEach(card => {
+      card.addEventListener('click', (e) => {
+        e.preventDefault();
+        const id = card.dataset.panel;
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    // ─── Botão "voltar ao topo" do painel ───────────
+    document.querySelectorAll('[data-back]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+  </script>
+
+</body>
+</html>
