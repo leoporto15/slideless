@@ -639,6 +639,15 @@ Impede tela de dormir durante apresentações. Automático — sem input do auto
 
 ### 4. Overview Mode — tecla `O`
 Grade miniaturizada de todos os slides. Clicar navega e fecha.
+
+**Implementação correta (não usar font-size scaling):** Os slides em overview precisam preservar `clamp()` e unidades viewport (`vw`/`vh`). A técnica correta é:
+1. Capturar `window.innerWidth/innerHeight` no `--slide-w` / `--slide-h` ao entrar em overview
+2. Manter cada slide com width/height reais e aplicar `transform: scale(--ov-scale)`
+3. Compensar com `margin-right/bottom: calc(var(--slide-w) * (var(--ov-scale) - 1))`
+4. No overview, forçar todos os `[data-fragment]` e `[data-anim]` para `opacity:1, transform:none`
+
+Tentar miniaturizar com `font-size: 0.35em` quebra porque `clamp()` e `vw` continuam resolvendo contra a janela inteira — o conteúdo overflowa ou desaparece.
+
 ```
 O           → abrir/fechar overview
 ESC         → fechar overview (ou sair de fullscreen)
@@ -833,6 +842,50 @@ Cada `<section>` pode ter background próprio, animado independentemente do cont
 8. **Auto-Animate em slides de evolução** — usar `data-auto-animate` + `data-id` quando o mesmo elemento muda de tamanho/posição entre slides consecutivos.
 9. **Rough Notation em KPIs** — `data-mark="circle"` em números-âncora e `data-mark="underline"` em termos-chave de slides de quote/statement.
 10. **Background por slide de seção** — slides divisores usam `data-background-color="var(--itau-orange)"` (tema itaú) em vez de só mudar tipografia.
+
+---
+
+## Pitfalls conhecidos do engine (NUNCA repetir)
+
+### Tabelas com fragmentos
+**Errado:** aplicar `data-fragment="highlight-current"` em `<tr>` sem ajustar o CSS base. A regra `.slide [data-fragment] { opacity: 0 }` torna a tabela inteira invisível e ela aparece linha-a-linha como se cada linha fosse um fragmento de fade-in.
+
+**Correto:** o CSS base do template já exclui `highlight-current` e `strike` do `opacity:0`. A tabela aparece completa desde o start; o `highlight-current` apenas muda a cor/peso da linha quando ela vira o fragmento ativo. Se você gera um novo template, **sempre use o seletor `:not([data-fragment="highlight-current"]):not([data-fragment="strike"])`** no fragment base.
+
+### Slide-num colidindo com título (REGRA CANÔNICA)
+
+**NUNCA posicionar `.slide-num` no canto top-left.** Esse é o canto onde kicker e título vivem (slides com `justify-content: center` podem ter conteúdo alto que overflowa para a área superior, sobrepondo o slide-num). Tentativas com `backdrop-filter`, `z-index` alto e background sólido falham porque o background (`--color-bg-elevated`) costuma ser quase idêntico ao bg do slide no tema itaú (ambos cream).
+
+**Posição canônica:** `bottom: 18px; right: 28px` — page-number style, sem badge nem fundo, só texto monospace com `opacity: 0.55`. O HUD fixo no bottom-center não conflita. Conteúdo do slide nunca atinge o canto inferior-direito em layouts centered.
+
+```css
+.slide-num {
+  position: absolute;
+  bottom: 18px; right: 28px;
+  font: 600 0.6875rem/1 var(--font-mono);
+  letter-spacing: 0.12em;
+  color: var(--color-fg-muted);
+  opacity: 0.55;
+  z-index: 30;
+  pointer-events: none;
+  user-select: none;
+}
+.slide-num span { color: var(--color-accent); font-weight: 700; }
+
+/* Em slides com background escuro/laranja, contraste claro */
+.slide[data-background-color="#000000"] .slide-num,
+.slide[data-background-color="#000"] .slide-num,
+.slide[data-background-color*="orange"] .slide-num {
+  color: rgba(255,255,255,0.75);
+}
+```
+
+Padding do `.slide`: `clamp(64px, 8vh, 90px)` no topo + `clamp(56px, 7vh, 80px)` no bottom — espaço respiratório para conteúdo, sem necessidade de safe-area específica para slide-num (já não está no topo).
+
+### Overview com font-size scaling
+**Errado:** `body.is-overview .slide { font-size: 0.35em; }`. Em viewports com `clamp()` e `vw/vh`, esses valores continuam resolvendo contra a janela inteira (não contra o thumbnail) — conteúdo overflowa ou desaparece.
+
+**Correto:** snapshot do viewport real em CSS variables (`--slide-w`, `--slide-h`) ao entrar em overview; `transform: scale(--ov-scale)` no slide com `transform-origin: top left`; compensar com `margin-right/bottom` negativo proporcional. No overview, forçar todos os `[data-fragment]` e `[data-anim]` a `opacity:1`.
 
 ---
 

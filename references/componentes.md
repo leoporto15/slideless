@@ -263,6 +263,39 @@ Ver [modelos/deck.md](modelos/deck.md) — slide engine é específico do deck, 
 
 Threshold: **4+ linhas OU 3+ colunas → usar `<table>`, nunca bullets**. Ver patterns completos em [css-patterns.md](css-patterns.md#3-data-tables).
 
+### Anti-pattern: reveal/fragment em linhas individuais
+
+**Errado** — Aplicar `data-reveal` (handbook/scrollytelling/site) ou `data-fragment` (deck) em cada `<tr>` faz a tabela aparecer linha por linha, quebrando a leitura comparativa.
+
+```html
+<!-- NUNCA fazer assim -->
+<table class="data-table">
+  <tr data-reveal>...</tr>
+  <tr data-reveal>...</tr>
+</table>
+```
+
+**Correto** — Reveal no wrapper, tabela aparece completa:
+
+```html
+<div class="table-wrap" data-reveal>
+  <table class="data-table">
+    <tr>...</tr>
+  </table>
+</div>
+```
+
+**Exceção (só deck):** spotlight progressivo de linhas via `data-fragment="highlight-current"` em `<tr>` — o CSS base do template-deck garante que linhas com esse tipo começam visíveis (regra `:not([data-fragment="highlight-current"])` no fragment base). Só a cor/peso muda quando a linha vira o fragmento ativo.
+
+```html
+<table class="data-table">
+  <tr data-fragment="highlight-current">...</tr>
+  <tr data-fragment="highlight-current">...</tr>
+</table>
+```
+
+---
+
 ```html
 <div class="table-wrap">
   <table class="data-table">
