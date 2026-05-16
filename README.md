@@ -31,6 +31,87 @@
 
 ---
 
+## Comandos (26)
+
+> ### 🧭 Não sabe por onde começar? Siga por aqui.
+>
+> Se você é de uma **área de negócios** e não conhece a diferença entre handbook, deck, hub etc. — **use `/criar`**. É um wizard conversacional que faz 5 perguntas em português comum e escolhe o modelo certo automaticamente. Você não precisa saber nada técnico.
+
+### 🚪 Ponto de entrada (1)
+
+| Comando | O que faz |
+|---|---|
+| **`/criar`** | **Wizard guiado para áreas de negócios.** Faz 5 perguntas (objetivo, público, distribuição, conteúdo, tema) e escolhe o modelo automaticamente. Coleta o conteúdo do jeito que você tiver (PDF, bullets, ideias na cabeça ou nada ainda) e gera o HTML pronto. |
+
+### Pré-geração (1)
+
+| Comando | O que faz |
+|---|---|
+| `/estruturar` | Analisa conteúdo bruto (bullets, PDF colado, descrição) e propõe um mapa estruturado em tabela para você aprovar antes de gerar HTML. Evita retrabalho em conteúdo denso. |
+
+### Criação direta (6)
+*Use quando você já sabe qual modelo quer.*
+
+| Comando | O que faz |
+|---|---|
+| `/slideless-deck` | **Apresentação com slides** que avançam (setas/teclado). Para pitch ao vivo, all-hands, demo guiada. Único modelo com tipografia gigante permitida. |
+| `/slideless-handbook` | **Manual web com menu lateral** + scrollspy + TOC sticky. Para documentação longa, onboarding, política interna, runbook. |
+| `/slideless-hub` | **Portal de cards categorizados.** Cards filtram por categoria; clicar abre painel in-page com gráficos e tabelas. Para centrais de recursos. |
+| `/slideless-scrollytelling` | **Narrativa única** que revela conteúdo ao rolar a página. Gráficos sticky que mudam conforme avança. Para relatórios anuais, casos de estudo. |
+| `/slideless-site` | **Mini-site SPA** com 2-5 abas (home, sobre, contato) e hash routing. Para microsites internos, lançamentos. |
+| `/slideless-report` | **Relatório editorial denso** otimizado para impressão e PDF — sumário executivo, seções numeradas, footnotes, CSS @print rigoroso. Para diretoria, RI, compliance. |
+
+### Importação (3)
+*Converte conteúdo existente em formato slideless.*
+
+| Comando | O que faz |
+|---|---|
+| `/importar-confluence` | Converte página ou espaço Confluence inteiro no modelo mais adequado. |
+| `/importar-ppt` | Converte PPT/PPTX em handbook (para leitura) ou deck (para apresentar). Sempre pergunta qual. |
+| `/importar-md` | Converte Markdown estruturado em handbook (default) ou scrollytelling. |
+
+### Edição cirúrgica (6)
+*Adiciona elementos a um documento existente sem regenerar.*
+
+| Comando | O que faz |
+|---|---|
+| `/adicionar-secao` | Adiciona uma seção a handbook, scrollytelling ou site existente. |
+| `/adicionar-slide` | Adiciona slide ao deck (hero, big-num, metrics, list, quote, two-col, divider, timeline). |
+| `/adicionar-callout` | Insere callout colorido (info, tip, warn, danger). |
+| `/adicionar-grafico` | Insere gráfico Chart.js (line, bar, donut, gauge, radar, bubble, waterfall, mixed). |
+| `/adicionar-fragment` | No deck: marca elementos para revelar progressivamente por click. |
+| `/adicionar-toc` | No handbook: regenera o TOC sticky a partir dos h2/h3 atuais. |
+
+### Transformação (3)
+*Modifica um documento existente.*
+
+| Comando | O que faz |
+|---|---|
+| `/aplicar-tema` | Troca tema (neutro ↔ itau) em documento existente. |
+| `/converter-modelo` | Converte entre modelos compatíveis (handbook ↔ scrollytelling, hub ↔ site). |
+| `/distill` | Reduz handbook longo a sumário enxuto preservando hierarquia. |
+
+### Qualidade (4)
+*Audita e melhora documentos existentes.*
+
+| Comando | O que faz |
+|---|---|
+| `/auditar` | Roda validador determinístico + checklist + anti-patterns. Devolve lista de violações com severidade. |
+| `/polir` | Refina tipografia, espaçamento e hierarquia visual. |
+| `/harden` | Endurece a11y (WCAG AA), keyboard nav, `prefers-reduced-motion`. |
+| `/acessibilidade` | Foco isolado em acessibilidade — varredura completa + correções. |
+
+### Export (2)
+
+| Comando | O que faz |
+|---|---|
+| `/exportar-pdf` | Renderiza para PDF via Playwright (deck → landscape; demais → retrato). |
+| `/exportar-screenshots` | 1 PNG por slide (deck) ou por seção (demais) para preview rápido. |
+
+Documentação técnica completa de cada comando em [commands/](commands/).
+
+---
+
 ## Modelos
 
 | Modelo | Quando usar | Referência |
@@ -40,8 +121,9 @@
 | [`scrollytelling`](references/modelos/scrollytelling.md) | narrativa única com reveal + sticky chart | NYT Upshot |
 | [`site`](references/modelos/site.md) | microsite SPA com 2-5 views | Linear, Vercel guides |
 | [`deck`](references/modelos/deck.md) | pitch ao vivo, all-hands (único onde tipografia gigante é OK) | Apple keynote |
+| `report` | relatório editorial denso para diretoria/RI/compliance, otimizado para PDF | Annual reports |
 
-Decisão entre modelos: [references/decisao-modelo.md](references/decisao-modelo.md).
+Decisão entre modelos: [references/decisao-modelo.md](references/decisao-modelo.md). **Ou simplesmente use `/criar` — o wizard decide por você.**
 
 ---
 
@@ -52,17 +134,19 @@ slideless/
 ├── SKILL.md                       ← entry point para o agente
 ├── README.md                      ← este arquivo
 ├── .claude-plugin/plugin.json     ← manifest da skill
-├── commands/                      ← 23 slash commands (1 arquivo cada)
+├── commands/                      ← 26 slash commands (1 arquivo cada)
 ├── references/
 │   ├── anti-patterns.md           ← PPT-isms proibidos
 │   ├── design-system.md           ← tokens, dark mode, boot script
 │   ├── componentes.md             ← biblioteca de componentes
-│   ├── decisao-modelo.md          ← decision tree dos 5 modelos
+│   ├── css-patterns.md            ← gráficos, tabelas, depth tiers
+│   ├── slide-patterns.md          ← layouts, engine v3, fragmentos
+│   ├── decisao-modelo.md          ← decision tree dos 6 modelos
 │   ├── protocolo-sem-conteudo.md  ← o que fazer sem conteúdo real
 │   ├── importar-conteudo.md       ← MD/PPT/Confluence → slideless
 │   ├── workflow.md                ← passo-a-passo
 │   ├── checklist-revisao.md       ← validação LLM
-│   ├── modelos/{handbook,hub,scrollytelling,site,deck}.md
+│   ├── modelos/{handbook,hub,scrollytelling,site,deck,report}.md
 │   └── temas/{neutro,itau}.md
 ├── assets/
 │   ├── temas/{itau,neutro}.css    ← tokens light+dark
@@ -74,30 +158,6 @@ slideless/
 │   └── exportar_pdf.py            ← PDF/PNG via Playwright
 └── demos/                         ← input → output reais pareados
 ```
-
----
-
-## Comandos (23)
-
-### Criação
-`/slideless-handbook` · `/slideless-hub` · `/slideless-scrollytelling` · `/slideless-site` · `/slideless-deck`
-
-### Importação
-`/importar-confluence` · `/importar-ppt` · `/importar-md`
-
-### Edição cirúrgica
-`/adicionar-secao` · `/adicionar-slide` · `/adicionar-callout` · `/adicionar-grafico` · `/adicionar-fragment` · `/adicionar-toc`
-
-### Transformação
-`/aplicar-tema` · `/converter-modelo` · `/distill`
-
-### Qualidade
-`/auditar` · `/polir` · `/harden` · `/acessibilidade`
-
-### Export
-`/exportar-pdf` · `/exportar-screenshots`
-
-Documentação completa de cada comando em [commands/](commands/).
 
 ---
 
