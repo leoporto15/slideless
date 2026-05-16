@@ -723,6 +723,217 @@ new Chart(document.getElementById('spark-1'), {
 </script>
 ```
 
+### 5e. Gauge / velocímetro (KPI vs meta)
+
+Doughnut rotado 180° com segmento base transparente. Ideal para taxa de cobertura, atingimento de meta, NPS.
+
+```html
+<div style="max-width: 220px; margin: 0 auto; position: relative;">
+  <canvas id="chart-gauge" aria-label="Gauge KPI"></canvas>
+  <div style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);text-align:center;line-height:1.1;">
+    <span id="gauge-val" style="font-family:var(--font-display);font-size:2rem;font-weight:800;color:var(--color-fg)">87%</span>
+    <br><span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--color-fg-subtle);text-transform:uppercase">Cobertura ESG</span>
+  </div>
+</div>
+<script>
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const val = 87; // valor 0-100
+new Chart(document.getElementById('chart-gauge'), {
+  type: 'doughnut',
+  data: {
+    datasets: [{
+      data: [val, 100 - val, 100],  // valor, restante, base oculta
+      backgroundColor: [css('--color-accent'), css('--color-border'), 'transparent'],
+      borderWidth: 0,
+      borderRadius: [4, 0, 0],
+    }]
+  },
+  options: {
+    responsive: true,
+    circumference: 180,
+    rotation: -90,
+    cutout: '75%',
+    plugins: { legend: { display: false }, tooltip: { enabled: false } },
+  }
+});
+</script>
+```
+
+---
+
+### 5f. Radar / aranha (comparação de perfil)
+
+Compara N dimensões de dois ou mais itens. Ideal para: perfil de risco de fundo, competências de gestor, atributos de produto.
+
+```html
+<canvas id="chart-radar" aria-label="Comparação de perfil"></canvas>
+<script>
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+new Chart(document.getElementById('chart-radar'), {
+  type: 'radar',
+  data: {
+    labels: ['Retorno', 'Liquidez', 'Diversificação', 'ESG', 'Volatilidade Baixa', 'Acesso'],
+    datasets: [
+      {
+        label: 'Fundo Alpha',
+        data: [90, 60, 85, 95, 70, 80],
+        borderColor: css('--color-accent'),
+        backgroundColor: css('--color-accent-dim'),
+        borderWidth: 2,
+        pointRadius: 4,
+        pointBackgroundColor: css('--color-accent'),
+      },
+      {
+        label: 'Benchmark',
+        data: [70, 80, 65, 50, 85, 90],
+        borderColor: css('--color-fg-muted'),
+        backgroundColor: 'transparent',
+        borderWidth: 2,
+        borderDash: [4, 4],
+        pointRadius: 3,
+        pointBackgroundColor: css('--color-fg-muted'),
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      r: {
+        min: 0, max: 100,
+        ticks: { stepSize: 25, color: css('--color-fg-subtle'), font: { size: 10 }, backdropColor: 'transparent' },
+        grid: { color: css('--color-border') },
+        pointLabels: { color: css('--color-fg-muted'), font: { size: 12 } },
+        angleLines: { color: css('--color-border') },
+      }
+    },
+    plugins: { legend: { labels: { color: css('--color-fg-muted') } } }
+  }
+});
+</script>
+```
+
+---
+
+### 5g. Bubble (risco × retorno × tamanho)
+
+Três dimensões em um gráfico. X = risco, Y = retorno, R = tamanho (AuM, volume). Ideal para análise de portfólio, comparação de fundos, mapeamento de produtos.
+
+```html
+<canvas id="chart-bubble" aria-label="Risco × Retorno × AuM"></canvas>
+<script>
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+new Chart(document.getElementById('chart-bubble'), {
+  type: 'bubble',
+  data: {
+    datasets: [
+      {
+        label: 'Renda Fixa',
+        data: [{ x: 2.1, y: 8.4, r: 24 }],
+        backgroundColor: css('--color-accent') + 'cc',
+        borderColor: css('--color-accent'),
+        borderWidth: 2,
+      },
+      {
+        label: 'Multimercado',
+        data: [{ x: 5.8, y: 14.2, r: 16 }],
+        backgroundColor: css('--color-info') + 'cc',
+        borderColor: css('--color-info'),
+        borderWidth: 2,
+      },
+      {
+        label: 'Renda Variável',
+        data: [{ x: 12.4, y: 19.7, r: 10 }],
+        backgroundColor: css('--color-teal') + 'cc',
+        borderColor: css('--color-teal'),
+        borderWidth: 2,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { labels: { color: css('--color-fg-muted') } },
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: risco ${ctx.parsed.x}% | retorno ${ctx.parsed.y}% | AuM R$${ctx.raw.r}bi` } }
+    },
+    scales: {
+      x: { min: 0, title: { display: true, text: 'Volatilidade anualizada (%)', color: css('--color-fg-muted') }, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => v + '%' } },
+      y: { min: 0, title: { display: true, text: 'Retorno acumulado (%)', color: css('--color-fg-muted') }, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => v + '%' } }
+    }
+  }
+});
+</script>
+```
+
+---
+
+### 5h. Waterfall / cascata (variação entre períodos)
+
+Mostra de onde vem cada incremento/decremento de um valor. Ideal para: variação de AuM, P&L breakdown, evolução de captação. Implementado com barras empilhadas (base transparente + valor real).
+
+```html
+<canvas id="chart-waterfall" aria-label="Variação de AuM"></canvas>
+<script>
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+// Dados: [rótulo, base invisível, valor (+) ou (-)], cor
+const steps = [
+  { label: 'Jan/24',    base: 0,    val: 980,  type: 'start' },
+  { label: 'Captação',  base: 980,  val: 145,  type: 'pos'   },
+  { label: 'Resgates',  base: 985,  val: -60,  type: 'neg'   },
+  { label: 'Rendimento',base: 925,  val: 88,   type: 'pos'   },
+  { label: 'Jun/24',    base: 0,    val: 1013, type: 'end'   },
+];
+
+const accent = css('--color-accent');
+const info   = css('--color-info');
+const danger = css('--color-danger-border') || '#ef4444';
+const muted  = css('--color-border');
+
+new Chart(document.getElementById('chart-waterfall'), {
+  type: 'bar',
+  data: {
+    labels: steps.map(s => s.label),
+    datasets: [
+      {
+        label: 'Base (invisível)',
+        data: steps.map(s => s.type === 'neg' ? s.base + s.val : s.base),
+        backgroundColor: 'transparent',
+        borderWidth: 0,
+        stack: 'wf',
+      },
+      {
+        label: 'Valor',
+        data: steps.map(s => Math.abs(s.val)),
+        backgroundColor: steps.map(s =>
+          s.type === 'start' || s.type === 'end' ? muted :
+          s.type === 'pos' ? info : danger
+        ),
+        borderRadius: 3,
+        stack: 'wf',
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: {
+        label: ctx => {
+          if (ctx.datasetIndex === 0) return null;
+          const s = steps[ctx.dataIndex];
+          return `${s.label}: ${s.val > 0 ? '+' : ''}R$ ${s.val} bi`;
+        }
+      }}
+    },
+    scales: {
+      x: { stacked: true, grid: { display: false }, ticks: { color: css('--color-fg-muted') } },
+      y: { stacked: true, min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => 'R$ ' + v + ' bi' } }
+    }
+  }
+});
+</script>
+```
+
 ---
 
 ## 6. Overflow Protection

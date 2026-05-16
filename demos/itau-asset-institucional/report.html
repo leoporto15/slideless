@@ -1,0 +1,2152 @@
+<!DOCTYPE html>
+<!--
+  slideless · modelo report
+  Demo: Itaú Asset Management — Relatório Institucional IAM-001/2024
+  Gerado por slideless v3 · Maio 2024
+-->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Itaú Asset Management — Relatório Institucional · IAM-001/2024</title>
+
+  <script>
+    (function() {
+      try {
+        var t = localStorage.getItem('ia-report-theme') ||
+                (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+
+  <style>
+    /* ═══════════════════════════════════════════════════════════════
+       DESIGN SYSTEM — Itaú Asset Management
+    ═══════════════════════════════════════════════════════════════ */
+    :root {
+      --itau-orange:     #FF6200;
+      --itau-orange-2:   #F88104;
+      --itau-orange-3:   #FA9F09;
+      --itau-blue-3:     #3B85FA;
+      --itau-yellow:     #FBC305;
+      --itau-warm-black: #14110d;
+
+      --color-accent:        var(--itau-orange);
+      --color-accent-dim:    rgba(255,98,0,0.08);
+      --color-accent-fg:     #ffffff;
+      --color-accent-hover:  var(--itau-orange-2);
+      --color-info:          var(--itau-blue-3);
+      --color-info-dim:      rgba(59,133,250,0.08);
+      --color-success:       #4d7c0f;
+      --color-success-dim:   rgba(77,124,15,0.08);
+      --color-sage:          #65a30d;
+      --color-sage-dim:      rgba(101,163,13,0.08);
+      --color-teal:          #0f766e;
+      --color-teal-dim:      rgba(15,118,110,0.08);
+      --color-plum:          #9f1239;
+      --color-plum-dim:      rgba(159,18,57,0.08);
+      --color-warn:          var(--itau-yellow);
+      --color-warn-dim:      rgba(251,195,5,0.12);
+      --color-danger:        #b91c1c;
+      --color-danger-dim:    rgba(185,28,28,0.08);
+
+      --color-bg:            #faf7f5;
+      --color-bg-elevated:   #ffffff;
+      --color-bg-sunken:     #f4f1ec;
+      --color-fg:            #292017;
+      --color-fg-muted:      #6b5d50;
+      --color-fg-subtle:     #8a7e72;
+      --color-border:        rgba(41,32,23,0.10);
+      --color-border-strong: rgba(41,32,23,0.18);
+
+      --font-display: 'Fraunces', Georgia, serif;
+      --font-text:    'Inter', -apple-system, system-ui, sans-serif;
+      --font-mono:    'JetBrains Mono', 'IBM Plex Mono', Consolas, monospace;
+
+      --size-xs:    clamp(0.75rem, 0.7rem + 0.2vw, 0.875rem);
+      --size-small: clamp(0.875rem, 0.85rem + 0.15vw, 1rem);
+      --size-body:  clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+      --size-lead:  clamp(1.15rem, 1.05rem + 0.5vw, 1.4rem);
+      --size-h3:    clamp(1.2rem, 1.1rem + 0.5vw, 1.5rem);
+      --size-h2:    clamp(1.6rem, 1.3rem + 1.2vw, 2.25rem);
+      --size-h1:    clamp(2.25rem, 1.8rem + 2vw, 3.5rem);
+
+      --space-1:  0.25rem;  --space-2:  0.5rem;   --space-3:  0.75rem;
+      --space-4:  1rem;     --space-5:  1.5rem;   --space-6:  2rem;
+      --space-7:  2.5rem;   --space-8:  3rem;     --space-10: 4rem;
+      --space-12: 5rem;
+
+      --radius-sm: 4px;
+      --radius:    10px;
+      --radius-lg: 16px;
+
+      --shadow-xs: 0 1px 2px rgba(41,32,23,0.04);
+      --shadow-sm: 0 2px 4px rgba(41,32,23,0.06), 0 1px 2px rgba(41,32,23,0.04);
+      --shadow:    0 4px 12px rgba(41,32,23,0.08), 0 1px 3px rgba(41,32,23,0.05);
+      --shadow-lg: 0 12px 32px rgba(41,32,23,0.12), 0 4px 12px rgba(41,32,23,0.06);
+      --inset-sm:  inset 0 1px 3px rgba(41,32,23,0.06);
+
+      --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);
+      --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --duration-fast: 150ms;
+      --duration:      250ms;
+      --duration-hero: 900ms;
+
+      /* Report-specific */
+      --report-max:       800px;
+      --report-gutter:    var(--space-8);
+      --report-lead:      1.75rem;
+      --report-body-size: 1rem;
+      --report-small:     0.875rem;
+      --report-header-h:  80px;
+    }
+
+    [data-theme="dark"] {
+      --color-bg:            #14110d;
+      --color-bg-elevated:   #1c1814;
+      --color-bg-sunken:     #221d18;
+      --color-fg:            #ede5dd;
+      --color-fg-muted:      #b8aa9a;
+      --color-fg-subtle:     #786e62;
+      --color-border:        rgba(237,229,221,0.10);
+      --color-border-strong: rgba(237,229,221,0.20);
+      --color-accent:        var(--itau-orange-3);
+      --color-accent-hover:  var(--itau-orange-2);
+      --color-accent-fg:     #14110d;
+      --color-accent-dim:    rgba(250,159,9,0.10);
+      --color-info-dim:      rgba(59,133,250,0.12);
+      --color-success:       #a3e635;
+      --color-success-dim:   rgba(163,230,53,0.10);
+      --color-sage:          #bef264;
+      --color-sage-dim:      rgba(190,242,100,0.10);
+      --color-teal:          #5eead4;
+      --color-teal-dim:      rgba(94,234,212,0.10);
+      --color-plum:          #fb7185;
+      --color-plum-dim:      rgba(251,113,133,0.10);
+      --color-warn-dim:      rgba(251,195,5,0.12);
+      --color-danger:        #f87171;
+      --color-danger-dim:    rgba(248,113,113,0.10);
+      --shadow-sm: 0 2px 4px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+      --shadow-lg: 0 12px 32px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.3);
+      --inset-sm:  inset 0 1px 3px rgba(0,0,0,0.4);
+    }
+
+    /* ─── Reset ───────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--font-text);
+      font-size: var(--report-body-size);
+      line-height: var(--report-lead);
+      color: var(--color-fg);
+      background: var(--color-bg);
+      background-image:
+        radial-gradient(ellipse 80% 60% at 80% 0%, rgba(255,98,0,0.10) 0%, transparent 55%),
+        radial-gradient(ellipse 70% 50% at 20% 100%, rgba(59,133,250,0.08) 0%, transparent 55%);
+      background-attachment: fixed;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      transition: background var(--duration-fast), color var(--duration-fast);
+      min-height: 100vh;
+    }
+    :focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 3px;
+      border-radius: var(--radius-sm);
+    }
+    h1, h2, h3, h4 {
+      font-family: var(--font-display);
+      color: var(--color-fg);
+      line-height: 1.1;
+      letter-spacing: -0.022em;
+      font-weight: 700;
+    }
+    p { margin: 0 0 var(--space-4); color: var(--color-fg-muted); max-width: 70ch; }
+    a { color: var(--color-accent); text-decoration: none; }
+    a:hover { color: var(--color-accent-hover); text-decoration: underline; text-underline-offset: 3px; }
+    strong { font-weight: 700; color: var(--color-fg); }
+    ul, ol { padding-left: var(--space-5); margin: 0 0 var(--space-4); }
+    li { margin-bottom: var(--space-2); color: var(--color-fg-muted); }
+    li::marker { color: var(--color-fg-subtle); }
+
+    /* ─── Header institucional ────────────────────────────────────── */
+    .report-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: var(--report-header-h);
+      background: rgba(250,247,245,0.90);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--color-border);
+      box-shadow: 0 1px 0 var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--space-8);
+      gap: var(--space-6);
+      position: relative;
+    }
+    [data-theme="dark"] .report-header {
+      background: rgba(20,17,13,0.90);
+    }
+    .report-header::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--color-accent) 0%, var(--itau-orange-3) 40%, transparent 80%);
+      opacity: 0.7;
+    }
+    .report-header-sticky {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .report-header__brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+    }
+    .report-header__logo {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-sm);
+      background: var(--color-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 800;
+      color: #fff;
+      font-size: 1.0625rem;
+      letter-spacing: -0.04em;
+      flex-shrink: 0;
+    }
+    .report-header__org {
+      margin: 0;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--color-fg);
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+    .report-header__doc {
+      margin: 0;
+      font-size: var(--size-xs);
+      color: var(--color-fg-muted);
+      font-family: var(--font-mono);
+      margin-top: 2px;
+    }
+    .report-header__meta {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+    }
+    .report-header__date {
+      margin: 0;
+      font-size: var(--size-small);
+      color: var(--color-fg-muted);
+      font-weight: 500;
+    }
+    .theme-toggle {
+      width: 36px; height: 36px;
+      display: grid; place-items: center;
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: 999px;
+      cursor: pointer;
+      color: var(--color-fg);
+      font-size: 14px;
+      transition: all var(--duration-fast);
+    }
+    .theme-toggle:hover {
+      background: var(--color-bg-sunken);
+      border-color: var(--color-border-strong);
+      transform: translateY(-1px);
+    }
+
+    /* ─── TOC ─────────────────────────────────────────────────────── */
+    .report-toc {
+      max-width: var(--report-max);
+      margin: var(--space-8) auto var(--space-6);
+      padding: 0 var(--report-gutter);
+    }
+    .report-toc__heading {
+      font-size: var(--size-xs);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.10em;
+      color: var(--color-fg-subtle);
+      margin: 0 0 var(--space-4);
+    }
+    .report-toc__list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      columns: 2;
+      column-gap: var(--space-6);
+    }
+    @media (max-width: 640px) {
+      .report-toc__list { columns: 1; }
+    }
+    .report-toc__list li { margin-bottom: var(--space-2); break-inside: avoid; }
+    .report-toc__list a {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-3);
+      font-size: var(--size-small);
+      color: var(--color-fg-muted);
+      text-decoration: none;
+      padding: var(--space-1) 0;
+      border-bottom: 1px dotted var(--color-border);
+      transition: color var(--duration-fast), border-color var(--duration-fast);
+    }
+    .report-toc__list a:hover { color: var(--color-accent); border-color: var(--color-accent); text-decoration: none; }
+    .toc-num {
+      font-family: var(--font-mono);
+      font-size: var(--size-xs);
+      color: var(--color-accent);
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    /* ─── Sumário executivo ───────────────────────────────────────── */
+    .report-summary {
+      max-width: var(--report-max);
+      margin: 0 auto var(--space-12);
+      padding: 0 var(--report-gutter);
+    }
+    .report-summary__inner {
+      background: var(--color-bg-elevated);
+      border-left: 4px solid var(--color-accent);
+      border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+      padding: var(--space-7) var(--space-8);
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+    .report-summary__inner::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 320px; height: 320px;
+      background: radial-gradient(circle, var(--color-accent-dim) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .report-summary__label {
+      font-size: var(--size-xs);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--color-accent);
+      margin: 0 0 var(--space-4);
+    }
+    .report-summary__lead {
+      font-family: var(--font-display);
+      font-size: clamp(1.1rem, 1rem + 0.5vw, 1.3rem);
+      line-height: 1.6;
+      color: var(--color-fg);
+      margin: 0 0 var(--space-7);
+      max-width: 62ch;
+    }
+    .report-summary__kpis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: var(--space-5);
+    }
+    .summary-kpi {
+      border-top: 2px solid var(--color-border-strong);
+      padding-top: var(--space-3);
+    }
+    .summary-kpi__val {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 1.3rem + 0.8vw, 2rem);
+      font-weight: 800;
+      color: var(--color-accent);
+      margin: 0 0 var(--space-1);
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+    .summary-kpi__label {
+      font-size: var(--size-xs);
+      color: var(--color-fg-muted);
+      margin: 0;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    /* ─── Corpo ───────────────────────────────────────────────────── */
+    .report-body {
+      max-width: var(--report-max);
+      margin: 0 auto;
+      padding: var(--space-10) var(--report-gutter);
+    }
+    .report-section {
+      margin-bottom: var(--space-12);
+      scroll-margin-top: calc(var(--report-header-h) + var(--space-6));
+    }
+    .section-header {
+      display: flex;
+      align-items: flex-end;
+      gap: var(--space-4);
+      margin-bottom: var(--space-6);
+      padding-bottom: var(--space-4);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .section-num {
+      font-family: var(--font-mono);
+      font-size: 4rem;
+      color: var(--color-border-strong);
+      line-height: 1;
+      font-weight: 400;
+      flex-shrink: 0;
+      user-select: none;
+      margin-bottom: 4px;
+    }
+    .report-section h2 {
+      font-size: var(--size-h2);
+      font-weight: 800;
+      margin: 0;
+      letter-spacing: -0.028em;
+      color: var(--color-fg);
+    }
+    .report-section h3 {
+      font-size: var(--size-h3);
+      font-weight: 700;
+      margin: var(--space-6) 0 var(--space-3);
+    }
+
+    /* ─── Métricas ────────────────────────────────────────────────── */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: var(--space-4);
+      margin: var(--space-5) 0;
+    }
+    .metric-card {
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: var(--space-4) var(--space-5);
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+    }
+    .metric-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--color-accent);
+    }
+    .metric-card.info::before  { background: var(--color-info); }
+    .metric-card.sage::before  { background: var(--color-sage); }
+    .metric-card.teal::before  { background: var(--color-teal); }
+    .metric-value {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(1.5rem, 1.3rem + 0.8vw, 2rem);
+      letter-spacing: -0.04em;
+      color: var(--color-accent);
+      display: block;
+      line-height: 1.05;
+    }
+    .metric-card.info .metric-value  { color: var(--color-info); }
+    .metric-card.sage .metric-value  { color: var(--color-sage); }
+    .metric-card.teal .metric-value  { color: var(--color-teal); }
+    .metric-label {
+      font-size: var(--size-xs);
+      color: var(--color-fg-muted);
+      margin-top: var(--space-1);
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    /* ─── Callouts ────────────────────────────────────────────────── */
+    .callout {
+      display: flex;
+      gap: var(--space-4);
+      padding: var(--space-4) var(--space-5);
+      margin: var(--space-5) 0;
+      border-left: 3px solid;
+      border-radius: var(--radius);
+      break-inside: avoid;
+    }
+    .callout--info    { background: var(--color-info-dim);    border-color: var(--color-info); }
+    .callout--tip     { background: var(--color-success-dim); border-color: var(--color-success); }
+    .callout--warn    { background: var(--color-warn-dim);    border-color: var(--color-warn); }
+    .callout--danger  { background: var(--color-danger-dim);  border-color: var(--color-danger); }
+    .callout--sage    { background: var(--color-sage-dim);    border-color: var(--color-sage); }
+    .callout__icon {
+      flex-shrink: 0; width: 22px; height: 22px;
+      display: grid; place-items: center;
+      border-radius: 50%; font-weight: 700;
+      font-size: 0.7rem; color: white; margin-top: 2px;
+    }
+    .callout--info   .callout__icon { background: var(--color-info); }
+    .callout--tip    .callout__icon { background: var(--color-success); }
+    .callout--warn   .callout__icon { background: var(--color-warn); color: var(--itau-warm-black); }
+    .callout--danger .callout__icon { background: var(--color-danger); }
+    .callout--sage   .callout__icon { background: var(--color-sage); }
+    .callout__content { flex: 1; min-width: 0; }
+    .callout__title { font-weight: 700; margin: 0 0 var(--space-1); font-size: var(--size-small); color: var(--color-fg); }
+    .callout__content p { margin: 0; font-size: var(--size-small); }
+
+    /* ─── Pull quote ──────────────────────────────────────────────── */
+    .report-pullquote {
+      border-left: 4px solid var(--color-accent);
+      background: var(--color-accent-dim);
+      padding: var(--space-5) var(--space-6);
+      margin: var(--space-7) 0;
+      border-radius: 0 var(--radius) var(--radius) 0;
+    }
+    .report-pullquote p {
+      font-family: var(--font-display);
+      font-size: var(--size-lead);
+      font-style: italic;
+      color: var(--color-fg);
+      line-height: 1.5;
+      margin: 0 0 var(--space-3);
+      max-width: 58ch;
+    }
+    .report-pullquote cite {
+      font-size: var(--size-small);
+      color: var(--color-fg-muted);
+      font-style: normal;
+      font-weight: 500;
+    }
+
+    /* ─── Tabelas ─────────────────────────────────────────────────── */
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-sm);
+      margin: var(--space-5) 0;
+      break-inside: avoid;
+    }
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--size-small);
+      background: var(--color-bg-elevated);
+    }
+    table.data-table thead {
+      position: sticky; top: 0; z-index: 2;
+      background: var(--color-bg-sunken);
+    }
+    table.data-table th {
+      padding: var(--space-3) var(--space-4);
+      text-align: left;
+      font-size: var(--size-xs);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-fg-subtle);
+      border-bottom: 2px solid var(--color-border-strong);
+      white-space: nowrap;
+    }
+    table.data-table td {
+      padding: var(--space-3) var(--space-4);
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-fg-muted);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    table.data-table tbody tr:nth-child(even) td { background: rgba(41,32,23,0.02); }
+    [data-theme="dark"] table.data-table tbody tr:nth-child(even) td { background: rgba(237,229,221,0.02); }
+    table.data-table tbody tr:hover td { background: var(--color-accent-dim); }
+    table.data-table tbody tr:last-child td { border-bottom: none; }
+    .td-strong { font-weight: 600; color: var(--color-fg); font-family: var(--font-display); }
+    .td-mono { font-family: var(--font-mono); font-size: var(--size-xs); }
+
+    /* ─── Badges ──────────────────────────────────────────────────── */
+    .badge {
+      display: inline-flex; align-items: center;
+      padding: 2px 8px; border-radius: 999px;
+      font-size: 0.7rem; font-weight: 600;
+      font-family: var(--font-text); white-space: nowrap;
+    }
+    .badge-accent   { background: var(--color-accent-dim);   color: var(--color-accent); }
+    .badge-info     { background: var(--color-info-dim);     color: var(--color-info); }
+    .badge-success  { background: var(--color-success-dim);  color: var(--color-success); }
+    .badge-sage     { background: var(--color-sage-dim);     color: var(--color-sage); }
+    .badge-teal     { background: var(--color-teal-dim);     color: var(--color-teal); }
+    .badge-plum     { background: var(--color-plum-dim);     color: var(--color-plum); }
+    .badge-warn     { background: var(--color-warn-dim);     color: var(--color-fg-muted); }
+
+    /* ─── Gráficos ────────────────────────────────────────────────── */
+    .chart-wrap {
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      box-shadow: var(--shadow-sm);
+      margin: var(--space-5) 0;
+      break-inside: avoid;
+    }
+    .chart-title {
+      font-family: var(--font-display);
+      font-size: var(--size-h3);
+      font-weight: 700;
+      margin: 0 0 var(--space-2);
+      color: var(--color-fg);
+    }
+    .chart-subtitle {
+      font-size: var(--size-xs);
+      color: var(--color-fg-subtle);
+      margin: 0 0 var(--space-5);
+    }
+    .chart-inner { position: relative; height: 320px; }
+    .chart-inner-tall { position: relative; height: 400px; }
+    .chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5); margin: var(--space-5) 0; }
+    @media (max-width: 640px) { .chart-row { grid-template-columns: 1fr; } }
+
+    /* ─── Timeline ────────────────────────────────────────────────── */
+    .timeline {
+      position: relative;
+      padding-left: var(--space-8);
+      margin: var(--space-5) 0;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 11px; top: 8px; bottom: 8px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--color-accent) 0%, var(--color-info) 100%);
+      border-radius: 2px;
+    }
+    .timeline-item { position: relative; margin-bottom: var(--space-5); }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: calc(-1 * var(--space-8) + 7px);
+      top: 6px;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--color-accent);
+      border: 2px solid var(--color-bg);
+      box-shadow: 0 0 0 2px var(--color-accent);
+    }
+    .timeline-year {
+      font-family: var(--font-mono);
+      font-size: var(--size-xs);
+      font-weight: 600;
+      color: var(--color-accent);
+      margin: 0 0 var(--space-1);
+    }
+    .timeline-text {
+      font-size: var(--size-small);
+      color: var(--color-fg-muted);
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    /* ─── Diretores ───────────────────────────────────────────────── */
+    .directors-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: var(--space-4);
+      margin: var(--space-5) 0;
+    }
+    .director-card {
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: var(--space-4);
+      box-shadow: var(--shadow-sm);
+    }
+    .director-avatar {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 700; color: #fff; font-size: 0.85rem;
+      margin-bottom: var(--space-3);
+      flex-shrink: 0;
+    }
+    .av-orange { background: #FF6200; }
+    .av-blue   { background: #3B85FA; }
+    .av-teal   { background: #0f766e; }
+    .av-sage   { background: #65a30d; }
+    .av-plum   { background: #9f1239; }
+    .av-yellow { background: #c28500; }
+    .director-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.875rem;
+      color: var(--color-fg);
+      line-height: 1.3;
+      margin-bottom: var(--space-1);
+    }
+    .director-role {
+      font-size: var(--size-xs);
+      color: var(--color-fg-muted);
+      line-height: 1.4;
+    }
+
+    /* ─── Org chart ───────────────────────────────────────────────── */
+    .org-chart {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-4);
+      margin: var(--space-6) 0;
+    }
+    .org-top { display: flex; flex-direction: column; align-items: center; }
+    .org-node {
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: var(--space-3) var(--space-5);
+      font-size: var(--size-small);
+      font-weight: 600;
+      color: var(--color-fg);
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+      min-width: 180px;
+    }
+    .org-node.is-cio {
+      border-color: var(--color-accent);
+      border-top: 3px solid var(--color-accent);
+      background: var(--color-accent-dim);
+    }
+    .org-node__role { font-size: var(--size-xs); color: var(--color-fg-muted); font-weight: 400; margin-top: 2px; }
+    .org-connector {
+      width: 2px;
+      height: var(--space-4);
+      background: var(--color-border-strong);
+    }
+    .org-row {
+      display: flex;
+      gap: var(--space-4);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .org-branch {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ─── Pilares ─────────────────────────────────────────────────── */
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: var(--space-4);
+      margin: var(--space-5) 0;
+    }
+    .pillar-card {
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: var(--space-5);
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+    }
+    .pillar-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+    .pillar-card.accent::before { background: var(--color-accent); }
+    .pillar-card.info::before   { background: var(--color-info); }
+    .pillar-card.teal::before   { background: var(--color-teal); }
+    .pillar-num {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--color-accent-dim);
+      line-height: 1;
+      margin-bottom: var(--space-2);
+      display: block;
+    }
+    .pillar-card.info .pillar-num { color: var(--color-info-dim); }
+    .pillar-card.teal .pillar-num { color: var(--color-teal-dim); }
+    .pillar-card h3 { font-size: 1rem; margin: 0 0 var(--space-2); }
+    .pillar-card p { font-size: var(--size-small); margin: 0; }
+
+    /* ─── Estrutura 3 camadas ─────────────────────────────────────── */
+    .structure-stack {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      margin: var(--space-5) 0;
+    }
+    .structure-layer {
+      border-radius: var(--radius);
+      padding: var(--space-4) var(--space-5);
+      border-left: 4px solid;
+    }
+    .structure-layer.top  { background: var(--color-accent-dim); border-color: var(--color-accent); }
+    .structure-layer.core { background: var(--color-info-dim);   border-color: var(--color-info); }
+    .structure-layer.base { background: var(--color-teal-dim);   border-color: var(--color-teal); }
+    .structure-layer-label {
+      font-size: var(--size-xs);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-fg-subtle);
+      margin-bottom: var(--space-1);
+    }
+    .structure-layer h3 { margin: 0 0 var(--space-2); font-size: 0.95rem; }
+    .structure-layer p { margin: 0; font-size: var(--size-small); }
+
+    /* ─── Selos ESG ───────────────────────────────────────────────── */
+    .recognition-row { display: flex; gap: var(--space-3); flex-wrap: wrap; margin: var(--space-4) 0; }
+    .recognition-badge {
+      display: flex; align-items: center; gap: var(--space-2);
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: var(--space-2) var(--space-3);
+      font-size: var(--size-xs);
+      font-weight: 600;
+      color: var(--color-fg-muted);
+      box-shadow: var(--shadow-sm);
+    }
+    .rb-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .rb-sage   { background: var(--color-sage); }
+    .rb-orange { background: var(--color-accent); }
+    .rb-blue   { background: var(--color-info); }
+    .rb-teal   { background: var(--color-teal); }
+
+    /* ─── Contato ─────────────────────────────────────────────────── */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: var(--space-4);
+      margin: var(--space-5) 0;
+    }
+    .contact-card {
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: var(--space-4) var(--space-5);
+      box-shadow: var(--shadow-sm);
+    }
+    .contact-type {
+      font-size: var(--size-xs);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-fg-subtle);
+      margin-bottom: var(--space-2);
+    }
+    .contact-value {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--color-fg);
+      margin-bottom: var(--space-1);
+    }
+    .contact-note {
+      font-size: var(--size-xs);
+      color: var(--color-fg-muted);
+    }
+
+    /* ─── Footnotes ───────────────────────────────────────────────── */
+    sup { font-size: 0.7em; line-height: 1; }
+    .fn-ref, .fn-back {
+      font-family: var(--font-mono);
+      font-size: 0.75em;
+      color: var(--color-accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .fn-ref:hover, .fn-back:hover { text-decoration: underline; }
+    .report-footnotes {
+      max-width: var(--report-max);
+      margin: var(--space-10) auto 0;
+      padding: var(--space-6) var(--report-gutter) var(--space-8);
+      border-top: 1px solid var(--color-border);
+    }
+    .fn-label {
+      font-size: var(--size-xs);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-fg-subtle);
+      margin: 0 0 var(--space-4);
+    }
+    .fn-list { padding-left: var(--space-5); margin: 0; }
+    .fn-list li {
+      font-size: var(--report-small);
+      color: var(--color-fg-muted);
+      margin-bottom: var(--space-2);
+      line-height: 1.55;
+    }
+
+    /* ─── Footer ──────────────────────────────────────────────────── */
+    .report-footer {
+      max-width: var(--report-max);
+      margin: 0 auto;
+      padding: var(--space-6) var(--report-gutter) var(--space-12);
+      border-top: 1px solid var(--color-border);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--space-6);
+      flex-wrap: wrap;
+    }
+    .report-footer__brand {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.875rem;
+      color: var(--color-fg-subtle);
+    }
+    .report-footer__disclaimer {
+      font-size: var(--size-xs);
+      color: var(--color-fg-subtle);
+      max-width: 48ch;
+      line-height: 1.6;
+      margin: 0;
+    }
+    .report-footer__anbima {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: var(--space-2) var(--space-3);
+      font-size: var(--size-xs);
+      font-weight: 600;
+      color: var(--color-fg-muted);
+      white-space: nowrap;
+    }
+
+    /* ─── Reveal ──────────────────────────────────────────────────── */
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(20px);
+      transition:
+        opacity var(--duration-hero) var(--ease-out),
+        transform var(--duration-hero) var(--ease-out);
+    }
+    [data-reveal].is-visible { opacity: 1; transform: none; }
+
+    /* ─── Utilidades ──────────────────────────────────────────────── */
+    .section-divider { border: none; border-top: 1px solid var(--color-border); margin: var(--space-7) 0; }
+    .text-accent { color: var(--color-accent); }
+
+    /* ─── @media print ────────────────────────────────────────────── */
+    @media print {
+      .report-header,
+      .report-toc,
+      .theme-toggle { display: none !important; }
+
+      body {
+        font-size: 11pt;
+        line-height: 1.6;
+        color: #000 !important;
+        background: #fff !important;
+        background-image: none !important;
+      }
+
+      .report-summary__inner,
+      .chart-wrap, .metric-card, .callout, .pillar-card,
+      .director-card, .contact-card, .report-pullquote {
+        box-shadow: none !important;
+        border-color: #ccc !important;
+        background: #fff !important;
+      }
+
+      .report-section { page-break-before: always; }
+      .report-section:first-of-type { page-break-before: avoid; }
+      .report-summary { page-break-after: always; }
+      table, .callout, .chart-wrap, .report-pullquote { page-break-inside: avoid; }
+      h2, h3 { page-break-after: avoid; }
+
+      @page { margin: 2cm; size: A4; }
+
+      .report-footer::after {
+        content: "Página " counter(page) " · Itaú Asset Management · Confidencial";
+        display: block;
+        text-align: center;
+        font-size: 9pt;
+        color: #666;
+        margin-top: 2em;
+      }
+    }
+
+    /* ─── Reduced motion ──────────────────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+      [data-reveal] { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       HEADER
+  ══════════════════════════════════════════════════════════════════ -->
+  <header class="report-header">
+    <div class="report-header__brand">
+      <span class="report-header__logo" aria-hidden="true">iA</span>
+      <div>
+        <p class="report-header__org">Itaú Asset Management</p>
+        <p class="report-header__doc">Relatório Institucional · Doc nº IAM-001/2024</p>
+      </div>
+    </div>
+    <div class="report-header__meta">
+      <p class="report-header__date">Maio 2024</p>
+      <button class="theme-toggle" aria-label="Alternar tema" type="button">
+        <span aria-hidden="true">◐</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       TOC (preenchida por JS)
+  ══════════════════════════════════════════════════════════════════ -->
+  <nav class="report-toc" aria-label="Sumário do documento">
+    <p class="report-toc__heading">Conteúdo</p>
+    <ol class="report-toc__list">
+      <!-- JS preenche aqui -->
+    </ol>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       SUMÁRIO EXECUTIVO
+  ══════════════════════════════════════════════════════════════════ -->
+  <section class="report-summary" aria-label="Sumário executivo" data-reveal>
+    <div class="report-summary__inner">
+      <p class="report-summary__label">Sumário Executivo</p>
+      <p class="report-summary__lead">
+        A Itaú Asset Management é a maior gestora privada do Brasil, com R$&nbsp;1,193 trilhão em ativos sob gestão, 2,6 milhões de clientes e 14,5% de market share. O Modelo Multimesas reúne oito estratégias especializadas com R$&nbsp;227&nbsp;bilhões em retorno absoluto e crédito. Desde 2020, 100% dos ativos possuem cobertura ESG integral, consolidando a gestora como referência em investimento responsável no mercado doméstico.
+      </p>
+      <div class="report-summary__kpis">
+        <div class="summary-kpi">
+          <p class="summary-kpi__val">R$ 1,193 tri</p>
+          <p class="summary-kpi__label">Ativos sob Gestão (AuM Total)</p>
+        </div>
+        <div class="summary-kpi">
+          <p class="summary-kpi__val">2,6 mi</p>
+          <p class="summary-kpi__label">Clientes Ativos</p>
+        </div>
+        <div class="summary-kpi">
+          <p class="summary-kpi__val">14,5%</p>
+          <p class="summary-kpi__label">Market Share no Setor</p>
+        </div>
+        <div class="summary-kpi">
+          <p class="summary-kpi__val">100%</p>
+          <p class="summary-kpi__label">Cobertura ESG dos Ativos</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       CORPO DO RELATÓRIO
+  ══════════════════════════════════════════════════════════════════ -->
+  <main class="report-body">
+
+    <!-- S01 — GRANDEZA E ESCALA ════════════════════════════════════ -->
+    <section class="report-section" id="s1" data-reveal>
+      <div class="section-header">
+        <span class="section-num" aria-hidden="true">01</span>
+        <h2>Grandeza e Escala</h2>
+      </div>
+
+      <p>A Itaú Asset Management encerra 2023 com <strong>R$&nbsp;1,193 trilhão em ativos sob gestão</strong>, posição que a consolida como a maior gestora privada do Brasil e uma das maiores da América Latina. O crescimento de 2004 a 2023 representa expansão de 238x em volume, impulsionada pela ampliação de produtos, digitalização da distribuição e integração de critérios ESG em toda a plataforma.</p>
+
+      <p>A base de <strong>2,6 milhões de clientes</strong> abrange desde investidores individuais de varejo até os maiores fundos de pensão e entidades públicas do país, com alocação diversificada em renda fixa, renda variável, multimercado, previdência e soluções estruturadas<sup><a href="#fn1" class="fn-ref" id="fn-ref-1">[1]</a></sup>.</p>
+
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <span class="metric-value">R$ 1,193 tri</span>
+          <p class="metric-label">AuM Total (dez/2023)</p>
+        </div>
+        <div class="metric-card info">
+          <span class="metric-value">2,6 mi</span>
+          <p class="metric-label">Clientes Ativos</p>
+        </div>
+        <div class="metric-card sage">
+          <span class="metric-value">14,5%</span>
+          <p class="metric-label">Market Share Brasil</p>
+        </div>
+        <div class="metric-card teal">
+          <span class="metric-value">R$ 227 bi</span>
+          <p class="metric-label">AuM Retorno Absoluto</p>
+        </div>
+        <div class="metric-card">
+          <span class="metric-value">238×</span>
+          <p class="metric-label">Crescimento 2004–2023</p>
+        </div>
+        <div class="metric-card info">
+          <span class="metric-value">8</span>
+          <p class="metric-label">Mesas Especializadas</p>
+        </div>
+      </div>
+
+      <!-- Gráfico donut: composição do AuM -->
+      <div class="chart-wrap">
+        <p class="chart-title">Composição do AuM — Breakdown por Categoria</p>
+        <p class="chart-subtitle">Distribuição do R$ 1,193 trilhão por classe de ativo · dez/2023</p>
+        <div class="chart-inner">
+          <canvas id="chartDonutAuM"></canvas>
+        </div>
+      </div>
+
+      <div class="callout callout--info">
+        <span class="callout__icon">i</span>
+        <div class="callout__content">
+          <p class="callout__title">Posição no Ranking ANBIMA</p>
+          <p>Itaú Asset Management ocupa o 1º lugar entre gestoras privadas no ranking ANBIMA por volume de ativos administrados, com dados referentes a dezembro de 2023.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- S02 — JORNADA ══════════════════════════════════════════════ -->
+    <section class="report-section" id="s2" data-reveal>
+      <div class="section-header">
+        <span class="section-num" aria-hidden="true">02</span>
+        <h2>Jornada</h2>
+      </div>
+
+      <p>Ao longo de mais de seis décadas, a Itaú Asset Management evoluiu de uma gestão artesanal de renda fixa para uma plataforma multi-estratégia de escala nacional, incorporando governança, tecnologia e responsabilidade socioambiental em cada fase de crescimento.</p>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <p class="timeline-year">1957</p>
+          <p class="timeline-text"><strong>Fundação do Banco Federal de Crédito</strong> — origem da linha de gestão de ativos que evoluiria até o atual Itaú Asset Management.</p>
+        </div>
+        <div class="timeline-item">
+          <p class="timeline-year">1966</p>
+          <p class="timeline-text"><strong>Criação do primeiro fundo de investimento</strong> — lançamento do fundo pioneiro de renda fixa, marco inicial da gestão coletiva de recursos no grupo.</p>
+        </div>
+        <div class="timeline-item">
+          <p class="timeline-year">1988</p>
+          <p class="timeline-text"><strong>Reestruturação Itaú</strong> — integração das operações de gestão de recursos ao Banco Itaú, com ampliação do portfólio de produtos.</p>
+        </div>
+        <div class="timeline-item">
+          <p class="timeline-year">1994</p>
+          <p class="timeline-text"><strong>Plano Real</strong> — adaptação estratégica ao novo ambiente de juros, expansão de fundos DI e multimercado como resposta à estabilização monetária.</p>
+        </div>
+        <div class="timeline-item">
+          <p class="timeline-year">2002</p>
+          <p class="timeline-text"><strong>Constituição formal da Asset</strong> — formalização da divisão de gestão de investimentos como unidade de negócios independente dentro do conglomerado.</p>
+        </div>
+        <div class="timeline-item">
+          <p class="timeline-year">2004</p>
+          <p class="timeline-text"><strong>Primeiros passos ESG</strong> — incorporação de critérios ambientais e sociais na análise de empresas da carteira de renda variável.</p>
+        </div>
+        <div class="timeline-item">
+          <p class="timeline-year">2008</p>
+          <p class="timeline-text"><strong>Fusão Itaú–Unibanco</strong> — combinação das plataformas de gestão de recursos, gerando a maior gestora privada do Brasil de forma consolidada.</p>
+        </div>
+        <div class="timeline-item">
+          <p class="timeline-year">2014</p>
+          <p class="timeline-text"><strong>Lançamento dos ETFs</strong> — pioneirismo na estruturação de fundos de índice (ETFs) de renda variável e renda fixa listados na B3.</p>
+        </div>
+        <div class="timeline-item">
+          <p class="timeline-year">2018</p>
+          <p class="timeline-text"><strong>Modelo Multimesas</strong> — implantação da arquitetura de mesas especializadas com autonomia de gestão e métricas de performance individuais.</p>
+        </div>
+        <div class="timeline-item">
+          <p class="timeline-year">2020</p>
+          <p class="timeline-text"><strong>Cobertura ESG 100%</strong> — integração completa de critérios ASG em todos os ativos sob gestão, meta alcançada antes do prazo previsto.</p>
+        </div>
+        <div class="timeline-item">
+          <p class="timeline-year">2022</p>
+          <p class="timeline-text"><strong>R$ 1 trilhão sob gestão</strong> — cruzamento do marco histórico de R$ 1 trilhão em ativos, reafirmando a liderança no mercado privado.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- S03 — POSICIONAMENTO ════════════════════════════════════════ -->
+    <section class="report-section" id="s3" data-reveal>
+      <div class="section-header">
+        <span class="section-num" aria-hidden="true">03</span>
+        <h2>Posicionamento</h2>
+      </div>
+
+      <p>O posicionamento competitivo da Itaú Asset Management assenta-se sobre três pilares estratégicos que combinam escala, especialização e responsabilidade. Esses pilares são operacionalizados por sete atributos-chave e sustentados por uma estrutura organizacional de três camadas sobrepostas<sup><a href="#fn2" class="fn-ref" id="fn-ref-2">[2]</a></sup>.</p>
+
+      <h3>3 Pilares Estratégicos</h3>
+      <div class="pillars-grid">
+        <div class="pillar-card accent">
+          <span class="pillar-num">01</span>
+          <h3>Escala com Especialização</h3>
+          <p>A maior plataforma privada do Brasil combina escala de distribuição com oito mesas de gestão especializadas, cada uma com autonomia e responsabilidade sobre seus resultados.</p>
+        </div>
+        <div class="pillar-card info">
+          <span class="pillar-num">02</span>
+          <h3>Rigor Analítico</h3>
+          <p>Equipe de pesquisa dedicada, modelos proprietários de Data Science e cobertura sistemática de empresas listadas e ativos de crédito privado embasam cada decisão de investimento.</p>
+        </div>
+        <div class="pillar-card teal">
+          <span class="pillar-num">03</span>
+          <h3>Responsabilidade Integrada</h3>
+          <p>ESG não é filtro — é variável de retorno. Cobertura 100% dos ativos desde 2020, com engajamento ativo junto a conselhos e adoção de práticas de stewardship.</p>
+        </div>
+      </div>
+
+      <h3>7 Atributos de Diferenciação</h3>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Atributo</th>
+              <th>Descrição</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="td-mono">01</td>
+              <td class="td-strong">Governança independente</td>
+              <td>Comitês de investimento com membros externos e voto qualificado</td>
+              <td><span class="badge badge-success">Ativo</span></td>
+            </tr>
+            <tr>
+              <td class="td-mono">02</td>
+              <td class="td-strong">Modelo Multimesas</td>
+              <td>Oito mesas autônomas com P&amp;L e benchmark individuais</td>
+              <td><span class="badge badge-success">Ativo</span></td>
+            </tr>
+            <tr>
+              <td class="td-mono">03</td>
+              <td class="td-strong">Pesquisa proprietária</td>
+              <td>200+ empresas cobertas; modelos macro e micro internos</td>
+              <td><span class="badge badge-success">Ativo</span></td>
+            </tr>
+            <tr>
+              <td class="td-mono">04</td>
+              <td class="td-strong">Distribuição multicanal</td>
+              <td>Agências Itaú, plataformas abertas, distribuição institucional</td>
+              <td><span class="badge badge-success">Ativo</span></td>
+            </tr>
+            <tr>
+              <td class="td-mono">05</td>
+              <td class="td-strong">Cobertura ESG 100%</td>
+              <td>Todos os ativos com score ASG e relatório anual de engajamento</td>
+              <td><span class="badge badge-sage">Certificado</span></td>
+            </tr>
+            <tr>
+              <td class="td-mono">06</td>
+              <td class="td-strong">Offshore &amp; estruturado</td>
+              <td>Fundos no exterior, FIDCs, CRIs, CRAs e soluções customizadas</td>
+              <td><span class="badge badge-info">Expansão</span></td>
+            </tr>
+            <tr>
+              <td class="td-mono">07</td>
+              <td class="td-strong">Data Science aplicado</td>
+              <td>Modelos de NLP, satélite e alternativa para alpha geração</td>
+              <td><span class="badge badge-teal">Inovação</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Estrutura em 3 Camadas</h3>
+      <div class="structure-stack">
+        <div class="structure-layer top">
+          <p class="structure-layer-label">Camada 1 — Visão</p>
+          <h3>Conselho de Investimentos</h3>
+          <p>Delibera macro policy, alocação tática entre classes e aprovação de novos produtos. Composição mista: internos e conselheiros independentes.</p>
+        </div>
+        <div class="structure-layer core">
+          <p class="structure-layer-label">Camada 2 — Gestão</p>
+          <h3>Modelo Multimesas + Pesquisa &amp; Data Science</h3>
+          <p>Oito mesas especializadas com gestores sênior, suportadas por equipe de Research (macro, micro, ESG) e pelo núcleo de Data Science com modelos quantitativos proprietários.</p>
+        </div>
+        <div class="structure-layer base">
+          <p class="structure-layer-label">Camada 3 — Infraestrutura</p>
+          <h3>Operações, Risco, Compliance e Distribuição</h3>
+          <p>Backoffice integrado ao conglomerado Itaú, gestão de risco independente, compliance ANBIMA/CVM e rede de distribuição com acesso a mais de 2,6 milhões de clientes.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- S04 — DIRETORIA ═════════════════════════════════════════════ -->
+    <section class="report-section" id="s4" data-reveal>
+      <div class="section-header">
+        <span class="section-num" aria-hidden="true">04</span>
+        <h2>Diretoria</h2>
+      </div>
+
+      <p>A Itaú Asset Management é dirigida por um time de <strong>12 executivos sênior</strong> com média de 18 anos de experiência no mercado de capitais. A estrutura de liderança combina especialistas de investimentos, operações e gestão de risco com perfis complementares.</p>
+
+      <div class="directors-grid">
+        <div class="director-card">
+          <div class="director-avatar av-orange">CS</div>
+          <p class="director-name">Carlos Augusto Salamonde</p>
+          <p class="director-role">CIO — Chief Investment Officer</p>
+        </div>
+        <div class="director-card">
+          <div class="director-avatar av-blue">PB</div>
+          <p class="director-name">Pedro G. Boainain</p>
+          <p class="director-role">Diretor — Renda Variável</p>
+        </div>
+        <div class="director-card">
+          <div class="director-avatar av-teal">AP</div>
+          <p class="director-name">Arlindo Penteado</p>
+          <p class="director-role">Diretor — Renda Fixa</p>
+        </div>
+        <div class="director-card">
+          <div class="director-avatar av-sage">SC</div>
+          <p class="director-name">Stefano Catinella</p>
+          <p class="director-role">Diretor — Multimercado</p>
+        </div>
+        <div class="director-card">
+          <div class="director-avatar av-plum">SC</div>
+          <p class="director-name">Sylvio Castro</p>
+          <p class="director-role">Diretor — Crédito Privado</p>
+        </div>
+        <div class="director-card">
+          <div class="director-avatar av-yellow">KA</div>
+          <p class="director-name">Kahlil Adam</p>
+          <p class="director-role">Diretor — Estruturado</p>
+        </div>
+        <div class="director-card">
+          <div class="director-avatar av-blue">TW</div>
+          <p class="director-name">Thomas Wu</p>
+          <p class="director-role">Diretor — Quantitativo</p>
+        </div>
+        <div class="director-card">
+          <div class="director-avatar av-teal">FB</div>
+          <p class="director-name">Fernando Brantes</p>
+          <p class="director-role">Diretor — ESG &amp; Stewardship</p>
+        </div>
+        <div class="director-card">
+          <div class="director-avatar av-orange">RE</div>
+          <p class="director-name">Renato Eid</p>
+          <p class="director-role">Diretor — Distribuição Institucional</p>
+        </div>
+        <div class="director-card">
+          <div class="director-avatar av-sage">FD</div>
+          <p class="director-name">Fayga Delbem</p>
+          <p class="director-role">Diretora — Compliance &amp; Risco</p>
+        </div>
+        <div class="director-card">
+          <div class="director-avatar av-plum">LW</div>
+          <p class="director-name">Luís Wetzel</p>
+          <p class="director-role">Diretor — Operações &amp; Tecnologia</p>
+        </div>
+        <div class="director-card">
+          <div class="director-avatar av-blue">SP</div>
+          <p class="director-name">Scott Piper</p>
+          <p class="director-role">Diretor — Offshore &amp; Internacional</p>
+        </div>
+      </div>
+
+      <!-- Org chart simplificado -->
+      <h3>Organograma Executivo</h3>
+      <div class="org-chart">
+        <div class="org-top">
+          <div class="org-node is-cio">
+            Carlos Augusto Salamonde
+            <p class="org-node__role">CIO</p>
+          </div>
+          <div class="org-connector"></div>
+        </div>
+        <div class="org-row">
+          <div class="org-branch">
+            <div class="org-connector"></div>
+            <div class="org-node">Pedro Boainain<p class="org-node__role">Renda Variável</p></div>
+          </div>
+          <div class="org-branch">
+            <div class="org-connector"></div>
+            <div class="org-node">Arlindo Penteado<p class="org-node__role">Renda Fixa</p></div>
+          </div>
+          <div class="org-branch">
+            <div class="org-connector"></div>
+            <div class="org-node">Stefano Catinella<p class="org-node__role">Multimercado</p></div>
+          </div>
+          <div class="org-branch">
+            <div class="org-connector"></div>
+            <div class="org-node">Thomas Wu<p class="org-node__role">Quantitativo</p></div>
+          </div>
+          <div class="org-branch">
+            <div class="org-connector"></div>
+            <div class="org-node">Fernando Brantes<p class="org-node__role">ESG</p></div>
+          </div>
+          <div class="org-branch">
+            <div class="org-connector"></div>
+            <div class="org-node">Fayga Delbem<p class="org-node__role">Compliance</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- S05 — ESTRATÉGIAS BETA ══════════════════════════════════════ -->
+    <section class="report-section" id="s5" data-reveal>
+      <div class="section-header">
+        <span class="section-num" aria-hidden="true">05</span>
+        <h2>Estratégias Beta</h2>
+      </div>
+
+      <p>As estratégias beta da Itaú Asset cobrem o espectro completo de classes de ativos, desde fundos passivos de baixo custo até produtos ativos com gestão qualitativa intensiva. A plataforma conta com <strong>9 fundos ativos</strong> e <strong>4 ETFs</strong> com liquidez diária e negociação em bolsa.</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Fundo</th>
+              <th>Classe</th>
+              <th>AuM Aprox.</th>
+              <th>Benchmark</th>
+              <th>Retorno 12m</th>
+              <th>Sharpe</th>
+              <th>Tipo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="td-strong">Itaú Ações Ibovespa</td>
+              <td>Renda Variável</td>
+              <td>R$ 28 bi</td>
+              <td>Ibovespa</td>
+              <td>+22,4%</td>
+              <td>1.12</td>
+              <td><span class="badge badge-accent">Ativo</span></td>
+            </tr>
+            <tr>
+              <td class="td-strong">Itaú Dividendos</td>
+              <td>Renda Variável</td>
+              <td>R$ 18 bi</td>
+              <td>IDIV</td>
+              <td>+19,8%</td>
+              <td>1.04</td>
+              <td><span class="badge badge-accent">Ativo</span></td>
+            </tr>
+            <tr>
+              <td class="td-strong">Itaú Small Caps</td>
+              <td>Renda Variável</td>
+              <td>R$ 8 bi</td>
+              <td>SMLL</td>
+              <td>+31,2%</td>
+              <td>1.28</td>
+              <td><span class="badge badge-accent">Ativo</span></td>
+            </tr>
+            <tr>
+              <td class="td-strong">Itaú RF Soberano</td>
+              <td>Renda Fixa</td>
+              <td>R$ 95 bi</td>
+              <td>IMA-B</td>
+              <td>+13,1%</td>
+              <td>2.10</td>
+              <td><span class="badge badge-info">Passivo</span></td>
+            </tr>
+            <tr>
+              <td class="td-strong">Itaú RF Crédito Privado</td>
+              <td>Renda Fixa</td>
+              <td>R$ 42 bi</td>
+              <td>CDI</td>
+              <td>+13,8%</td>
+              <td>2.45</td>
+              <td><span class="badge badge-accent">Ativo</span></td>
+            </tr>
+            <tr>
+              <td class="td-strong">Itaú Prev RF Plus</td>
+              <td>Previdência</td>
+              <td>R$ 120 bi</td>
+              <td>INPC + 4%</td>
+              <td>+11,6%</td>
+              <td>1.90</td>
+              <td><span class="badge badge-teal">Previdência</span></td>
+            </tr>
+            <tr>
+              <td class="td-strong">Itaú Balanceado 30</td>
+              <td>Multimercado</td>
+              <td>R$ 35 bi</td>
+              <td>CDI + 2%</td>
+              <td>+14,2%</td>
+              <td>1.55</td>
+              <td><span class="badge badge-accent">Ativo</span></td>
+            </tr>
+            <tr>
+              <td class="td-strong">Itaú Global Allocation</td>
+              <td>Multimercado</td>
+              <td>R$ 22 bi</td>
+              <td>MSCI ACWI</td>
+              <td>+18,9%</td>
+              <td>1.32</td>
+              <td><span class="badge badge-sage">Global</span></td>
+            </tr>
+            <tr>
+              <td class="td-strong">Itaú Deb Incentivadas</td>
+              <td>Renda Fixa</td>
+              <td>R$ 15 bi</td>
+              <td>IDA-IPCA</td>
+              <td>+16,4%</td>
+              <td>1.85</td>
+              <td><span class="badge badge-accent">Ativo</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>ETFs Listados na B3</h3>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Ticker</th>
+              <th>Nome</th>
+              <th>Índice</th>
+              <th>AuM</th>
+              <th>TER (a.a.)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="td-mono">ITSA11</td>
+              <td class="td-strong">Itaú Ibovespa ETF</td>
+              <td>Ibovespa</td>
+              <td>R$ 12 bi</td>
+              <td>0,10%</td>
+            </tr>
+            <tr>
+              <td class="td-mono">ISUS11</td>
+              <td class="td-strong">Itaú ESG Sustentabilidade ETF</td>
+              <td>ISE B3</td>
+              <td>R$ 4,2 bi</td>
+              <td>0,20%</td>
+            </tr>
+            <tr>
+              <td class="td-mono">GOVE11</td>
+              <td class="td-strong">Itaú Títulos Públicos ETF</td>
+              <td>IMA-B 5</td>
+              <td>R$ 8 bi</td>
+              <td>0,15%</td>
+            </tr>
+            <tr>
+              <td class="td-mono">REVE11</td>
+              <td class="td-strong">Itaú Inflação Curta ETF</td>
+              <td>IMA-B 5+</td>
+              <td>R$ 6 bi</td>
+              <td>0,15%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- S06 — MODELO MULTIMESAS ════════════════════════════════════ -->
+    <section class="report-section" id="s6" data-reveal>
+      <div class="section-header">
+        <span class="section-num" aria-hidden="true">06</span>
+        <h2>Modelo Multimesas</h2>
+      </div>
+
+      <p>O Modelo Multimesas é a espinha dorsal da gestão ativa na Itaú Asset. Cada mesa opera com autonomia de portfólio, P&amp;L próprio e mandato específico, dentro das diretrizes macroeconômicas aprovadas pelo Conselho de Investimentos. As oito mesas somam <strong>R$&nbsp;227 bilhões em estratégias de retorno absoluto e crédito</strong>.</p>
+
+      <blockquote class="report-pullquote">
+        <p>"Incluir critérios socioambientais não é uma restrição ao retorno — nós fazemos os dois."</p>
+        <cite>— Carlos Augusto Salamonde, CIO</cite>
+      </blockquote>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Mesa</th>
+              <th>Foco</th>
+              <th>AuM Aprox.</th>
+              <th>Benchmark</th>
+              <th>Retorno 12m</th>
+              <th>Sharpe</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="td-strong">Crédito Estruturado</td>
+              <td>FIDCs, CRIs, CRAs, debêntures incentivadas</td>
+              <td>R$ 48 bi</td>
+              <td>CDI + 3%</td>
+              <td>+16,8%</td>
+              <td>2.62</td>
+            </tr>
+            <tr>
+              <td class="td-strong">Asgard</td>
+              <td>Macro global, FX, juros internacionais</td>
+              <td>R$ 35 bi</td>
+              <td>CDI + 4%</td>
+              <td>+19,2%</td>
+              <td>1.88</td>
+            </tr>
+            <tr>
+              <td class="td-strong">Janeiro</td>
+              <td>Long &amp; short ações domésticas</td>
+              <td>R$ 28 bi</td>
+              <td>CDI + 5%</td>
+              <td>+21,4%</td>
+              <td>1.74</td>
+            </tr>
+            <tr>
+              <td class="td-strong">Optimus</td>
+              <td>Sistemático quantitativo, algoritmos</td>
+              <td>R$ 24 bi</td>
+              <td>CDI + 3,5%</td>
+              <td>+17,6%</td>
+              <td>2.15</td>
+            </tr>
+            <tr>
+              <td class="td-strong">Legend</td>
+              <td>Distressed, situações especiais, private</td>
+              <td>R$ 20 bi</td>
+              <td>IPCA + 8%</td>
+              <td>+24,8%</td>
+              <td>1.52</td>
+            </tr>
+            <tr>
+              <td class="td-strong">Hunter</td>
+              <td>Global macro, commodities, derivativos</td>
+              <td>R$ 32 bi</td>
+              <td>CDI + 4,5%</td>
+              <td>+20,1%</td>
+              <td>1.66</td>
+            </tr>
+            <tr>
+              <td class="td-strong">Artax</td>
+              <td>Arbitragem, relative value, estruturas</td>
+              <td>R$ 22 bi</td>
+              <td>CDI + 2,5%</td>
+              <td>+15,9%</td>
+              <td>2.38</td>
+            </tr>
+            <tr>
+              <td class="td-strong">Aurora Yield Plus</td>
+              <td>Renda fixa high yield, crédito corporativo</td>
+              <td>R$ 18 bi</td>
+              <td>CDI + 3%</td>
+              <td>+16,4%</td>
+              <td>2.20</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Gráfico de barras: AuM por mesa -->
+      <div class="chart-wrap">
+        <p class="chart-title">AuM por Mesa — R$ bilhões</p>
+        <p class="chart-subtitle">Valores aproximados · dezembro 2023</p>
+        <div class="chart-inner">
+          <canvas id="chartMesas"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- S07 — PESQUISA & DATA SCIENCE ══════════════════════════════ -->
+    <section class="report-section" id="s7" data-reveal>
+      <div class="section-header">
+        <span class="section-num" aria-hidden="true">07</span>
+        <h2>Pesquisa &amp; Data Science</h2>
+      </div>
+
+      <p>A plataforma de Research &amp; Data Science da Itaú Asset é um dos pilares de geração de alpha da gestora. A equipe combina analistas fundamentalistas tradicionais com cientistas de dados que desenvolvem modelos proprietários de aprendizado de máquina aplicados a portfólios de investimento.</p>
+
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <span class="metric-value">200+</span>
+          <p class="metric-label">Empresas cobertas sistematicamente</p>
+        </div>
+        <div class="metric-card info">
+          <span class="metric-value">38</span>
+          <p class="metric-label">Analistas &amp; Cientistas de Dados</p>
+        </div>
+        <div class="metric-card teal">
+          <span class="metric-value">12</span>
+          <p class="metric-label">Modelos proprietários ativos</p>
+        </div>
+        <div class="metric-card sage">
+          <span class="metric-value">3</span>
+          <p class="metric-label">Centros de pesquisa (SP, RJ, NY)</p>
+        </div>
+      </div>
+
+      <h3>Tópicos de Pesquisa Ativa</h3>
+      <ul>
+        <li><strong>Análise fundamentalista</strong> — cobertura de 200+ empresas listadas com modelos de valuation DCF e relativo setorial</li>
+        <li><strong>Macro quantitativo</strong> — modelos de projeção de inflação, taxa de juros, câmbio e ciclo fiscal com horizonte de 12 a 24 meses</li>
+        <li><strong>NLP &amp; Sentiment Analysis</strong> — processamento de linguagem natural em atas de reuniões, release de resultados e mídias sociais para geração de sinais</li>
+        <li><strong>Dados alternativos de satélite</strong> — análise de imagens para estimar produção agrícola, tráfego logístico e atividade industrial</li>
+        <li><strong>Scoring ESG proprietário</strong> — metodologia interna de avaliação ambiental, social e de governança com 148 variáveis por empresa</li>
+        <li><strong>Modelos de risco de crédito</strong> — probabilidade de default e rating interno para emissores de crédito privado e estruturado</li>
+        <li><strong>Otimização de portfólio</strong> — algoritmos de Black-Litterman aprimorados com restrições ESG e de liquidez</li>
+      </ul>
+
+      <div class="callout callout--tip">
+        <span class="callout__icon">✓</span>
+        <div class="callout__content">
+          <p class="callout__title">Parceria Acadêmica</p>
+          <p>A Itaú Asset mantém parcerias de pesquisa com FGV EPGE, Insper e MIT Sloan para desenvolvimento de metodologias quantitativas aplicadas a mercados emergentes.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- S08 — ESG ══════════════════════════════════════════════════ -->
+    <section class="report-section" id="s8" data-reveal>
+      <div class="section-header">
+        <span class="section-num" aria-hidden="true">08</span>
+        <h2>ESG — Investimento Responsável</h2>
+      </div>
+
+      <p>A Itaú Asset Management integrou critérios ASG em toda a plataforma de gestão, atingindo cobertura de <strong>100% dos ativos em 2020</strong> — quatro anos antes do compromisso original firmado junto a signatários dos PRI. Hoje, o engajamento ativo com conselhos e a política de voto baseada em critérios de sustentabilidade são marca registrada da gestora<sup><a href="#fn3" class="fn-ref" id="fn-ref-3">[3]</a></sup>.</p>
+
+      <!-- Gráfico misto: barras AuM ESG + linha cobertura % -->
+      <div class="chart-wrap">
+        <p class="chart-title">Evolução ESG — AuM e Cobertura (2004–2023)</p>
+        <p class="chart-subtitle">Barras: AuM total sob cobertura ESG (R$ bilhões, eixo esquerdo) · Linha: % de ativos com cobertura ESG (eixo direito)</p>
+        <div class="chart-inner-tall">
+          <canvas id="chartEsgMisto"></canvas>
+        </div>
+      </div>
+
+      <h3>8 Produtos ESG</h3>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Produto</th>
+              <th>Tipo</th>
+              <th>Foco ESG</th>
+              <th>AuM Aprox.</th>
+              <th>Lançamento</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="td-strong">Active Fix ESG</td>
+              <td>Multimercado</td>
+              <td>ASG integrado — renda fixa</td>
+              <td>R$ 12 bi</td>
+              <td>2018</td>
+              <td><span class="badge badge-sage">Ativo</span></td>
+            </tr>
+            <tr>
+              <td class="td-mono">ISUS11</td>
+              <td>ETF — RV</td>
+              <td>ISE B3 — Sustentabilidade</td>
+              <td>R$ 4,2 bi</td>
+              <td>2014</td>
+              <td><span class="badge badge-sage">Listado</span></td>
+            </tr>
+            <tr>
+              <td class="td-mono">GOVE11</td>
+              <td>ETF — RF</td>
+              <td>Governança &amp; Títulos Públicos</td>
+              <td>R$ 8 bi</td>
+              <td>2016</td>
+              <td><span class="badge badge-sage">Listado</span></td>
+            </tr>
+            <tr>
+              <td class="td-mono">REVE11</td>
+              <td>ETF — RF</td>
+              <td>Inflação — critérios sociais</td>
+              <td>R$ 6 bi</td>
+              <td>2017</td>
+              <td><span class="badge badge-sage">Listado</span></td>
+            </tr>
+            <tr>
+              <td class="td-mono">YDRO11</td>
+              <td>ETF — RV</td>
+              <td>Setor hídrico — infraestrutura verde</td>
+              <td>R$ 2,8 bi</td>
+              <td>2021</td>
+              <td><span class="badge badge-teal">Temático</span></td>
+            </tr>
+            <tr>
+              <td class="td-strong">Itaú Index ESG Água</td>
+              <td>FI — RV</td>
+              <td>Empresas de saneamento e recursos hídricos</td>
+              <td>R$ 3,4 bi</td>
+              <td>2020</td>
+              <td><span class="badge badge-teal">Temático</span></td>
+            </tr>
+            <tr>
+              <td class="td-strong">Itaú Index ESG Energia Limpa</td>
+              <td>FI — RV</td>
+              <td>Renováveis, transição energética</td>
+              <td>R$ 5,1 bi</td>
+              <td>2021</td>
+              <td><span class="badge badge-teal">Temático</span></td>
+            </tr>
+            <tr>
+              <td class="td-strong">Active Fix ESG Horizonte</td>
+              <td>Previdência</td>
+              <td>ASG integrado com viés de longo prazo</td>
+              <td>R$ 18 bi</td>
+              <td>2022</td>
+              <td><span class="badge badge-sage">Ativo</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Selos e Reconhecimentos</h3>
+      <div class="recognition-row">
+        <span class="recognition-badge"><span class="rb-dot rb-sage"></span>PRI — Signatário A+</span>
+        <span class="recognition-badge"><span class="rb-dot rb-orange"></span>CDP — Nota A</span>
+        <span class="recognition-badge"><span class="rb-dot rb-blue"></span>GRI Standards</span>
+        <span class="recognition-badge"><span class="rb-dot rb-teal"></span>TCFD Alinhado</span>
+        <span class="recognition-badge"><span class="rb-dot rb-sage"></span>ISE B3</span>
+        <span class="recognition-badge"><span class="rb-dot rb-orange"></span>ANBIMA — Gestão Responsável</span>
+      </div>
+    </section>
+
+    <!-- S09 — CONTATO ══════════════════════════════════════════════ -->
+    <section class="report-section" id="s9" data-reveal>
+      <div class="section-header">
+        <span class="section-num" aria-hidden="true">09</span>
+        <h2>Contato e Informações Relevantes</h2>
+      </div>
+
+      <p>Para informações sobre produtos, mandatos institucionais, consultas de compliance ou acesso ao Relatório de Stewardship, utilize os canais abaixo. Atendimento em português, inglês e espanhol.</p>
+
+      <div class="contact-grid">
+        <div class="contact-card">
+          <p class="contact-type">Atendimento Comercial</p>
+          <p class="contact-value">(11) 3631-2555</p>
+          <p class="contact-note">Segunda a sexta, 9h às 18h</p>
+        </div>
+        <div class="contact-card">
+          <p class="contact-type">SAC (gratuito)</p>
+          <p class="contact-value">0800 728 0728</p>
+          <p class="contact-note">24 horas, 7 dias por semana</p>
+        </div>
+        <div class="contact-card">
+          <p class="contact-type">Ouvidoria</p>
+          <p class="contact-value">0800 570 0011</p>
+          <p class="contact-note">Segunda a sexta, 9h às 18h</p>
+        </div>
+        <div class="contact-card">
+          <p class="contact-type">Deficientes auditivos / fala</p>
+          <p class="contact-value">0800 722 1722</p>
+          <p class="contact-note">24 horas, 7 dias por semana</p>
+        </div>
+        <div class="contact-card">
+          <p class="contact-type">Website institucional</p>
+          <p class="contact-value">www.itauasset.com.br</p>
+          <p class="contact-note">Relatórios, regulamentos e lâminas</p>
+        </div>
+        <div class="contact-card">
+          <p class="contact-type">Regulatório</p>
+          <p class="contact-value">ANBIMA · CVM</p>
+          <p class="contact-note">Código ANBIMA de Regulação e Melhores Práticas para Gestão de Recursos de Terceiros</p>
+        </div>
+      </div>
+
+      <div class="callout callout--warn">
+        <span class="callout__icon">!</span>
+        <div class="callout__content">
+          <p class="callout__title">Aviso Legal</p>
+          <p>Este documento tem caráter exclusivamente informativo. Rentabilidade passada não é garantia de resultados futuros. Os fundos citados não possuem garantia do FGC. Leia os regulamentos antes de investir.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       FOOTNOTES
+  ══════════════════════════════════════════════════════════════════ -->
+  <div class="report-footnotes">
+    <p class="fn-label">Notas e Referências</p>
+    <ol class="fn-list">
+      <li id="fn1"><a href="#fn-ref-1" class="fn-back">↑</a> Dados de AuM consolidados conforme relatório ANBIMA de dezembro de 2023. Inclui todos os veículos sob gestão discricionária e assessorada pelo conglomerado Itaú Asset Management.</li>
+      <li id="fn2"><a href="#fn-ref-2" class="fn-back">↑</a> A estrutura organizacional descrita é para fins ilustrativos e pode sofrer ajustes conforme necessidades de negócio e exigências regulatórias. Para a composição atualizada do Conselho e da Diretoria, consulte os documentos regulatórios na CVM.</li>
+      <li id="fn3"><a href="#fn-ref-3" class="fn-back">↑</a> Cobertura ESG definida como proporção dos ativos sob gestão que possuem avaliação formalizada de critérios Ambiental, Social e Governança nos sistemas proprietários de análise da Itaú Asset Management. Metodologia disponível no Relatório de Stewardship anual.</li>
+    </ol>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════════════════════════════ -->
+  <footer class="report-footer">
+    <span class="report-footer__brand">Itaú Asset Management · 2024</span>
+    <p class="report-footer__disclaimer">
+      Documento de uso interno e distribuição restrita. Informações de caráter prospectivo envolvem riscos e incertezas que podem fazer os resultados reais diferirem materialmente dos projetados. Itaú Asset Management — CNPJ 03.885.475/0001-59.
+    </p>
+    <span class="report-footer__anbima">● Código ANBIMA de Gestão</span>
+  </footer>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       JAVASCRIPT
+  ══════════════════════════════════════════════════════════════════ -->
+  <script>
+    // ── 1. Tema toggle ──────────────────────────────────────────────
+    document.querySelector('.theme-toggle').addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme');
+      const next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      try { localStorage.setItem('ia-report-theme', next); } catch {}
+      // Re-render gráficos com novas cores
+      setTimeout(() => {
+        window._reportCharts.forEach(c => {
+          applyChartTheme(c);
+          c.update('none');
+        });
+      }, 50);
+    });
+
+    // ── 2. TOC gerada dos h2 ────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      const toc = document.querySelector('.report-toc__list');
+      if (!toc) return;
+      document.querySelectorAll('.report-section[id] > .section-header > h2').forEach((h, i) => {
+        const li = document.createElement('li');
+        const n = String(i + 1).padStart(2, '0');
+        li.innerHTML = `<a href="#${h.closest('section').id}"><span class="toc-num">${n}</span>${h.textContent}</a>`;
+        toc.appendChild(li);
+      });
+    });
+
+    // ── 3. Reveal on scroll ─────────────────────────────────────────
+    const revObs = new IntersectionObserver(es => {
+      es.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('is-visible'); revObs.unobserve(e.target); }
+      });
+    }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('[data-reveal]').forEach(el => revObs.observe(el));
+
+    // ── 4. Helpers de cor ───────────────────────────────────────────
+    function css(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+
+    function applyChartTheme(chart) {
+      const fg = css('--color-fg');
+      const mu = css('--color-fg-muted');
+      const bo = css('--color-border');
+      if (chart.options.plugins?.legend?.labels) chart.options.plugins.legend.labels.color = mu;
+      if (chart.options.scales) {
+        Object.values(chart.options.scales).forEach(sc => {
+          if (sc.ticks)  sc.ticks.color  = mu;
+          if (sc.grid)   sc.grid.color   = bo;
+          if (sc.title)  sc.title.color  = mu;
+          if (sc.border) sc.border.color = bo;
+        });
+      }
+    }
+
+    window._reportCharts = [];
+
+    // ── 5. Donut: composição AuM ────────────────────────────────────
+    (function() {
+      const ctx = document.getElementById('chartDonutAuM');
+      if (!ctx) return;
+      const mu = css('--color-fg-muted'); const bo = css('--color-border');
+      const accent = css('--color-accent');
+      const colors = [
+        '#FF6200', '#3B85FA', '#0f766e', '#65a30d',
+        '#FBC305', '#9f1239', '#F88104', '#5eead4'
+      ];
+      const chart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: [
+            'Renda Fixa Soberana',
+            'Previdência',
+            'Renda Variável',
+            'Multimercado / Retorno Absoluto',
+            'Crédito Estruturado',
+            'ETFs',
+            'Fundos Balanceados',
+            'Offshore & Global'
+          ],
+          datasets: [{
+            data: [380, 220, 180, 160, 110, 60, 45, 38],
+            backgroundColor: colors,
+            borderWidth: 2,
+            borderColor: css('--color-bg-elevated'),
+            hoverOffset: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '62%',
+          plugins: {
+            legend: {
+              position: 'right',
+              labels: { color: mu, font: { family: 'Inter', size: 12 }, padding: 14, boxWidth: 14 }
+            },
+            tooltip: {
+              callbacks: {
+                label: ctx => ` R$ ${ctx.raw} bi  (${(ctx.raw / 1193 * 100).toFixed(1)}%)`
+              }
+            }
+          }
+        }
+      });
+      window._reportCharts.push(chart);
+    })();
+
+    // ── 6. Barras: AuM por mesa ─────────────────────────────────────
+    (function() {
+      const ctx = document.getElementById('chartMesas');
+      if (!ctx) return;
+      const mu = css('--color-fg-muted'); const bo = css('--color-border');
+      const accent = css('--color-accent');
+      const infoC = css('--color-info');
+      const mesas  = ['Crédito Estruturado','Asgard','Janeiro','Optimus','Legend','Hunter','Artax','Aurora Yield Plus'];
+      const values = [48, 35, 28, 24, 20, 32, 22, 18];
+      // Paleta gradiente simples
+      const bgColors = mesas.map((_, i) => {
+        const t = i / (mesas.length - 1);
+        const r = Math.round(255 * (1 - t) + 59 * t);
+        const g = Math.round(98  * (1 - t) + 133 * t);
+        const b = Math.round(0   * (1 - t) + 250 * t);
+        return `rgba(${r},${g},${b},0.85)`;
+      });
+      const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: mesas,
+          datasets: [{
+            label: 'AuM (R$ bilhões)',
+            data: values,
+            backgroundColor: bgColors,
+            borderRadius: 5,
+            borderSkipped: false,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: { callbacks: { label: c => ` R$ ${c.raw} bi` } }
+          },
+          scales: {
+            x: {
+              ticks: { color: mu, font: { family: 'Inter', size: 11 }, maxRotation: 30 },
+              grid: { display: false },
+              border: { color: bo }
+            },
+            y: {
+              beginAtZero: true,
+              ticks: {
+                color: mu,
+                font: { family: 'JetBrains Mono', size: 11 },
+                callback: v => `R$ ${v} bi`
+              },
+              grid: { color: bo },
+              border: { color: bo }
+            }
+          }
+        }
+      });
+      window._reportCharts.push(chart);
+    })();
+
+    // ── 7. Misto bar+line: ESG AuM + cobertura % ───────────────────
+    (function() {
+      const ctx = document.getElementById('chartEsgMisto');
+      if (!ctx) return;
+      const mu = css('--color-fg-muted'); const bo = css('--color-border');
+      const accent  = css('--color-accent');
+      const sageC   = css('--color-sage');
+      const infoC   = css('--color-info');
+
+      const labels = ['2004','2005','2006','2007','2008','2009','2010','2011','2012','2013',
+                      '2014','2015','2016','2017','2018','2019','2020','2021','2022','2023'];
+      const aumEsg    = [5,8,12,20,35,48,65,85,110,150,210,280,380,490,580,680,820,950,1050,1193];
+      const cobPct    = [null,null,null,null,null,null,null,null,null,10,15,25,89,90,90,95,100,100,100,100];
+
+      const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            {
+              type: 'bar',
+              label: 'AuM sob cobertura ESG (R$ bi)',
+              data: aumEsg,
+              backgroundColor: 'rgba(255,98,0,0.75)',
+              borderRadius: 3,
+              borderSkipped: false,
+              yAxisID: 'y',
+              order: 2
+            },
+            {
+              type: 'line',
+              label: 'Cobertura ESG (%)',
+              data: cobPct,
+              borderColor: sageC,
+              backgroundColor: 'rgba(101,163,13,0.12)',
+              borderWidth: 2.5,
+              pointRadius: 4,
+              pointBackgroundColor: sageC,
+              pointBorderColor: css('--color-bg-elevated'),
+              pointBorderWidth: 2,
+              fill: false,
+              tension: 0.35,
+              spanGaps: false,
+              yAxisID: 'y2',
+              order: 1
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: {
+              labels: { color: mu, font: { family: 'Inter', size: 12 }, padding: 16, boxWidth: 14 }
+            },
+            tooltip: {
+              callbacks: {
+                label: ctx => {
+                  if (ctx.dataset.yAxisID === 'y2') return ` Cobertura: ${ctx.raw ?? '—'}%`;
+                  return ` AuM: R$ ${ctx.raw} bi`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              ticks: { color: mu, font: { family: 'Inter', size: 11 }, maxRotation: 45 },
+              grid: { display: false },
+              border: { color: bo }
+            },
+            y: {
+              type: 'linear',
+              position: 'left',
+              beginAtZero: true,
+              title: { display: true, text: 'AuM (R$ bilhões)', color: mu, font: { family: 'Inter', size: 11 } },
+              ticks: { color: mu, font: { family: 'JetBrains Mono', size: 11 }, callback: v => `R$ ${v}` },
+              grid: { color: bo },
+              border: { color: bo }
+            },
+            y2: {
+              type: 'linear',
+              position: 'right',
+              beginAtZero: true,
+              max: 110,
+              title: { display: true, text: 'Cobertura ESG (%)', color: mu, font: { family: 'Inter', size: 11 } },
+              ticks: { color: mu, font: { family: 'JetBrains Mono', size: 11 }, callback: v => `${v}%` },
+              grid: { drawOnChartArea: false },
+              border: { color: bo }
+            }
+          }
+        }
+      });
+      window._reportCharts.push(chart);
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<!--
+  Template: slideless report (vazio)
+  Modelo: relatório anual / documento executivo
+  Como usar:
+    1. Substituir {{TÍTULO}}, {{ORG}}, {{DOC_NUM}}, {{DATA}} pelos valores reais
+    2. Substituir o marker /* SLIDELESS:THEME */ pelo conteúdo de assets/temas/{itau,neutro}.css
+    3. Adicionar seções .report-section com id="sN" dentro de <main class="report-body">
+    4. TOC é gerada automaticamente por JS a partir dos h2 dentro de .report-section[id]
+    5. Footnotes: adicionar <sup><a href="#fnN">[N]</a></sup> no texto e <li id="fnN"> no .report-footnotes
+  Público-alvo: diretoria, RI, compliance, conselho — impressão/PDF
+-->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{TÍTULO}} — Relatório Institucional</title>
+
+  <!-- Boot: lê preferência de tema antes do paint para evitar flash -->
+  <script>
+    (function() {
+      try {
+        var t = localStorage.getItem('theme') ||
+                (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+
+  <!-- Fontes: Fraunces (display) + Inter (texto) + JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Chart.js (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+
+  <style>
+    /* SLIDELESS:THEME — substituir por conteúdo de assets/temas/itau.css ou neutro.css */
+
+    /* ─── Tokens do sistema (inline fallback) ─────────────────────── */
+    :root {
+      --itau-orange:     #FF6200;
+      --itau-orange-2:   #F88104;
+      --itau-orange-3:   #FA9F09;
+      --itau-blue-3:     #3B85FA;
+      --itau-yellow:     #FBC305;
+      --itau-warm-black: #14110d;
+
+      --color-accent:        var(--itau-orange);
+      --color-accent-dim:    rgba(255,98,0,0.08);
+      --color-accent-fg:     #ffffff;
+      --color-info:          var(--itau-blue-3);
+      --color-info-dim:      rgba(59,133,250,0.08);
+      --color-success:       #4d7c0f;
+      --color-success-dim:   rgba(77,124,15,0.08);
+      --color-sage:          #65a30d;
+      --color-sage-dim:      rgba(101,163,13,0.08);
+      --color-teal:          #0f766e;
+      --color-teal-dim:      rgba(15,118,110,0.08);
+      --color-plum:          #9f1239;
+      --color-plum-dim:      rgba(159,18,57,0.08);
+      --color-warn:          var(--itau-yellow);
+      --color-warn-dim:      rgba(251,195,5,0.12);
+      --color-danger:        #b91c1c;
+      --color-danger-dim:    rgba(185,28,28,0.08);
+
+      --color-bg:            #faf7f5;
+      --color-bg-elevated:   #ffffff;
+      --color-bg-sunken:     #f4f1ec;
+      --color-fg:            #292017;
+      --color-fg-muted:      #6b5d50;
+      --color-fg-subtle:     #8a7e72;
+      --color-border:        rgba(41,32,23,0.10);
+      --color-border-strong: rgba(41,32,23,0.18);
+      --color-accent-hover:  var(--itau-orange-2);
+
+      --glow-warm: radial-gradient(ellipse 80% 60% at 80% 0%,rgba(255,98,0,0.10) 0%,transparent 55%);
+      --glow-cool: radial-gradient(ellipse 70% 50% at 20% 100%,rgba(59,133,250,0.08) 0%,transparent 55%);
+
+      --font-display: 'Fraunces', Georgia, serif;
+      --font-text:    'Inter', -apple-system, system-ui, sans-serif;
+      --font-mono:    'JetBrains Mono', 'IBM Plex Mono', Consolas, monospace;
+
+      --size-xs:    clamp(0.75rem, 0.7rem + 0.2vw, 0.875rem);
+      --size-small: clamp(0.875rem, 0.85rem + 0.15vw, 1rem);
+      --size-body:  clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+      --size-lead:  clamp(1.15rem, 1.05rem + 0.5vw, 1.4rem);
+      --size-h3:    clamp(1.2rem, 1.1rem + 0.5vw, 1.5rem);
+      --size-h2:    clamp(1.6rem, 1.3rem + 1.2vw, 2.25rem);
+      --size-h1:    clamp(2.25rem, 1.8rem + 2vw, 3.5rem);
+
+      --space-1:  0.25rem;  --space-2:  0.5rem;   --space-3:  0.75rem;
+      --space-4:  1rem;     --space-5:  1.5rem;   --space-6:  2rem;
+      --space-7:  2.5rem;   --space-8:  3rem;     --space-10: 4rem;
+      --space-12: 5rem;     --space-16: 7rem;
+
+      --radius-sm: 4px;
+      --radius:    10px;
+      --radius-lg: 16px;
+
+      --shadow-xs: 0 1px 2px rgba(41,32,23,0.04);
+      --shadow-sm: 0 2px 4px rgba(41,32,23,0.06), 0 1px 2px rgba(41,32,23,0.04);
+      --shadow:    0 4px 12px rgba(41,32,23,0.08), 0 1px 3px rgba(41,32,23,0.05);
+      --shadow-lg: 0 12px 32px rgba(41,32,23,0.12), 0 4px 12px rgba(41,32,23,0.06);
+      --inset-sm:  inset 0 1px 3px rgba(41,32,23,0.06);
+
+      --ease-out:       cubic-bezier(0.22, 1, 0.36, 1);
+      --ease-in-out:    cubic-bezier(0.65, 0, 0.35, 1);
+      --ease-emphatic:  cubic-bezier(0.16, 1, 0.3, 1);
+      --duration-fast:  150ms;
+      --duration:       250ms;
+      --duration-slow:  400ms;
+      --duration-hero:  900ms;
+
+      /* ─── Tokens específicos do report ───────────────────────────── */
+      --report-max:       800px;
+      --report-gutter:    var(--space-8);
+      --report-lead:      1.75rem;
+      --report-body-size: 1rem;
+      --report-small:     0.875rem;
+      --report-header-h:  80px;
+    }
+
+    [data-theme="dark"] {
+      --color-bg:            #14110d;
+      --color-bg-elevated:   #1c1814;
+      --color-bg-sunken:     #221d18;
+      --color-fg:            #ede5dd;
+      --color-fg-muted:      #b8aa9a;
+      --color-fg-subtle:     #786e62;
+      --color-border:        rgba(237,229,221,0.10);
+      --color-border-strong: rgba(237,229,221,0.20);
+      --color-accent:        var(--itau-orange-3);
+      --color-accent-hover:  var(--itau-orange-2);
+      --color-accent-fg:     #14110d;
+      --color-accent-dim:    rgba(250,159,9,0.10);
+      --color-info-dim:      rgba(59,133,250,0.12);
+      --color-success:       #a3e635;
+      --color-success-dim:   rgba(163,230,53,0.10);
+      --color-sage:          #bef264;
+      --color-sage-dim:      rgba(190,242,100,0.10);
+      --color-teal:          #5eead4;
+      --color-teal-dim:      rgba(94,234,212,0.10);
+      --color-plum:          #fb7185;
+      --color-plum-dim:      rgba(251,113,133,0.10);
+      --color-warn-dim:      rgba(251,195,5,0.12);
+      --color-danger:        #f87171;
+      --color-danger-dim:    rgba(248,113,113,0.10);
+      --shadow-sm: 0 2px 4px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+      --shadow-lg: 0 12px 32px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.3);
+      --inset-sm:  inset 0 1px 3px rgba(0,0,0,0.4);
+      --glow-warm: radial-gradient(ellipse 80% 60% at 80% 0%,rgba(250,159,9,0.18) 0%,transparent 55%);
+      --glow-cool: radial-gradient(ellipse 70% 50% at 20% 100%,rgba(59,133,250,0.14) 0%,transparent 55%);
+    }
+
+    /* ─── Reset base ──────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--font-text);
+      font-size: var(--report-body-size);
+      line-height: var(--report-lead);
+      color: var(--color-fg);
+      background: var(--color-bg);
+      background-image: var(--glow-warm), var(--glow-cool);
+      background-attachment: fixed;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      transition: background var(--duration-fast), color var(--duration-fast);
+    }
+    :focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 3px;
+      border-radius: var(--radius-sm);
+    }
+    h1, h2, h3, h4 {
+      font-family: var(--font-display);
+      color: var(--color-fg);
+      line-height: 1.1;
+      letter-spacing: -0.022em;
+      font-weight: 700;
+    }
+    p { margin: 0 0 var(--space-4); color: var(--color-fg-muted); max-width: 70ch; }
+    a { color: var(--color-accent); text-decoration: none; }
+    a:hover { color: var(--color-accent-hover); text-decoration: underline; text-underline-offset: 3px; }
+    strong { font-weight: 700; color: var(--color-fg); }
+
+    /* ─── Header institucional ────────────────────────────────────── */
+    .report-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: var(--report-header-h);
+      background: rgba(250,247,245,0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--color-border);
+      border-bottom-width: 1px;
+      box-shadow: 0 1px 0 var(--color-border), 0 0 0 1px transparent;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--space-8);
+      gap: var(--space-6);
+    }
+    [data-theme="dark"] .report-header {
+      background: rgba(20,17,13,0.88);
+    }
+    /* accent line bottom */
+    .report-header::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--color-accent) 0%, var(--itau-orange-3) 50%, transparent 100%);
+      opacity: 0.6;
+    }
+    .report-header__brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+    }
+    .report-header__logo {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      background: var(--color-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 800;
+      color: #fff;
+      font-size: 1rem;
+      letter-spacing: -0.03em;
+      flex-shrink: 0;
+    }
+    .report-header__org {
+      margin: 0;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.9375rem;
+      color: var(--color-fg);
+      letter-spacing: -0.02em;
+    }
+    .report-header__doc {
+      margin: 0;
+      font-size: var(--size-xs);
+      color: var(--color-fg-muted);
+      font-family: var(--font-mono);
+    }
+    .report-header__meta {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+    }
+    .report-header__date {
+      margin: 0;
+      font-size: var(--size-small);
+      color: var(--color-fg-muted);
+      font-weight: 500;
+    }
+
+    /* ─── Theme toggle ────────────────────────────────────────────── */
+    .theme-toggle {
+      width: 36px; height: 36px;
+      display: grid; place-items: center;
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: 999px;
+      cursor: pointer;
+      color: var(--color-fg);
+      font-size: 14px;
+      transition: all var(--duration-fast);
+    }
+    .theme-toggle:hover {
+      background: var(--color-bg-sunken);
+      border-color: var(--color-border-strong);
+      transform: translateY(-1px);
+    }
+
+    /* ─── TOC numerado ────────────────────────────────────────────── */
+    .report-toc {
+      max-width: var(--report-max);
+      margin: var(--space-8) auto var(--space-6);
+      padding: var(--space-5) var(--report-gutter);
+    }
+    .report-toc__heading {
+      font-size: var(--size-xs);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-fg-subtle);
+      margin: 0 0 var(--space-4);
+    }
+    .report-toc__list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      columns: 2;
+      column-gap: var(--space-6);
+    }
+    .report-toc__list li {
+      margin-bottom: var(--space-2);
+      break-inside: avoid;
+    }
+    .report-toc__list a {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-3);
+      font-size: var(--size-small);
+      color: var(--color-fg-muted);
+      text-decoration: none;
+      padding: var(--space-1) 0;
+      border-bottom: 1px dotted var(--color-border);
+      transition: color var(--duration-fast);
+    }
+    .report-toc__list a:hover { color: var(--color-accent); border-color: var(--color-accent); }
+    .toc-num {
+      font-family: var(--font-mono);
+      font-size: var(--size-xs);
+      color: var(--color-accent);
+      font-weight: 600;
+      flex-shrink: 0;
+      min-width: 2ch;
+    }
+
+    /* ─── Sumário executivo ───────────────────────────────────────── */
+    .report-summary {
+      max-width: var(--report-max);
+      margin: 0 auto var(--space-10);
+      padding: 0 var(--report-gutter);
+    }
+    .report-summary__inner {
+      background: var(--color-bg-elevated);
+      border-left: 4px solid var(--color-accent);
+      border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+      padding: var(--space-7) var(--space-8);
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+    .report-summary__inner::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, var(--color-accent-dim) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .report-summary__label {
+      font-size: var(--size-xs);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-accent);
+      margin: 0 0 var(--space-4);
+      font-family: var(--font-text);
+    }
+    .report-summary__lead {
+      font-family: var(--font-display);
+      font-size: var(--size-lead);
+      line-height: 1.55;
+      color: var(--color-fg);
+      margin: 0 0 var(--space-6);
+      max-width: 60ch;
+    }
+    .report-summary__kpis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: var(--space-4);
+    }
+    .summary-kpi {
+      border-top: 2px solid var(--color-border-strong);
+      padding-top: var(--space-3);
+    }
+    .summary-kpi__val {
+      font-family: var(--font-display);
+      font-size: clamp(1.4rem, 1.2rem + 1vw, 1.9rem);
+      font-weight: 800;
+      color: var(--color-accent);
+      margin: 0 0 var(--space-1);
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+    .summary-kpi__label {
+      font-size: var(--size-xs);
+      color: var(--color-fg-muted);
+      margin: 0;
+      font-weight: 500;
+      max-width: 20ch;
+    }
+
+    /* ─── Corpo principal ─────────────────────────────────────────── */
+    .report-body {
+      max-width: var(--report-max);
+      margin: 0 auto;
+      padding: var(--space-10) var(--report-gutter);
+    }
+
+    /* ─── Seção com número grande ─────────────────────────────────── */
+    .report-section {
+      margin-bottom: var(--space-12);
+      scroll-margin-top: calc(var(--report-header-h) + var(--space-4));
+    }
+    .section-header {
+      display: flex;
+      align-items: flex-end;
+      gap: var(--space-4);
+      margin-bottom: var(--space-6);
+      padding-bottom: var(--space-4);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .section-num {
+      font-family: var(--font-mono);
+      font-size: 4rem;
+      color: var(--color-border-strong);
+      line-height: 1;
+      font-weight: 400;
+      flex-shrink: 0;
+      user-select: none;
+    }
+    .report-section h2 {
+      font-size: var(--size-h2);
+      font-weight: 800;
+      margin: 0;
+      letter-spacing: -0.025em;
+      color: var(--color-fg);
+    }
+
+    /* ─── Pull quote ──────────────────────────────────────────────── */
+    .report-pullquote {
+      border-left: 4px solid var(--color-accent);
+      background: var(--color-accent-dim);
+      padding: var(--space-5) var(--space-6);
+      margin: var(--space-7) calc(-1 * var(--space-5));
+      border-radius: 0 var(--radius) var(--radius) 0;
+    }
+    .report-pullquote p {
+      font-family: var(--font-display);
+      font-size: var(--size-lead);
+      font-style: italic;
+      color: var(--color-fg);
+      line-height: 1.5;
+      margin: 0 0 var(--space-3);
+      max-width: 60ch;
+    }
+    .report-pullquote cite {
+      font-size: var(--size-small);
+      color: var(--color-fg-muted);
+      font-style: normal;
+      font-weight: 500;
+    }
+
+    /* ─── Callouts ────────────────────────────────────────────────── */
+    .callout {
+      display: flex;
+      gap: var(--space-4);
+      padding: var(--space-4) var(--space-5);
+      margin: var(--space-5) 0;
+      border-left: 3px solid;
+      border-radius: var(--radius);
+      break-inside: avoid;
+    }
+    .callout--info    { background: var(--color-info-dim);    border-color: var(--color-info); }
+    .callout--tip     { background: var(--color-success-dim); border-color: var(--color-success); }
+    .callout--warn    { background: var(--color-warn-dim);    border-color: var(--color-warn); }
+    .callout--danger  { background: var(--color-danger-dim);  border-color: var(--color-danger); }
+    .callout__icon {
+      flex-shrink: 0; width: 22px; height: 22px;
+      display: grid; place-items: center;
+      border-radius: 50%; font-weight: 700;
+      font-size: 0.7rem; color: white; margin-top: 2px;
+    }
+    .callout--info   .callout__icon { background: var(--color-info); }
+    .callout--tip    .callout__icon { background: var(--color-success); }
+    .callout--warn   .callout__icon { background: var(--color-warn); color: var(--itau-warm-black); }
+    .callout--danger .callout__icon { background: var(--color-danger); }
+    .callout__content { flex: 1; min-width: 0; }
+    .callout__title { font-weight: 700; margin: 0 0 var(--space-1); font-size: var(--size-small); color: var(--color-fg); }
+    .callout__content p { margin: 0; font-size: var(--size-small); }
+
+    /* ─── Tabelas de dados ────────────────────────────────────────── */
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-sm);
+      margin: var(--space-5) 0;
+      break-inside: avoid;
+    }
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--size-small);
+      background: var(--color-bg-elevated);
+    }
+    table.data-table thead {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: var(--color-bg-sunken);
+    }
+    table.data-table th {
+      padding: var(--space-3) var(--space-4);
+      text-align: left;
+      font-size: var(--size-xs);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-fg-subtle);
+      border-bottom: 2px solid var(--color-border-strong);
+      white-space: nowrap;
+    }
+    table.data-table td {
+      padding: var(--space-3) var(--space-4);
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-fg-muted);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    table.data-table tbody tr:nth-child(even) td { background: rgba(41,32,23,0.02); }
+    [data-theme="dark"] table.data-table tbody tr:nth-child(even) td { background: rgba(237,229,221,0.02); }
+    table.data-table tbody tr:hover td { background: var(--color-accent-dim); }
+    table.data-table tbody tr:last-child td { border-bottom: none; }
+    .td-strong { font-weight: 600; color: var(--color-fg); font-family: var(--font-display); }
+
+    /* ─── Badges ──────────────────────────────────────────────────── */
+    .badge {
+      display: inline-flex; align-items: center;
+      padding: 2px 8px; border-radius: 999px;
+      font-size: 0.7rem; font-weight: 600;
+      font-family: var(--font-text); white-space: nowrap;
+    }
+    .badge-accent   { background: var(--color-accent-dim);   color: var(--color-accent); }
+    .badge-info     { background: var(--color-info-dim);     color: var(--color-info); }
+    .badge-success  { background: var(--color-success-dim);  color: var(--color-success); }
+    .badge-sage     { background: var(--color-sage-dim);     color: var(--color-sage); }
+    .badge-teal     { background: var(--color-teal-dim);     color: var(--color-teal); }
+    .badge-plum     { background: var(--color-plum-dim);     color: var(--color-plum); }
+    .badge-warn     { background: var(--color-warn-dim);     color: var(--color-fg-muted); }
+
+    /* ─── Gráficos ────────────────────────────────────────────────── */
+    .chart-wrap {
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      box-shadow: var(--shadow-sm);
+      margin: var(--space-5) 0;
+      break-inside: avoid;
+    }
+    .chart-title {
+      font-family: var(--font-display);
+      font-size: var(--size-h3);
+      font-weight: 700;
+      margin: 0 0 var(--space-2);
+      color: var(--color-fg);
+    }
+    .chart-subtitle {
+      font-size: var(--size-xs);
+      color: var(--color-fg-subtle);
+      margin: 0 0 var(--space-5);
+    }
+    .chart-inner { position: relative; height: 300px; }
+    .chart-inner-tall { position: relative; height: 380px; }
+
+    /* ─── Métricas em grid ────────────────────────────────────────── */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: var(--space-4);
+      margin: var(--space-5) 0;
+    }
+    .metric-card {
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: var(--space-4) var(--space-5);
+      box-shadow: var(--shadow-sm);
+    }
+    .metric-value {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(1.4rem, 1.2rem + 1vw, 2rem);
+      letter-spacing: -0.03em;
+      color: var(--color-accent);
+      display: block;
+      line-height: 1.1;
+    }
+    .metric-label {
+      font-size: var(--size-xs);
+      color: var(--color-fg-muted);
+      margin-top: var(--space-1);
+      font-weight: 500;
+    }
+
+    /* ─── Timeline ────────────────────────────────────────────────── */
+    .timeline {
+      position: relative;
+      padding-left: var(--space-7);
+      margin: var(--space-5) 0;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 10px; top: 8px; bottom: 8px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--color-accent), var(--color-info));
+      border-radius: 2px;
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: var(--space-5);
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: calc(-1 * var(--space-7) + 6px);
+      top: 8px;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--color-accent);
+      border: 2px solid var(--color-bg);
+      box-shadow: 0 0 0 2px var(--color-accent);
+    }
+    .timeline-year {
+      font-family: var(--font-mono);
+      font-size: var(--size-xs);
+      font-weight: 600;
+      color: var(--color-accent);
+      margin-bottom: var(--space-1);
+    }
+    .timeline-text {
+      font-size: var(--size-small);
+      color: var(--color-fg-muted);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    /* ─── Footnotes ───────────────────────────────────────────────── */
+    sup { font-size: 0.7em; line-height: 1; }
+    .fn-ref, .fn-back {
+      font-family: var(--font-mono);
+      font-size: 0.75em;
+      color: var(--color-accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .fn-ref:hover, .fn-back:hover { text-decoration: underline; }
+    .report-footnotes {
+      max-width: var(--report-max);
+      margin: var(--space-10) auto 0;
+      padding: var(--space-6) var(--report-gutter) var(--space-8);
+      border-top: 1px solid var(--color-border);
+    }
+    .fn-label {
+      font-size: var(--size-xs);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-fg-subtle);
+      margin: 0 0 var(--space-4);
+    }
+    .fn-list {
+      padding-left: var(--space-5);
+      margin: 0;
+    }
+    .fn-list li {
+      font-size: var(--report-small);
+      color: var(--color-fg-muted);
+      margin-bottom: var(--space-2);
+      line-height: 1.55;
+    }
+
+    /* ─── Footer ──────────────────────────────────────────────────── */
+    .report-footer {
+      max-width: var(--report-max);
+      margin: 0 auto;
+      padding: var(--space-6) var(--report-gutter) var(--space-10);
+      border-top: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      flex-wrap: wrap;
+    }
+    .report-footer__brand {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.875rem;
+      color: var(--color-fg-subtle);
+    }
+    .report-footer__disclaimer {
+      font-size: var(--size-xs);
+      color: var(--color-fg-subtle);
+      max-width: 50ch;
+      line-height: 1.5;
+      margin: 0;
+    }
+    .report-footer__anbima {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: var(--space-2) var(--space-3);
+      font-size: var(--size-xs);
+      font-weight: 600;
+      color: var(--color-fg-muted);
+      white-space: nowrap;
+    }
+
+    /* ─── Reveal on scroll ────────────────────────────────────────── */
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(20px);
+      transition:
+        opacity var(--duration-hero) var(--ease-out),
+        transform var(--duration-hero) var(--ease-out);
+    }
+    [data-reveal].is-visible { opacity: 1; transform: none; }
+
+    /* ─── Utilities ───────────────────────────────────────────────── */
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--color-border);
+      margin: var(--space-8) 0;
+    }
+    .text-accent { color: var(--color-accent); }
+    .font-mono { font-family: var(--font-mono); }
+
+    /* ─── @media print ────────────────────────────────────────────── */
+    @media print {
+      /* Ocultar UI interativa */
+      .report-header,
+      .report-toc,
+      .theme-toggle { display: none !important; }
+
+      /* Tipografia para impressão */
+      body {
+        font-size: 11pt;
+        line-height: 1.6;
+        color: #000 !important;
+        background: #fff !important;
+        background-image: none !important;
+      }
+
+      .report-summary__inner,
+      .chart-wrap,
+      .metric-card,
+      .callout {
+        box-shadow: none !important;
+        border-color: #ccc !important;
+      }
+
+      /* Quebra de página antes de cada seção */
+      .report-section { page-break-before: always; }
+      .report-section:first-of-type { page-break-before: avoid; }
+
+      /* Sumário executivo na primeira página */
+      .report-summary { page-break-after: always; }
+
+      /* Evitar quebra dentro de componentes */
+      table, .callout, .chart-wrap, .report-pullquote { page-break-inside: avoid; }
+
+      h2 { page-break-after: avoid; }
+
+      /* Margens e numeração */
+      @page { margin: 2cm; }
+      .report-footer::after {
+        content: "Página " counter(page);
+        display: block;
+        text-align: center;
+        font-size: 9pt;
+        color: #666;
+        margin-top: 2em;
+      }
+
+      /* Links visíveis em impressão */
+      a[href]::after {
+        content: " (" attr(href) ")";
+        font-size: 8pt;
+        color: #666;
+      }
+      .fn-ref::after, .fn-back::after { content: none; }
+    }
+
+    /* ─── Reduced motion ──────────────────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+      [data-reveal] { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ HEADER ═══════════════════════════════════════════════════ -->
+  <header class="report-header">
+    <div class="report-header__brand">
+      <span class="report-header__logo" aria-hidden="true">{{LOGO}}</span>
+      <div>
+        <p class="report-header__org">{{ORG}}</p>
+        <p class="report-header__doc">{{TIPO_DOC}} · Doc nº {{DOC_NUM}}</p>
+      </div>
+    </div>
+    <div class="report-header__meta">
+      <p class="report-header__date">{{DATA}}</p>
+      <button class="theme-toggle" aria-label="Alternar tema" type="button">
+        <span aria-hidden="true">◐</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ═══ TOC (gerada por JS) ══════════════════════════════════════ -->
+  <nav class="report-toc" aria-label="Sumário">
+    <p class="report-toc__heading">Conteúdo</p>
+    <ol class="report-toc__list">
+      <!-- preenchido por JS -->
+    </ol>
+  </nav>
+
+  <!-- ═══ SUMÁRIO EXECUTIVO ════════════════════════════════════════ -->
+  <section class="report-summary" aria-label="Sumário executivo" data-reveal>
+    <div class="report-summary__inner">
+      <p class="report-summary__label">Sumário Executivo</p>
+      <p class="report-summary__lead">{{SUMARIO_LEAD}}</p>
+      <div class="report-summary__kpis">
+        <!-- KPI 1 -->
+        <div class="summary-kpi">
+          <p class="summary-kpi__val">{{KPI_1_VAL}}</p>
+          <p class="summary-kpi__label">{{KPI_1_LABEL}}</p>
+        </div>
+        <!-- KPI 2 -->
+        <div class="summary-kpi">
+          <p class="summary-kpi__val">{{KPI_2_VAL}}</p>
+          <p class="summary-kpi__label">{{KPI_2_LABEL}}</p>
+        </div>
+        <!-- KPI 3 -->
+        <div class="summary-kpi">
+          <p class="summary-kpi__val">{{KPI_3_VAL}}</p>
+          <p class="summary-kpi__label">{{KPI_3_LABEL}}</p>
+        </div>
+        <!-- KPI 4 — opcional -->
+        <div class="summary-kpi">
+          <p class="summary-kpi__val">{{KPI_4_VAL}}</p>
+          <p class="summary-kpi__label">{{KPI_4_LABEL}}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CORPO DO RELATÓRIO ═══════════════════════════════════════ -->
+  <main class="report-body">
+
+    <!-- S01 — SEÇÃO EXEMPLO 1 -->
+    <section class="report-section" id="s1" data-reveal>
+      <div class="section-header">
+        <span class="section-num" aria-hidden="true">01</span>
+        <h2>{{TITULO_S01}}</h2>
+      </div>
+
+      <p>{{CONTEUDO_S01_P1}}</p>
+      <p>{{CONTEUDO_S01_P2}}</p>
+
+      <!-- Métricas em grid — substituir conforme necessário -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <span class="metric-value">{{METRICA_VAL}}</span>
+          <p class="metric-label">{{METRICA_LABEL}}</p>
+        </div>
+      </div>
+
+      <!-- Callout de exemplo -->
+      <div class="callout callout--info">
+        <span class="callout__icon">i</span>
+        <div class="callout__content">
+          <p class="callout__title">{{CALLOUT_TITULO}}</p>
+          <p>{{CALLOUT_TEXTO}}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- S02 — SEÇÃO EXEMPLO 2 (com tabela) -->
+    <section class="report-section" id="s2" data-reveal>
+      <div class="section-header">
+        <span class="section-num" aria-hidden="true">02</span>
+        <h2>{{TITULO_S02}}</h2>
+      </div>
+
+      <p>{{CONTEUDO_S02_P1}}</p>
+
+      <!-- Tabela de dados -->
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>{{COL_1}}</th>
+              <th>{{COL_2}}</th>
+              <th>{{COL_3}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="td-strong">{{DADO_1_1}}</td>
+              <td>{{DADO_1_2}}</td>
+              <td><span class="badge badge-accent">{{DADO_1_3}}</span></td>
+            </tr>
+            <tr>
+              <td class="td-strong">{{DADO_2_1}}</td>
+              <td>{{DADO_2_2}}</td>
+              <td><span class="badge badge-info">{{DADO_2_3}}</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pull quote -->
+      <blockquote class="report-pullquote">
+        <p>"{{PULLQUOTE_TEXTO}}"</p>
+        <cite>— {{PULLQUOTE_CITE}}</cite>
+      </blockquote>
+    </section>
+
+    <!-- S03 — SEÇÃO EXEMPLO 3 (com gráfico) -->
+    <section class="report-section" id="s3" data-reveal>
+      <div class="section-header">
+        <span class="section-num" aria-hidden="true">03</span>
+        <h2>{{TITULO_S03}}</h2>
+      </div>
+
+      <p>{{CONTEUDO_S03_P1}}<sup><a href="#fn1" class="fn-ref" id="fn-ref-1">[1]</a></sup></p>
+
+      <!-- Gráfico Chart.js -->
+      <div class="chart-wrap">
+        <p class="chart-title">{{GRAFICO_TITULO}}</p>
+        <p class="chart-subtitle">{{GRAFICO_SUBTITULO}}</p>
+        <div class="chart-inner">
+          <canvas id="chartExemplo"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Adicionar mais seções conforme necessário: -->
+    <!--
+    <section class="report-section" id="sN" data-reveal>
+      <div class="section-header">
+        <span class="section-num" aria-hidden="true">0N</span>
+        <h2>{{TITULO_SN}}</h2>
+      </div>
+      {{CONTEUDO_SN}}
+    </section>
+    -->
+
+  </main>
+
+  <!-- ═══ FOOTNOTES ════════════════════════════════════════════════ -->
+  <div class="report-footnotes">
+    <p class="fn-label">Notas</p>
+    <ol class="fn-list">
+      <li id="fn1"><a href="#fn-ref-1" class="fn-back">↑</a> {{NOTA_1}}</li>
+      <!-- adicionar mais conforme necessário -->
+    </ol>
+  </div>
+
+  <!-- ═══ FOOTER ═══════════════════════════════════════════════════ -->
+  <footer class="report-footer">
+    <span class="report-footer__brand">{{ORG}} · {{ANO}}</span>
+    <p class="report-footer__disclaimer">{{DISCLAIMER}}</p>
+    <span class="report-footer__anbima">● {{REGULATORIO}}</span>
+  </footer>
+
+  <script>
+    // ── Boot: tema ──────────────────────────────────────────────────
+    document.querySelector('.theme-toggle')?.addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme');
+      const next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch {}
+      // Re-renderizar gráficos Chart.js com novas cores de tema
+      if (window._reportCharts) {
+        window._reportCharts.forEach(chart => {
+          updateChartTheme(chart);
+          chart.update();
+        });
+      }
+    });
+
+    // ── TOC gerada dos h2 dentro de .report-section[id] ────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      const toc = document.querySelector('.report-toc__list');
+      if (!toc) return;
+      document.querySelectorAll('.report-section[id] > .section-header > h2').forEach((h, i) => {
+        const li = document.createElement('li');
+        const n = String(i + 1).padStart(2, '0');
+        const id = h.closest('section').id;
+        li.innerHTML = `<a href="#${id}"><span class="toc-num">${n}</span>${h.textContent}</a>`;
+        toc.appendChild(li);
+      });
+    });
+
+    // ── Reveal on scroll ────────────────────────────────────────────
+    const revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('is-visible');
+          revealObserver.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('[data-reveal]').forEach(el => revealObserver.observe(el));
+
+    // ── Helper: lê cor CSS calculada ────────────────────────────────
+    function cssVar(name) {
+      return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    }
+
+    // ── Helper: atualiza cores do gráfico no tema toggle ────────────
+    function updateChartTheme(chart) {
+      const fg = cssVar('--color-fg');
+      const fgMuted = cssVar('--color-fg-muted');
+      const border = cssVar('--color-border');
+      if (chart.options.plugins?.legend?.labels) {
+        chart.options.plugins.legend.labels.color = fgMuted;
+      }
+      if (chart.options.scales) {
+        Object.values(chart.options.scales).forEach(scale => {
+          if (scale.ticks) scale.ticks.color = fgMuted;
+          if (scale.grid) scale.grid.color = border;
+          if (scale.title) scale.title.color = fgMuted;
+          if (scale.border) scale.border.color = border;
+        });
+      }
+    }
+
+    // ── Gráfico de exemplo (substituir conforme dados reais) ─────────
+    window._reportCharts = [];
+    (function() {
+      const ctx = document.getElementById('chartExemplo');
+      if (!ctx) return;
+      const fg = cssVar('--color-fg');
+      const fgMuted = cssVar('--color-fg-muted');
+      const border = cssVar('--color-border');
+      const accent = cssVar('--color-accent');
+      const info = cssVar('--color-info');
+
+      const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Cat A', 'Cat B', 'Cat C', 'Cat D', 'Cat E'],
+          datasets: [{
+            label: '{{DATASET_LABEL}}',
+            data: [10, 25, 18, 32, 22],
+            backgroundColor: accent,
+            borderRadius: 4,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { labels: { color: fgMuted, font: { family: 'Inter' } } }
+          },
+          scales: {
+            x: { ticks: { color: fgMuted }, grid: { color: border } },
+            y: {
+              beginAtZero: true,
+              ticks: { color: fgMuted },
+              grid: { color: border },
+            }
+          }
+        }
+      });
+      window._reportCharts.push(chart);
+    })();
+  </script>
+</body>
+</html>
