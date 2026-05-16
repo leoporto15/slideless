@@ -259,18 +259,167 @@ Ver [modelos/deck.md](modelos/deck.md) — slide engine é específico do deck, 
 
 ---
 
-## Gráficos (Chart.js via CDN)
+## Tabelas de dados (HTML semântico)
+
+Threshold: **4+ linhas OU 3+ colunas → usar `<table>`, nunca bullets**. Ver patterns completos em [css-patterns.md](css-patterns.md#3-data-tables).
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
-<canvas id="chart-1" aria-label="Volume mensal"></canvas>
+<div class="table-wrap">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Tipo</th>
+        <th class="num">AuM (R$ bi)</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Fundo Alpha</strong><br><small style="color: var(--color-fg-subtle)">CNPJ 00.000.000/0001-00</small></td>
+        <td>Multimercado</td>
+        <td class="num">12,4</td>
+        <td><span class="badge badge--success">Ativo</span></td>
+      </tr>
+      <tr>
+        <td><strong>Fundo Beta</strong></td>
+        <td>Renda Fixa</td>
+        <td class="num">8,7</td>
+        <td><span class="badge badge--info">Em análise</span></td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="2"><strong>Total</strong></td>
+        <td class="num"><strong>21,1</strong></td>
+        <td></td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+```
+
+---
+
+## Gráficos (Chart.js via CDN)
+
+CDN: `<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>`
+
+Patterns completos (barra, linha, donut, sparkline) em [css-patterns.md](css-patterns.md#5-chartjs-patterns).
+
+### Ler cores via getComputedStyle (obrigatório para dark mode)
+```js
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+```
+
+### Linha — evolução temporal
+```html
+<canvas id="chart-line" aria-label="Evolução AuM"></canvas>
 <script>
-  new Chart(document.getElementById('chart-1'), {
-    type: 'line',
-    data: { labels: [...], datasets: [{ data: [...], borderColor: 'var(--color-accent)' }] },
-    options: { responsive: true, plugins: { legend: { display: false } } }
-  });
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+new Chart(document.getElementById('chart-line'), {
+  type: 'line',
+  data: {
+    labels: ['2019', '2020', '2021', '2022', '2023'],
+    datasets: [{
+      label: 'AuM (R$ tri)',
+      data: [0.70, 0.85, 0.95, 1.10, 1.19],
+      borderColor: css('--color-accent'),
+      backgroundColor: css('--color-accent-dim'),
+      tension: 0.4, fill: true,
+      pointRadius: 5, pointHoverRadius: 7,
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { color: css('--color-fg-muted') } },
+      y: { grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted') } }
+    }
+  }
+});
 </script>
 ```
 
-Para tema dinâmico, ler cores via `getComputedStyle(document.documentElement).getPropertyValue('--color-accent')` e reaplicar no `themeChange` event.
+### Barra — comparação por categoria
+```html
+<canvas id="chart-bar" aria-label="Distribuição por estratégia"></canvas>
+<script>
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+new Chart(document.getElementById('chart-bar'), {
+  type: 'bar',
+  data: {
+    labels: ['RF', 'Ações', 'MM', 'ETF'],
+    datasets: [{
+      data: [45, 22, 20, 13],
+      backgroundColor: [css('--color-accent-dim'), css('--color-info-dim'), css('--color-teal-dim'), css('--color-success-dim')],
+      borderColor: [css('--color-accent'), css('--color-info'), css('--color-teal'), css('--color-success')],
+      borderWidth: 2, borderRadius: 6,
+    }]
+  },
+  options: {
+    responsive: true, indexAxis: 'y',
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted') } },
+      y: { grid: { display: false }, ticks: { color: css('--color-fg-muted') } }
+    }
+  }
+});
+</script>
+```
+
+### Donut — composição / market share
+```html
+<div style="max-width: 300px;">
+  <canvas id="chart-donut" aria-label="Composição do portfólio"></canvas>
+</div>
+<script>
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+new Chart(document.getElementById('chart-donut'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Renda Fixa', 'Ações', 'Multi-Mercado', 'ETFs'],
+    datasets: [{
+      data: [45, 22, 20, 13],
+      backgroundColor: [css('--color-accent'), css('--color-info'), css('--color-teal'), css('--color-success')],
+      borderWidth: 2, borderColor: css('--color-bg-elevated'), hoverOffset: 6,
+    }]
+  },
+  options: {
+    responsive: true, cutout: '68%',
+    plugins: {
+      legend: { position: 'right', labels: { color: css('--color-fg-muted'), font: { size: 12 }, padding: 12 } },
+      tooltip: { callbacks: { label: ctx => ctx.label + ': ' + ctx.parsed + '%' } }
+    }
+  }
+});
+</script>
+```
+
+---
+
+## Mermaid Zoom Controls
+
+Todo diagrama Mermaid precisa de zoom/pan/fit/expand. Pattern completo (HTML + CSS + JS ~180 linhas) em [css-patterns.md](css-patterns.md#4-mermaid-zoom-controls).
+
+Estrutura mínima obrigatória:
+```html
+<div class="diagram-shell">
+  <div class="zoom-controls">
+    <button class="zoom-btn" data-action="zoom-in">+</button>
+    <button class="zoom-btn" data-action="zoom-out">−</button>
+    <button class="zoom-btn" data-action="zoom-fit">↻</button>
+    <button class="zoom-btn" data-action="zoom-one">1:1</button>
+    <button class="zoom-btn" data-action="zoom-exp">⛶</button>
+    <span class="zoom-label">100%</span>
+  </div>
+  <div class="mermaid-viewport">
+    <div class="mermaid mermaid-canvas">
+      graph TD
+        A[Componente A] --> B[Componente B]
+    </div>
+  </div>
+</div>
+```

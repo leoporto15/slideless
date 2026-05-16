@@ -130,13 +130,99 @@ Toda criação exige:
 
 ---
 
-## Workflow padrão
+## Workflow padrão — Think → Structure → Style → Deliver
+
+### 1. Think (5s de comprometimento com direção)
+
+Antes de escrever HTML, responder:
+- **Quem lê?** (executivo, time técnico, toda empresa?)
+- **Que tipo de conteúdo?** (dados históricos, narrativa qualitativa, catálogo, referência?)
+- **Qual estética?** Escolher uma das constrained (mais seguro) ou flexível:
+
+**Constrained (preferidas — impossível parecer genérico):**
+- **Warm Signal** — cream + laranja Itaú + glow atmosférico. Padrão para tema itaú.
+- **Blueprint** — grid técnico, slate/azul profundo, labels monospace. Ideal para docs de engenharia.
+- **Editorial** — serif headlines, whitespace generoso, earth tones. Ideal para relatórios narrativos.
+- **Terminal Mono** — verde/amber on near-black, monospace tudo. Para conteúdo de infraestrutura/dados.
+
+**Flexíveis (com cuidado):**
+- **IDE-inspired** — temas nomeados reais (Dracula, Nord, Catppuccin, One Dark). Só se o contexto pedir.
+- **Data-dense** — small type, tight spacing, cores mutted. Para tabelas complexas.
+
+**Explicitamente proibido:**
+- Neon dashboard (cyan + magenta + purple on dark)
+- Inter + violet/indigo accents + gradient text
+- Emoji como ícones de seção
+
+### 2. Structure (ler antes de escrever)
+
+Para cada tipo de conteúdo, usar o template correto:
+
+| Conteúdo | Usar | Referência |
+|---|---|---|
+| Texto narrativo longo | template-handbook | references/modelos/handbook.md |
+| Cards / catálogo | template-hub | references/modelos/hub.md |
+| Narrativa scroll-triggered | template-scrollytelling | references/modelos/scrollytelling.md |
+| Multi-view com abas | template-site | references/modelos/site.md |
+| Apresentação linear ao vivo | template-deck | references/modelos/deck.md + slide-patterns.md |
+| CSS patterns novos | — | references/css-patterns.md |
+| Slide layouts | — | references/slide-patterns.md |
+
+**Planejamento de conteúdo (obrigatório para deck):**
+1. Inventariar todos os elementos discretos da fonte (slides, bullets, métricas, nomes, datas, tabelas).
+2. Mapear cada elemento a uma seção/slide/card. Nada pode ficar sem destino.
+3. Só então escrever HTML.
+
+### 3. Style (aplicar princípios)
+
+- **Tipografia é estrutura** — hierarquia via escala + peso + cor, não cores flashy.
+- **Depth tiers** — variar profundidade visual: hero (elevated), default (flat), recessed (inset). Ver `references/css-patterns.md § 2`.
+- **Backgrounds criam atmosfera** — nunca fundo sólido flat. Usar glow radial, dot grid ou gradient mesh.
+- **Animações ganham seu lugar** — stagger fadeUp para cards, heroIn para títulos principais, counters para números. Nunca glowing shadows ou pulsing em elementos estáticos.
+- **Font pairing distinto** — nunca Inter sozinho. Ver `references/css-patterns.md § 10` para opções.
+
+### 4. Deliver
+
+- Salvar output no diretório indicado pelo usuário.
+- Abrir em browser (testar ambos os temas, redimensionar janela).
+- Declarar ao usuário: path do arquivo + o que foi gerado.
+
+---
+
+## Regras mandatórias de gráficos e tabelas
+
+**Gráficos (Chart.js):**
+- Dados numéricos com evolução temporal → gráfico de linha obrigatório.
+- Comparação de N categorias → gráfico de barras ou donut.
+- KPI com tendência → sparkline inline.
+- CDN: `https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js`
+- Patterns completos em `references/css-patterns.md § 5`.
+
+**Regras inegociáveis de fidelidade (gráficos):**
+1. **Dados completos** — todos os pontos/categorias da fonte entram no gráfico. Nunca resumir, truncar ou omitir valores "para simplificar".
+2. **Composição preservada** — se a fonte mostra múltiplas séries num mesmo gráfico (ex: barras de volume + linha de tendência sobreposta), isso deve ser reproduzido como um único gráfico misto (`type: 'bar'` com dataset extra `type: 'line'`). Nunca separar em dois gráficos o que a fonte mostra junto — a sobreposição é a informação.
+3. **Escala coerente** — eixo Y deve começar em 0 para comparações de magnitude. Exceção permitida só para séries temporais de variação relativa (ex: taxa de retorno). Nunca usar eixo duplo sem legenda explícita. Unidades (R$ bi, %, k) obrigatórias nos ticks.
+
+**Tabelas:**
+- 4+ linhas OU 3+ colunas de dados → `<table class="data-table">` obrigatório (nunca bullets de texto, nunca ASCII).
+- Sticky `<thead>`, alternating rows, status badges (nunca emoji como status).
+- **Dados completos** — todas as linhas da fonte entram na tabela. Nunca truncar com "ver mais" ou omitir linhas por espaço — ajustar o layout, nunca cortar o conteúdo.
+- Pattern completo em `references/css-patterns.md § 3`.
+
+**Mermaid:**
+- Todo diagrama Mermaid precisa de zoom/pan controls.
+- Estrutura: `.diagram-shell → .zoom-controls → .mermaid-viewport → .mermaid-canvas`.
+- JS completo em `references/css-patterns.md § 4`.
+
+---
+
+## Workflow de geração
 
 1. **Briefing** (acima) → confirmar antes de escrever HTML.
-2. **Geração** — usar `assets/templates/template-<modelo>.html` como esqueleto, popular com conteúdo real, aplicar tema.
-3. **Validação determinística** — rodar `python scripts/validar.py <arquivo.html>` (anti-patterns, tokens corretos, a11y básica).
-4. **Revisão LLM** — [references/checklist-revisao.md](references/checklist-revisao.md).
-5. **Entrega** — salvar em `/mnt/user-data/outputs/<nome-descritivo>.html` (ou diretório indicado pelo usuário).
+2. **Think → Structure → Style** (seção acima).
+3. **Geração** — usar `assets/templates/template-<modelo>.html` como esqueleto, popular com conteúdo real, aplicar tema.
+4. **Validação** — checar checklist de `references/css-patterns.md` (squint test, swap test, overflow, ambos os temas).
+5. **Entrega** — salvar no diretório indicado.
 
 Detalhes em [references/workflow.md](references/workflow.md).
 

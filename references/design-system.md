@@ -174,20 +174,30 @@ document.querySelector('.theme-toggle')?.addEventListener('click', () => {
 
 ---
 
-## Fontes Itaú
+## Fontes Itaú e pairings externos
 
-Itaú Display e Itaú Text são proprietárias. Fora da rede interna, **fallback automático** para Inter (Google Fonts). Nunca falhar a geração por causa de fontes.
+Itaú Display e Itaú Text são proprietárias (disponíveis via CDN interno). Fora da rede, fallback para Inter — mas para demos externos e documentos de qualidade visual-explainer, usar um dos pairings abaixo para evitar o "AI slop" de Inter + visual genérico.
+
+**Regra:** Nunca usar Inter sozinho como única fonte display.
+
+### Pairings curados (Google Fonts)
+
+| Pairing | Caráter | Link completo |
+|---|---|---|
+| **Fraunces + JetBrains Mono** | Quente, editorial. Padrão Itaú fora da rede. | `family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,800&family=JetBrains+Mono:wght@400;500;600` |
+| **DM Sans + Fira Code** | Técnico, preciso | `family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Fira+Code:wght@400;500` |
+| **Instrument Serif + JetBrains Mono** | Editorial refinado | `family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600` |
+| **IBM Plex Sans + IBM Plex Mono** | Corporativo confiável | `family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500` |
+| **Bricolage Grotesque + Fragment Mono** | Bold, characterful | `family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Fragment+Mono` |
 
 ```html
+<!-- Exemplo: Fraunces + JetBrains Mono (padrão fora da rede Itaú) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 ```
 
-Para deck adicione peso 800 ao Inter:
-```
-family=Inter:wght@400;500;600;700;800
-```
+O tema `itau.css` já define `--font-display: 'Itau Display', 'Fraunces', 'Inter', Georgia, serif` — Fraunces é o fallback de qualidade para uso externo.
 
 ---
 
