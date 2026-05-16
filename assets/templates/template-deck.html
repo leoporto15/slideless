@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  Template: slideless deck v2 (visual-explainer-grade)
+  Template: slideless deck v3 (visual-explainer-grade)
   Como usar:
     1. Substituir o marker /* SLIDELESS:THEME */ pelo conteúdo de assets/temas/{itau,neutro}.css
     2. Cada <section class="slide"> = um slide. PRESERVAR 100% do conteúdo da fonte.
@@ -14,6 +14,17 @@
     - Glow radial atmosférico via ::before do .slide
     - Depth tiers (tier-hero, tier-default, tier-recessed)
     - Color variants (var-accent, var-info, var-success, var-sage, var-teal, var-plum)
+    - Overview mode (tecla O) — grade miniaturizada de slides
+    - Auto-Animate FLIP (data-auto-animate + data-id)
+    - Novos tipos de fragmento (current-visible, highlight-current, grow, shrink, etc)
+    - Rough Notation (data-mark)
+    - AutoFitText (data-fit-text)
+    - Scroll View (?view=scroll)
+    - Posicionamento relativo de fragmentos (data-fragment-index="+1")
+    - Layouts semânticos (layout-two-cols, layout-fact, layout-quote, layout-statement, etc)
+    - Code Stepping (data-line-numbers)
+    - Background layers por slide (data-background-color, data-background-gradient, data-background-image)
+    - Wake Lock API (impede bloqueio de tela)
 -->
 <html lang="pt-BR">
 <head>
@@ -33,6 +44,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800;9..144,900&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Feature 7: Rough Notation CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/rough-notation@0.6.1/lib/rough-notation.iife.js"></script>
 
   <style>
     /* SLIDELESS:THEME — substituir por assets/temas/itau.css ou neutro.css */
@@ -422,7 +436,7 @@
       margin: 0 0 var(--space-6);
     }
     .quote-deck__text::before {
-      content: '“';
+      content: '"';
       color: var(--color-accent);
       font-size: 1.4em;
       line-height: 0;
@@ -632,6 +646,320 @@
         opacity: 1 !important; transform: none !important; filter: none !important;
       }
     }
+
+    /* ════════════════════════════════════════════════════════════════
+       FEATURES v3 — adicionados abaixo; nenhum CSS acima foi removido
+       ════════════════════════════════════════════════════════════════ */
+
+    /* ─── Feature 4: Overview Mode ──────────────────────────────── */
+    body.is-overview { overflow: auto; }
+    body.is-overview .deck {
+      overflow: visible;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+      padding: 24px;
+      height: auto;
+      min-height: 100vh;
+      background: var(--color-bg-sunken, #0a0a0a);
+    }
+    body.is-overview .slide {
+      position: relative;
+      inset: auto;
+      width: 100%;
+      aspect-ratio: 16/9;
+      opacity: 1;
+      transform: none;
+      pointer-events: auto;
+      cursor: pointer;
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-lg, 12px);
+      overflow: hidden;
+      padding: 5%;
+      font-size: 0.35em;
+      transition: border-color 150ms, box-shadow 150ms;
+    }
+    body.is-overview .slide.is-active {
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px var(--color-accent);
+    }
+    body.is-overview .slide:hover {
+      border-color: var(--color-accent);
+      box-shadow: var(--shadow-lg);
+    }
+    body.is-overview .hud,
+    body.is-overview .deck-progress,
+    body.is-overview .brand-mark { display: none; }
+    body.is-overview .slide-num { font-size: 2.5em; }
+
+    /* ─── Feature 6: Novos tipos de fragmento ───────────────────── */
+
+    /* current-visible: visível só quando é o fragmento ativo */
+    [data-fragment="current-visible"] {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 400ms var(--ease-out, ease-out), transform 400ms var(--ease-out, ease-out);
+    }
+    [data-fragment="current-visible"].is-visible { opacity: 1; transform: none; }
+    [data-fragment="current-visible"].was-visible { opacity: 0.3; transform: none; }
+
+    /* highlight-current: destaca em accent quando ativo */
+    [data-fragment="highlight-current"] { color: var(--color-fg-muted); transition: color 300ms; }
+    [data-fragment="highlight-current"].is-visible { color: var(--color-accent); font-weight: 700; }
+    [data-fragment="highlight-current"].was-visible { color: var(--color-fg-muted); font-weight: inherit; }
+
+    /* grow: escala de 0.7 para 1 */
+    [data-fragment="grow"] {
+      opacity: 0;
+      transform: scale(0.7);
+      transition: opacity 400ms var(--ease-out, ease-out), transform 400ms var(--ease-out, ease-out);
+    }
+    [data-fragment="grow"].is-visible { opacity: 1; transform: scale(1); }
+
+    /* shrink: escala de 1.3 para 1 */
+    [data-fragment="shrink"] {
+      opacity: 0;
+      transform: scale(1.3);
+      transition: opacity 400ms var(--ease-out, ease-out), transform 400ms var(--ease-out, ease-out);
+    }
+    [data-fragment="shrink"].is-visible { opacity: 1; transform: scale(1); }
+
+    /* fade-in-then-out: aparece e some no próximo step */
+    [data-fragment="fade-in-then-out"] { opacity: 0; transition: opacity 400ms var(--ease-out, ease-out); }
+    [data-fragment="fade-in-then-out"].is-visible { opacity: 1; }
+    [data-fragment="fade-in-then-out"].was-visible { opacity: 0; }
+
+    /* strike: aplica riscado ao aparecer */
+    [data-fragment="strike"] { transition: text-decoration 300ms, opacity 400ms; }
+    [data-fragment="strike"].is-visible { text-decoration: line-through; color: var(--color-fg-muted); }
+
+    /* Remover override geral de [data-fragment] para tipos novos que têm estado próprio */
+    /* (o selector base .slide [data-fragment] já cobre o fallback) */
+
+    /* ─── Feature 7: Rough Notation ─────────────────────────────── */
+    [data-mark] { position: relative; }
+
+    /* ─── Feature 9: AutoFitText ────────────────────────────────── */
+    [data-fit-text] { white-space: nowrap; display: block; }
+
+    /* ─── Feature 10: Scroll View ───────────────────────────────── */
+    body.scroll-view { overflow: auto; }
+    body.scroll-view .deck {
+      width: 100%;
+      height: auto;
+      overflow: visible;
+      display: block;
+    }
+    body.scroll-view .slide {
+      position: relative;
+      inset: auto;
+      width: 100vw;
+      height: 100svh;
+      opacity: 1;
+      transform: none;
+      pointer-events: auto;
+      scroll-snap-align: start;
+    }
+    body.scroll-view { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+    body.scroll-view .hud { position: sticky; }
+
+    /* ─── Feature 12: Layouts semânticos ────────────────────────── */
+
+    /* Layout: two-cols — duas colunas iguais */
+    .layout-two-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-8, 2rem);
+      align-items: start;
+      width: 100%;
+    }
+    .layout-two-cols .col-left, .layout-two-cols .col-right { min-width: 0; }
+
+    /* Layout: image-left — imagem/visual à esquerda, texto à direita */
+    .layout-image-left {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: var(--space-8, 2rem);
+      align-items: center;
+      width: 100%;
+    }
+    .layout-image-right {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: var(--space-8, 2rem);
+      align-items: center;
+      width: 100%;
+    }
+
+    /* Layout: fact — KPI gigante centralizado */
+    .layout-fact {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      width: 100%;
+      height: 100%;
+    }
+    .layout-fact .fact-val {
+      font-family: var(--font-display);
+      font-size: clamp(5rem, 18vw, 14rem);
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      line-height: 0.9;
+      color: var(--color-accent);
+    }
+    .layout-fact .fact-label {
+      font-size: clamp(1rem, 2vw, 1.5rem);
+      color: var(--color-fg-muted);
+      margin-top: var(--space-5, 1.25rem);
+      max-width: 40ch;
+      text-align: center;
+    }
+
+    /* Layout: quote — citação */
+    .layout-quote {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      max-width: 820px;
+    }
+    .layout-quote blockquote {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 3vw, 2.8rem);
+      font-style: italic;
+      font-weight: 600;
+      line-height: 1.25;
+      color: var(--color-fg);
+      margin: 0 0 var(--space-6, 1.5rem);
+      padding-left: var(--space-6, 1.5rem);
+      border-left: 4px solid var(--color-accent);
+    }
+    .layout-quote cite {
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      color: var(--color-fg-muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-style: normal;
+      padding-left: var(--space-6, 1.5rem);
+    }
+
+    /* Layout: statement — one-liner de impacto, tela cheia */
+    .layout-statement {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      width: 100%;
+      height: 100%;
+    }
+    .layout-statement .statement-text {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      max-width: 20ch;
+    }
+
+    /* ─── Feature 13: Code Stepping ─────────────────────────────── */
+    .code-block { position: relative; font-family: var(--font-mono); }
+    .code-block .code-line { display: block; transition: opacity 300ms; padding: 0 1em; }
+    .code-block .code-line.is-dim { opacity: 0.25; }
+    .code-block .code-line.is-highlight {
+      background: var(--color-accent-dim, rgba(255,98,0,0.12));
+      border-left: 3px solid var(--color-accent);
+    }
+
+    /* ─── Feature 14: Slide background layer ────────────────────── */
+    .slide-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      transition: opacity var(--duration, 300ms) var(--ease-out, ease-out);
+    }
+    .slide > :not(.slide-bg) { position: relative; z-index: 1; }
+
+    /* ─── Keyboard shortcuts overlay (tecla ?) ──────────────────── */
+    .shortcuts-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.72);
+      backdrop-filter: blur(8px);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .shortcuts-overlay.is-open { display: flex; }
+    .shortcuts-panel {
+      background: var(--color-bg-elevated, #1a1a1a);
+      border: 1px solid var(--color-border, #333);
+      border-radius: var(--radius-lg, 12px);
+      padding: 2rem;
+      min-width: 340px;
+      box-shadow: 0 32px 64px rgba(0,0,0,0.5);
+    }
+    .shortcuts-panel h3 {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-fg-muted);
+      margin: 0 0 1.25rem;
+    }
+    .shortcuts-panel dl {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.5rem 1.5rem;
+      margin: 0;
+    }
+    .shortcuts-panel dt {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      background: var(--color-bg-sunken, #0a0a0a);
+      border: 1px solid var(--color-border, #333);
+      border-radius: 4px;
+      padding: 2px 8px;
+      color: var(--color-accent);
+      white-space: nowrap;
+      align-self: center;
+    }
+    .shortcuts-panel dd {
+      font-size: 0.875rem;
+      color: var(--color-fg-muted);
+      margin: 0;
+      align-self: center;
+    }
+    .shortcuts-close {
+      display: block;
+      margin-top: 1.5rem;
+      width: 100%;
+      padding: 0.5rem;
+      background: none;
+      border: 1px solid var(--color-border, #333);
+      border-radius: 6px;
+      color: var(--color-fg-muted);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      cursor: pointer;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .shortcuts-close:hover { border-color: var(--color-accent); color: var(--color-accent); }
+
+    /* ─── reduced-motion: desabilitar todas as novas animações ─── */
+    @media (prefers-reduced-motion: reduce) {
+      [data-fragment="current-visible"],
+      [data-fragment="grow"],
+      [data-fragment="shrink"],
+      [data-fragment="fade-in-then-out"] {
+        transition: none !important;
+        animation: none !important;
+      }
+      body.is-overview .slide { transition: none !important; }
+    }
   </style>
 </head>
 <body>
@@ -644,7 +972,7 @@
   <div class="deck">
     <!-- Slide 1 — HERO -->
     <section class="slide is-active" data-slide="1">
-      <span class="slide-num"><span>01</span> · 03</span>
+      <span class="slide-num"><span>01</span> · 07</span>
       <div class="layout-hero">
         <p class="kicker kicker--accent" data-anim style="--i: 0"><span class="kicker__dot"></span>CAPÍTULO 01</p>
         <h1 class="title-mega" data-anim="hero">Título <em>chave</em> do deck</h1>
@@ -658,7 +986,7 @@
 
     <!-- Slide 2 — METRICS 3-up -->
     <section class="slide" data-slide="2">
-      <span class="slide-num"><span>02</span> · 03</span>
+      <span class="slide-num"><span>02</span> · 07</span>
       <p class="kicker" data-anim style="--i: 0"><span class="kicker__dot"></span>VISÃO GERAL</p>
       <h2 class="title-lg" data-anim style="--i: 1">Os <em>números-âncora</em></h2>
       <div class="metrics-deck metrics-deck--3" data-anim style="--i: 2">
@@ -680,11 +1008,67 @@
 
     <!-- Slide 3 — BIG-NUM -->
     <section class="slide" data-slide="3">
-      <span class="slide-num"><span>03</span> · 03</span>
+      <span class="slide-num"><span>03</span> · 07</span>
       <p class="kicker kicker--accent" data-anim style="--i: 0"><span class="kicker__dot"></span>UM NÚMERO</p>
       <div class="big-num">
         <p class="big-num__val" data-anim style="--i: 1">+<span>N</span>%</p>
         <p class="big-num__label" data-anim style="--i: 2">Descrição do número-âncora em uma frase curta.</p>
+      </div>
+    </section>
+
+    <!-- Slide 4 — layout-two-cols com fragmentos current-visible -->
+    <section class="slide" data-slide="4">
+      <span class="slide-num"><span>04</span> · 07</span>
+      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>COMPARATIVO</p>
+      <h2 class="title-lg" data-anim style="--i:1">Dois <em>lados</em></h2>
+      <div class="layout-two-cols" data-anim style="--i:2">
+        <div class="col-left" data-fragment="current-visible">
+          <h3>Coluna A</h3>
+          <p>Conteúdo do lado esquerdo.</p>
+        </div>
+        <div class="col-right" data-fragment="current-visible">
+          <h3>Coluna B</h3>
+          <p>Conteúdo do lado direito.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 5 — layout-fact com data-fit-text e data-background-color -->
+    <section class="slide" data-background-color="var(--color-bg-sunken)" data-slide="5">
+      <div class="layout-fact">
+        <p class="kicker kicker--accent" data-anim style="--i:0"><span class="kicker__dot"></span>MARKET SHARE</p>
+        <p class="fact-val" data-fit-text data-anim style="--i:1">14,5%</p>
+        <p class="fact-label" data-anim style="--i:2">da dívida pública brasileira sob gestão</p>
+      </div>
+    </section>
+
+    <!-- Slide 6 — layout-quote com Rough Notation -->
+    <section class="slide" data-slide="6">
+      <span class="slide-num"><span>06</span> · 07</span>
+      <div class="layout-quote">
+        <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>FILOSOFIA</p>
+        <blockquote data-anim style="--i:1">
+          "Sofisticada no modelo, <strong data-mark="underline">democrática no acesso</strong>, internacional nas possibilidades."
+        </blockquote>
+        <cite data-anim style="--i:2">— Itaú Asset Management</cite>
+      </div>
+    </section>
+
+    <!-- Slide 7 — Code Stepping -->
+    <section class="slide" data-slide="7">
+      <span class="slide-num"><span>07</span> · 07</span>
+      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>EXEMPLO</p>
+      <h2 class="title-md" data-anim style="--i:1">Code <em>stepping</em></h2>
+      <div class="code code-block" data-anim style="--i:2">
+        <div class="code__head"><span class="code__lang">python</span></div>
+        <pre><code data-line-numbers="1-2|4-6|8">aum     = 1_193_000_000_000
+clientes = 2_600_000
+
+def market_share(aum, total):
+    share = aum / total * 100
+    return f'{share:.1f}%'
+
+print(market_share(aum, 8.2e12))  # 14.5%</code></pre>
       </div>
     </section>
   </div>
@@ -693,41 +1077,332 @@
 
   <nav class="hud" aria-label="Controles do deck">
     <button class="hud__btn hud__prev" type="button" aria-label="Slide anterior">◀</button>
-    <span class="hud__counter"><span id="cur">1</span> / <span id="tot">3</span></span>
+    <span class="hud__counter"><span id="cur">1</span> / <span id="tot">7</span></span>
     <button class="hud__btn hud__next" type="button" aria-label="Próximo slide">▶</button>
+    <button class="hud__btn hud__overview" type="button" aria-label="Visão geral (O)" title="O">⊞</button>
+    <button class="hud__btn hud__scroll" type="button" aria-label="Modo scroll" title="Scroll">↕</button>
     <button class="hud__fs" type="button" aria-label="Alternar fullscreen">⛶</button>
     <button class="theme-toggle" type="button" aria-label="Alternar tema"><span aria-hidden="true">◐</span></button>
   </nav>
 
+  <!-- Keyboard shortcuts overlay (tecla ?) -->
+  <div class="shortcuts-overlay" id="shortcuts-overlay" role="dialog" aria-modal="true" aria-label="Atalhos de teclado">
+    <div class="shortcuts-panel">
+      <h3>Atalhos de teclado</h3>
+      <dl>
+        <dt>→ / Space / PgDn</dt><dd>Próximo slide ou fragmento</dd>
+        <dt>←  / PgUp</dt><dd>Slide anterior</dd>
+        <dt>Home</dt><dd>Primeiro slide</dd>
+        <dt>End</dt><dd>Último slide</dd>
+        <dt>O</dt><dd>Overview (grade de slides)</dd>
+        <dt>F</dt><dd>Fullscreen</dd>
+        <dt>Escape</dt><dd>Fechar overview / sair de fullscreen</dd>
+        <dt>?</dt><dd>Mostrar atalhos</dd>
+      </dl>
+      <button class="shortcuts-close" id="shortcuts-close">Fechar (Esc)</button>
+    </div>
+  </div>
+
   <script>
+    /*
+      Atalhos:
+      → / Space / PageDown  — próximo slide/fragmento
+      ← / PageUp            — slide anterior
+      Home / End            — primeiro / último slide
+      O                     — overview mode (grade de slides)
+      F                     — fullscreen
+      Escape                — fechar overview / sair de fullscreen
+      ?                     — mostrar atalhos
+    */
+
+    /* ────────────────────────────────────────────────────────────────
+       Feature 11 — Posicionamento relativo de fragmentos
+       Resolver índices relativos ("+1", "-1") antes de tudo
+    ──────────────────────────────────────────────────────────────── */
+    (function resolveRelativeFragmentIndexes() {
+      document.querySelectorAll('.slide').forEach(slide => {
+        let maxIdx = -1;
+        slide.querySelectorAll('[data-fragment-index]').forEach(el => {
+          const v = el.dataset.fragmentIndex;
+          if (!v.startsWith('+') && !v.startsWith('-')) {
+            maxIdx = Math.max(maxIdx, parseInt(v, 10));
+          }
+        });
+        slide.querySelectorAll('[data-fragment-index]').forEach(el => {
+          const v = el.dataset.fragmentIndex;
+          if (v.startsWith('+') || v.startsWith('-')) {
+            el.dataset.fragmentIndex = String(maxIdx + parseInt(v, 10));
+          }
+        });
+      });
+    })();
+
+    /* ────────────────────────────────────────────────────────────────
+       Feature 14 — Background layers por slide
+    ──────────────────────────────────────────────────────────────── */
+    (function initBackgroundLayers() {
+      document.querySelectorAll('.slide').forEach(slide => {
+        if (!slide.dataset.backgroundColor && !slide.dataset.backgroundGradient && !slide.dataset.backgroundImage) return;
+        const bg = document.createElement('div');
+        bg.className = 'slide-bg';
+        if (slide.dataset.backgroundGradient) {
+          bg.style.background = slide.dataset.backgroundGradient;
+        } else if (slide.dataset.backgroundColor) {
+          bg.style.background = slide.dataset.backgroundColor;
+        } else if (slide.dataset.backgroundImage) {
+          bg.style.backgroundImage = 'url(' + slide.dataset.backgroundImage + ')';
+          bg.style.backgroundSize = slide.dataset.backgroundSize || 'cover';
+          bg.style.backgroundPosition = slide.dataset.backgroundPosition || 'center';
+          bg.style.opacity = slide.dataset.backgroundOpacity || '1';
+        }
+        slide.insertBefore(bg, slide.firstChild);
+      });
+    })();
+
+    /* ────────────────────────────────────────────────────────────────
+       Feature 13 — Code Stepping: pré-processar blocos
+    ──────────────────────────────────────────────────────────────── */
+    (function initCodeStepping() {
+      document.querySelectorAll('[data-line-numbers]').forEach(code => {
+        try {
+          const stepsRaw = code.dataset.lineNumbers.split('|');
+          const steps = stepsRaw.map(s => {
+            return s.split(',').flatMap(part => {
+              const [a, b] = part.trim().split('-').map(Number);
+              if (!isNaN(b)) return Array.from({ length: b - a + 1 }, (_, i) => a + i);
+              return isNaN(a) ? [] : [a];
+            });
+          });
+
+          // Envolver linhas em <span class="code-line">
+          const raw = code.textContent;
+          const lines = raw.replace(/^\n/, '').replace(/\n$/, '').split('\n');
+          code.innerHTML = lines.map((l, i) =>
+            '<span class="code-line" data-line="' + (i + 1) + '">' + l.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</span>'
+          ).join('\n');
+
+          code.classList.add('code-block');
+          code._codeSteps = steps;
+          code._codeStep = -1;
+        } catch (err) {
+          // degrada gracefully
+        }
+      });
+    })();
+
+    function applyCodeStep(code, stepIdx) {
+      try {
+        const steps = code._codeSteps;
+        if (!steps || stepIdx < 0 || stepIdx >= steps.length) return;
+        const step = steps[stepIdx];
+        code.querySelectorAll('.code-line').forEach(line => {
+          const n = parseInt(line.dataset.line, 10);
+          const active = step.includes(n);
+          line.classList.toggle('is-highlight', active);
+          line.classList.toggle('is-dim', !active);
+        });
+        code._codeStep = stepIdx;
+      } catch (err) {}
+    }
+
+    function clearCodeStep(code) {
+      try {
+        code.querySelectorAll('.code-line').forEach(l => {
+          l.classList.remove('is-highlight', 'is-dim');
+        });
+        code._codeStep = -1;
+      } catch (err) {}
+    }
+
+    /* ────────────────────────────────────────────────────────────────
+       Feature 9 — AutoFitText
+    ──────────────────────────────────────────────────────────────── */
+    function fitText(el) {
+      try {
+        const parent = el.parentElement;
+        if (!parent) return;
+        let min = 10, max = 300, mid;
+        el.style.fontSize = max + 'px';
+        while (max - min > 1) {
+          mid = (min + max) / 2;
+          el.style.fontSize = mid + 'px';
+          if (el.scrollWidth > parent.clientWidth || el.scrollHeight > parent.clientHeight) max = mid;
+          else min = mid;
+        }
+        el.style.fontSize = min + 'px';
+      } catch (err) {}
+    }
+
+    document.querySelectorAll('[data-fit-text]').forEach(el => {
+      fitText(el);
+      try {
+        new ResizeObserver(() => fitText(el)).observe(el.parentElement);
+      } catch (err) {}
+    });
+
+    /* ────────────────────────────────────────────────────────────────
+       Engine principal
+    ──────────────────────────────────────────────────────────────── */
     const slides = [...document.querySelectorAll('.slide')];
-    const fragmentsByIdx = slides.map(s => [...s.querySelectorAll('[data-fragment]')]);
+    const fragmentsByIdx = slides.map(s => {
+      // ordenar por data-fragment-index se disponível
+      const frags = [...s.querySelectorAll('[data-fragment]')];
+      frags.sort((a, b) => {
+        const ai = parseInt(a.dataset.fragmentIndex ?? '999', 10);
+        const bi = parseInt(b.dataset.fragmentIndex ?? '999', 10);
+        return ai - bi;
+      });
+      return frags;
+    });
     const fragShownByIdx = slides.map(() => 0);
+    // rastrear code steppers por slide
+    const codeSteppersBySlide = slides.map(s => [...s.querySelectorAll('[data-line-numbers]')]);
+    // rastrear índice de code stepper ativo por slide
+    const codeStepperIdxBySlide = slides.map(() => 0);
     let idx = 0;
 
     function updateProgress() {
       const pct = ((idx + 1) / slides.length) * 100;
-      document.getElementById('progress-bar').style.width = pct + '%';
+      const bar = document.getElementById('progress-bar');
+      if (bar) bar.style.width = pct + '%';
+    }
+
+    /* ─── Feature 5: Auto-Animate FLIP ──────────────────────────── */
+    function runAutoAnimate(fromSlide, toSlide) {
+      try {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        if (!fromSlide?.dataset.autoAnimate || !toSlide?.dataset.autoAnimate) return;
+        const froms = [...fromSlide.querySelectorAll('[data-id]')];
+        const tos   = [...toSlide.querySelectorAll('[data-id]')];
+        tos.forEach(to => {
+          const from = froms.find(f => f.dataset.id === to.dataset.id);
+          if (!from) return;
+          const fRect = from.getBoundingClientRect();
+          const tRect = to.getBoundingClientRect();
+          const dx = fRect.left - tRect.left;
+          const dy = fRect.top  - tRect.top;
+          const sx = fRect.width  / (tRect.width  || 1);
+          const sy = fRect.height / (tRect.height || 1);
+          to.animate([
+            { transform: 'translate(' + dx + 'px, ' + dy + 'px) scale(' + sx + ', ' + sy + ')', opacity: getComputedStyle(from).opacity },
+            { transform: 'none', opacity: '1' }
+          ], { duration: 600, easing: 'cubic-bezier(0.22,1,0.36,1)', fill: 'both' });
+        });
+      } catch (err) {}
+    }
+
+    /* ─── Feature 7: Rough Notation ─────────────────────────────── */
+    function initMarks(slide) {
+      try {
+        if (typeof RoughNotation === 'undefined') return;
+        slide.querySelectorAll('[data-mark]').forEach(el => {
+          if (el._rn) return;
+          const type  = el.dataset.mark || 'underline';
+          const color = el.dataset.markColor ||
+            getComputedStyle(document.documentElement).getPropertyValue('--color-accent').trim() ||
+            '#FF6200';
+          const at = parseInt(el.dataset.markAt, 10);
+          const ann = RoughNotation.annotate(el, {
+            type, color, strokeWidth: 2.5, animationDuration: 600, multiline: true
+          });
+          el._rn = ann;
+          el._rnAt = isNaN(at) ? null : at;
+          if (el._rnAt === null) {
+            // sem data-mark-at → mostra ao entrar no slide (pequeno delay)
+            requestAnimationFrame(() => ann.show());
+          }
+        });
+      } catch (err) {}
+    }
+
+    function checkMarkFragments(slideIdx, fragIdx) {
+      try {
+        if (typeof RoughNotation === 'undefined') return;
+        slides[slideIdx].querySelectorAll('[data-mark][data-mark-at]').forEach(el => {
+          if (el._rn && el._rnAt === fragIdx) el._rn.show();
+        });
+      } catch (err) {}
     }
 
     function goto(n) {
       n = Math.max(0, Math.min(slides.length - 1, n));
+      const prevSlide = slides[idx];
+
       slides.forEach((s, i) => {
         s.classList.toggle('is-active', i === n);
         s.classList.toggle('is-prev', i < n);
       });
+
+      // Feature 5: Auto-Animate
+      if (idx !== n) {
+        requestAnimationFrame(() => runAutoAnimate(prevSlide, slides[n]));
+      }
+
+      // Resetar fragmentos visíveis do slide anterior
+      if (idx !== n) {
+        fragmentsByIdx[idx].forEach(f => {
+          f.classList.remove('is-visible', 'was-visible');
+        });
+        fragShownByIdx[idx] = 0;
+
+        // Resetar code steppers do slide anterior
+        codeSteppersBySlide[idx].forEach(c => clearCodeStep(c));
+        codeStepperIdxBySlide[idx] = 0;
+      }
+
       idx = n;
-      document.getElementById('cur').textContent = n + 1;
-      document.getElementById('tot').textContent = slides.length;
+      const cur = document.getElementById('cur');
+      const tot = document.getElementById('tot');
+      if (cur) cur.textContent = n + 1;
+      if (tot) tot.textContent = slides.length;
       history.replaceState(null, '', '#s' + (n + 1));
       updateProgress();
+
+      // Feature 7: inicializar marcações Rough Notation no novo slide
+      requestAnimationFrame(() => initMarks(slides[idx]));
     }
 
     function nextFragment() {
       const frags = fragmentsByIdx[idx];
-      if (fragShownByIdx[idx] < frags.length) {
-        frags[fragShownByIdx[idx]].classList.add('is-visible');
+      const shown = fragShownByIdx[idx];
+
+      // Verificar se há code steppers para avançar primeiro
+      const codeSteppers = codeSteppersBySlide[idx];
+      if (codeSteppers.length > 0) {
+        const csIdx = codeStepperIdxBySlide[idx];
+        if (csIdx < codeSteppers.length) {
+          const cs = codeSteppers[csIdx];
+          const nextStep = (cs._codeStep ?? -1) + 1;
+          if (nextStep < (cs._codeSteps?.length ?? 0)) {
+            applyCodeStep(cs, nextStep);
+            return true;
+          } else {
+            // esse code stepper acabou, passar para o próximo
+            codeStepperIdxBySlide[idx]++;
+          }
+        }
+      }
+
+      if (shown < frags.length) {
+        const frag = frags[shown];
+        const fragType = frag.dataset.fragment;
+
+        // Marcar fragmento anterior como was-visible para tipos que precisam
+        if (shown > 0) {
+          const prevFrag = frags[shown - 1];
+          const prevType = prevFrag.dataset.fragment;
+          if (prevType === 'current-visible' || prevType === 'highlight-current' || prevType === 'fade-in-then-out') {
+            prevFrag.classList.remove('is-visible');
+            prevFrag.classList.add('was-visible');
+          }
+        }
+
+        frag.classList.add('is-visible');
         fragShownByIdx[idx]++;
+
+        // Feature 7: verificar marcações atreladas a fragmentos
+        checkMarkFragments(idx, fragShownByIdx[idx]);
+
         return true;
       }
       return false;
@@ -736,20 +1411,93 @@
     function next() { if (!nextFragment()) goto(idx + 1); }
     function prev() { goto(idx - 1); }
 
-    addEventListener('keydown', e => {
-      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); next(); }
-      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prev(); }
-      else if (e.key === 'Home') goto(0);
-      else if (e.key === 'End') goto(slides.length - 1);
-      else if (e.key === 'Escape' && document.fullscreenElement) document.exitFullscreen();
-      else if (e.key === 'f' || e.key === 'F') document.documentElement.requestFullscreen?.();
+    /* ─── Feature 4: Overview Mode ──────────────────────────────── */
+    function toggleOverview() {
+      document.body.classList.toggle('is-overview');
+      if (!document.body.classList.contains('is-overview')) {
+        // ao fechar, scroll para o slide ativo
+        try {
+          slides[idx].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } catch (err) {}
+        window.scrollTo(0, 0);
+      }
+    }
+
+    // Clicar num slide no overview → navegar e fechar
+    document.querySelector('.deck').addEventListener('click', e => {
+      if (!document.body.classList.contains('is-overview')) return;
+      const sl = e.target.closest('.slide');
+      if (sl) {
+        goto(slides.indexOf(sl));
+        document.body.classList.remove('is-overview');
+        window.scrollTo(0, 0);
+      }
     });
 
+    /* ─── Shortcuts overlay ─────────────────────────────────────── */
+    const shortcutsOverlay = document.getElementById('shortcuts-overlay');
+    const shortcutsClose   = document.getElementById('shortcuts-close');
+
+    function showShortcuts() {
+      if (shortcutsOverlay) shortcutsOverlay.classList.add('is-open');
+    }
+    function hideShortcuts() {
+      if (shortcutsOverlay) shortcutsOverlay.classList.remove('is-open');
+    }
+
+    if (shortcutsClose) shortcutsClose.addEventListener('click', hideShortcuts);
+    if (shortcutsOverlay) shortcutsOverlay.addEventListener('click', e => {
+      if (e.target === shortcutsOverlay) hideShortcuts();
+    });
+
+    /* ─── Keyboard handler (atualizado) ─────────────────────────── */
+    addEventListener('keydown', e => {
+      // fechar shortcuts overlay com Escape
+      if (shortcutsOverlay?.classList.contains('is-open')) {
+        if (e.key === 'Escape') { e.preventDefault(); hideShortcuts(); }
+        return;
+      }
+
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault(); next();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault(); prev();
+      } else if (e.key === 'Home') {
+        goto(0);
+      } else if (e.key === 'End') {
+        goto(slides.length - 1);
+      } else if (e.key === 'o' || e.key === 'O') {
+        toggleOverview();
+      } else if (e.key === 'Escape') {
+        if (document.body.classList.contains('is-overview')) {
+          document.body.classList.remove('is-overview');
+          window.scrollTo(0, 0);
+        } else if (document.fullscreenElement) {
+          document.exitFullscreen();
+        }
+      } else if (e.key === 'f' || e.key === 'F') {
+        document.documentElement.requestFullscreen?.();
+      } else if (e.key === '?') {
+        showShortcuts();
+      }
+    });
+
+    /* ─── HUD click handlers ─────────────────────────────────────── */
     document.querySelector('.hud__prev').addEventListener('click', prev);
     document.querySelector('.hud__next').addEventListener('click', next);
     document.querySelector('.hud__fs').addEventListener('click', () => {
       if (document.fullscreenElement) document.exitFullscreen();
       else document.documentElement.requestFullscreen?.();
+    });
+    document.querySelector('.hud__overview').addEventListener('click', toggleOverview);
+    document.querySelector('.hud__scroll').addEventListener('click', () => {
+      const url = new URL(location.href);
+      if (url.searchParams.get('view') === 'scroll') {
+        url.searchParams.delete('view');
+      } else {
+        url.searchParams.set('view', 'scroll');
+      }
+      location.href = url.toString();
     });
 
     document.querySelector('.theme-toggle').addEventListener('click', () => {
@@ -759,8 +1507,42 @@
       try { localStorage.setItem('theme', nx); } catch {}
     });
 
+    /* ─── Feature 10: Scroll View ───────────────────────────────── */
+    if (new URLSearchParams(location.search).get('view') === 'scroll') {
+      document.body.classList.add('scroll-view');
+      const scrollObs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            const i = slides.indexOf(e.target);
+            if (i !== -1) {
+              idx = i;
+              updateProgress();
+              const cur = document.getElementById('cur');
+              if (cur) cur.textContent = i + 1;
+            }
+          }
+        });
+      }, { threshold: 0.5 });
+      slides.forEach(s => scrollObs.observe(s));
+    }
+
+    /* ─── Inicializar navegação via hash ────────────────────────── */
     const fromHash = parseInt((location.hash.match(/^#s(\d+)$/) || [])[1], 10);
     goto(fromHash ? fromHash - 1 : 0);
+
+    /* ─── Feature 1: Wake Lock API ──────────────────────────────── */
+    let wakeLock = null;
+    async function acquireWakeLock() {
+      try {
+        if ('wakeLock' in navigator) {
+          wakeLock = await navigator.wakeLock.request('screen');
+        }
+      } catch (err) {}
+    }
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') acquireWakeLock();
+    });
+    acquireWakeLock();
   </script>
 </body>
 </html>

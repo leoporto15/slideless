@@ -263,6 +263,21 @@ Para cada tipo de conteúdo, usar o template correto:
 - Estrutura: `.diagram-shell → .zoom-controls → .mermaid-viewport → .mermaid-canvas`.
 - JS completo em `references/css-patterns.md § 4`.
 
+**Deck engine v3 — features obrigatórias ao gerar deck:**
+- **Wake Lock**: automático no engine — tela não dorme durante apresentação.
+- **Overview** (`O`): grade de todos os slides. Gerar decks longos sabendo que o apresentador pode navegar via overview.
+- **Auto-Animate**: usar `data-auto-animate` + `data-id` em slides consecutivos onde o mesmo elemento muda de escala/posição (ex: KPI que cresce de card para big-num).
+- **Layouts semânticos**: usar `layout-fact` para KPIs isolados, `layout-quote` para citações, `layout-two-cols` para comparações, `layout-statement` para one-liners. Nunca improvizar layout inline quando existe semântico.
+- **Tipos de fragmento**: usar `current-visible` para listas onde o contexto de cada item importa (spotlight); `highlight-current` para percorrer linhas de tabela; `grow` para revelar KPIs com impacto.
+- **Rough Notation**: `data-mark="circle"` em números-âncora, `data-mark="underline"` em termos-chave. Ativa automático ao entrar no slide. Cor default = `--color-accent`.
+- **AutoFitText**: `data-fit-text` em títulos de comprimento variável. Nunca hardcodar font-size menor só para caber.
+- **Scroll View**: ao gerar link para o deck, mencionar que `?view=scroll` ativa versão scrollável para leitura em mobile.
+- **Posicionamento relativo**: usar `data-fragment-index="+1"` em listas — nunca índices absolutos sequenciais que quebram ao reordenar.
+- **Background por slide**: slides de seção/divisor usam `data-background-color="var(--itau-orange)"` (tema itaú) para identidade visual forte.
+- **Code Stepping**: blocos de código com narrativa progressiva usam `data-line-numbers="1-3|5-7|10"`.
+
+Referência completa em `references/slide-patterns.md § Features do engine v3`.
+
 ---
 
 ## Workflow de geração
