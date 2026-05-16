@@ -78,7 +78,7 @@
     .slide {
       position: absolute; inset: 0;
       display: flex; flex-direction: column; justify-content: center;
-      padding: 7vh 8vw;
+      padding: clamp(72px, 9vh, 100px) clamp(48px, 8vw, 120px) clamp(56px, 7vh, 80px);
       opacity: 0;
       pointer-events: none;
       transform: translateX(60px) scale(0.98);
@@ -86,6 +86,11 @@
                   transform var(--duration-slide) var(--ease-emphatic);
       overflow: hidden;
       z-index: 1;
+    }
+    /* Em viewports baixos, alinhar conteúdo ao topo para evitar overflow vertical
+       que sobreporia o slide-num */
+    @media (max-height: 760px) {
+      .slide { justify-content: flex-start; }
     }
     .slide.is-prev { transform: translateX(-60px) scale(0.98); }
     .slide.is-active { opacity: 1; transform: translateX(0) scale(1); pointer-events: auto; }
@@ -119,8 +124,10 @@
       to   { opacity: 1; filter: blur(0);    transform: translateY(0) scale(1); }
     }
 
-    /* Fragments */
-    .slide [data-fragment] {
+    /* Fragments — base só para tipos que começam invisíveis.
+       Tipos always-visible (highlight-current, strike) são excluídos para
+       não ficarem com opacity:0 inicial — eles começam visíveis e só mudam estilo. */
+    .slide [data-fragment]:not([data-fragment="highlight-current"]):not([data-fragment="strike"]) {
       opacity: 0;
       transform: translateY(14px);
       transition: opacity 500ms var(--ease-out), transform 500ms var(--ease-out);
@@ -128,6 +135,12 @@
     .slide [data-fragment].is-visible {
       opacity: 1;
       transform: translateY(0);
+    }
+    /* Tabelas: linhas com highlight-current começam visíveis em estado muted */
+    .slide table [data-fragment="highlight-current"] td,
+    .slide table [data-fragment="highlight-current"] th {
+      opacity: 1;
+      transform: none;
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -618,17 +631,35 @@
       box-shadow: 0 0 12px var(--color-accent);
     }
 
-    /* ─── Slide number badge ─────────────────────────────────────── */
+    /* ─── Slide number (page number style, bottom-right) ─────────────
+       Posicionado bottom-right (longe do kicker/título que vivem no topo).
+       Estilo subtle de page number — sem badge nem fundo, só texto monospace
+       discreto com opacity 0.45. Impossível colidir com conteúdo do slide
+       porque o HUD ocupa o bottom-center, deixando bottom-right livre. */
     .slide-num {
       position: absolute;
-      top: 24px; left: 28px;
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      color: var(--color-fg-subtle);
+      bottom: 18px; right: 28px;
+      font: 600 0.6875rem/1 var(--font-mono);
+      letter-spacing: 0.12em;
+      color: var(--color-fg-muted);
+      opacity: 0.55;
+      z-index: 30;
+      white-space: nowrap;
+      pointer-events: none;
+      user-select: none;
     }
-    .slide-num span { color: var(--color-accent); }
+    .slide-num span { color: var(--color-accent); opacity: 0.9; font-weight: 700; }
+    /* Em slides com background escuro, slide-num precisa contraste maior */
+    .slide[data-background-color="#000000"] .slide-num,
+    .slide[data-background-color="#000"] .slide-num,
+    .slide[data-background-color^="var(--itau-orange"] .slide-num,
+    .slide[data-background-color*="orange"] .slide-num {
+      color: rgba(255,255,255,0.75);
+    }
+    .slide[data-background-color="#000000"] .slide-num span,
+    .slide[data-background-color="#000"] .slide-num span {
+      color: var(--itau-orange-3, #FA9F09);
+    }
 
     /* ─── Print ──────────────────────────────────────────────────── */
     @media print {
@@ -652,36 +683,54 @@
        ════════════════════════════════════════════════════════════════ */
 
     /* ─── Feature 4: Overview Mode ──────────────────────────────── */
-    body.is-overview { overflow: auto; }
-    body.is-overview .deck {
-      overflow: visible;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 16px;
-      padding: 24px;
+    /* Estratégia: cada slide renderiza em seu tamanho real de viewport
+       (snapshotted em --slide-w/--slide-h ao entrar em overview), depois
+       é escalado com transform: scale(). Isso preserva clamp() e vw/vh. */
+    :root {
+      --ov-scale: 0.22;
+      --slide-w: 100vw;
+      --slide-h: 100vh;
+    }
+    body.is-overview {
+      overflow: auto !important;
       height: auto;
+    }
+    body.is-overview .deck {
+      position: static !important;
+      overflow: visible !important;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, calc(var(--slide-w) * var(--ov-scale)));
+      gap: 20px;
+      padding: 28px;
+      height: auto !important;
       min-height: 100vh;
+      width: 100% !important;
       background: var(--color-bg-sunken, #0a0a0a);
+      justify-content: center;
+      align-content: start;
     }
     body.is-overview .slide {
-      position: relative;
-      inset: auto;
-      width: 100%;
-      aspect-ratio: 16/9;
-      opacity: 1;
-      transform: none;
+      position: relative !important;
+      inset: auto !important;
+      width: var(--slide-w) !important;
+      height: var(--slide-h) !important;
+      opacity: 1 !important;
       pointer-events: auto;
       cursor: pointer;
       border: 2px solid var(--color-border);
       border-radius: var(--radius-lg, 12px);
       overflow: hidden;
-      padding: 5%;
-      font-size: 0.35em;
+      transform: scale(var(--ov-scale)) !important;
+      transform-origin: top left;
+      /* compensa o espaço deixado pelo scale na grade */
+      margin-right: calc(var(--slide-w) * (var(--ov-scale) - 1));
+      margin-bottom: calc(var(--slide-h) * (var(--ov-scale) - 1));
       transition: border-color 150ms, box-shadow 150ms;
+      flex-shrink: 0;
     }
     body.is-overview .slide.is-active {
       border-color: var(--color-accent);
-      box-shadow: 0 0 0 3px var(--color-accent);
+      box-shadow: 0 0 0 4px var(--color-accent);
     }
     body.is-overview .slide:hover {
       border-color: var(--color-accent);
@@ -689,8 +738,15 @@
     }
     body.is-overview .hud,
     body.is-overview .deck-progress,
-    body.is-overview .brand-mark { display: none; }
-    body.is-overview .slide-num { font-size: 2.5em; }
+    body.is-overview .brand-mark { display: none !important; }
+    /* No overview, todos os fragmentos e animações ficam visíveis */
+    body.is-overview .slide [data-fragment],
+    body.is-overview .slide [data-anim] {
+      opacity: 1 !important;
+      transform: none !important;
+      filter: none !important;
+      animation: none !important;
+    }
 
     /* ─── Feature 6: Novos tipos de fragmento ───────────────────── */
 
@@ -1412,16 +1468,30 @@ print(market_share(aum, 8.2e12))  # 14.5%</code></pre>
     function prev() { goto(idx - 1); }
 
     /* ─── Feature 4: Overview Mode ──────────────────────────────── */
+    function snapshotViewportForOverview() {
+      // Captura dimensões reais do viewport ANTES do scale, para que
+      // clamp() e vw/vh continuem resolvendo contra o tamanho original.
+      document.documentElement.style.setProperty('--slide-w', window.innerWidth + 'px');
+      document.documentElement.style.setProperty('--slide-h', window.innerHeight + 'px');
+    }
     function toggleOverview() {
-      document.body.classList.toggle('is-overview');
-      if (!document.body.classList.contains('is-overview')) {
-        // ao fechar, scroll para o slide ativo
-        try {
-          slides[idx].scrollIntoView({ behavior: 'smooth', block: 'center' });
-        } catch (err) {}
+      const willOpen = !document.body.classList.contains('is-overview');
+      if (willOpen) {
+        snapshotViewportForOverview();
+        document.body.classList.add('is-overview');
+        // Scroll para o slide ativo dentro do overview
+        requestAnimationFrame(() => {
+          try { slides[idx].scrollIntoView({ behavior: 'auto', block: 'center' }); } catch {}
+        });
+      } else {
+        document.body.classList.remove('is-overview');
         window.scrollTo(0, 0);
       }
     }
+    // Re-snapshotar dimensões se a janela for redimensionada com overview aberto
+    window.addEventListener('resize', () => {
+      if (document.body.classList.contains('is-overview')) snapshotViewportForOverview();
+    });
 
     // Clicar num slide no overview → navegar e fechar
     document.querySelector('.deck').addEventListener('click', e => {
