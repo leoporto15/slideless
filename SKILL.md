@@ -73,6 +73,7 @@ Os comandos vivem em [commands/](commands/) — cada arquivo `.md` é um slash c
 ### Criação (5)
 | Comando | Função |
 |---|---|
+| `/criar` | **Wizard para usuários não-técnicos** (RH, Comunicação, Negócios) — faz 5 perguntas em português comum e escolhe o modelo automaticamente, sem precisar conhecer a diferença entre deck/handbook/hub/etc. |
 | `/slideless-handbook <tópico>` | Cria handbook com sidebar + scrollspy + TOC |
 | `/slideless-hub <tópico>` | Cria hub com grid de cards categorizáveis |
 | `/slideless-scrollytelling <tópico>` | Cria scrollytelling com reveal e sticky chart |
