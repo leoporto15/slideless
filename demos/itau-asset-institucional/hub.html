@@ -20,37 +20,34 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,800;9..144,900&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,800;1,9..144,400;1,9..144,700;1,9..144,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 
   <style>
     /* ══════════════════════════════════════════════════════
-       DESIGN TOKENS — TEMA ITAÚ
+       DESIGN TOKENS — LIGHT
     ══════════════════════════════════════════════════════ */
     :root {
-      --itau-orange:  #FF6200;
-      --itau-orange-2:#F88104;
-      --itau-orange-3:#FA9F09;
-      --itau-blue-3:  #3B85FA;
-      --itau-yellow:  #FBC305;
-      --itau-warm-black:#14110d;
+      --itau-orange:   #FF6200;
+      --itau-orange-2: #F88104;
+      --itau-orange-3: #FA9F09;
+      --itau-blue-3:   #3B85FA;
+      --itau-yellow:   #FBC305;
 
-      --color-accent:       var(--itau-orange);
-      --color-accent-dim:   rgba(255,98,0,0.08);
-      --color-accent-fg:    #ffffff;
-      --color-info:         var(--itau-blue-3);
-      --color-info-dim:     rgba(59,133,250,0.08);
-      --color-success:      #4d7c0f;
-      --color-success-dim:  rgba(77,124,15,0.08);
-      --color-sage:         #65a30d;
-      --color-sage-dim:     rgba(101,163,13,0.08);
-      --color-teal:         #0f766e;
-      --color-teal-dim:     rgba(15,118,110,0.08);
-      --color-plum:         #9f1239;
-      --color-plum-dim:     rgba(159,18,57,0.08);
-      --color-warn:         var(--itau-yellow);
-      --color-warn-dim:     rgba(251,195,5,0.12);
-      --color-danger:       #b91c1c;
-      --color-danger-dim:   rgba(185,28,28,0.08);
+      --color-accent:      var(--itau-orange);
+      --color-accent-dim:  rgba(255,98,0,0.10);
+      --color-info:        var(--itau-blue-3);
+      --color-info-dim:    rgba(59,133,250,0.10);
+      --color-success:     #4d7c0f;
+      --color-success-dim: rgba(77,124,15,0.10);
+      --color-sage:        #65a30d;
+      --color-sage-dim:    rgba(101,163,13,0.10);
+      --color-teal:        #0f766e;
+      --color-teal-dim:    rgba(15,118,110,0.10);
+      --color-plum:        #9f1239;
+      --color-plum-dim:    rgba(159,18,57,0.10);
+      --color-warn:        var(--itau-yellow);
+      --color-warn-dim:    rgba(251,195,5,0.14);
 
       --color-bg:           #faf7f5;
       --color-bg-elevated:  #ffffff;
@@ -60,38 +57,38 @@
       --color-fg-subtle:    #8a7e72;
       --color-border:       rgba(41,32,23,0.10);
       --color-border-strong:rgba(41,32,23,0.18);
-      --color-accent-hover: var(--itau-orange-2);
 
-      --font-text:   'Itau Text','Inter',-apple-system,system-ui,sans-serif;
-      --font-display:'Itau Display','Fraunces','Inter',Georgia,serif;
-      --font-mono:   'JetBrains Mono','IBM Plex Mono',monospace;
+      --font-display: 'Fraunces', Georgia, serif;
+      --font-text:    'Inter', system-ui, sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
 
-      --size-xs:     clamp(0.75rem,0.7rem + 0.2vw,0.875rem);
-      --size-small:  clamp(0.875rem,0.85rem + 0.15vw,1rem);
-      --size-body:   clamp(1rem,0.95rem + 0.2vw,1.125rem);
-      --size-lead:   clamp(1.15rem,1.05rem + 0.5vw,1.4rem);
-      --size-h3:     clamp(1.2rem,1.1rem + 0.5vw,1.5rem);
-      --size-h2:     clamp(1.6rem,1.3rem + 1.2vw,2.25rem);
-      --size-h1:     clamp(2.25rem,1.8rem + 2vw,3.5rem);
+      --size-xs:    clamp(0.75rem,  0.70rem + 0.20vw, 0.875rem);
+      --size-small: clamp(0.875rem, 0.85rem + 0.15vw, 1rem);
+      --size-body:  clamp(1rem,     0.95rem + 0.20vw, 1.125rem);
+      --size-h2:    clamp(1.6rem,   1.3rem  + 1.20vw, 2.25rem);
+      --size-h1:    clamp(2.25rem,  1.8rem  + 2.00vw, 3.5rem);
 
       --space-1: 0.25rem; --space-2: 0.5rem;  --space-3: 0.75rem;
       --space-4: 1rem;    --space-5: 1.5rem;  --space-6: 2rem;
-      --space-7: 2.5rem;  --space-8: 3rem;    --space-10:4rem;
-      --space-12:5rem;
+      --space-7: 2.5rem;  --space-8: 3rem;    --space-10: 4rem;
+      --space-12: 5rem;
 
       --header-h: 56px;
-      --radius-sm:4px; --radius:10px; --radius-lg:16px;
+      --radius:   10px;
+      --radius-lg:16px;
 
       --shadow-xs: 0 1px 2px rgba(41,32,23,0.04);
-      --shadow-sm: 0 2px 4px rgba(41,32,23,0.06),0 1px 2px rgba(41,32,23,0.04);
-      --shadow-md: 0 4px 12px rgba(41,32,23,0.09),0 2px 4px rgba(41,32,23,0.05);
-      --shadow-lg: 0 12px 32px rgba(41,32,23,0.12),0 4px 12px rgba(41,32,23,0.06);
+      --shadow-sm: 0 2px 4px rgba(41,32,23,0.06);
+      --shadow-md: 0 4px 12px rgba(41,32,23,0.08);
+      --shadow-lg: 0 12px 32px rgba(41,32,23,0.12), 0 4px 12px rgba(41,32,23,0.06);
 
-      --ease-out:     cubic-bezier(0.22,1,0.36,1);
-      --duration-fast:150ms;
-      --duration:     250ms;
+      --ease-out:    cubic-bezier(0.22,1,0.36,1);
+      --duration-fast: 150ms;
     }
 
+    /* ══════════════════════════════════════════════════════
+       DESIGN TOKENS — DARK OVERRIDE
+    ══════════════════════════════════════════════════════ */
     [data-theme="dark"] {
       --color-bg:           #14110d;
       --color-bg-elevated:  #1c1814;
@@ -101,264 +98,182 @@
       --color-fg-subtle:    #786e62;
       --color-border:       rgba(237,229,221,0.10);
       --color-border-strong:rgba(237,229,221,0.20);
-      --color-accent:       var(--itau-orange-3);
-      --color-accent-hover: var(--itau-orange-2);
-      --color-accent-fg:    #14110d;
-      --color-accent-dim:   rgba(250,159,9,0.10);
-      --color-success:      #a3e635;
-      --color-teal:         #5eead4;
-      --shadow-sm: 0 2px 4px rgba(0,0,0,0.4),0 1px 2px rgba(0,0,0,0.3);
-      --shadow-lg: 0 12px 32px rgba(0,0,0,0.5),0 4px 12px rgba(0,0,0,0.3);
+
+      --color-accent:      var(--itau-orange-3);
+      --color-accent-dim:  rgba(250,159,9,0.12);
+      --color-info-dim:    rgba(59,133,250,0.14);
+      --color-success:     #a3e635;
+      --color-success-dim: rgba(163,230,53,0.12);
+      --color-teal:        #5eead4;
+      --color-teal-dim:    rgba(94,234,212,0.12);
+      --color-plum:        #fb7185;
+      --color-plum-dim:    rgba(251,113,133,0.12);
+
+      --shadow-sm: 0 2px 4px rgba(0,0,0,0.40);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.50);
+      --shadow-lg: 0 12px 32px rgba(0,0,0,0.55), 0 4px 12px rgba(0,0,0,0.40);
     }
 
     /* ══════════════════════════════════════════════════════
        RESET & BASE
     ══════════════════════════════════════════════════════ */
-    *, *::before, *::after { box-sizing: border-box; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body {
-      margin: 0;
       font-family: var(--font-text);
       font-size: var(--size-body);
-      line-height: 1.65;
       color: var(--color-fg);
       background: var(--color-bg);
-      -webkit-font-smoothing: antialiased;
-      transition: background var(--duration-fast), color var(--duration-fast);
+      min-height: 100vh;
+      line-height: 1.6;
+      position: relative;
+      overflow-x: hidden;
     }
-    :focus-visible {
-      outline: 2px solid var(--color-accent);
-      outline-offset: 3px;
-      border-radius: var(--radius-sm);
-    }
-    h1,h2,h3 {
-      font-family: var(--font-display);
-      color: var(--color-fg);
-      line-height: 1.1;
-      letter-spacing: -0.022em;
-      font-weight: 700;
-    }
-    h1 { font-size: var(--size-h1); margin: 0 0 var(--space-4); }
-    h2 { font-size: var(--size-h2); margin: var(--space-8) 0 var(--space-4); }
-    h3 { font-size: var(--size-h3); font-weight: 600; margin: var(--space-6) 0 var(--space-3); }
-    p  { margin: 0 0 var(--space-4); max-width: 65ch; }
-    .lead { font-size: var(--size-lead); line-height: 1.5; color: var(--color-fg-muted); margin-bottom: var(--space-6); max-width: 60ch; }
-    a  { color: var(--color-accent); text-decoration: none; }
-    strong { font-weight: 700; color: var(--color-fg); }
-    ul { padding-left: var(--space-5); margin: 0 0 var(--space-4); }
-    li { margin-bottom: var(--space-2); }
-
     @media (prefers-reduced-motion: reduce) {
-      * { transition-duration: 0.01ms !important; }
+      *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
     }
 
     /* ══════════════════════════════════════════════════════
-       TOPBAR
+       ATMOSPHERIC BACKGROUND
     ══════════════════════════════════════════════════════ */
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 60% 55% at 88% 6%,  rgba(255,98,0,0.13)  0%, transparent 70%),
+        radial-gradient(ellipse 55% 50% at  8% 92%, rgba(59,133,250,0.11) 0%, transparent 70%);
+      background-attachment: fixed;
+    }
+    [data-theme="dark"] body::before {
+      background:
+        radial-gradient(ellipse 60% 55% at 88% 6%,  rgba(250,159,9,0.10)  0%, transparent 70%),
+        radial-gradient(ellipse 55% 50% at  8% 92%, rgba(59,133,250,0.11) 0%, transparent 70%);
+      background-attachment: fixed;
+    }
+
+    /* ══════════════════════════════════════════════════════
+       STICKY HEADER
+    ══════════════════════════════════════════════════════ */
+    .site-header {
+      position: sticky; top: 0; z-index: 100;
       height: var(--header-h);
-      background: var(--color-bg-elevated);
-      border-bottom: 1px solid var(--color-border);
-      display: flex;
-      align-items: center;
+      display: flex; align-items: center; justify-content: space-between;
       padding: 0 var(--space-6);
-      gap: var(--space-4);
-      backdrop-filter: blur(12px);
+      background: rgba(250,247,245,0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--color-border);
     }
-    .topbar__brand {
-      display: flex;
-      align-items: center;
-      gap: var(--space-3);
-      text-decoration: none;
-      flex-shrink: 0;
-    }
-    .topbar__logo {
-      width: 32px;
-      height: 32px;
-      border-radius: var(--radius-sm);
+    [data-theme="dark"] .site-header { background: rgba(20,17,13,0.88); }
+
+    .header-brand { display: flex; align-items: center; gap: var(--space-3); }
+    .brand-logo {
+      width: 34px; height: 34px; border-radius: 9px;
       background: var(--color-accent);
-      display: grid;
-      place-items: center;
-      font-size: 18px;
-      line-height: 1;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-weight: 800; font-size: 1.05rem;
+      color: #fff; letter-spacing: -0.02em; flex-shrink: 0;
     }
-    .topbar__name {
-      font-family: var(--font-display);
-      font-size: var(--size-small);
-      font-weight: 700;
-      color: var(--color-fg);
-      letter-spacing: -0.01em;
-      line-height: 1.2;
+    .brand-name {
+      font-family: var(--font-display); font-weight: 700;
+      font-size: 1.05rem; color: var(--color-fg); letter-spacing: -0.02em;
     }
-    .topbar__name span {
-      display: block;
-      font-family: var(--font-text);
-      font-weight: 400;
-      font-size: var(--size-xs);
-      color: var(--color-fg-muted);
-      letter-spacing: 0;
-    }
-    .topbar__spacer { flex: 1; }
-    .topbar__badge {
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
-      font-size: var(--size-xs);
-      color: var(--color-fg-muted);
-    }
-    .topbar__badge strong {
-      color: var(--color-accent);
-      font-family: var(--font-mono);
-      font-size: var(--size-xs);
-    }
-    .theme-toggle {
-      width: 36px;
-      height: 36px;
-      display: grid;
-      place-items: center;
-      background: var(--color-bg-elevated);
+    .brand-name span { color: var(--color-accent); }
+
+    .brand-tag {
+      font-family: var(--font-mono); font-size: var(--size-xs); font-weight: 500;
+      color: var(--color-fg-subtle); background: var(--color-bg-sunken);
+      padding: var(--space-1) var(--space-2); border-radius: 6px;
       border: 1px solid var(--color-border);
-      border-radius: 999px;
-      cursor: pointer;
-      color: var(--color-fg);
-      font-size: 14px;
-      transition: all var(--duration-fast);
-      flex-shrink: 0;
     }
-    .theme-toggle:hover {
+
+    .header-actions { display: flex; align-items: center; gap: var(--space-3); }
+    .btn-icon {
+      width: 36px; height: 36px;
+      border: 1px solid var(--color-border); background: var(--color-bg-elevated);
+      border-radius: var(--radius); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--color-fg-muted); font-size: 1rem;
+      transition: background var(--duration-fast), border-color var(--duration-fast), color var(--duration-fast);
+    }
+    .btn-icon:hover {
       background: var(--color-bg-sunken);
       border-color: var(--color-border-strong);
-    }
-
-    /* ══════════════════════════════════════════════════════
-       PAGE LAYOUT
-    ══════════════════════════════════════════════════════ */
-    .page {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 var(--space-6) var(--space-12);
+      color: var(--color-fg);
     }
 
     /* ══════════════════════════════════════════════════════
        HERO
     ══════════════════════════════════════════════════════ */
     .hero {
-      padding: var(--space-10) 0 var(--space-7);
-      position: relative;
-      overflow: hidden;
+      position: relative; z-index: 1;
+      padding: var(--space-12) var(--space-6) var(--space-8);
+      max-width: 1200px; margin: 0 auto;
     }
-    .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 80% 60% at 70% -10%, rgba(255,98,0,0.10) 0%, transparent 55%),
-        radial-gradient(ellipse 50% 40% at 10% 80%, rgba(59,133,250,0.06) 0%, transparent 50%);
-      pointer-events: none;
-    }
-    .hero__kicker {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-2);
-      font-size: var(--size-xs);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--color-accent);
-      background: var(--color-accent-dim);
-      padding: var(--space-1) var(--space-3);
-      border-radius: 999px;
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: var(--space-2);
+      font-family: var(--font-mono); font-size: var(--size-xs); font-weight: 600;
+      color: var(--color-accent); text-transform: uppercase; letter-spacing: 0.09em;
       margin-bottom: var(--space-4);
     }
-    .hero__title {
-      font-size: var(--size-h1);
+    .hero-eyebrow::before {
+      content: ''; display: inline-block;
+      width: 22px; height: 2px; background: var(--color-accent); border-radius: 2px;
+    }
+    .hero-title {
+      font-family: var(--font-display); font-size: var(--size-h1);
+      font-weight: 800; line-height: 1.06; letter-spacing: -0.04em;
+      color: var(--color-fg); max-width: 700px; margin-bottom: var(--space-4);
+    }
+    .hero-title em { font-style: italic; color: var(--color-accent); }
+    .hero-sub {
+      font-size: var(--size-body); color: var(--color-fg-muted);
+      max-width: 560px; line-height: 1.75; margin-bottom: var(--space-6);
+    }
+    .hero-stats { display: flex; flex-wrap: wrap; gap: var(--space-6); }
+    .hero-stat { display: flex; flex-direction: column; gap: 2px; }
+    .hero-stat-value {
       font-family: var(--font-display);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      line-height: 1.05;
-      margin: 0 0 var(--space-4);
-      max-width: 14ch;
+      font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.1rem);
+      font-weight: 800; letter-spacing: -0.03em; color: var(--color-fg); line-height: 1;
     }
-    .hero__title em {
-      font-style: normal;
-      color: var(--color-accent);
-    }
-    .hero__sub {
-      font-size: var(--size-lead);
-      color: var(--color-fg-muted);
-      line-height: 1.55;
-      max-width: 52ch;
-      margin: 0 0 var(--space-7);
-    }
-    .hero__stats {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-5);
-    }
-    .hero__stat {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-    .hero__stat-val {
-      font-family: var(--font-display);
-      font-size: clamp(1.6rem, 1.4rem + 0.8vw, 2.2rem);
-      font-weight: 800;
-      color: var(--color-accent);
-      letter-spacing: -0.03em;
-      line-height: 1;
-    }
-    .hero__stat-lbl {
-      font-size: var(--size-xs);
-      color: var(--color-fg-subtle);
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-    .hero__stat-sep {
-      width: 1px;
-      height: 40px;
-      background: var(--color-border-strong);
-      align-self: center;
+    .hero-stat-value.accent { color: var(--color-accent); }
+    .hero-stat-value.info   { color: var(--color-info); }
+    .hero-stat-label { font-size: var(--size-xs); color: var(--color-fg-subtle); font-weight: 500; }
+
+    /* ══════════════════════════════════════════════════════
+       MAIN
+    ══════════════════════════════════════════════════════ */
+    .main {
+      position: relative; z-index: 1;
+      max-width: 1200px; margin: 0 auto;
+      padding: 0 var(--space-6) var(--space-12);
     }
 
     /* ══════════════════════════════════════════════════════
        FILTERS
     ══════════════════════════════════════════════════════ */
     .filters {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-2);
-      padding: var(--space-5) 0 var(--space-6);
-      border-bottom: 1px solid var(--color-border);
-      margin-bottom: var(--space-7);
+      display: flex; flex-wrap: wrap; gap: var(--space-2);
+      margin-bottom: var(--space-6);
     }
     .filter-btn {
-      font-family: var(--font-text);
-      font-size: var(--size-small);
-      font-weight: 500;
-      padding: var(--space-2) var(--space-4);
-      border-radius: 999px;
-      border: 1px solid var(--color-border);
-      background: var(--color-bg-elevated);
-      color: var(--color-fg-muted);
-      cursor: pointer;
-      transition: all var(--duration-fast);
-      line-height: 1.4;
+      font-family: var(--font-text); font-size: var(--size-small); font-weight: 500;
+      padding: var(--space-2) var(--space-4); border-radius: 100px;
+      border: 1px solid var(--color-border); background: var(--color-bg-elevated);
+      color: var(--color-fg-muted); cursor: pointer;
+      transition: all var(--duration-fast) var(--ease-out);
+      white-space: nowrap;
     }
     .filter-btn:hover {
       border-color: var(--color-border-strong);
-      color: var(--color-fg);
-      background: var(--color-bg-sunken);
+      color: var(--color-fg); background: var(--color-bg-sunken);
     }
-    .filter-btn[aria-pressed="true"] {
-      background: var(--color-accent);
-      color: var(--color-accent-fg);
-      border-color: var(--color-accent);
-      font-weight: 600;
+    .filter-btn.active {
+      background: var(--color-accent); border-color: var(--color-accent); color: #fff;
     }
 
     /* ══════════════════════════════════════════════════════
@@ -366,1833 +281,1254 @@
     ══════════════════════════════════════════════════════ */
     .cards-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: var(--space-5);
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: var(--space-4);
     }
-
     .card {
       background: var(--color-bg-elevated);
       border: 1px solid var(--color-border);
       border-radius: var(--radius-lg);
       padding: var(--space-5);
       cursor: pointer;
-      transition:
-        box-shadow var(--duration) var(--ease-out),
-        border-color var(--duration) var(--ease-out),
-        transform var(--duration) var(--ease-out);
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-3);
+      transition: box-shadow var(--duration-fast) var(--ease-out),
+                  border-color var(--duration-fast) var(--ease-out),
+                  transform var(--duration-fast) var(--ease-out);
+      display: flex; flex-direction: column; gap: var(--space-3);
       position: relative;
-      overflow: hidden;
-    }
-    .card::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: var(--radius-lg);
-      border: 2px solid var(--color-accent);
-      opacity: 0;
-      transition: opacity var(--duration-fast);
-      pointer-events: none;
     }
     .card:hover {
       box-shadow: var(--shadow-md);
       border-color: var(--color-border-strong);
       transform: translateY(-2px);
     }
-    .card:hover::after { opacity: 0.25; }
-    .card:focus-visible { outline: none; }
-    .card:focus-visible::after { opacity: 1; }
-    .card[aria-expanded="true"] {
+    .card.active {
       border-color: var(--color-accent);
-      box-shadow: var(--shadow-md);
+      box-shadow: 0 0 0 1px var(--color-accent), var(--shadow-md);
     }
-    .card[aria-expanded="true"]::after { opacity: 1; }
+    .card-hero {
+      grid-column: span 2;
+      box-shadow: var(--shadow-lg);
+    }
+    @media (max-width: 680px) { .card-hero { grid-column: span 1; } }
 
-    .card__icon {
-      font-size: 28px;
-      line-height: 1;
+    .card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-3); }
+    .card-icon {
+      width: 40px; height: 40px; border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; flex-shrink: 0;
     }
-    .card__cat-tag {
-      position: absolute;
-      top: var(--space-3);
-      right: var(--space-3);
-      font-size: var(--size-xs);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      padding: 2px var(--space-2);
-      border-radius: var(--radius-sm);
+    .card-arrow {
+      width: 28px; height: 28px; border-radius: 7px;
+      border: 1px solid var(--color-border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--color-fg-muted); font-size: 0.85rem;
+      transition: transform var(--duration-fast) var(--ease-out),
+                  background var(--duration-fast),
+                  color var(--duration-fast);
+      flex-shrink: 0; margin-top: 2px;
     }
-    .card__title {
-      font-family: var(--font-display);
-      font-size: clamp(1rem, 0.95rem + 0.2vw, 1.15rem);
-      font-weight: 700;
+    .card.active .card-arrow {
+      transform: rotate(90deg);
+      background: var(--color-accent); border-color: var(--color-accent); color: #fff;
+    }
+    .card-title {
+      font-family: var(--font-display); font-size: 1.1rem;
+      font-weight: 700; letter-spacing: -0.02em; color: var(--color-fg);
       line-height: 1.25;
-      color: var(--color-fg);
-      letter-spacing: -0.015em;
-      margin: 0;
     }
-    .card__excerpt {
-      font-size: var(--size-small);
-      color: var(--color-fg-muted);
-      line-height: 1.5;
-      margin: 0;
-      flex: 1;
-    }
-    .card__cta {
-      font-size: var(--size-xs);
-      font-weight: 600;
-      color: var(--color-accent);
-      display: flex;
-      align-items: center;
-      gap: var(--space-1);
+    .card-desc { font-size: var(--size-small); color: var(--color-fg-muted); line-height: 1.6; }
+    .card-meta {
       margin-top: auto;
+      display: flex; flex-wrap: wrap; gap: var(--space-2);
     }
-    .card__cta::after { content: '→'; }
-
-    /* category color accents */
-    [data-category="visao"]       .card__cat-tag { background: var(--color-info-dim);    color: var(--color-info); }
-    [data-category="estrategias"] .card__cat-tag { background: var(--color-accent-dim);  color: var(--color-accent); }
-    [data-category="inteligencia"].card__cat-tag { background: var(--color-sage-dim);    color: var(--color-sage); }
-    [data-category="equipe"]      .card__cat-tag { background: var(--color-teal-dim);    color: var(--color-teal); }
-    [data-category="contato"]     .card__cat-tag { background: var(--color-warn-dim);    color: var(--color-fg-muted); }
-
-    /* hidden state for filter */
-    .card[hidden] { display: none; }
+    .badge {
+      font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600;
+      padding: 2px 8px; border-radius: 100px;
+      background: var(--color-accent-dim); color: var(--color-accent);
+      border: 1px solid var(--color-accent-dim);
+    }
+    .badge.info    { background: var(--color-info-dim);    color: var(--color-info); }
+    .badge.success { background: var(--color-success-dim); color: var(--color-success); }
+    .badge.teal    { background: var(--color-teal-dim);    color: var(--color-teal); }
+    .badge.warn    { background: var(--color-warn-dim);    color: #92400e; }
+    [data-theme="dark"] .badge.warn { color: var(--color-warn); }
 
     /* ══════════════════════════════════════════════════════
-       PANEL (in-page drawer)
+       PANEL (expansível)
     ══════════════════════════════════════════════════════ */
-    .panel-backdrop {
+    .panel {
+      grid-column: 1 / -1;
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
       display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(41,32,23,0.35);
-      z-index: 200;
-      backdrop-filter: blur(3px);
-      animation: fadeIn var(--duration) var(--ease-out);
     }
-    .panel-backdrop.is-visible { display: block; }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
+    .panel.open {
+      display: block;
+      animation: panel-in 280ms var(--ease-out) both;
     }
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(24px); }
+    @keyframes panel-in {
+      from { opacity: 0; transform: translateY(-10px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-    [data-theme="dark"] .panel-backdrop {
-      background: rgba(0,0,0,0.55);
+    .panel-inner {
+      padding: var(--space-6);
+      display: flex; flex-direction: column; gap: var(--space-6);
+    }
+    .panel-title {
+      font-family: var(--font-display); font-size: var(--size-h2);
+      font-weight: 800; letter-spacing: -0.03em; color: var(--color-fg);
+    }
+    .panel-title span { color: var(--color-accent); }
+
+    /* Chart containers */
+    .chart-wrap {
+      position: relative;
+      background: var(--color-bg-sunken);
+      border-radius: var(--radius);
+      padding: var(--space-4);
+      border: 1px solid var(--color-border);
+    }
+    .chart-wrap canvas { max-height: 380px; }
+    .chart-label {
+      font-family: var(--font-mono); font-size: var(--size-xs);
+      color: var(--color-fg-subtle); font-weight: 500;
+      margin-bottom: var(--space-3);
     }
 
-    .panel {
-      display: none;
-      position: fixed;
-      z-index: 300;
-      background: var(--color-bg-elevated);
-      box-shadow: var(--shadow-lg);
-      overflow-y: auto;
-      /* desktop: right drawer */
-      top: var(--header-h);
-      right: 0;
-      bottom: 0;
-      width: min(620px, 92vw);
-      border-left: 1px solid var(--color-border);
-      border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+    /* Panel 2-col layout */
+    .panel-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-5);
     }
-    .panel.is-visible {
-      display: block;
-      animation: slideUp var(--duration) var(--ease-out);
-    }
+    @media (max-width: 720px) { .panel-cols { grid-template-columns: 1fr; } }
 
-    .panel__head {
-      position: sticky;
-      top: 0;
-      background: var(--color-bg-elevated);
+    /* ══════════════════════════════════════════════════════
+       TABLES
+    ══════════════════════════════════════════════════════ */
+    .tbl-wrap {
+      overflow-x: auto;
+      border-radius: var(--radius);
+      border: 1px solid var(--color-border);
+    }
+    table {
+      width: 100%; border-collapse: collapse;
+      font-size: var(--size-small);
+    }
+    th {
+      text-align: left; padding: var(--space-3) var(--space-4);
+      font-family: var(--font-mono); font-size: var(--size-xs); font-weight: 600;
+      color: var(--color-fg-muted); text-transform: uppercase; letter-spacing: 0.06em;
+      background: var(--color-bg-sunken);
       border-bottom: 1px solid var(--color-border);
-      padding: var(--space-5) var(--space-6);
-      display: flex;
-      align-items: flex-start;
-      gap: var(--space-4);
-      z-index: 1;
     }
-    .panel__icon { font-size: 32px; line-height: 1; flex-shrink: 0; }
-    .panel__head-text { flex: 1; }
-    .panel__title {
-      font-family: var(--font-display);
-      font-size: var(--size-h3);
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      color: var(--color-fg);
-      margin: 0 0 var(--space-1);
-    }
-    .panel__subtitle {
-      font-size: var(--size-small);
-      color: var(--color-fg-muted);
-      margin: 0;
-    }
-    .panel__close {
-      width: 36px;
-      height: 36px;
-      flex-shrink: 0;
-      display: grid;
-      place-items: center;
-      background: var(--color-bg-sunken);
-      border: 1px solid var(--color-border);
-      border-radius: 999px;
-      cursor: pointer;
-      font-size: 18px;
-      color: var(--color-fg-muted);
-      transition: all var(--duration-fast);
-      line-height: 1;
-    }
-    .panel__close:hover {
-      background: var(--color-bg-elevated);
-      border-color: var(--color-border-strong);
-      color: var(--color-fg);
-    }
-
-    .panel__body {
-      padding: var(--space-6) var(--space-6) var(--space-8);
-    }
-
-    /* ── Conteúdo interno dos painéis ── */
-    .metric-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: var(--space-4);
-      margin: 0 0 var(--space-6);
-    }
-    .metric-card {
-      background: var(--color-bg-sunken);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius);
-      padding: var(--space-4);
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-1);
-    }
-    .metric-card__val {
-      font-family: var(--font-display);
-      font-size: clamp(1.4rem,1.2rem + 0.6vw,1.9rem);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      color: var(--color-accent);
-      line-height: 1;
-    }
-    .metric-card__lbl {
-      font-size: var(--size-xs);
-      color: var(--color-fg-muted);
-      font-weight: 500;
-      line-height: 1.3;
-    }
-    .metric-card--info  .metric-card__val { color: var(--color-info); }
-    .metric-card--sage  .metric-card__val { color: var(--color-sage); }
-    .metric-card--teal  .metric-card__val { color: var(--color-teal); }
-
-    .def-list {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: var(--space-2) var(--space-5);
-      margin: 0 0 var(--space-5);
-    }
-    .def-list dt {
-      font-size: var(--size-small);
-      font-weight: 600;
-      color: var(--color-fg-subtle);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      padding-top: 2px;
-    }
-    .def-list dd {
-      font-size: var(--size-body);
-      color: var(--color-fg);
-      margin: 0;
-    }
-
-    .tag-cloud {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-2);
-      margin: 0 0 var(--space-5);
-    }
-    .tag {
-      font-size: var(--size-xs);
-      font-weight: 600;
-      padding: var(--space-1) var(--space-3);
-      border-radius: 999px;
-      border: 1px solid var(--color-border);
-      background: var(--color-bg-sunken);
-      color: var(--color-fg-muted);
-    }
-    .tag--accent  { background: var(--color-accent-dim);  color: var(--color-accent);  border-color: var(--color-accent); }
-    .tag--info    { background: var(--color-info-dim);    color: var(--color-info);    border-color: var(--color-info); }
-    .tag--sage    { background: var(--color-sage-dim);    color: var(--color-sage);    border-color: var(--color-sage); }
-    .tag--teal    { background: var(--color-teal-dim);    color: var(--color-teal);    border-color: var(--color-teal); }
-    .tag--warn    { background: var(--color-warn-dim);    color: var(--color-fg-muted);border-color: var(--color-warn); }
-
-    .section-label {
-      font-size: var(--size-xs);
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--color-fg-subtle);
-      margin: var(--space-6) 0 var(--space-3);
-    }
-
-    .mesa-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: var(--space-3);
-      margin: 0 0 var(--space-6);
-    }
-    .mesa-card {
-      background: var(--color-bg-sunken);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius);
+    td {
       padding: var(--space-3) var(--space-4);
-      display: grid;
-      grid-template-columns: 1fr auto;
-      align-items: center;
-      gap: var(--space-3);
+      color: var(--color-fg); line-height: 1.5;
+      border-bottom: 1px solid var(--color-border);
+      vertical-align: top;
     }
-    .mesa-card__name {
-      font-weight: 700;
-      font-size: var(--size-body);
-      color: var(--color-fg);
-    }
-    .mesa-card__strat {
-      font-size: var(--size-xs);
-      color: var(--color-fg-muted);
-    }
-    .mesa-card__aum {
-      font-family: var(--font-mono);
-      font-size: var(--size-small);
-      font-weight: 600;
-      color: var(--color-accent);
-      text-align: right;
-    }
+    tr:last-child td { border-bottom: none; }
+    tr:nth-child(even) td { background: rgba(0,0,0,0.018); }
+    [data-theme="dark"] tr:nth-child(even) td { background: rgba(255,255,255,0.025); }
 
-    .pilar-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: var(--space-3);
-      margin: 0 0 var(--space-6);
-    }
-    .pilar-card {
-      background: var(--color-bg-sunken);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius);
-      padding: var(--space-4);
-    }
-    .pilar-card__title {
-      font-weight: 700;
-      font-size: var(--size-body);
-      color: var(--color-fg);
-      margin: 0 0 var(--space-2);
-    }
-    .pilar-card__desc {
-      font-size: var(--size-small);
-      color: var(--color-fg-muted);
-      margin: 0;
-      max-width: none;
-    }
-
-    .person-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: var(--space-4);
-      margin: 0 0 var(--space-6);
-    }
-    .person-card {
-      background: var(--color-bg-sunken);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius);
-      padding: var(--space-4);
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-2);
-    }
-    .person-card__avatar {
-      width: 44px;
-      height: 44px;
-      border-radius: 999px;
-      background: var(--color-accent-dim);
-      border: 2px solid var(--color-accent);
-      display: grid;
-      place-items: center;
-      font-size: 20px;
-      flex-shrink: 0;
-    }
-    .person-card__name {
-      font-weight: 700;
-      font-size: var(--size-body);
-      color: var(--color-fg);
-      line-height: 1.2;
-    }
-    .person-card__role {
-      font-size: var(--size-xs);
-      color: var(--color-fg-muted);
-      line-height: 1.35;
-    }
-
-    .award-list {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-3);
-      margin: 0 0 var(--space-5);
-    }
-    .award-item {
-      display: flex;
-      align-items: flex-start;
-      gap: var(--space-3);
-      padding: var(--space-3) var(--space-4);
-      background: var(--color-bg-sunken);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius);
-    }
-    .award-item__icon { font-size: 22px; flex-shrink: 0; }
-    .award-item__text { font-size: var(--size-small); color: var(--color-fg); }
-    .award-item__text strong { display: block; font-weight: 700; color: var(--color-fg); }
-
-    .esg-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: var(--space-3);
-      margin: 0 0 var(--space-5);
-    }
-    .esg-card {
-      background: var(--color-sage-dim);
-      border: 1px solid var(--color-sage);
-      border-radius: var(--radius);
-      padding: var(--space-3) var(--space-4);
-    }
-    .esg-card__name {
-      font-weight: 700;
-      font-size: var(--size-small);
-      color: var(--color-sage);
-      margin-bottom: var(--space-1);
-    }
-    .esg-card__type {
-      font-size: var(--size-xs);
-      color: var(--color-fg-muted);
-    }
-
+    /* ══════════════════════════════════════════════════════
+       TIMELINE
+    ══════════════════════════════════════════════════════ */
     .timeline {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-      margin: 0 0 var(--space-6);
-      border-left: 2px solid var(--color-accent-dim);
-      padding-left: var(--space-5);
+      display: flex; flex-wrap: wrap; gap: 0;
+      position: relative;
     }
     .timeline-item {
+      display: flex; flex-direction: column; align-items: center;
+      flex: 1 1 80px; min-width: 72px;
+      padding: var(--space-3) var(--space-2);
       position: relative;
-      padding-bottom: var(--space-5);
     }
-    .timeline-item::before {
-      content: '';
-      position: absolute;
-      left: calc(-1 * var(--space-5) - 5px);
-      top: 6px;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--color-accent);
-      border: 2px solid var(--color-bg-elevated);
+    .timeline-dot {
+      width: 12px; height: 12px; border-radius: 50%;
+      background: var(--color-accent); flex-shrink: 0;
+      box-shadow: 0 0 0 3px var(--color-accent-dim);
     }
-    .timeline-item__year {
-      font-family: var(--font-mono);
-      font-size: var(--size-xs);
-      font-weight: 600;
-      color: var(--color-accent);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: var(--space-1);
+    .timeline-line {
+      position: absolute; top: calc(var(--space-3) + 6px);
+      left: calc(50% + 6px); right: 0;
+      height: 2px; background: var(--color-border);
     }
-    .timeline-item__text {
-      font-size: var(--size-small);
-      color: var(--color-fg-muted);
-      margin: 0;
-      max-width: none;
+    .timeline-item:last-child .timeline-line { display: none; }
+    .timeline-year {
+      font-family: var(--font-mono); font-size: var(--size-xs); font-weight: 700;
+      color: var(--color-accent); margin-top: var(--space-2);
+    }
+    .timeline-label {
+      font-size: 0.68rem; color: var(--color-fg-muted);
+      text-align: center; line-height: 1.4; margin-top: 2px;
     }
 
-    .contact-block {
+    /* ══════════════════════════════════════════════════════
+       PILARES
+    ══════════════════════════════════════════════════════ */
+    .pilares {
+      display: flex; flex-wrap: wrap; gap: var(--space-4);
+    }
+    .pilar-card {
+      flex: 1 1 200px;
+      background: var(--color-bg-sunken);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-5);
+      display: flex; flex-direction: column; gap: var(--space-2);
+    }
+    .pilar-icon {
+      width: 44px; height: 44px; border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; margin-bottom: var(--space-2);
+    }
+    .pilar-name {
+      font-family: var(--font-display); font-size: 1.2rem;
+      font-weight: 800; letter-spacing: -0.02em; color: var(--color-fg);
+    }
+    .pilar-desc { font-size: var(--size-small); color: var(--color-fg-muted); line-height: 1.6; }
+
+    /* ══════════════════════════════════════════════════════
+       DIRETORIA GRID
+    ══════════════════════════════════════════════════════ */
+    .dir-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: var(--space-4);
-      margin: 0 0 var(--space-6);
+      gap: var(--space-3);
     }
-    .contact-item {
+    .dir-card {
       background: var(--color-bg-sunken);
       border: 1px solid var(--color-border);
       border-radius: var(--radius);
       padding: var(--space-4);
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-2);
+      display: flex; align-items: center; gap: var(--space-3);
     }
-    .contact-item__label {
-      font-size: var(--size-xs);
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--color-fg-subtle);
+    .dir-avatar {
+      width: 42px; height: 42px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-weight: 800;
+      font-size: 0.9rem; color: #fff; flex-shrink: 0;
     }
-    .contact-item__val {
-      font-family: var(--font-mono);
-      font-size: var(--size-body);
-      font-weight: 600;
-      color: var(--color-fg);
+    .dir-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .dir-name {
+      font-weight: 600; font-size: var(--size-small);
+      color: var(--color-fg); line-height: 1.3;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
-    .contact-item__desc {
-      font-size: var(--size-xs);
-      color: var(--color-fg-muted);
-    }
+    .dir-role { font-size: 0.7rem; color: var(--color-fg-muted); line-height: 1.3; }
 
     /* ══════════════════════════════════════════════════════
-       FOOTER (dentro dos painéis)
+       CONTATO
     ══════════════════════════════════════════════════════ */
-    .panel__footer {
-      padding: var(--space-4) var(--space-6);
-      border-top: 1px solid var(--color-border);
-      font-size: var(--size-xs);
-      color: var(--color-fg-subtle);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    .contato-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
       gap: var(--space-4);
     }
+    .contato-item {
+      background: var(--color-bg-sunken);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: var(--space-4);
+      display: flex; flex-direction: column; gap: var(--space-1);
+    }
+    .contato-label {
+      font-family: var(--font-mono); font-size: var(--size-xs);
+      font-weight: 600; color: var(--color-fg-subtle);
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .contato-value {
+      font-family: var(--font-mono); font-size: var(--size-small);
+      font-weight: 600; color: var(--color-fg);
+    }
+    .contato-value a { color: var(--color-accent); text-decoration: none; }
+    .contato-value a:hover { text-decoration: underline; }
 
     /* ══════════════════════════════════════════════════════
-       PAGE FOOTER
+       ESG SELOS
     ══════════════════════════════════════════════════════ */
-    .page-footer {
-      margin-top: var(--space-10);
-      padding: var(--space-6) 0;
-      border-top: 1px solid var(--color-border);
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-4);
-      font-size: var(--size-xs);
-      color: var(--color-fg-subtle);
+    .selos {
+      display: flex; flex-wrap: wrap; gap: var(--space-2);
+      margin-top: var(--space-2);
     }
-    .page-footer a { color: var(--color-accent); }
+    .selo {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: var(--font-mono); font-size: var(--size-xs); font-weight: 600;
+      padding: var(--space-2) var(--space-3); border-radius: var(--radius);
+      background: var(--color-success-dim); color: var(--color-success);
+      border: 1px solid var(--color-success-dim);
+    }
 
     /* ══════════════════════════════════════════════════════
-       RESPONSIVE
+       SECTION DIVIDERS
     ══════════════════════════════════════════════════════ */
-    @media (max-width: 640px) {
-      .page { padding-inline: var(--space-4); }
-      .topbar { padding-inline: var(--space-4); }
-      .topbar__badge { display: none; }
-      .panel {
-        top: auto;
-        right: 0;
-        left: 0;
-        bottom: 0;
-        width: 100%;
-        height: 90dvh;
-        border-left: none;
-        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-        border-top: 1px solid var(--color-border);
-      }
+    .section-heading {
+      font-family: var(--font-mono); font-size: var(--size-xs);
+      font-weight: 600; color: var(--color-fg-subtle);
+      text-transform: uppercase; letter-spacing: 0.08em;
+      margin-bottom: var(--space-4);
+      display: flex; align-items: center; gap: var(--space-2);
     }
+    .section-heading::after {
+      content: ''; flex: 1; height: 1px; background: var(--color-border);
+    }
+
+    /* ══════════════════════════════════════════════════════
+       HIDDEN FILTER
+    ══════════════════════════════════════════════════════ */
+    .card[data-hidden="true"] { display: none; }
+
+    /* ══════════════════════════════════════════════════════
+       SCROLLBAR
+    ══════════════════════════════════════════════════════ */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--color-border-strong); border-radius: 10px; }
   </style>
 </head>
 <body>
 
-  <!-- ══════════════════════════════════════════════════
-       TOPBAR
-  ══════════════════════════════════════════════════ -->
-  <header class="topbar" role="banner">
-    <a class="topbar__brand" href="#">
-      <div class="topbar__logo" aria-hidden="true">🏦</div>
-      <div class="topbar__name">
-        Itaú Asset Management
-        <span>Hub Institucional</span>
-      </div>
-    </a>
-    <div class="topbar__spacer"></div>
-    <div class="topbar__badge">
-      AuM <strong>R$ 1,193 tri</strong>
+<!-- ══ STICKY HEADER ══════════════════════════════════════ -->
+<header class="site-header">
+  <div class="header-brand">
+    <div class="brand-logo">iA</div>
+    <span class="brand-name">Itaú <span>Asset</span></span>
+    <span class="brand-tag">Hub Institucional</span>
+  </div>
+  <div class="header-actions">
+    <button class="btn-icon" id="theme-toggle" title="Alternar tema" aria-label="Alternar tema claro/escuro">
+      <svg id="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+        <circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/>
+        <line x1="4.22" y1="4.22" x2="7.05" y2="7.05"/><line x1="16.95" y1="16.95" x2="19.78" y2="19.78"/>
+        <line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="7.05" y2="16.95"/><line x1="16.95" y1="7.05" x2="19.78" y2="4.22"/>
+      </svg>
+      <svg id="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<!-- ══ HERO ═══════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-eyebrow">Itaú Asset Management · 2024</div>
+  <h1 class="hero-title">Gestão de <em>excelência,</em><br>escala brasileira</h1>
+  <p class="hero-sub">Uma das maiores gestoras de recursos da América Latina, combinando sofisticação, democratização e presença global.</p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <span class="hero-stat-value accent">R$ 1,193 tri</span>
+      <span class="hero-stat-label">Ativos sob Gestão</span>
     </div>
-    <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema" title="Alternar tema claro/escuro">☀</button>
-  </header>
-
-  <!-- ══════════════════════════════════════════════════
-       PAGE
-  ══════════════════════════════════════════════════ -->
-  <main class="page">
-
-    <!-- HERO -->
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="hero__kicker">Hub Institucional · 2024</div>
-      <h1 class="hero__title" id="hero-title"><em>Itaú Asset</em><br>Management</h1>
-      <p class="hero__sub">Maior gestora independente do Brasil. Mais de 65 anos conectando capital a oportunidades com rigor técnico e visão de longo prazo.</p>
-      <div class="hero__stats" role="list">
-        <div class="hero__stat" role="listitem">
-          <span class="hero__stat-val">R$&thinsp;1,193 tri</span>
-          <span class="hero__stat-lbl">Assets under Management</span>
-        </div>
-        <div class="hero__stat-sep" aria-hidden="true"></div>
-        <div class="hero__stat" role="listitem">
-          <span class="hero__stat-val">2,6 mi</span>
-          <span class="hero__stat-lbl">Clientes</span>
-        </div>
-        <div class="hero__stat-sep" aria-hidden="true"></div>
-        <div class="hero__stat" role="listitem">
-          <span class="hero__stat-val">14,5%</span>
-          <span class="hero__stat-lbl">Market share</span>
-        </div>
-        <div class="hero__stat-sep" aria-hidden="true"></div>
-        <div class="hero__stat" role="listitem">
-          <span class="hero__stat-val">+300</span>
-          <span class="hero__stat-lbl">Profissionais</span>
-        </div>
-        <div class="hero__stat-sep" aria-hidden="true"></div>
-        <div class="hero__stat" role="listitem">
-          <span class="hero__stat-val">+60 anos</span>
-          <span class="hero__stat-lbl">De trajetória</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- FILTROS -->
-    <nav class="filters" aria-label="Filtrar categorias">
-      <button class="filter-btn" data-filter="all" aria-pressed="true">Todos</button>
-      <button class="filter-btn" data-filter="visao" aria-pressed="false">Visão Geral</button>
-      <button class="filter-btn" data-filter="estrategias" aria-pressed="false">Estratégias</button>
-      <button class="filter-btn" data-filter="inteligencia" aria-pressed="false">Inteligência &amp; ESG</button>
-      <button class="filter-btn" data-filter="equipe" aria-pressed="false">Equipe</button>
-      <button class="filter-btn" data-filter="contato" aria-pressed="false">Contato</button>
-    </nav>
-
-    <!-- GRID DE CARDS -->
-    <section aria-label="Cards de conteúdo">
-      <div class="cards-grid" id="cardsGrid">
-
-        <!-- ── VISÃO: Visão Geral ── -->
-        <article
-          class="card"
-          data-category="visao"
-          data-panel="panel-visao-geral"
-          tabindex="0"
-          role="button"
-          aria-expanded="false"
-          aria-controls="panel-visao-geral"
-          aria-label="Abrir painel Visão Geral"
-        >
-          <span class="card__cat-tag">Visão Geral</span>
-          <div class="card__icon" aria-hidden="true">📊</div>
-          <h2 class="card__title">Visão Geral</h2>
-          <p class="card__excerpt">Posicionamento estratégico, escala e presença da Itaú Asset no mercado brasileiro e global.</p>
-          <span class="card__cta">Explorar</span>
-        </article>
-
-        <!-- ── VISÃO: Números em Destaque ── -->
-        <article
-          class="card"
-          data-category="visao"
-          data-panel="panel-numeros"
-          tabindex="0"
-          role="button"
-          aria-expanded="false"
-          aria-controls="panel-numeros"
-          aria-label="Abrir painel Números em Destaque"
-        >
-          <span class="card__cat-tag">Visão Geral</span>
-          <div class="card__icon" aria-hidden="true">🔢</div>
-          <h2 class="card__title">Números em Destaque</h2>
-          <p class="card__excerpt">AuM total de R$&thinsp;1,193 trilhão, 14,5% de market share e 2,6 milhões de clientes atendidos.</p>
-          <span class="card__cta">Explorar</span>
-        </article>
-
-        <!-- ── VISÃO: Reconhecimentos ── -->
-        <article
-          class="card"
-          data-category="visao"
-          data-panel="panel-reconhecimentos"
-          tabindex="0"
-          role="button"
-          aria-expanded="false"
-          aria-controls="panel-reconhecimentos"
-          aria-label="Abrir painel Reconhecimentos"
-        >
-          <span class="card__cat-tag">Visão Geral</span>
-          <div class="card__icon" aria-hidden="true">🏆</div>
-          <h2 class="card__title">Reconhecimentos</h2>
-          <p class="card__excerpt">15× Melhor Gestora FGV, rating S&amp;P AMP-1', ALAS20 Leading Investor 2024 e PRI Signatory.</p>
-          <span class="card__cta">Explorar</span>
-        </article>
-
-        <!-- ── ESTRATÉGIAS: Pilares de Gestão ── -->
-        <article
-          class="card"
-          data-category="estrategias"
-          data-panel="panel-pilares"
-          tabindex="0"
-          role="button"
-          aria-expanded="false"
-          aria-controls="panel-pilares"
-          aria-label="Abrir painel Pilares de Gestão"
-        >
-          <span class="card__cat-tag">Estratégias</span>
-          <div class="card__icon" aria-hidden="true">🏛</div>
-          <h2 class="card__title">Pilares de Gestão</h2>
-          <p class="card__excerpt">Beta/Indexado, Renda Fixa Ativa, Crédito e Retorno Absoluto — quatro eixos estruturantes da plataforma.</p>
-          <span class="card__cta">Explorar</span>
-        </article>
-
-        <!-- ── ESTRATÉGIAS: Estratégias Beta & ETFs ── -->
-        <article
-          class="card"
-          data-category="estrategias"
-          data-panel="panel-beta"
-          tabindex="0"
-          role="button"
-          aria-expanded="false"
-          aria-controls="panel-beta"
-          aria-label="Abrir painel Estratégias Beta e ETFs"
-        >
-          <span class="card__cat-tag">Estratégias</span>
-          <div class="card__icon" aria-hidden="true">📈</div>
-          <h2 class="card__title">Estratégias Beta &amp; ETFs</h2>
-          <p class="card__excerpt">Plataforma itnow com ETFs em Renda Fixa, RV Local, RV Global e Criptomoedas. Fundos índice em todas as classes.</p>
-          <span class="card__cta">Explorar</span>
-        </article>
-
-        <!-- ── ESTRATÉGIAS: Modelo Multimesas ── -->
-        <article
-          class="card"
-          data-category="estrategias"
-          data-panel="panel-multimesas"
-          tabindex="0"
-          role="button"
-          aria-expanded="false"
-          aria-controls="panel-multimesas"
-          aria-label="Abrir painel Modelo Multimesas"
-        >
-          <span class="card__cat-tag">Estratégias</span>
-          <div class="card__icon" aria-hidden="true">🔀</div>
-          <h2 class="card__title">Modelo Multimesas</h2>
-          <p class="card__excerpt">8 mesas autônomas com R$&thinsp;113,5 bi em gestão ativa — Crédito Estruturado, Asgard, Janeiro, Optimus, Legend, Hunter, Artax e Aurora.</p>
-          <span class="card__cta">Explorar</span>
-        </article>
-
-        <!-- ── INTELIGÊNCIA: Pesquisa Econômica ── -->
-        <article
-          class="card"
-          data-category="inteligencia"
-          data-panel="panel-pesquisa"
-          tabindex="0"
-          role="button"
-          aria-expanded="false"
-          aria-controls="panel-pesquisa"
-          aria-label="Abrir painel Pesquisa Econômica"
-        >
-          <span class="card__cat-tag">Inteligência &amp; ESG</span>
-          <div class="card__icon" aria-hidden="true">🔬</div>
-          <h2 class="card__title">Pesquisa Econômica</h2>
-          <p class="card__excerpt">10 economistas — melhor desempenho em projeções de juros do BCB — e 5 cientistas de dados integrando IA à gestão.</p>
-          <span class="card__cta">Explorar</span>
-        </article>
-
-        <!-- ── INTELIGÊNCIA: ESG & Sustentabilidade ── -->
-        <article
-          class="card"
-          data-category="inteligencia"
-          data-panel="panel-esg"
-          tabindex="0"
-          role="button"
-          aria-expanded="false"
-          aria-controls="panel-esg"
-          aria-label="Abrir painel ESG e Sustentabilidade"
-        >
-          <span class="card__cat-tag">Inteligência &amp; ESG</span>
-          <div class="card__icon" aria-hidden="true">🌱</div>
-          <h2 class="card__title">ESG &amp; Sustentabilidade</h2>
-          <p class="card__excerpt">Estratégia de investimento responsável integrada à gestão, com compromisso PRI e engajamento ativo com empresas.</p>
-          <span class="card__cta">Explorar</span>
-        </article>
-
-        <!-- ── INTELIGÊNCIA: Produtos ESG ── -->
-        <article
-          class="card"
-          data-category="inteligencia"
-          data-panel="panel-produtos-esg"
-          tabindex="0"
-          role="button"
-          aria-expanded="false"
-          aria-controls="panel-produtos-esg"
-          aria-label="Abrir painel Produtos ESG"
-        >
-          <span class="card__cat-tag">Inteligência &amp; ESG</span>
-          <div class="card__icon" aria-hidden="true">🌿</div>
-          <h2 class="card__title">Produtos ESG</h2>
-          <p class="card__excerpt">8 produtos dedicados: fundos temáticos em água, energia limpa, governança corporativa e renda fixa com critérios ESG.</p>
-          <span class="card__cta">Explorar</span>
-        </article>
-
-        <!-- ── EQUIPE: Diretoria ── -->
-        <article
-          class="card"
-          data-category="equipe"
-          data-panel="panel-diretoria"
-          tabindex="0"
-          role="button"
-          aria-expanded="false"
-          aria-controls="panel-diretoria"
-          aria-label="Abrir painel Diretoria"
-        >
-          <span class="card__cat-tag">Equipe</span>
-          <div class="card__icon" aria-hidden="true">👥</div>
-          <h2 class="card__title">Diretoria</h2>
-          <p class="card__excerpt">Liderança executiva com Carlos Augusto Salamonde (CAS) à frente da gestão de investimentos globais.</p>
-          <span class="card__cta">Explorar</span>
-        </article>
-
-        <!-- ── EQUIPE: Time Asset Core ── -->
-        <article
-          class="card"
-          data-category="equipe"
-          data-panel="panel-asset-core"
-          tabindex="0"
-          role="button"
-          aria-expanded="false"
-          aria-controls="panel-asset-core"
-          aria-label="Abrir painel Time Asset Core"
-        >
-          <span class="card__cat-tag">Equipe</span>
-          <div class="card__icon" aria-hidden="true">⚙️</div>
-          <h2 class="card__title">Time Asset Core</h2>
-          <p class="card__excerpt">Pedro G Boainain lidera o Asset Core; Arlindo Penteado coordena as Multimesas; equipe global de distribuição e soluções.</p>
-          <span class="card__cta">Explorar</span>
-        </article>
-
-        <!-- ── EQUIPE: Jornada 65 Anos ── -->
-        <article
-          class="card"
-          data-category="equipe"
-          data-panel="panel-jornada"
-          tabindex="0"
-          role="button"
-          aria-expanded="false"
-          aria-controls="panel-jornada"
-          aria-label="Abrir painel Jornada 65 Anos"
-        >
-          <span class="card__cat-tag">Equipe</span>
-          <div class="card__icon" aria-hidden="true">📅</div>
-          <h2 class="card__title">Jornada 65 Anos</h2>
-          <p class="card__excerpt">De gestora pioneira na renda fixa brasileira à maior plataforma de investimentos independente do país.</p>
-          <span class="card__cta">Explorar</span>
-        </article>
-
-        <!-- ── CONTATO: Fale Conosco ── -->
-        <article
-          class="card"
-          data-category="contato"
-          data-panel="panel-contato"
-          tabindex="0"
-          role="button"
-          aria-expanded="false"
-          aria-controls="panel-contato"
-          aria-label="Abrir painel Fale Conosco"
-        >
-          <span class="card__cat-tag">Contato</span>
-          <div class="card__icon" aria-hidden="true">📞</div>
-          <h2 class="card__title">Fale Conosco</h2>
-          <p class="card__excerpt">Central de Atendimento, SAC e Ouvidoria. Entre em contato para soluções de investimento ou suporte.</p>
-          <span class="card__cta">Explorar</span>
-        </article>
-
-      </div><!-- /cards-grid -->
-    </section>
-
-    <!-- PAGE FOOTER -->
-    <footer class="page-footer">
-      <span>© 2024 Itaú Asset Management. Todos os direitos reservados.</span>
-      <span>
-        <a href="https://www.itauasset.com.br" target="_blank" rel="noopener">itauasset.com.br</a>
-        &nbsp;·&nbsp;
-        <a href="https://www.itnow.com.br" target="_blank" rel="noopener">itnow.com.br</a>
-      </span>
-    </footer>
-
-  </main><!-- /page -->
-
-  <!-- ══════════════════════════════════════════════════
-       PANEL BACKDROP
-  ══════════════════════════════════════════════════ -->
-  <div class="panel-backdrop" id="panelBackdrop" aria-hidden="true"></div>
-
-  <!-- ══════════════════════════════════════════════════
-       PAINÉIS IN-PAGE
-  ══════════════════════════════════════════════════ -->
-
-  <!-- ─────────────────────────────
-       PANEL: Visão Geral
-  ───────────────────────────── -->
-  <aside id="panel-visao-geral" class="panel" role="dialog" aria-modal="true" aria-label="Visão Geral" hidden>
-    <div class="panel__head">
-      <div class="panel__icon" aria-hidden="true">📊</div>
-      <div class="panel__head-text">
-        <h3 class="panel__title">Visão Geral</h3>
-        <p class="panel__subtitle">Posicionamento, escala e diferenciais competitivos</p>
-      </div>
-      <button class="panel__close" aria-label="Fechar painel">✕</button>
+    <div class="hero-stat">
+      <span class="hero-stat-value">2,6 mi</span>
+      <span class="hero-stat-label">Clientes</span>
     </div>
-    <div class="panel__body">
-      <p>A <strong>Itaú Asset Management</strong> é a maior gestora independente do Brasil, com presença local e global, atendendo desde investidores individuais até os maiores fundos institucionais e soberanos do mundo.</p>
-      <p>Com mais de seis décadas de história, a gestora combina escala, profundidade analítica e capacidade de inovação — da renda fixa clássica às estratégias alternativas mais sofisticadas.</p>
+    <div class="hero-stat">
+      <span class="hero-stat-value info">14,5%</span>
+      <span class="hero-stat-label">Market Share</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-value">+300</span>
+      <span class="hero-stat-label">Profissionais</span>
+    </div>
+  </div>
+</section>
 
-      <p class="section-label">Escala e presença</p>
-      <div class="metric-grid">
-        <div class="metric-card">
-          <span class="metric-card__val">R$&thinsp;1,193 tri</span>
-          <span class="metric-card__lbl">AuM Total</span>
+<!-- ══ MAIN ════════════════════════════════════════════════ -->
+<main class="main">
+
+  <!-- Filtros -->
+  <div class="filters" role="group" aria-label="Filtros de categoria">
+    <button class="filter-btn active" data-filter="all">Todos</button>
+    <button class="filter-btn" data-filter="visao">Visão Geral</button>
+    <button class="filter-btn" data-filter="estrategias">Estratégias</button>
+    <button class="filter-btn" data-filter="inteligencia">Inteligência</button>
+    <button class="filter-btn" data-filter="equipe">Equipe</button>
+    <button class="filter-btn" data-filter="contato">Contato</button>
+  </div>
+
+  <!-- Cards Grid -->
+  <div class="cards-grid" id="cards-grid">
+
+    <!-- ── CARD 1: Sobre (hero) ──────────────────── -->
+    <div class="card card-hero" data-category="visao" data-panel="panel-sobre">
+      <div class="card-header">
+        <div class="card-icon" style="background:var(--color-accent-dim);color:var(--color-accent);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20A14.5 14.5 0 0 0 12 2"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
         </div>
-        <div class="metric-card metric-card--info">
-          <span class="metric-card__val">R$&thinsp;1,171 tri</span>
-          <span class="metric-card__lbl">AuM Local</span>
-        </div>
-        <div class="metric-card metric-card--teal">
-          <span class="metric-card__val">R$&thinsp;60 bi</span>
-          <span class="metric-card__lbl">AuM Offshore</span>
-        </div>
-        <div class="metric-card">
-          <span class="metric-card__val">2,6 mi</span>
-          <span class="metric-card__lbl">Clientes</span>
-        </div>
-        <div class="metric-card">
-          <span class="metric-card__val">14,5%</span>
-          <span class="metric-card__lbl">Market share Brasil</span>
-        </div>
-        <div class="metric-card metric-card--sage">
-          <span class="metric-card__val">+300</span>
-          <span class="metric-card__lbl">Profissionais</span>
-        </div>
+        <div class="card-arrow">→</div>
       </div>
-
-      <p class="section-label">Diferenciais</p>
-      <ul>
-        <li>Gestora integrada ao maior banco privado da América Latina, com acesso privilegiado a fluxos de mercado e inteligência econômica.</li>
-        <li>Plataforma multimesa com 8 gestoras independentes operando sob o mesmo guarda-chuva regulatório e de risco.</li>
-        <li>Equipe de pesquisa econômica com desempenho reconhecido: 1º lugar nas projeções de juros do BCB.</li>
-        <li>Presença offshore para clientes que buscam diversificação em ativos internacionais.</li>
-        <li>Linha completa de ETFs (itnow) incluindo cripto, pioneira no segmento no Brasil.</li>
-      </ul>
-    </div>
-    <div class="panel__footer">
-      <span>Itaú Asset Management · 2024</span>
-      <span><a href="https://www.itauasset.com.br" target="_blank" rel="noopener">itauasset.com.br</a></span>
-    </div>
-  </aside>
-
-  <!-- ─────────────────────────────
-       PANEL: Números em Destaque
-  ───────────────────────────── -->
-  <aside id="panel-numeros" class="panel" role="dialog" aria-modal="true" aria-label="Números em Destaque" hidden>
-    <div class="panel__head">
-      <div class="panel__icon" aria-hidden="true">🔢</div>
-      <div class="panel__head-text">
-        <h3 class="panel__title">Números em Destaque</h3>
-        <p class="panel__subtitle">Principais métricas operacionais e de AuM</p>
+      <div class="card-title">Sobre a Itaú Asset</div>
+      <p class="card-desc">Líder de mercado com R$ 1,193 trilhão em AuM, presença em 5 continentes e mais de 65 anos de história. Conheça os números e a estrutura da gestora.</p>
+      <div class="card-meta">
+        <span class="badge">R$ 1,193 tri AuM</span>
+        <span class="badge info">14,5% market share</span>
+        <span class="badge success">+300 profissionais</span>
       </div>
-      <button class="panel__close" aria-label="Fechar painel">✕</button>
     </div>
-    <div class="panel__body">
-      <p class="section-label">AuM — Breakdown por origem</p>
-      <div class="metric-grid">
-        <div class="metric-card">
-          <span class="metric-card__val">R$&thinsp;1,193 tri</span>
-          <span class="metric-card__lbl">AuM Consolidado</span>
+
+    <!-- ── CARD 2: Multimesas ────────────────────── -->
+    <div class="card" data-category="estrategias" data-panel="panel-multimesas">
+      <div class="card-header">
+        <div class="card-icon" style="background:var(--color-info-dim);color:var(--color-info);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
         </div>
-        <div class="metric-card metric-card--info">
-          <span class="metric-card__val">R$&thinsp;1,171 tri</span>
-          <span class="metric-card__lbl">Local</span>
-        </div>
-        <div class="metric-card metric-card--teal">
-          <span class="metric-card__val">R$&thinsp;60 bi</span>
-          <span class="metric-card__lbl">Offshore</span>
-        </div>
+        <div class="card-arrow">→</div>
       </div>
-
-      <p class="section-label">AuM Multimesas — Por estratégia</p>
-      <div class="metric-grid">
-        <div class="metric-card">
-          <span class="metric-card__val">R$&thinsp;113,5 bi</span>
-          <span class="metric-card__lbl">Total Multimesas</span>
-        </div>
-        <div class="metric-card metric-card--info">
-          <span class="metric-card__val">R$&thinsp;89,8 bi</span>
-          <span class="metric-card__lbl">Crédito + RF</span>
-        </div>
-        <div class="metric-card metric-card--sage">
-          <span class="metric-card__val">R$&thinsp;18,5 bi</span>
-          <span class="metric-card__lbl">Macro</span>
-        </div>
-        <div class="metric-card metric-card--teal">
-          <span class="metric-card__val">R$&thinsp;5,2 bi</span>
-          <span class="metric-card__lbl">Equities</span>
-        </div>
+      <div class="card-title">Multimesas</div>
+      <p class="card-desc">4 categorias de estratégias com R$ 227 bi em AuM combinado: Retorno Absoluto, Crédito, Macro e Equities.</p>
+      <div class="card-meta">
+        <span class="badge info">R$ 227 bi</span>
+        <span class="badge">8 mesas</span>
       </div>
-
-      <p class="section-label">Métricas operacionais</p>
-      <dl class="def-list">
-        <dt>Clientes</dt>     <dd>2,6 milhões de cotistas ativos</dd>
-        <dt>Market share</dt> <dd>14,5% do mercado brasileiro de gestão</dd>
-        <dt>Equipe</dt>       <dd>+300 profissionais dedicados</dd>
-        <dt>Trajetória</dt>   <dd>+60 anos de operação ininterrupta</dd>
-        <dt>Pesquisa</dt>     <dd>10 economistas + 5 cientistas de dados</dd>
-        <dt>Mesas ativas</dt> <dd>8 gestoras independentes (Multimesas)</dd>
-      </dl>
     </div>
-    <div class="panel__footer">
-      <span>Dados de posição de 2024. AuM em R$ bilhões/trilhões.</span>
-    </div>
-  </aside>
 
-  <!-- ─────────────────────────────
-       PANEL: Reconhecimentos
-  ───────────────────────────── -->
-  <aside id="panel-reconhecimentos" class="panel" role="dialog" aria-modal="true" aria-label="Reconhecimentos" hidden>
-    <div class="panel__head">
-      <div class="panel__icon" aria-hidden="true">🏆</div>
-      <div class="panel__head-text">
-        <h3 class="panel__title">Reconhecimentos</h3>
-        <p class="panel__subtitle">Prêmios, ratings e certificações institucionais</p>
+    <!-- ── CARD 3: ESG ───────────────────────────── -->
+    <div class="card" data-category="inteligencia" data-panel="panel-esg">
+      <div class="card-header">
+        <div class="card-icon" style="background:var(--color-success-dim);color:var(--color-success);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="card-arrow">→</div>
       </div>
-      <button class="panel__close" aria-label="Fechar painel">✕</button>
+      <div class="card-title">ESG &amp; Sustentabilidade</div>
+      <p class="card-desc">100% da carteira com cobertura ESG desde 2020. 8 produtos dedicados e certificações internacionais.</p>
+      <div class="card-meta">
+        <span class="badge success">PRI Signatory</span>
+        <span class="badge success">ALAS20 Winner 2024</span>
+      </div>
     </div>
-    <div class="panel__body">
-      <p>A Itaú Asset acumula o conjunto mais amplo de reconhecimentos externos do mercado brasileiro de gestão, abrangendo excelência operacional, sustentabilidade e liderança setorial.</p>
 
-      <div class="award-list">
-        <div class="award-item">
-          <span class="award-item__icon">⭐</span>
-          <div class="award-item__text">
-            <strong>S&amp;P AMP-1'</strong>
-            Maior rating de qualidade da Standard &amp; Poor's para gestoras de recursos, avaliando processos de gestão, controles de risco e governança operacional.
+    <!-- ── CARD 4: ETFs itnow ───────────────────── -->
+    <div class="card" data-category="estrategias" data-panel="panel-etf">
+      <div class="card-header">
+        <div class="card-icon" style="background:var(--color-warn-dim);color:#92400e;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+      <div class="card-title">ETFs itnow</div>
+      <p class="card-desc">Plataforma completa de ETFs: RF Local, RV Local, RV Global, Criptomoedas e linha ESG completa.</p>
+      <div class="card-meta">
+        <span class="badge warn">8 ETFs</span>
+        <span class="badge">B3 Listed</span>
+      </div>
+    </div>
+
+    <!-- ── CARD 5: Diretoria ─────────────────────── -->
+    <div class="card" data-category="equipe" data-panel="panel-diretoria">
+      <div class="card-header">
+        <div class="card-icon" style="background:var(--color-teal-dim);color:var(--color-teal);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+      <div class="card-title">Diretoria</div>
+      <p class="card-desc">12 executivos liderando estratégias de investimento, distribuição global e operações da gestora.</p>
+      <div class="card-meta">
+        <span class="badge teal">12 líderes</span>
+        <span class="badge teal">CIO + Diretores</span>
+      </div>
+    </div>
+
+    <!-- ── CARD 6: Timeline ──────────────────────── -->
+    <div class="card" data-category="visao" data-panel="panel-timeline">
+      <div class="card-header">
+        <div class="card-icon" style="background:var(--color-plum-dim);color:var(--color-plum);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+      <div class="card-title">Nossa História</div>
+      <p class="card-desc">65 anos de evolução: de gestora local a player global com presença em 5 continentes e R$ 1,193 tri em AuM.</p>
+      <div class="card-meta">
+        <span class="badge" style="background:var(--color-plum-dim);color:var(--color-plum);">1957–2022</span>
+        <span class="badge" style="background:var(--color-plum-dim);color:var(--color-plum);">11 marcos</span>
+      </div>
+    </div>
+
+    <!-- ── CARD 7: Pilares ──────────────────────── -->
+    <div class="card" data-category="visao" data-panel="panel-pilares">
+      <div class="card-header">
+        <div class="card-icon" style="background:var(--color-sage-dim);color:var(--color-sage);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+      <div class="card-title">Pilares Estratégicos</div>
+      <p class="card-desc">Sofisticada, Democrática e Internacional — os três eixos que definem a proposta de valor da Itaú Asset.</p>
+      <div class="card-meta">
+        <span class="badge" style="background:var(--color-sage-dim);color:var(--color-sage);">3 pilares</span>
+      </div>
+    </div>
+
+    <!-- ── CARD 8: Contato ───────────────────────── -->
+    <div class="card" data-category="contato" data-panel="panel-contato">
+      <div class="card-header">
+        <div class="card-icon" style="background:var(--color-accent-dim);color:var(--color-accent);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.34h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6 6l.92-1.84a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 14.92z"/></svg>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+      <div class="card-title">Contato &amp; Canais</div>
+      <p class="card-desc">Telefones, SAC, Ouvidoria, canais para deficientes e site oficial da Itaú Asset.</p>
+      <div class="card-meta">
+        <span class="badge">ANBIMA</span>
+        <span class="badge">CVM</span>
+      </div>
+    </div>
+
+  </div><!-- /cards-grid -->
+
+  <!-- ══ PAINÉIS ═══════════════════════════════════════════ -->
+
+  <!-- PAINEL: Sobre -->
+  <div class="panel" id="panel-sobre">
+    <div class="panel-inner">
+      <h2 class="panel-title">Sobre a <span>Itaú Asset</span></h2>
+
+      <div class="panel-cols">
+        <div>
+          <div class="section-heading">AuM por Categoria</div>
+          <div class="chart-wrap">
+            <div class="chart-label">Composição do portfólio · R$ bi</div>
+            <canvas id="chart-donut"></canvas>
           </div>
         </div>
-        <div class="award-item">
-          <span class="award-item__icon">🎓</span>
-          <div class="award-item__text">
-            <strong>15× Melhor Gestora — FGV EPGE</strong>
-            Prêmio concedido pela Fundação Getulio Vargas, reconhecendo consistência no retorno ajustado ao risco dos fundos ao longo de múltiplos períodos.
-          </div>
-        </div>
-        <div class="award-item">
-          <span class="award-item__icon">🌎</span>
-          <div class="award-item__text">
-            <strong>ALAS20 Leading Investor 2024</strong>
-            Reconhecimento pela associação latino-americana como investidor de referência em sustentabilidade e engajamento ativo com empresas do portfólio.
-          </div>
-        </div>
-        <div class="award-item">
-          <span class="award-item__icon">🌿</span>
-          <div class="award-item__text">
-            <strong>PRI Signatory</strong>
-            Signatária dos Princípios para o Investimento Responsável das Nações Unidas, comprometida com integração de fatores ESG em todo o processo de gestão.
+        <div style="display:flex;flex-direction:column;gap:var(--space-4);">
+          <div class="section-heading">Números-chave</div>
+          <div style="display:flex;flex-direction:column;gap:var(--space-3);">
+            <div class="contato-item">
+              <span class="contato-label">AuM Total</span>
+              <span class="contato-value" style="font-size:1.4rem;color:var(--color-accent);">R$ 1,193 trilhão</span>
+            </div>
+            <div class="contato-item">
+              <span class="contato-label">Clientes</span>
+              <span class="contato-value">2,6 milhões</span>
+            </div>
+            <div class="contato-item">
+              <span class="contato-label">Market Share</span>
+              <span class="contato-value">14,5%</span>
+            </div>
+            <div class="contato-item">
+              <span class="contato-label">Profissionais</span>
+              <span class="contato-value">+300</span>
+            </div>
           </div>
         </div>
       </div>
-
-      <p class="section-label">Destaques adicionais</p>
-      <div class="tag-cloud">
-        <span class="tag tag--accent">Melhor Gestora Macro — Exame</span>
-        <span class="tag tag--info">Gestora do Ano — Valor Econômico</span>
-        <span class="tag tag--sage">Top 3 Research Econômico</span>
-        <span class="tag tag--teal">Melhor Plataforma ETF Brasil</span>
-        <span class="tag">+60 anos de track record</span>
-      </div>
     </div>
-    <div class="panel__footer">
-      <span>Prêmios referentes ao período 2018–2024.</span>
-    </div>
-  </aside>
+  </div>
 
-  <!-- ─────────────────────────────
-       PANEL: Pilares de Gestão
-  ───────────────────────────── -->
-  <aside id="panel-pilares" class="panel" role="dialog" aria-modal="true" aria-label="Pilares de Gestão" hidden>
-    <div class="panel__head">
-      <div class="panel__icon" aria-hidden="true">🏛</div>
-      <div class="panel__head-text">
-        <h3 class="panel__title">Pilares de Gestão</h3>
-        <p class="panel__subtitle">Os quatro eixos estruturantes da plataforma</p>
-      </div>
-      <button class="panel__close" aria-label="Fechar painel">✕</button>
-    </div>
-    <div class="panel__body">
-      <p>A arquitetura de investimentos da Itaú Asset é organizada em quatro pilares complementares, cada um com equipe especializada, processos dedicados e filosofia de gestão própria.</p>
+  <!-- PAINEL: Multimesas -->
+  <div class="panel" id="panel-multimesas">
+    <div class="panel-inner">
+      <h2 class="panel-title">Plataforma <span>Multimesas</span></h2>
 
-      <div class="pilar-grid">
-        <div class="pilar-card">
-          <div class="pilar-card__title">Beta / Indexado</div>
-          <p class="pilar-card__desc">Estratégias que replicam benchmarks com eficiência de custos máxima. Inclui fundos índice, ETFs itnow e smart beta. Foco em tracking error mínimo e liquidez.</p>
-        </div>
-        <div class="pilar-card">
-          <div class="pilar-card__title">Renda Fixa Ativa</div>
-          <p class="pilar-card__desc">Gestão ativa de duration, curva de juros e spreads em ativos locais e globais de renda fixa. Aproveitamento de prêmios de risco com controle rigoroso de drawdown.</p>
-        </div>
-        <div class="pilar-card">
-          <div class="pilar-card__title">Crédito</div>
-          <p class="pilar-card__desc">Originação e gestão de crédito privado estruturado — Infraestrutura, Agronegócio, Imobiliário e operações estruturadas. Mesa dedicada com R$&thinsp;89,8 bi em carteira.</p>
-        </div>
-        <div class="pilar-card">
-          <div class="pilar-card__title">Retorno Absoluto</div>
-          <p class="pilar-card__desc">Fundos macro, equity long/short e multimercados sem restrição de benchmark. Objetivo de gerar alfa independente do ciclo de mercado.</p>
-        </div>
+      <div class="section-heading">AuM por Categoria (R$ bi)</div>
+      <div class="chart-wrap">
+        <div class="chart-label">Retorno Absoluto · Crédito · Macro · Equities</div>
+        <canvas id="chart-multimesas"></canvas>
       </div>
 
-      <p class="section-label">Princípios transversais</p>
-      <ul>
-        <li><strong>Rigor de processo:</strong> comitês de investimento formalizados com atas e trilha de auditoria completa.</li>
-        <li><strong>Gestão de risco independente:</strong> área de risco separada das mesas de gestão, com limites VaR e stress test diários.</li>
-        <li><strong>Pesquisa proprietária:</strong> análise econômica e de empresas produzida internamente, sem dependência de sell-side.</li>
-        <li><strong>Integração ESG:</strong> critérios ambientais, sociais e de governança aplicados em todos os quatro pilares.</li>
-      </ul>
-    </div>
-    <div class="panel__footer">
-      <span>Itaú Asset Management · Plataforma de Gestão 2024</span>
-    </div>
-  </aside>
-
-  <!-- ─────────────────────────────
-       PANEL: Estratégias Beta & ETFs
-  ───────────────────────────── -->
-  <aside id="panel-beta" class="panel" role="dialog" aria-modal="true" aria-label="Estratégias Beta e ETFs" hidden>
-    <div class="panel__head">
-      <div class="panel__icon" aria-hidden="true">📈</div>
-      <div class="panel__head-text">
-        <h3 class="panel__title">Estratégias Beta &amp; ETFs</h3>
-        <p class="panel__subtitle">Indexação, smart beta e plataforma itnow</p>
+      <div class="section-heading">8 Mesas de Gestão</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Mesa</th>
+              <th>Estratégia</th>
+              <th>Categoria</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Crédito Estruturado</strong></td>
+              <td>Infra + Agro + Imob + Op. Estruturadas</td>
+              <td><span class="badge">Crédito</span></td>
+            </tr>
+            <tr>
+              <td><strong>Asgard</strong></td>
+              <td>RV Unconstrained</td>
+              <td><span class="badge info">Renda Variável</span></td>
+            </tr>
+            <tr>
+              <td><strong>Janeiro</strong></td>
+              <td>Macro + RF Unconstrained</td>
+              <td><span class="badge" style="background:var(--color-teal-dim);color:var(--color-teal);">Macro</span></td>
+            </tr>
+            <tr>
+              <td><strong>Optimus</strong></td>
+              <td>Macro + RF + Long Bias</td>
+              <td><span class="badge" style="background:var(--color-teal-dim);color:var(--color-teal);">Macro</span></td>
+            </tr>
+            <tr>
+              <td><strong>Legend</strong></td>
+              <td>Macro + RF Unconstrained</td>
+              <td><span class="badge" style="background:var(--color-teal-dim);color:var(--color-teal);">Macro</span></td>
+            </tr>
+            <tr>
+              <td><strong>Hunter</strong></td>
+              <td>RV / Multimercado L/S</td>
+              <td><span class="badge info">Renda Variável</span></td>
+            </tr>
+            <tr>
+              <td><strong>Artax</strong></td>
+              <td>Macro + RF Unconstrained</td>
+              <td><span class="badge" style="background:var(--color-teal-dim);color:var(--color-teal);">Macro</span></td>
+            </tr>
+            <tr>
+              <td><strong>Aurora Yield Plus</strong></td>
+              <td>Multimercado Juros e Moedas</td>
+              <td><span class="badge" style="background:var(--color-teal-dim);color:var(--color-teal);">Macro</span></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <button class="panel__close" aria-label="Fechar painel">✕</button>
     </div>
-    <div class="panel__body">
-      <p>A plataforma beta da Itaú Asset cobre todo o espectro de classes de ativos com eficiência de custo e replicação fiel de benchmarks. Os ETFs são distribuídos sob a marca <strong>itnow</strong> (www.itnow.com.br).</p>
+  </div>
 
-      <p class="section-label">Fundos indexados — Classes disponíveis</p>
-      <div class="tag-cloud">
-        <span class="tag tag--info">RF Local</span>
-        <span class="tag tag--info">Moedas</span>
-        <span class="tag tag--accent">RV Local</span>
-        <span class="tag tag--accent">RV Global</span>
-        <span class="tag tag--sage">RF Global</span>
-        <span class="tag tag--sage">Smart Beta</span>
-        <span class="tag tag--teal">Commodities</span>
-        <span class="tag tag--teal">Temáticos</span>
-        <span class="tag">Alavancados</span>
-      </div>
+  <!-- PAINEL: ESG -->
+  <div class="panel" id="panel-esg">
+    <div class="panel-inner">
+      <h2 class="panel-title">ESG &amp; <span>Sustentabilidade</span></h2>
 
-      <p class="section-label">ETFs itnow — Categorias</p>
-      <div class="pilar-grid">
-        <div class="pilar-card">
-          <div class="pilar-card__title">RF Local</div>
-          <p class="pilar-card__desc">ETFs de renda fixa brasileira com exposição a Tesouro, CDI e crédito soberano. Negociados em bolsa com liquidez diária.</p>
-        </div>
-        <div class="pilar-card">
-          <div class="pilar-card__title">RV Local</div>
-          <p class="pilar-card__desc">ETFs atrelados a índices de ações brasileiras — Ibovespa, ISE, IBRX e estratégias de fator.</p>
-        </div>
-        <div class="pilar-card">
-          <div class="pilar-card__title">RV Global</div>
-          <p class="pilar-card__desc">Exposição a índices internacionais — S&amp;P 500, MSCI World e mercados emergentes — negociados diretamente na B3.</p>
-        </div>
-        <div class="pilar-card">
-          <div class="pilar-card__title">Criptomoedas</div>
-          <p class="pilar-card__desc">Pioneiro no mercado: ETFs de cripto regulados pela CVM com gestão profissional de custódia e rebalanceamento automatizado.</p>
-        </div>
-      </div>
-
-      <p class="section-label">Diferenciais competitivos</p>
-      <ul>
-        <li>Taxa de administração competitiva com revisão periódica vinculada ao crescimento do AuM.</li>
-        <li>Market maker dedicado para os ETFs itnow, garantindo spread reduzido no livro de ordens.</li>
-        <li>Acesso via todas as principais plataformas de distribuição do Brasil.</li>
-        <li>Relatório de tracking difference mensal disponível no site itnow.com.br.</li>
-      </ul>
-    </div>
-    <div class="panel__footer">
-      <span>Plataforma itnow:</span>
-      <a href="https://www.itnow.com.br" target="_blank" rel="noopener">www.itnow.com.br</a>
-    </div>
-  </aside>
-
-  <!-- ─────────────────────────────
-       PANEL: Modelo Multimesas
-  ───────────────────────────── -->
-  <aside id="panel-multimesas" class="panel" role="dialog" aria-modal="true" aria-label="Modelo Multimesas" hidden>
-    <div class="panel__head">
-      <div class="panel__icon" aria-hidden="true">🔀</div>
-      <div class="panel__head-text">
-        <h3 class="panel__title">Modelo Multimesas</h3>
-        <p class="panel__subtitle">8 gestoras autônomas · R$&thinsp;113,5 bi em gestão ativa</p>
-      </div>
-      <button class="panel__close" aria-label="Fechar painel">✕</button>
-    </div>
-    <div class="panel__body">
-      <p>O modelo Multimesas oferece independência operacional para times especializados, preservando os benefícios de infraestrutura, compliance e distribuição compartilhados da Itaú Asset.</p>
-
-      <p class="section-label">AuM por tipo de estratégia</p>
-      <div class="metric-grid">
-        <div class="metric-card">
-          <span class="metric-card__val">R$&thinsp;89,8 bi</span>
-          <span class="metric-card__lbl">Crédito + RF</span>
-        </div>
-        <div class="metric-card metric-card--sage">
-          <span class="metric-card__val">R$&thinsp;18,5 bi</span>
-          <span class="metric-card__lbl">Macro</span>
-        </div>
-        <div class="metric-card metric-card--info">
-          <span class="metric-card__val">R$&thinsp;5,2 bi</span>
-          <span class="metric-card__lbl">Equities</span>
-        </div>
-        <div class="metric-card">
-          <span class="metric-card__val">8</span>
-          <span class="metric-card__lbl">Mesas ativas</span>
-        </div>
+      <div class="section-heading">Evolução Histórica (2004–2023)</div>
+      <div class="chart-wrap">
+        <div class="chart-label">AuM ESG (barras, eixo esq.) · Cobertura ESG % (linha, eixo dir.)</div>
+        <canvas id="chart-esg"></canvas>
       </div>
 
-      <p class="section-label">As 8 mesas</p>
-      <div class="mesa-grid">
-        <div class="mesa-card">
-          <div>
-            <div class="mesa-card__name">Crédito Estruturado</div>
-            <div class="mesa-card__strat">Infra · Agro · Imobiliário · Estruturadas</div>
-          </div>
-          <div class="mesa-card__aum">R$&thinsp;89,8 bi</div>
-        </div>
-        <div class="mesa-card">
-          <div>
-            <div class="mesa-card__name">Asgard</div>
-            <div class="mesa-card__strat">Renda Variável Unconstrained</div>
-          </div>
-          <div class="mesa-card__aum">—</div>
-        </div>
-        <div class="mesa-card">
-          <div>
-            <div class="mesa-card__name">Janeiro</div>
-            <div class="mesa-card__strat">Macro · RF Unconstrained</div>
-          </div>
-          <div class="mesa-card__aum">—</div>
-        </div>
-        <div class="mesa-card">
-          <div>
-            <div class="mesa-card__name">Optimus</div>
-            <div class="mesa-card__strat">Macro · RF Unconstrained · Long Bias</div>
-          </div>
-          <div class="mesa-card__aum">—</div>
-        </div>
-        <div class="mesa-card">
-          <div>
-            <div class="mesa-card__name">Legend</div>
-            <div class="mesa-card__strat">Macro · RF Unconstrained</div>
-          </div>
-          <div class="mesa-card__aum">—</div>
-        </div>
-        <div class="mesa-card">
-          <div>
-            <div class="mesa-card__name">Hunter</div>
-            <div class="mesa-card__strat">RV Unconstrained · Multimercado L/S</div>
-          </div>
-          <div class="mesa-card__aum">—</div>
-        </div>
-        <div class="mesa-card">
-          <div>
-            <div class="mesa-card__name">Artax</div>
-            <div class="mesa-card__strat">Macro · RF Unconstrained</div>
-          </div>
-          <div class="mesa-card__aum">—</div>
-        </div>
-        <div class="mesa-card">
-          <div>
-            <div class="mesa-card__name">Aurora Yield Plus</div>
-            <div class="mesa-card__strat">Multimercado Juros e Moedas</div>
-          </div>
-          <div class="mesa-card__aum">—</div>
-        </div>
-      </div>
-
-      <p class="section-label">Como funciona o modelo</p>
-      <ul>
-        <li>Cada mesa possui autonomia de portfólio, equipe dedicada e P&amp;L independente.</li>
-        <li>Infraestrutura de risco, compliance, middle e back-office compartilhados com a Itaú Asset.</li>
-        <li>Acesso à rede de distribuição do Itaú Unibanco e parceiros institucionais.</li>
-        <li>Monitoramento de risco em tempo real pela área de gestão de riscos da Asset.</li>
-      </ul>
-    </div>
-    <div class="panel__footer">
-      <span>AuM consolidado das mesas. Dados de 2024.</span>
-    </div>
-  </aside>
-
-  <!-- ─────────────────────────────
-       PANEL: Pesquisa Econômica
-  ───────────────────────────── -->
-  <aside id="panel-pesquisa" class="panel" role="dialog" aria-modal="true" aria-label="Pesquisa Econômica" hidden>
-    <div class="panel__head">
-      <div class="panel__icon" aria-hidden="true">🔬</div>
-      <div class="panel__head-text">
-        <h3 class="panel__title">Pesquisa Econômica</h3>
-        <p class="panel__subtitle">10 economistas · 5 cientistas de dados · Melhor previsão BCB</p>
-      </div>
-      <button class="panel__close" aria-label="Fechar painel">✕</button>
-    </div>
-    <div class="panel__body">
-      <p>O time de pesquisa econômica da Itaú Asset é um dos mais reconhecidos do mercado financeiro brasileiro, com histórico documentado de acerto superior nas projeções macroeconômicas que norteiam as decisões de alocação.</p>
-
-      <p class="section-label">Composição da equipe</p>
-      <div class="metric-grid">
-        <div class="metric-card">
-          <span class="metric-card__val">10</span>
-          <span class="metric-card__lbl">Economistas sênior</span>
-        </div>
-        <div class="metric-card metric-card--info">
-          <span class="metric-card__val">5</span>
-          <span class="metric-card__lbl">Cientistas de dados</span>
-        </div>
-        <div class="metric-card metric-card--sage">
-          <span class="metric-card__val">1º</span>
-          <span class="metric-card__lbl">Ranking BCB — Juros</span>
-        </div>
-      </div>
-
-      <p class="section-label">Cobertura analítica</p>
-      <ul>
-        <li><strong>Macroeconomia doméstica:</strong> PIB, inflação (IPCA/IGP), política fiscal, câmbio e mercado de trabalho.</li>
-        <li><strong>Política monetária:</strong> projeções de SELIC com melhor histórico de acerto no ranking do Banco Central do Brasil.</li>
-        <li><strong>Cenário externo:</strong> Fed, BCE, mercados emergentes e impacto em commodities brasileiras.</li>
-        <li><strong>Renda fixa e crédito:</strong> análise de spreads, curva de juros reais e nominais.</li>
-        <li><strong>Equity research:</strong> cobertura setorial integrada com os gestores das mesas de RV.</li>
-      </ul>
-
-      <p class="section-label">Ciência de dados &amp; IA aplicada</p>
-      <ul>
-        <li>Modelos proprietários de nowcasting de atividade econômica com frequência diária.</li>
-        <li>Processamento de linguagem natural (NLP) para monitoramento de notícias e sentiment de mercado.</li>
-        <li>Backtesting automatizado de estratégias quantitativas integrado aos comitês de investimento.</li>
-        <li>Plataforma interna de dados alternativos: cartões, satélite, tráfego e mobilidade.</li>
-      </ul>
-    </div>
-    <div class="panel__footer">
-      <span>Ranking BCB referente às projeções de juros — Focus Relatório de Mercado 2024.</span>
-    </div>
-  </aside>
-
-  <!-- ─────────────────────────────
-       PANEL: ESG & Sustentabilidade
-  ───────────────────────────── -->
-  <aside id="panel-esg" class="panel" role="dialog" aria-modal="true" aria-label="ESG e Sustentabilidade" hidden>
-    <div class="panel__head">
-      <div class="panel__icon" aria-hidden="true">🌱</div>
-      <div class="panel__head-text">
-        <h3 class="panel__title">ESG &amp; Sustentabilidade</h3>
-        <p class="panel__subtitle">Investimento responsável integrado à gestão</p>
-      </div>
-      <button class="panel__close" aria-label="Fechar painel">✕</button>
-    </div>
-    <div class="panel__body">
-      <p>A Itaú Asset adota uma abordagem de investimento responsável que permeia todos os pilares de gestão, não se restringindo a produtos ESG dedicados. A integração de fatores ambientais, sociais e de governança é um requisito do processo de análise e monitoramento de portfólio.</p>
-
-      <p class="section-label">Compromissos institucionais</p>
-      <div class="award-list">
-        <div class="award-item">
-          <span class="award-item__icon">🌿</span>
-          <div class="award-item__text">
-            <strong>PRI — Signatária desde 2016</strong>
-            Relatório anual de transparência submetido à ONU, incluindo avaliação de integração ESG e engajamento ativo.
+      <div class="panel-cols">
+        <div>
+          <div class="section-heading">8 Produtos ESG</div>
+          <div class="tbl-wrap">
+            <table>
+              <thead>
+                <tr><th>#</th><th>Produto</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td>Active Fix ESG</td></tr>
+                <tr><td>2</td><td>ISUS11</td></tr>
+                <tr><td>3</td><td>GOVE11</td></tr>
+                <tr><td>4</td><td>REVE11</td></tr>
+                <tr><td>5</td><td>YDHO11</td></tr>
+                <tr><td>6</td><td>Itaú Index ESG Água</td></tr>
+                <tr><td>7</td><td>Itaú Index ESG Energia Limpa</td></tr>
+                <tr><td>8</td><td>Active Fix ESG Horizonte</td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
-        <div class="award-item">
-          <span class="award-item__icon">🌎</span>
-          <div class="award-item__text">
-            <strong>ALAS20 Leading Investor 2024</strong>
-            Reconhecimento pela excelência no engajamento com empresas do portfólio em temas de sustentabilidade.
-          </div>
-        </div>
-        <div class="award-item">
-          <span class="award-item__icon">📋</span>
-          <div class="award-item__text">
-            <strong>TCFD — Alinhamento climático</strong>
-            Divulgação alinhada às recomendações da Task Force on Climate-related Financial Disclosures, incluindo análise de riscos físicos e de transição.
+        <div>
+          <div class="section-heading">Certificações &amp; Selos</div>
+          <div style="display:flex;flex-direction:column;gap:var(--space-3);">
+            <div class="selos">
+              <span class="selo">✓ PRI Signatory</span>
+              <span class="selo">✓ ALAS20 Winner Brazil 2024</span>
+              <span class="selo">✓ B3 ISE Member</span>
+            </div>
+            <div class="contato-item" style="margin-top:var(--space-2);">
+              <span class="contato-label">Cobertura ESG atual</span>
+              <span class="contato-value" style="font-size:1.4rem;color:var(--color-success);">100%</span>
+            </div>
+            <div class="contato-item">
+              <span class="contato-label">AuM ESG Total</span>
+              <span class="contato-value" style="color:var(--color-accent);">R$ 1.193 bi</span>
+            </div>
           </div>
         </div>
       </div>
-
-      <p class="section-label">Pilares da estratégia ESG</p>
-      <ul>
-        <li><strong>Integração:</strong> fatores ESG incorporados na análise de valuation e avaliação de risco de todos os ativos.</li>
-        <li><strong>Engajamento:</strong> diálogo ativo com companhias investidas sobre melhores práticas de sustentabilidade e governança.</li>
-        <li><strong>Exclusão:</strong> política de restrições setoriais em atividades com alto risco de controvérsia (armamentos, tabaco, desmatamento).</li>
-        <li><strong>Produtos temáticos:</strong> linha dedicada com 8 fundos ESG cobrindo água, energia limpa, governança e renda fixa sustentável.</li>
-        <li><strong>Voto consciente:</strong> exercício do direito de voto em assembleias de acordo com política de engajamento publicada.</li>
-      </ul>
     </div>
-    <div class="panel__footer">
-      <span>Itaú Asset PRI Signatory · ALAS20 Leading Investor 2024</span>
-    </div>
-  </aside>
+  </div>
 
-  <!-- ─────────────────────────────
-       PANEL: Produtos ESG
-  ───────────────────────────── -->
-  <aside id="panel-produtos-esg" class="panel" role="dialog" aria-modal="true" aria-label="Produtos ESG" hidden>
-    <div class="panel__head">
-      <div class="panel__icon" aria-hidden="true">🌿</div>
-      <div class="panel__head-text">
-        <h3 class="panel__title">Produtos ESG</h3>
-        <p class="panel__subtitle">8 produtos dedicados em sustentabilidade</p>
+  <!-- PAINEL: ETF itnow -->
+  <div class="panel" id="panel-etf">
+    <div class="panel-inner">
+      <h2 class="panel-title">ETFs <span>itnow</span></h2>
+      <div class="section-heading">Linha Completa de ETFs</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>ETF / Ticker</th>
+              <th>Classe</th>
+              <th>Segmento</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td><strong>RF Local</strong></td>
+              <td><span class="badge">Renda Fixa</span></td>
+              <td>Brasil</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td><strong>RV Local</strong></td>
+              <td><span class="badge info">Renda Variável</span></td>
+              <td>Brasil</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td><strong>RV Global</strong></td>
+              <td><span class="badge info">Renda Variável</span></td>
+              <td>Global</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td><strong>Criptomoedas</strong></td>
+              <td><span class="badge warn">Cripto</span></td>
+              <td>Digital Assets</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td><strong>ISUS11</strong></td>
+              <td><span class="badge success">ESG</span></td>
+              <td>Sustentabilidade</td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td><strong>GOVE11</strong></td>
+              <td><span class="badge success">ESG</span></td>
+              <td>Governança</td>
+            </tr>
+            <tr>
+              <td>7</td>
+              <td><strong>REVE11</strong></td>
+              <td><span class="badge success">ESG</span></td>
+              <td>Sustentabilidade</td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td><strong>YDRO11</strong></td>
+              <td><span class="badge success">ESG</span></td>
+              <td>Energia/Água</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <button class="panel__close" aria-label="Fechar painel">✕</button>
     </div>
-    <div class="panel__body">
-      <p>A linha ESG da Itaú Asset cobre desde fundos de renda fixa com critérios sustentáveis até ETFs temáticos em água, energia limpa e governança corporativa — todos negociados na B3 ou disponíveis via plataformas de distribuição.</p>
+  </div>
 
-      <p class="section-label">Catálogo de produtos ESG</p>
-      <div class="esg-grid">
-        <div class="esg-card">
-          <div class="esg-card__name">Active Fix ESG</div>
-          <div class="esg-card__type">Fundo RF · Gestão ativa com filtro ESG</div>
+  <!-- PAINEL: Diretoria -->
+  <div class="panel" id="panel-diretoria">
+    <div class="panel-inner">
+      <h2 class="panel-title"><span>Diretoria</span> Executiva</h2>
+      <div class="section-heading">12 Líderes</div>
+      <div class="dir-grid">
+        <div class="dir-card">
+          <div class="dir-avatar" style="background:#FF6200;">CA</div>
+          <div class="dir-info">
+            <span class="dir-name">Carlos A. Salamonde</span>
+            <span class="dir-role">CIO</span>
+          </div>
         </div>
-        <div class="esg-card">
-          <div class="esg-card__name">ISUS11</div>
-          <div class="esg-card__type">ETF · Índice de Sustentabilidade Empresarial (B3)</div>
+        <div class="dir-card">
+          <div class="dir-avatar" style="background:#3B85FA;">PB</div>
+          <div class="dir-info">
+            <span class="dir-name">Pedro G. Boainain</span>
+            <span class="dir-role">Asset Core</span>
+          </div>
         </div>
-        <div class="esg-card">
-          <div class="esg-card__name">GOVE11</div>
-          <div class="esg-card__type">ETF · Governança corporativa diferenciada</div>
+        <div class="dir-card">
+          <div class="dir-avatar" style="background:#0f766e;">AP</div>
+          <div class="dir-info">
+            <span class="dir-name">Arlindo Penteado</span>
+            <span class="dir-role">Multimesas</span>
+          </div>
         </div>
-        <div class="esg-card">
-          <div class="esg-card__name">REVE11</div>
-          <div class="esg-card__type">ETF · Receitas ESG — empresas com maior percentual de receita sustentável</div>
+        <div class="dir-card">
+          <div class="dir-avatar" style="background:#9f1239;">SC</div>
+          <div class="dir-info">
+            <span class="dir-name">Stefano Catinella</span>
+            <span class="dir-role">Distribuição Global</span>
+          </div>
         </div>
-        <div class="esg-card">
-          <div class="esg-card__name">YDRO11</div>
-          <div class="esg-card__type">ETF · Setor hídrico — companhias de saneamento e gestão de água</div>
+        <div class="dir-card">
+          <div class="dir-avatar" style="background:#65a30d;">SC</div>
+          <div class="dir-info">
+            <span class="dir-name">Sylvio Castro</span>
+            <span class="dir-role">Global Solutions &amp; FoF</span>
+          </div>
         </div>
-        <div class="esg-card">
-          <div class="esg-card__name">Itaú Index ESG Água</div>
-          <div class="esg-card__type">Fundo índice · Carteira temática de recursos hídricos</div>
+        <div class="dir-card">
+          <div class="dir-avatar" style="background:#7c3aed;">KA</div>
+          <div class="dir-info">
+            <span class="dir-name">Kahlil Adam</span>
+            <span class="dir-role">Estratégias Internacionais</span>
+          </div>
         </div>
-        <div class="esg-card">
-          <div class="esg-card__name">Itaú Index ESG Energia Limpa</div>
-          <div class="esg-card__type">Fundo índice · Energia renovável e transição energética</div>
+        <div class="dir-card">
+          <div class="dir-avatar" style="background:#d97706;">TW</div>
+          <div class="dir-info">
+            <span class="dir-name">Thomas Wu</span>
+            <span class="dir-role">Pesquisa Econômica</span>
+          </div>
         </div>
-        <div class="esg-card">
-          <div class="esg-card__name">Active Fix ESG Horizonte</div>
-          <div class="esg-card__type">Fundo RF · Longo prazo com critérios ESG e debentures incentivadas</div>
+        <div class="dir-card">
+          <div class="dir-avatar" style="background:#0369a1;">FB</div>
+          <div class="dir-info">
+            <span class="dir-name">Fernando Brantes</span>
+            <span class="dir-role">COO</span>
+          </div>
         </div>
-      </div>
-
-      <p class="section-label">Por que investir em ESG com a Itaú Asset?</p>
-      <ul>
-        <li>Track record documentado com metodologia de avaliação ESG proprietária.</li>
-        <li>Equipe dedicada de analistas ESG integrada à pesquisa econômica e equity research.</li>
-        <li>Relatório de impacto anual com métricas de pegada de carbono e indicadores sociais do portfólio.</li>
-        <li>Acompanhamento da Taxonomia Sustentável Brasileira em desenvolvimento pelo governo federal.</li>
-      </ul>
-    </div>
-    <div class="panel__footer">
-      <span>ETFs disponíveis na B3. Fundos via plataformas habilitadas.</span>
-    </div>
-  </aside>
-
-  <!-- ─────────────────────────────
-       PANEL: Diretoria
-  ───────────────────────────── -->
-  <aside id="panel-diretoria" class="panel" role="dialog" aria-modal="true" aria-label="Diretoria" hidden>
-    <div class="panel__head">
-      <div class="panel__icon" aria-hidden="true">👥</div>
-      <div class="panel__head-text">
-        <h3 class="panel__title">Diretoria</h3>
-        <p class="panel__subtitle">Liderança executiva da Itaú Asset Management</p>
-      </div>
-      <button class="panel__close" aria-label="Fechar painel">✕</button>
-    </div>
-    <div class="panel__body">
-      <p>A diretoria da Itaú Asset reúne profissionais com décadas de experiência nos mercados local e global, combinando expertise técnica em gestão de investimentos com visão estratégica de negócios.</p>
-
-      <p class="section-label">Liderança principal</p>
-      <div class="person-grid">
-        <div class="person-card">
-          <div class="person-card__avatar" aria-hidden="true">🏦</div>
-          <div class="person-card__name">Carlos Augusto Salamonde</div>
-          <div class="person-card__role">CAS · Diretor de Gestão de Investimentos Globais<br>Head máximo da Itaú Asset Management</div>
+        <div class="dir-card">
+          <div class="dir-avatar" style="background:#b45309;">RE</div>
+          <div class="dir-info">
+            <span class="dir-name">Renato Eid</span>
+            <span class="dir-role">Beta</span>
+          </div>
         </div>
-        <div class="person-card">
-          <div class="person-card__avatar" aria-hidden="true">⚙️</div>
-          <div class="person-card__name">Pedro G Boainain</div>
-          <div class="person-card__role">Diretor Asset Core<br>Responsável pela plataforma de fundos ativos e indexados</div>
+        <div class="dir-card">
+          <div class="dir-avatar" style="background:#be185d;">FD</div>
+          <div class="dir-info">
+            <span class="dir-name">Fayga Delbem</span>
+            <span class="dir-role">Crédito</span>
+          </div>
         </div>
-        <div class="person-card">
-          <div class="person-card__avatar" aria-hidden="true">🔀</div>
-          <div class="person-card__name">Arlindo Penteado</div>
-          <div class="person-card__role">Diretor Multimesas<br>Coordenação das 8 gestoras autônomas</div>
+        <div class="dir-card">
+          <div class="dir-avatar" style="background:#15803d;">LW</div>
+          <div class="dir-info">
+            <span class="dir-name">Luís Wetzel</span>
+            <span class="dir-role">Renda Fixa</span>
+          </div>
         </div>
-        <div class="person-card">
-          <div class="person-card__avatar" aria-hidden="true">🌐</div>
-          <div class="person-card__name">Stefano Catinella</div>
-          <div class="person-card__role">Diretor Distribuição Global<br>Relacionamento com clientes institucionais internacionais</div>
-        </div>
-        <div class="person-card">
-          <div class="person-card__avatar" aria-hidden="true">🔭</div>
-          <div class="person-card__name">Sylvio Castro</div>
-          <div class="person-card__role">Diretor Global Solutions e FoF<br>Soluções de alocação global e fundos de fundos</div>
-        </div>
-      </div>
-
-      <p class="section-label">Estrutura de governança</p>
-      <ul>
-        <li>Comitê de Investimentos com reuniões semanais e registro formal de decisões.</li>
-        <li>Comitê de Risco independente com reporte direto ao conselho.</li>
-        <li>Política de conflito de interesses publicada e auditada anualmente.</li>
-        <li>Código de ética e conduta aplicável a todos os gestores e analistas.</li>
-      </ul>
-    </div>
-    <div class="panel__footer">
-      <span>Estrutura organizacional vigente em 2024.</span>
-    </div>
-  </aside>
-
-  <!-- ─────────────────────────────
-       PANEL: Time Asset Core
-  ───────────────────────────── -->
-  <aside id="panel-asset-core" class="panel" role="dialog" aria-modal="true" aria-label="Time Asset Core" hidden>
-    <div class="panel__head">
-      <div class="panel__icon" aria-hidden="true">⚙️</div>
-      <div class="panel__head-text">
-        <h3 class="panel__title">Time Asset Core</h3>
-        <p class="panel__subtitle">Gestão ativa, indexação e soluções globais</p>
-      </div>
-      <button class="panel__close" aria-label="Fechar painel">✕</button>
-    </div>
-    <div class="panel__body">
-      <p>O Asset Core é responsável pela plataforma principal de fundos da Itaú Asset, englobando gestão ativa de renda fixa, estratégias beta/indexadas, distribuição global e soluções customizadas para grandes investidores.</p>
-
-      <p class="section-label">Áreas do Asset Core</p>
-      <div class="pilar-grid">
-        <div class="pilar-card">
-          <div class="pilar-card__title">Renda Fixa Ativa</div>
-          <p class="pilar-card__desc">Gestores sênior com foco em curva de juros, inflação e crédito soberano. Histórico de alfa consistente sobre CDI e IMA-B.</p>
-        </div>
-        <div class="pilar-card">
-          <div class="pilar-card__title">Beta &amp; Indexação</div>
-          <p class="pilar-card__desc">Equipe de replicação de índices, gestão de tracking error e operações de ETF. Suporte técnico à plataforma itnow.</p>
-        </div>
-        <div class="pilar-card">
-          <div class="pilar-card__title">Distribuição Global</div>
-          <p class="pilar-card__desc">Liderada por Stefano Catinella, atende fundos soberanos, endowments e institucionais globais com estratégias offshore.</p>
-        </div>
-        <div class="pilar-card">
-          <div class="pilar-card__title">Global Solutions &amp; FoF</div>
-          <p class="pilar-card__desc">Sob Sylvio Castro, estrutura portfólios multiativo e fundos de fundos para family offices e clientes de alta renda.</p>
+        <div class="dir-card">
+          <div class="dir-avatar" style="background:#1d4ed8;">SP</div>
+          <div class="dir-info">
+            <span class="dir-name">Scott Piper</span>
+            <span class="dir-role">LatAm Equities</span>
+          </div>
         </div>
       </div>
-
-      <p class="section-label">Capacidades transversais</p>
-      <ul>
-        <li><strong>Quant &amp; Dados:</strong> 5 cientistas de dados aplicando IA em modelos preditivos e construção de portfólio.</li>
-        <li><strong>Risco:</strong> plataforma proprietária de risco de mercado, liquidez e contraparte com frequência diária.</li>
-        <li><strong>Operações:</strong> middle e back-office integrados ao sistema global do Itaú Unibanco.</li>
-        <li><strong>Compliance:</strong> área independente com políticas alinhadas a CVM, ANBIMA e reguladores internacionais.</li>
-      </ul>
     </div>
-    <div class="panel__footer">
-      <span>Itaú Asset · Asset Core 2024</span>
-    </div>
-  </aside>
+  </div>
 
-  <!-- ─────────────────────────────
-       PANEL: Jornada 65 Anos
-  ───────────────────────────── -->
-  <aside id="panel-jornada" class="panel" role="dialog" aria-modal="true" aria-label="Jornada 65 Anos" hidden>
-    <div class="panel__head">
-      <div class="panel__icon" aria-hidden="true">📅</div>
-      <div class="panel__head-text">
-        <h3 class="panel__title">Jornada 65 Anos</h3>
-        <p class="panel__subtitle">De gestora pioneira à maior plataforma independente do Brasil</p>
-      </div>
-      <button class="panel__close" aria-label="Fechar painel">✕</button>
-    </div>
-    <div class="panel__body">
-      <p>A Itaú Asset Management tem raízes nos primeiros fundos de investimento do Brasil. Em mais de seis décadas, a gestora acompanhou todas as transformações do mercado de capitais brasileiro — e as liderou em vários momentos decisivos.</p>
-
-      <p class="section-label">Linha do tempo</p>
+  <!-- PAINEL: Timeline -->
+  <div class="panel" id="panel-timeline">
+    <div class="panel-inner">
+      <h2 class="panel-title">Nossa <span>História</span></h2>
+      <div class="section-heading">11 Marcos — 1957 a 2022</div>
       <div class="timeline">
         <div class="timeline-item">
-          <div class="timeline-item__year">Década de 1960</div>
-          <p class="timeline-item__text">Criação dos primeiros fundos de renda fixa vinculados ao Itaú. Pioneirismo na gestão coletiva de recursos no mercado brasileiro ainda em formação.</p>
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+          <div class="timeline-year">1957</div>
+          <div class="timeline-label">Fundação</div>
         </div>
         <div class="timeline-item">
-          <div class="timeline-item__year">Décadas de 1970–1980</div>
-          <p class="timeline-item__text">Expansão da plataforma de fundos durante o processo de industrialização e abertura financeira do Brasil. Consolidação como referência em renda fixa.</p>
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+          <div class="timeline-year">1997</div>
+          <div class="timeline-label">Expansão de produtos</div>
         </div>
         <div class="timeline-item">
-          <div class="timeline-item__year">Década de 1990</div>
-          <p class="timeline-item__text">Adaptação ao Plano Real e criação de estratégias de renda variável. Início da gestão de fundos para investidores institucionais e previdência.</p>
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+          <div class="timeline-year">2004</div>
+          <div class="timeline-label">Início ESG</div>
         </div>
         <div class="timeline-item">
-          <div class="timeline-item__year">Década de 2000</div>
-          <p class="timeline-item__text">Lançamento dos primeiros fundos multimercado e expansão para gestão de recursos offshore. Fusões e aquisições consolidam escala.</p>
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+          <div class="timeline-year">2005</div>
+          <div class="timeline-label">PRI Signatory</div>
         </div>
         <div class="timeline-item">
-          <div class="timeline-item__year">Década de 2010</div>
-          <p class="timeline-item__text">Lançamento do modelo Multimesas. Primeiros ETFs sob a marca itnow. Início da integração ESG e assinatura dos PRI.</p>
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+          <div class="timeline-year">2011</div>
+          <div class="timeline-label">Plataforma Multi­mesas</div>
         </div>
         <div class="timeline-item">
-          <div class="timeline-item__year">2020–presente</div>
-          <p class="timeline-item__text">Superação de R$&thinsp;1 trilhão em AuM. ETF de cripto pioneiro. 8 mesas ativas. ALAS20 Leading Investor 2024. 15× Melhor Gestora FGV.</p>
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+          <div class="timeline-year">2013</div>
+          <div class="timeline-label">ISE B3 Member</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+          <div class="timeline-year">2016</div>
+          <div class="timeline-label">89% cobertura ESG</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+          <div class="timeline-year">2019</div>
+          <div class="timeline-label">ETFs itnow</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+          <div class="timeline-year">2020</div>
+          <div class="timeline-label">100% cobertura ESG</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+          <div class="timeline-year">2021</div>
+          <div class="timeline-label">Expansão global</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+          <div class="timeline-year">2022</div>
+          <div class="timeline-label">R$ 1,193 tri AuM</div>
         </div>
       </div>
     </div>
-    <div class="panel__footer">
-      <span>+65 anos de história. AuM R$&thinsp;1,193 tri em 2024.</span>
-    </div>
-  </aside>
+  </div>
 
-  <!-- ─────────────────────────────
-       PANEL: Fale Conosco
-  ───────────────────────────── -->
-  <aside id="panel-contato" class="panel" role="dialog" aria-modal="true" aria-label="Fale Conosco" hidden>
-    <div class="panel__head">
-      <div class="panel__icon" aria-hidden="true">📞</div>
-      <div class="panel__head-text">
-        <h3 class="panel__title">Fale Conosco</h3>
-        <p class="panel__subtitle">Central de Atendimento, SAC e Ouvidoria</p>
-      </div>
-      <button class="panel__close" aria-label="Fechar painel">✕</button>
-    </div>
-    <div class="panel__body">
-      <p>Para informações sobre produtos, soluções de investimento para grandes clientes ou suporte operacional, entre em contato pelos canais abaixo. Atendimento em horário comercial, exceto feriados nacionais.</p>
-
-      <p class="section-label">Canais de atendimento</p>
-      <div class="contact-block">
-        <div class="contact-item">
-          <span class="contact-item__label">Central de Atendimento</span>
-          <span class="contact-item__val">(11) 3631-2555</span>
-          <span class="contact-item__desc">Seg–Sex, 9h–18h. Atendimento para investidores institucionais e distribuidores.</span>
+  <!-- PAINEL: Pilares -->
+  <div class="panel" id="panel-pilares">
+    <div class="panel-inner">
+      <h2 class="panel-title">Pilares <span>Estratégicos</span></h2>
+      <div class="pilares">
+        <div class="pilar-card">
+          <div class="pilar-icon" style="background:var(--color-accent-dim);color:var(--color-accent);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div class="pilar-name">Sofisticada</div>
+          <p class="pilar-desc">Plataforma Multimesas com 8 mesas especializadas, mais de R$ 227 bi em estratégias ativas e time de +300 profissionais de investimento.</p>
         </div>
-        <div class="contact-item">
-          <span class="contact-item__label">SAC — Serviço de Atendimento</span>
-          <span class="contact-item__val">0800 728 0728</span>
-          <span class="contact-item__desc">Atendimento gratuito 24 horas por dia, 7 dias por semana.</span>
+        <div class="pilar-card">
+          <div class="pilar-icon" style="background:var(--color-info-dim);color:var(--color-info);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="pilar-name">Democrática</div>
+          <p class="pilar-desc">2,6 milhões de clientes atendidos com soluções acessíveis: ETFs itnow, fundos de varejo e plataformas digitais que democratizam o investimento de qualidade.</p>
         </div>
-        <div class="contact-item">
-          <span class="contact-item__label">Ouvidoria</span>
-          <span class="contact-item__val">0800 570 0011</span>
-          <span class="contact-item__desc">Seg–Sex, 9h–18h, exceto feriados nacionais. Para reclamações não resolvidas via SAC.</span>
-        </div>
-        <div class="contact-item">
-          <span class="contact-item__label">Site Institucional</span>
-          <span class="contact-item__val"><a href="https://www.itauasset.com.br" target="_blank" rel="noopener">itauasset.com.br</a></span>
-          <span class="contact-item__desc">Documentos de fundos, relatórios de gestão, lâminas e regulamentos.</span>
-        </div>
-        <div class="contact-item">
-          <span class="contact-item__label">ETFs itnow</span>
-          <span class="contact-item__val"><a href="https://www.itnow.com.br" target="_blank" rel="noopener">itnow.com.br</a></span>
-          <span class="contact-item__desc">Informações, tracking difference e regulamentos dos ETFs.</span>
+        <div class="pilar-card">
+          <div class="pilar-icon" style="background:var(--color-success-dim);color:var(--color-success);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20A14.5 14.5 0 0 0 12 2"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+          </div>
+          <div class="pilar-name">Internacional</div>
+          <p class="pilar-desc">Presença em 5 continentes, estratégias globais lideradas por Kahlil Adam e Scott Piper, com distribuição para investidores em múltiplas jurisdições.</p>
         </div>
       </div>
-
-      <p class="section-label">Para gestores e investidores institucionais</p>
-      <p>A equipe de Distribuição Global, liderada por Stefano Catinella, atende investidores institucionais brasileiros e internacionais com soluções customizadas. Entre em contato pela Central de Atendimento solicitando o time institucional.</p>
-
-      <p class="section-label">Aviso legal</p>
-      <p style="font-size: var(--size-xs); color: var(--color-fg-subtle); max-width: none;">
-        Este material é de caráter meramente informativo e não constitui oferta de valores mobiliários. Rentabilidade passada não representa garantia de retorno futuro. Leia o prospecto, regulamento e lâmina antes de investir. A Itaú Asset Management é autorizada pela CVM e ANBIMA.
-      </p>
     </div>
-    <div class="panel__footer">
-      <span>Itaú Asset Management · (11) 3631-2555</span>
-      <a href="https://www.itauasset.com.br" target="_blank" rel="noopener">itauasset.com.br</a>
+  </div>
+
+  <!-- PAINEL: Contato -->
+  <div class="panel" id="panel-contato">
+    <div class="panel-inner">
+      <h2 class="panel-title">Contato &amp; <span>Canais</span></h2>
+      <div class="contato-grid">
+        <div class="contato-item">
+          <span class="contato-label">Telefone Principal</span>
+          <span class="contato-value">(11) 3631-2555</span>
+        </div>
+        <div class="contato-item">
+          <span class="contato-label">SAC (24 horas)</span>
+          <span class="contato-value">0800 728 0728</span>
+        </div>
+        <div class="contato-item">
+          <span class="contato-label">Ouvidoria</span>
+          <span class="contato-value">0800 570 0011</span>
+        </div>
+        <div class="contato-item">
+          <span class="contato-label">Deficientes Auditivos</span>
+          <span class="contato-value">0800 722 1722</span>
+        </div>
+        <div class="contato-item">
+          <span class="contato-label">Site Oficial</span>
+          <span class="contato-value"><a href="https://www.itauasset.com.br" target="_blank" rel="noopener">www.itauasset.com.br</a></span>
+        </div>
+        <div class="contato-item">
+          <span class="contato-label">Regulação</span>
+          <span class="contato-value">
+            <span class="badge">ANBIMA</span>&nbsp;
+            <span class="badge info">CVM</span>
+          </span>
+        </div>
+      </div>
     </div>
-  </aside>
+  </div>
 
-  <!-- ══════════════════════════════════════════════════
-       JAVASCRIPT
-  ══════════════════════════════════════════════════ -->
-  <script>
-    (function () {
-      'use strict';
+</main>
 
-      /* ── Theme toggle ── */
-      var themeBtn = document.getElementById('themeToggle');
-      function updateThemeIcon() {
-        var dark = document.documentElement.getAttribute('data-theme') === 'dark';
-        themeBtn.textContent = dark ? '☀' : '🌙';
-        themeBtn.setAttribute('aria-label', dark ? 'Mudar para tema claro' : 'Mudar para tema escuro');
-      }
-      updateThemeIcon();
-      themeBtn.addEventListener('click', function () {
-        var current = document.documentElement.getAttribute('data-theme');
-        var next = current === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', next);
-        try { localStorage.setItem('theme', next); } catch (e) {}
-        updateThemeIcon();
+<!-- ══ SCRIPTS ═══════════════════════════════════════════════ -->
+<script>
+(function () {
+  'use strict';
+
+  /* ── Helpers ─────────────────────────────────────────────── */
+  const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+  /* ── Theme toggle ────────────────────────────────────────── */
+  const root = document.documentElement;
+  const btnTheme = document.getElementById('theme-toggle');
+  const iconSun  = document.getElementById('icon-sun');
+  const iconMoon = document.getElementById('icon-moon');
+
+  function applyTheme(t) {
+    root.setAttribute('data-theme', t);
+    try { localStorage.setItem('theme', t); } catch(e) {}
+    iconSun.style.display  = t === 'dark'  ? 'block' : 'none';
+    iconMoon.style.display = t === 'light' ? 'block' : 'none';
+    // Re-render all open charts on theme change
+    Object.values(openCharts).forEach(ch => { if (ch) ch.destroy(); });
+    openCharts = {};
+    document.querySelectorAll('.panel.open').forEach(p => {
+      renderPanelCharts(p.id);
+    });
+  }
+
+  applyTheme(root.getAttribute('data-theme') || 'light');
+
+  btnTheme.addEventListener('click', () => {
+    applyTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  });
+
+  /* ── Filters ─────────────────────────────────────────────── */
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const cards      = document.querySelectorAll('.card[data-category]');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.dataset.filter;
+      cards.forEach(card => {
+        const match = f === 'all' || card.dataset.category === f;
+        card.setAttribute('data-hidden', String(!match));
+        if (!match && card.classList.contains('active')) {
+          closePanel(card);
+        }
       });
+    });
+  });
 
-      /* ── Filter buttons ── */
-      var filterBtns = document.querySelectorAll('.filter-btn');
-      var cards = document.querySelectorAll('.card[data-category]');
-      var currentFilter = 'all';
+  /* ── Panel open/close ────────────────────────────────────── */
+  let openCharts = {};
+  let activeCard = null;
 
-      filterBtns.forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          currentFilter = btn.getAttribute('data-filter');
-          filterBtns.forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
-          btn.setAttribute('aria-pressed', 'true');
-          cards.forEach(function (card) {
-            var cat = card.getAttribute('data-category');
-            var show = currentFilter === 'all' || cat === currentFilter;
-            if (show) {
-              card.removeAttribute('hidden');
-            } else {
-              card.setAttribute('hidden', '');
-              // close panel if open
-              var panelId = card.getAttribute('data-panel');
-              if (panelId) closePanel(panelId, card);
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      const panelId = card.dataset.panel;
+      const panel   = document.getElementById(panelId);
+      if (!panel) return;
+
+      if (card.classList.contains('active')) {
+        closePanel(card);
+        return;
+      }
+
+      // Close previous
+      if (activeCard && activeCard !== card) {
+        closePanel(activeCard);
+      }
+
+      // Open this
+      card.classList.add('active');
+      activeCard = card;
+
+      // Insert panel after card's row — after the card itself
+      card.after(panel);
+      panel.classList.add('open');
+
+      // Lazy render charts
+      renderPanelCharts(panelId);
+    });
+  });
+
+  function closePanel(card) {
+    const panelId = card.dataset.panel;
+    const panel   = document.getElementById(panelId);
+    if (panel) panel.classList.remove('open');
+    card.classList.remove('active');
+    if (activeCard === card) activeCard = null;
+  }
+
+  /* ── Chart renders (lazy, per panel) ────────────────────── */
+  function renderPanelCharts(panelId) {
+    switch (panelId) {
+      case 'panel-sobre':      renderDonut();      break;
+      case 'panel-multimesas': renderMultimesas(); break;
+      case 'panel-esg':        renderESG();        break;
+    }
+  }
+
+  /* ── Donut: AuM composição ──────────────────────────────── */
+  function renderDonut() {
+    if (openCharts['donut']) return;
+    const ctx = document.getElementById('chart-donut');
+    if (!ctx) return;
+    openCharts['donut'] = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Retorno Absoluto', 'Crédito Estruturado + RF Unconstrained', 'Macro', 'Equities'],
+        datasets: [{
+          data: [113.5, 89.8, 18.5, 5.2],
+          backgroundColor: [
+            css('--color-accent'),
+            css('--color-info'),
+            css('--color-teal'),
+            css('--color-sage'),
+          ],
+          borderColor: css('--color-bg-elevated'),
+          borderWidth: 3,
+          hoverOffset: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        cutout: '60%',
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              color: css('--color-fg-muted'),
+              padding: 14,
+              font: { size: 12 }
             }
-          });
-        });
-      });
-
-      /* ── Panel logic ── */
-      var backdrop = document.getElementById('panelBackdrop');
-      var activeCard = null;
-      var activePanelId = null;
-
-      function openPanel(panelId, triggerCard) {
-        // close any open panel first
-        if (activePanelId && activePanelId !== panelId) {
-          closePanel(activePanelId, activeCard);
-        }
-
-        var panel = document.getElementById(panelId);
-        if (!panel) return;
-
-        panel.removeAttribute('hidden');
-        requestAnimationFrame(function () {
-          panel.classList.add('is-visible');
-          backdrop.classList.add('is-visible');
-          backdrop.removeAttribute('aria-hidden');
-        });
-
-        if (triggerCard) {
-          triggerCard.setAttribute('aria-expanded', 'true');
-        }
-
-        activePanelId = panelId;
-        activeCard = triggerCard;
-
-        // focus first focusable element
-        var focusable = panel.querySelector('button, [href], input, [tabindex]');
-        if (focusable) {
-          setTimeout(function () { focusable.focus(); }, 50);
+          },
+          tooltip: {
+            callbacks: {
+              label: ctx => ' R$ ' + ctx.parsed + ' bi'
+            }
+          }
         }
       }
+    });
+  }
 
-      function closePanel(panelId, triggerCard) {
-        var panel = document.getElementById(panelId);
-        if (!panel) return;
-
-        panel.classList.remove('is-visible');
-        backdrop.classList.remove('is-visible');
-        backdrop.setAttribute('aria-hidden', 'true');
-
-        setTimeout(function () {
-          panel.setAttribute('hidden', '');
-        }, 260);
-
-        if (triggerCard) {
-          triggerCard.setAttribute('aria-expanded', 'false');
-          triggerCard.focus();
-        }
-
-        if (activePanelId === panelId) {
-          activePanelId = null;
-          activeCard = null;
+  /* ── Barras horizontais: Multimesas AuM ─────────────────── */
+  function renderMultimesas() {
+    if (openCharts['multimesas']) return;
+    const ctx = document.getElementById('chart-multimesas');
+    if (!ctx) return;
+    openCharts['multimesas'] = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: [
+          'Retorno Absoluto',
+          'Crédito Estruturado\n+ RF Unconstrained',
+          'Macro',
+          'Equities'
+        ],
+        datasets: [{
+          label: 'AuM (R$ bi)',
+          data: [113.5, 89.8, 18.5, 5.2],
+          backgroundColor: [
+            css('--color-accent'),
+            css('--color-info'),
+            css('--color-teal'),
+            css('--color-sage'),
+          ],
+          borderRadius: 6,
+          barThickness: 36
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: ctx => ' R$ ' + ctx.parsed.x + ' bi'
+            }
+          }
+        },
+        scales: {
+          x: {
+            min: 0,
+            grid: { color: css('--color-border') },
+            ticks: {
+              color: css('--color-fg-muted'),
+              callback: v => 'R$ ' + v + ' bi'
+            }
+          },
+          y: {
+            grid: { display: false },
+            ticks: { color: css('--color-fg-muted') }
+          }
         }
       }
+    });
+  }
 
-      /* ── Cards: click + keyboard ── */
-      cards.forEach(function (card) {
-        function handleActivate() {
-          var panelId = card.getAttribute('data-panel');
-          if (!panelId) return;
-          var isOpen = card.getAttribute('aria-expanded') === 'true';
-          if (isOpen) {
-            closePanel(panelId, card);
-          } else {
-            openPanel(panelId, card);
+  /* ── ESG: bar + line (gráfico misto, único Chart()) ─────── */
+  function renderESG() {
+    if (openCharts['esg']) return;
+    const ctx = document.getElementById('chart-esg');
+    if (!ctx) return;
+    openCharts['esg'] = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['2004','2005','2006','2007','2008','2009','2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023'],
+        datasets: [
+          {
+            type: 'bar',
+            label: 'AuM ESG (R$ bi)',
+            yAxisID: 'y',
+            data: [5,8,12,20,35,48,65,85,110,150,210,280,380,490,580,680,820,950,1050,1193],
+            backgroundColor: css('--color-accent-dim'),
+            borderColor: css('--color-accent'),
+            borderWidth: 2,
+            borderRadius: 4
+          },
+          {
+            type: 'line',
+            label: 'Cobertura ESG (%)',
+            yAxisID: 'y2',
+            data: [null,null,null,null,null,null,null,null,null,10,15,25,89,90,90,95,100,100,100,100],
+            borderColor: css('--color-info'),
+            backgroundColor: 'transparent',
+            borderWidth: 2,
+            tension: 0.4,
+            pointRadius: 3,
+            fill: false
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            labels: { color: css('--color-fg-muted') }
+          },
+          tooltip: { mode: 'index', intersect: false }
+        },
+        scales: {
+          y: {
+            min: 0,
+            position: 'left',
+            grid: { color: css('--color-border') },
+            ticks: {
+              color: css('--color-fg-muted'),
+              callback: v => 'R$ ' + v + ' bi'
+            }
+          },
+          y2: {
+            min: 0,
+            max: 100,
+            position: 'right',
+            grid: { drawOnChartArea: false },
+            ticks: {
+              color: css('--color-fg-muted'),
+              callback: v => v + '%'
+            }
+          },
+          x: {
+            grid: { display: false },
+            ticks: { color: css('--color-fg-muted') }
           }
         }
-        card.addEventListener('click', handleActivate);
-        card.addEventListener('keydown', function (e) {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            handleActivate();
-          }
-        });
-      });
+      }
+    });
+  }
 
-      /* ── Panel close buttons ── */
-      document.querySelectorAll('.panel__close').forEach(function (closeBtn) {
-        closeBtn.addEventListener('click', function () {
-          var panel = closeBtn.closest('.panel');
-          if (!panel) return;
-          closePanel(panel.id, activeCard);
-        });
-      });
-
-      /* ── Backdrop click ── */
-      backdrop.addEventListener('click', function () {
-        if (activePanelId) {
-          closePanel(activePanelId, activeCard);
-        }
-      });
-
-      /* ── Escape key ── */
-      document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && activePanelId) {
-          closePanel(activePanelId, activeCard);
-        }
-      });
-
-      /* ── Trap focus inside panel ── */
-      document.addEventListener('keydown', function (e) {
-        if (e.key !== 'Tab' || !activePanelId) return;
-        var panel = document.getElementById(activePanelId);
-        if (!panel) return;
-        var focusables = Array.from(panel.querySelectorAll(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        )).filter(function (el) { return !el.disabled; });
-        if (!focusables.length) return;
-        var first = focusables[0];
-        var last = focusables[focusables.length - 1];
-        if (e.shiftKey) {
-          if (document.activeElement === first) {
-            e.preventDefault();
-            last.focus();
-          }
-        } else {
-          if (document.activeElement === last) {
-            e.preventDefault();
-            first.focus();
-          }
-        }
-      });
-
-    })();
-  </script>
-
+})();
+</script>
 </body>
 </html>

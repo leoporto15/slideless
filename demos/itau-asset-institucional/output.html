@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,800;9..144,900&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 
   <style>
     /* ═══════════ TEMA ITAÚ v2 (visual-explainer-grade) ═══════════════════ */
@@ -146,7 +146,7 @@
 
     /* ═══════════ DECK ENGINE ═══════════════════════════════════════════ */
     body::before { content: ''; position: fixed; inset: 0; background: var(--glow-hero); pointer-events: none; z-index: 0; opacity: 0.75; transition: opacity var(--duration) var(--ease-out); }
-    body::after { content: ''; position: fixed; inset: 0; background: var(--glow-cool); pointer-events: none; z-index: 0; opacity: 0.55; }
+    body::after  { content: ''; position: fixed; inset: 0; background: var(--glow-cool); pointer-events: none; z-index: 0; opacity: 0.55; }
 
     .deck { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
 
@@ -326,6 +326,20 @@
     .slide-num { position: absolute; top: 22px; left: 26px; font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.14em; color: var(--color-fg-subtle); z-index: 5; }
     .slide-num span { color: var(--color-accent); font-weight: 700; }
 
+    /* ═══════════ BADGES ════════════════════════════════════════════ */
+    .badge { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 999px; font-size: 0.7rem; font-family: var(--font-mono); font-weight: 700; letter-spacing: 0.06em; }
+    .badge--accent  { background: var(--color-accent-dim);  color: var(--color-accent); }
+    .badge--info    { background: var(--color-info-dim);    color: var(--color-info); }
+    .badge--teal    { background: var(--color-teal-dim);    color: var(--color-teal); }
+    .badge--sage    { background: var(--color-sage-dim);    color: var(--color-sage); }
+    .badge--plum    { background: var(--color-plum-dim);    color: var(--color-plum); }
+
+    /* ═══════════ NAV DOTS ══════════════════════════════════════════ */
+    .deck-dots { position:fixed;right:20px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px;z-index:70; }
+    .deck-dot { width:7px;height:7px;border:none;border-radius:50%;background:var(--color-fg-subtle);opacity:0.3;cursor:pointer;padding:0;transition:all 200ms var(--ease-out); }
+    .deck-dot:hover { opacity:0.6; }
+    .deck-dot.active { opacity:1;transform:scale(1.5);background:var(--color-accent); }
+
     @media print {
       @page { size: A4 landscape; margin: 0; }
       body::before, body::after { display: none; }
@@ -401,7 +415,7 @@
             <li><strong>R$ 647 bi</strong> em títulos públicos<br><em>12,2%</em> da dívida pública brasileira</li>
             <li><strong>R$ 355 bi</strong> em títulos privados</li>
             <li><strong>R$ 113,5 bi</strong> em Retorno Absoluto</li>
-            <li><strong>R$ 174,49 bi</strong> em Estratégias Beta (gestão)</li>
+            <li><strong>R$ 174,49 bi</strong> em Estratégias Beta (gestão indexada)</li>
             <li><strong>R$ 18,77 bi</strong> em ETFs</li>
             <li><strong>+300</strong> profissionais</li>
           </ul>
@@ -416,7 +430,7 @@
       <div class="divider-deck">
         <p class="divider-deck__num" data-anim style="--i: 0">PARTE 01 / 06</p>
         <h2 class="title-xl" data-anim="hero">Crescimento<br>e <em>conquistas</em></h2>
-        <p class="lead-deck" data-anim style="--i: 2">Uma trajetória de 65+ anos. Do primeiro fundo de renda variável do Brasil em 1957 ao modelo Multimesas com R$ 100 bi sob gestão em 2022.</p>
+        <p class="lead-deck" data-anim style="--i: 2">Uma trajetória de 65+ anos. Do primeiro fundo de renda variável do Brasil em 1957 ao modelo Multimesas com +R$ 100 bi sob gestão em 2022.</p>
         <div class="divider-deck__rule" data-anim style="--i: 3"></div>
       </div>
     </section>
@@ -429,26 +443,27 @@
       <div class="timeline-h" style="--cols: 6;" data-anim style="--i: 2">
         <div class="timeline-h__item">
           <p class="timeline-h__date">1957</p>
-          <p class="timeline-h__title">1º fundo de renda variável do Brasil</p>
+          <p class="timeline-h__title">1º fundo de RV do Brasil</p>
         </div>
         <div class="timeline-h__item">
           <p class="timeline-h__date">1997</p>
-          <p class="timeline-h__title">1º produto Multimercado</p>
+          <p class="timeline-h__title">1º Multimercado</p>
           <p class="timeline-h__desc">Itaú K2</p>
         </div>
         <div class="timeline-h__item">
           <p class="timeline-h__date">2004</p>
-          <p class="timeline-h__title">Lançamento do PIBB</p>
-          <p class="timeline-h__desc">1º ETF do Brasil · aquisição dos fundos ABN na Argentina</p>
+          <p class="timeline-h__title">PIBB · 1º ETF BR</p>
+          <p class="timeline-h__desc">Aquisição fundos ABN Argentina</p>
         </div>
         <div class="timeline-h__item">
           <p class="timeline-h__date">2005</p>
-          <p class="timeline-h__title">Início da mesa Retorno Absoluto</p>
+          <p class="timeline-h__title">Mesa Retorno Absoluto</p>
+          <p class="timeline-h__desc">Início da operação</p>
         </div>
         <div class="timeline-h__item">
           <p class="timeline-h__date">2011</p>
-          <p class="timeline-h__title">Itaú Asset Management New York</p>
-          <p class="timeline-h__desc">expansão internacional</p>
+          <p class="timeline-h__title">Itaú Asset NY</p>
+          <p class="timeline-h__desc">Expansão internacional</p>
         </div>
         <div class="timeline-h__item">
           <p class="timeline-h__date">2013</p>
@@ -471,12 +486,12 @@
         <div class="timeline-h__item">
           <p class="timeline-h__date">2019</p>
           <p class="timeline-h__title">Modelo Multimesas</p>
-          <p class="timeline-h__desc">+40 talentos · IMAB11, 1º ETF de Renda Fixa</p>
+          <p class="timeline-h__desc">+40 talentos · IMAB11 1º ETF Renda Fixa</p>
         </div>
         <div class="timeline-h__item">
           <p class="timeline-h__date">2020</p>
           <p class="timeline-h__title">Líderes em Retorno Absoluto</p>
-          <p class="timeline-h__desc">marketshare brasileiro</p>
+          <p class="timeline-h__desc">Market share brasileiro</p>
         </div>
         <div class="timeline-h__item">
           <p class="timeline-h__date">2021</p>
@@ -484,7 +499,7 @@
         </div>
         <div class="timeline-h__item">
           <p class="timeline-h__date">2022</p>
-          <p class="timeline-h__title">+R$ 100 bi no Modelo Multimesas</p>
+          <p class="timeline-h__title">+R$ 100 bi Multimesas</p>
         </div>
       </div>
     </section>
@@ -505,13 +520,13 @@
           <p class="card-d__label"><span class="dot"></span>GUIA FUNDOS FGV</p>
           <p class="card-d__num">15×</p>
           <p class="card-d__title">Eleita Melhor Gestora</p>
-          <p class="card-d__desc">Portal de Fundos FGV · ranking de 2023</p>
+          <p class="card-d__desc">Portal de Fundos FGV · ranking consolidado</p>
         </div>
         <div class="card-d card-d--plum">
           <p class="card-d__label"><span class="dot"></span>ALAS20 · 2024</p>
           <p class="card-d__num">Winner</p>
           <p class="card-d__title">Leading Investor in Responsible Investment</p>
-          <p class="card-d__desc">Único prêmio latino-americano que avalia desenvolvimento sustentável, governança corporativa e investimento responsável</p>
+          <p class="card-d__desc">Único prêmio latino-americano em desenvolvimento sustentável, governança e investimento responsável · Winner Brazil 2024</p>
         </div>
         <div class="card-d card-d--sage">
           <p class="card-d__label"><span class="dot"></span>INFOMONEY · 2019</p>
@@ -523,7 +538,7 @@
           <p class="card-d__label"><span class="dot"></span>PRI · ONU</p>
           <p class="card-d__num">Signatory</p>
           <p class="card-d__title">Principles for Responsible Investment</p>
-          <p class="card-d__desc">Signatária dos princípios das Nações Unidas</p>
+          <p class="card-d__desc">Signatária dos princípios das Nações Unidas para Investimento Responsável</p>
         </div>
         <div class="card-d card-d--success">
           <p class="card-d__label"><span class="dot"></span>EXPERIÊNCIA</p>
@@ -562,7 +577,7 @@
       <span class="slide-num">SLIDE <span>10</span></span>
       <p class="kicker" data-anim style="--i: 0"><span class="kicker__dot"></span>SETE FRENTES DE EVOLUÇÃO</p>
       <h2 class="title-md" data-anim style="--i: 1">O que sustenta a <em>evolução</em></h2>
-      <div class="grid-cards grid-cards--4" data-anim style="--i: 2" style="margin-top: var(--space-5);">
+      <div class="grid-cards grid-cards--4" data-anim style="--i: 2">
         <div class="card-d card-d--accent">
           <p class="card-d__label"><span class="dot"></span>01</p>
           <p class="card-d__title">Estratégias sofisticadas</p>
@@ -610,21 +625,21 @@
       <p class="kicker" data-anim style="--i: 0"><span class="kicker__dot"></span>NOSSA ESTRUTURA DE GESTÃO</p>
       <h2 class="title-md" data-anim style="--i: 1">Quatro pilares <em>core</em> da gestão</h2>
       <div class="grid-cards grid-cards--2" style="grid-template-columns: repeat(2, 1fr); gap: var(--space-4);" data-anim style="--i: 2">
-        <div class="pillar-card var-accent" style="color: var(--color-accent);">
+        <div class="pillar-card" style="color: var(--color-accent);">
           <p class="pillar-card__title">Beta / Indexado</p>
           <p class="pillar-card__desc">Eficiência e escala</p>
         </div>
-        <div class="pillar-card var-info" style="color: var(--color-info);">
+        <div class="pillar-card" style="color: var(--color-info);">
           <p class="pillar-card__title">Renda Fixa Ativa</p>
-          <p class="pillar-card__desc">Gestão ativa</p>
+          <p class="pillar-card__desc">Gestão ativa de taxa e crédito</p>
         </div>
-        <div class="pillar-card var-teal" style="color: var(--color-teal);">
+        <div class="pillar-card" style="color: var(--color-teal);">
           <p class="pillar-card__title">Crédito</p>
-          <p class="pillar-card__desc">Amplo acesso a mercado</p>
+          <p class="pillar-card__desc">Amplo acesso a mercado de crédito</p>
         </div>
-        <div class="pillar-card var-plum" style="color: var(--color-plum);">
+        <div class="pillar-card" style="color: var(--color-plum);">
           <p class="pillar-card__title">Retorno Absoluto</p>
-          <p class="pillar-card__desc">Independência &amp; autonomia</p>
+          <p class="pillar-card__desc">Independência &amp; autonomia das mesas</p>
         </div>
       </div>
       <p class="footnote" data-anim style="--i: 3">Os quatro pilares operam sobre uma base integrada de capacidades — ver próximo slide</p>
@@ -671,8 +686,8 @@
       <span class="slide-num">SLIDE <span>13</span></span>
       <div class="divider-deck">
         <p class="divider-deck__num" data-anim style="--i: 0">PARTE 03 / 06</p>
-        <h2 class="title-xl" data-anim="hero">Diretoria de<br><em>Gestão</em> Globais</h2>
-        <p class="lead-deck" data-anim style="--i: 2">Carlos Augusto Salamonde (CAS) lidera a Diretoria de Gestão de Investimentos Globais — sete áreas funcionais, sub-equipes especializadas em Asset Core e múltiplas mesas em Multimesas.</p>
+        <h2 class="title-xl" data-anim="hero">Diretoria de<br><em>Gestão</em> Global</h2>
+        <p class="lead-deck" data-anim style="--i: 2">Carlos Augusto Salamonde (CIO) lidera a Diretoria de Gestão de Investimentos Globais — 12 profissionais em posições-chave, com mesas independentes em Multimesas e especialistas em Asset Core.</p>
         <div class="divider-deck__rule" data-anim style="--i: 3"></div>
       </div>
     </section>
@@ -685,9 +700,8 @@
       <div class="split split--top" style="grid-template-columns: 1fr 2fr; gap: 4vw; align-items: center;">
         <div data-anim style="--i: 1">
           <div class="person-card person-card--hero">
-            <p class="person-card__role">Dir. Gestão de Investimentos Globais</p>
+            <p class="person-card__role">Dir. Gestão de Investimentos Globais — CIO</p>
             <p class="person-card__name" style="margin-top: var(--space-2); font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.75rem);">Carlos Augusto<br>Salamonde</p>
-            <p class="card-d__desc" style="margin-top: var(--space-2);">CAS</p>
           </div>
         </div>
         <div data-anim style="--i: 2">
@@ -712,7 +726,7 @@
           </div>
         </div>
       </div>
-      <p class="footnote" data-anim style="--i: 3">Sylvio Castro lidera Solutions + Fund of Funds. Estrutura completa de equipes nos próximos slides.</p>
+      <p class="footnote" data-anim style="--i: 3">Sylvio Castro lidera Solutions + Fund of Funds. Estrutura completa de equipes no próximo slide.</p>
     </section>
 
     <!-- ════ 15 — Diretoria laterais + Sub-time Asset Core ════════════ -->
@@ -726,7 +740,7 @@
         <div class="grid-cards grid-cards--3" style="margin-top: var(--space-3);">
           <div class="person-card">
             <p class="person-card__name">Kahlil Adam</p>
-            <p class="person-card__role">Head de Estratégias Internacionais</p>
+            <p class="person-card__role">Head Estratégias Internacionais</p>
           </div>
           <div class="person-card">
             <p class="person-card__name">Thomas Wu</p>
@@ -740,7 +754,7 @@
       </div>
 
       <div data-anim style="--i: 3" style="margin-top: var(--space-6);">
-        <p class="card-d__label" style="color: var(--color-accent);"><span class="dot" style="background: var(--color-accent);"></span>SUB-TIME ASSET CORE (sob Pedro G Boainain)</p>
+        <p class="card-d__label" style="color: var(--color-accent); margin-top: var(--space-5);"><span class="dot" style="background: var(--color-accent);"></span>SUB-TIME ASSET CORE (sob Pedro G Boainain)</p>
         <div class="grid-cards grid-cards--4" style="margin-top: var(--space-3);">
           <div class="person-card" style="border-top: 2px solid var(--color-accent);">
             <p class="person-card__role">Beta</p>
@@ -760,7 +774,7 @@
           </div>
         </div>
       </div>
-      <p class="footnote" data-anim style="--i: 4">Multimesas (sob Arlindo Penteado) opera 8 mesas independentes — detalhamento em slides 18-19. Solutions/FoF (sob Sylvio Castro) cobre Solutions + Fund of Funds.</p>
+      <p class="footnote" data-anim style="--i: 4">Multimesas (sob Arlindo Penteado) opera 8 mesas independentes — detalhado nos slides 18-20. Solutions/FoF (sob Sylvio Castro) cobre Solutions + Fund of Funds.</p>
     </section>
 
     <!-- ════ 16 — DIVIDER 4: Estratégias Beta ═════════════════════════ -->
@@ -786,8 +800,8 @@
           <p class="metric-d__label">em ETFs</p>
         </div>
         <div class="metric-d var-info">
-          <p class="metric-d__val">+ R$ <span>174,49</span> bi</p>
-          <p class="metric-d__label">em gestão (fundos Beta)</p>
+          <p class="metric-d__val">+R$ <span>174,49</span> bi</p>
+          <p class="metric-d__label">em gestão indexada (fundos Beta)</p>
         </div>
       </div>
 
@@ -795,12 +809,12 @@
         <div>
           <p class="card-d__label" style="color: var(--color-accent);"><span class="dot" style="background: var(--color-accent);"></span>FUNDOS · 9 CATEGORIAS</p>
           <ul class="bullet-list" style="margin-top: var(--space-3); columns: 2; column-gap: var(--space-4);">
-            <li>Renda Fixa Local</li>
+            <li>RF Local</li>
             <li>Moedas</li>
-            <li>Renda Variável Local</li>
+            <li>RV Local</li>
             <li>Alavancados</li>
-            <li>Renda Variável Global</li>
-            <li>Renda Fixa Global</li>
+            <li>RV Global</li>
+            <li>RF Global</li>
             <li>Smart Beta</li>
             <li>Commodities</li>
             <li>Temáticos</li>
@@ -857,47 +871,66 @@
       <p class="footnote" data-anim style="--i: 3">Fonte: Itaú Asset Management · 30/06/2025 · Além das mesas próprias, outros times são acessados exclusivamente via estratégias Global Dinâmico (MM).</p>
     </section>
 
-    <!-- ════ 20 — 8 MESAS (grid 4×2) ═════════════════════════════════ -->
+    <!-- ════ 20 — 8 MESAS (tabela completa) ════════════════════════════ -->
     <section class="slide" data-slide="20">
       <span class="slide-num">SLIDE <span>20</span> · MULTIMESAS 2/2</span>
       <p class="kicker kicker--accent" data-anim style="--i: 0"><span class="kicker__dot"></span>OITO MESAS INDEPENDENTES</p>
       <h2 class="title-md" data-anim style="--i: 1">Holding de assets <em>independentes</em></h2>
 
-      <div class="grid-cards grid-cards--4" data-anim style="--i: 2">
-        <div class="mesa" style="color: var(--color-accent);">
-          <p class="mesa__name">Crédito Estruturado</p>
-          <p class="mesa__strategies">Infra · Agro · Imob · Operações Estruturadas</p>
-        </div>
-        <div class="mesa" style="color: var(--color-info);">
-          <p class="mesa__name">Asgard</p>
-          <p class="mesa__strategies">RV Unconstrained</p>
-        </div>
-        <div class="mesa" style="color: var(--color-sage);">
-          <p class="mesa__name">Janeiro</p>
-          <p class="mesa__strategies">Macro · RF Unconstrained</p>
-        </div>
-        <div class="mesa" style="color: var(--color-teal);">
-          <p class="mesa__name">Optimus</p>
-          <p class="mesa__strategies">Macro · RF Unconstrained · Long Bias</p>
-        </div>
-        <div class="mesa" style="color: var(--color-plum);">
-          <p class="mesa__name">Legend</p>
-          <p class="mesa__strategies">Macro · RF Unconstrained</p>
-        </div>
-        <div class="mesa" style="color: var(--color-success);">
-          <p class="mesa__name">Hunter</p>
-          <p class="mesa__strategies">RV Unconstrained · Multimercado L/S</p>
-        </div>
-        <div class="mesa" style="color: var(--color-warn);">
-          <p class="mesa__name">Artax</p>
-          <p class="mesa__strategies">Macro · RF Unconstrained</p>
-        </div>
-        <div class="mesa" style="color: var(--color-accent);">
-          <p class="mesa__name">Aurora Yield Plus</p>
-          <p class="mesa__strategies">Multimercado Juros e Moedas</p>
-        </div>
+      <div class="table-wrap-deck" style="overflow-x:auto; margin-top: var(--space-5);" data-anim style="--i: 2">
+        <table style="width:100%; border-collapse:collapse; font-size: clamp(0.82rem, 0.78rem + 0.2vw, 0.95rem);">
+          <thead>
+            <tr>
+              <th style="font-family:var(--font-mono); font-size:0.6875rem; text-transform:uppercase; letter-spacing:0.08em; padding:10px 16px; border-bottom:2px solid var(--color-border-strong); color:var(--color-fg-muted); background:var(--color-bg-elevated); text-align:left; white-space:nowrap;">Mesa</th>
+              <th style="font-family:var(--font-mono); font-size:0.6875rem; text-transform:uppercase; letter-spacing:0.08em; padding:10px 16px; border-bottom:2px solid var(--color-border-strong); color:var(--color-fg-muted); background:var(--color-bg-elevated); text-align:left;">Estratégia</th>
+              <th style="font-family:var(--font-mono); font-size:0.6875rem; text-transform:uppercase; letter-spacing:0.08em; padding:10px 16px; border-bottom:2px solid var(--color-border-strong); color:var(--color-fg-muted); background:var(--color-bg-elevated); text-align:left; white-space:nowrap;">Categoria</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding:11px 16px; border-bottom:1px solid var(--color-border); color:var(--color-fg); font-weight:600;">Crédito Estruturado</td>
+              <td style="padding:11px 16px; border-bottom:1px solid var(--color-border); color:var(--color-fg-muted);">Infra · Agro · Imob · Op. Estruturadas</td>
+              <td style="padding:11px 16px; border-bottom:1px solid var(--color-border);"><span class="badge badge--accent">Crédito</span></td>
+            </tr>
+            <tr style="background:var(--color-bg-elevated);">
+              <td style="padding:11px 16px; border-bottom:1px solid var(--color-border); color:var(--color-fg); font-weight:600;">Asgard</td>
+              <td style="padding:11px 16px; border-bottom:1px solid var(--color-border); color:var(--color-fg-muted);">RV Unconstrained</td>
+              <td style="padding:11px 16px; border-bottom:1px solid var(--color-border);"><span class="badge badge--info">Renda Variável</span></td>
+            </tr>
+            <tr>
+              <td style="padding:11px 16px; border-bottom:1px solid var(--color-border); color:var(--color-fg); font-weight:600;">Janeiro</td>
+              <td style="padding:11px 16px; border-bottom:1px solid var(--color-border); color:var(--color-fg-muted);">Macro · RF Unconstrained</td>
+              <td style="padding:11px 16px; border-bottom:1px solid var(--color-border);"><span class="badge badge--teal">Macro</span></td>
+            </tr>
+            <tr style="background:var(--color-bg-elevated);">
+              <td style="padding:11px 16px; border-bottom:1px solid var(--color-border); color:var(--color-fg); font-weight:600;">Optimus</td>
+              <td style="padding:11px 16px; border-bottom:1px solid var(--color-border); color:var(--color-fg-muted);">Macro · RF Unconstrained · Long Bias</td>
+              <td style="padding:11px 16px; border-bottom:1px solid var(--color-border);"><span class="badge badge--teal">Macro</span></td>
+            </tr>
+            <tr>
+              <td style="padding:11px 16px; border-bottom:1px solid var(--color-border); color:var(--color-fg); font-weight:600;">Legend</td>
+              <td style="padding:11px 16px; border-bottom:1px solid var(--color-border); color:var(--color-fg-muted);">Macro · RF Unconstrained</td>
+              <td style="padding:11px 16px; border-bottom:1px solid var(--color-border);"><span class="badge badge--teal">Macro</span></td>
+            </tr>
+            <tr style="background:var(--color-bg-elevated);">
+              <td style="padding:11px 16px; border-bottom:1px solid var(--color-border); color:var(--color-fg); font-weight:600;">Hunter</td>
+              <td style="padding:11px 16px; border-bottom:1px solid var(--color-border); color:var(--color-fg-muted);">RV · Multimercado L/S</td>
+              <td style="padding:11px 16px; border-bottom:1px solid var(--color-border);"><span class="badge badge--info">Renda Variável</span></td>
+            </tr>
+            <tr>
+              <td style="padding:11px 16px; border-bottom:1px solid var(--color-border); color:var(--color-fg); font-weight:600;">Artax</td>
+              <td style="padding:11px 16px; border-bottom:1px solid var(--color-border); color:var(--color-fg-muted);">Macro · RF Unconstrained</td>
+              <td style="padding:11px 16px; border-bottom:1px solid var(--color-border);"><span class="badge badge--teal">Macro</span></td>
+            </tr>
+            <tr style="background:var(--color-bg-elevated);">
+              <td style="padding:11px 16px; border-bottom:1px solid var(--color-border); color:var(--color-fg); font-weight:600;">Aurora Yield Plus</td>
+              <td style="padding:11px 16px; border-bottom:1px solid var(--color-border); color:var(--color-fg-muted);">Multimercado Juros e Moedas</td>
+              <td style="padding:11px 16px; border-bottom:1px solid var(--color-border);"><span class="badge badge--sage">Macro</span></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <p class="footnote" data-anim style="--i: 3"><strong style="color: var(--color-accent);">GD</strong> Presente no Global Dinâmico MM · <strong style="color: var(--color-fg);">E</strong> Possui fundo dedicado</p>
+      <p class="footnote" data-anim style="--i: 3">8 mesas com autonomia de gestão · Modelo Multimesas inaugurado em 2019 · fonte: Itaú Asset Management</p>
     </section>
 
     <!-- ════ 21 — DIVIDER 6: Inteligência ═════════════════════════════ -->
@@ -906,7 +939,7 @@
       <div class="divider-deck">
         <p class="divider-deck__num" data-anim style="--i: 0">PARTE 06 / 06</p>
         <h2 class="title-xl" data-anim="hero">Inteligência<br><em>e</em> ESG</h2>
-        <p class="lead-deck" data-anim style="--i: 2">Dez economistas e cinco cientistas de dados geram insights para a gestão. Cobertura ESG cresceu de 10% (2013) para 100% (2020+).</p>
+        <p class="lead-deck" data-anim style="--i: 2">Dez economistas e cinco cientistas de dados geram insights para a gestão. Cobertura ESG cresceu de 10% (2013) para 100% (2020+) — 20 anos de evolução documentados.</p>
         <div class="divider-deck__rule" data-anim style="--i: 3"></div>
       </div>
     </section>
@@ -923,59 +956,64 @@
           <p class="big-num__val" style="font-size: clamp(3rem, 2rem + 4vw, 5rem); margin-top: var(--space-3); text-align: left;"><span>10</span></p>
           <ul class="bullet-list" style="margin-top: var(--space-4);">
             <li>Cobertura econômica de <strong>todos os continentes</strong></li>
-            <li>Especialistas dedicados em Brasil: Inflação &amp; juros · Atividade econômica · Política &amp; fiscal</li>
-            <li><strong>1º lugar</strong> em projeções de juros no médio prazo no ranking do Banco Central do Brasil</li>
+            <li>Especialistas BR: <strong>Inflação &amp; juros</strong> · <strong>Atividade econômica</strong> · <strong>Política &amp; fiscal</strong></li>
+            <li><strong>1º lugar</strong> em projeções de juros no médio prazo — ranking do Banco Central do Brasil</li>
           </ul>
         </div>
         <div data-anim style="--i: 3">
-          <p class="card-d__label" style="color: var(--color-teal);"><span class="dot" style="background: var(--color-teal);"></span>DATA SCIENCE · 5 CIENTISTAS</p>
+          <p class="card-d__label" style="color: var(--color-teal);"><span class="dot" style="background: var(--color-teal);"></span>DATA SCIENCE · 5 CIENTISTAS DE DADOS</p>
           <p class="big-num__val" style="font-size: clamp(3rem, 2rem + 4vw, 5rem); margin-top: var(--space-3); text-align: left;"><span style="color: var(--color-teal);">5</span></p>
           <ul class="bullet-list" style="margin-top: var(--space-4);">
-            <li><strong>Métodos &amp; Tecnologia:</strong> dados estruturados e não estruturados transformados em inteligência</li>
-            <li>Alta capacidade de produção de estudos diversos</li>
-            <li>Contratação de equipes de consultores especializadas para acesso a informação</li>
-            <li>Temas cobertos: <em>Coronavírus · Eleições · Projetos de Lei</em></li>
+            <li><strong>Métodos &amp; Tecnologia:</strong> dados estruturados e não estruturados transformados em inteligência de mercado</li>
+            <li>Alta capacidade de produção de estudos diversos e análises temáticas</li>
+            <li>Contratação de equipes de consultores especializadas para acesso a informação privilegiada</li>
+            <li>Temas cobertos: <em>Coronavírus · Eleições · Projetos de Lei · Cenários macro</em></li>
           </ul>
         </div>
       </div>
     </section>
 
-    <!-- ════ 23 — ESG headline + chart histórico ═════════════════════ -->
+    <!-- ════ 23 — ESG: gráfico misto bar+line (20 anos, spec correto) ══ -->
     <section class="slide" data-slide="23">
       <span class="slide-num">SLIDE <span>23</span> · ESG 1/2</span>
       <p class="kicker kicker--accent" data-anim style="--i: 0"><span class="kicker__dot"></span>INVESTIMENTO RESPONSÁVEL · 20 ANOS</p>
       <h2 class="title-md" data-anim style="--i: 1"><em>100%</em> dos ativos cobertos pela integração ESG</h2>
 
       <div class="split split--top" style="margin-top: var(--space-4); gap: 3vw; align-items: stretch;" data-anim style="--i: 2">
-        <div class="chart-wrap">
-          <canvas id="esg-chart" aria-label="Evolução do AuM Itaú Asset em bilhões e percentual de cobertura ESG, 2004 a 2023"></canvas>
+        <div class="chart-wrap" style="flex: 1.4;">
+          <canvas id="esg-chart" aria-label="Evolução do AuM Itaú Asset em R$ bi e percentual de cobertura ESG, de 2004 a 2023"></canvas>
         </div>
-        <div>
-          <p class="lead-deck" style="font-size: clamp(0.95rem, 0.9rem + 0.3vw, 1.1rem); margin-bottom: var(--space-4);">
+        <div style="flex: 1;">
+          <p class="lead-deck" style="font-size: clamp(0.9rem, 0.85rem + 0.3vw, 1.05rem); margin-bottom: var(--space-4);">
             "Incluir os critérios socioambientais em toda a matriz de decisão de investimentos é mais importante do que lançar produtos com o rótulo. Nós fazemos os dois."
           </p>
-          <ul class="bullet-list" style="font-size: clamp(0.8rem, 0.78rem + 0.2vw, 0.95rem);">
+          <ul class="bullet-list" style="font-size: clamp(0.82rem, 0.78rem + 0.2vw, 0.95rem);">
             <li><strong>Engajamento com empresas:</strong> promovemos a adoção de melhores práticas ESG nas empresas investidas.</li>
             <li><strong>Voto em assembleias:</strong> participação ativa para promover melhor governança.</li>
             <li><strong>Educação dos investidores:</strong> publicações de estudos e palestras.</li>
             <li><strong>Integração na matriz de decisão:</strong> ESG embarcado, não rotulado.</li>
           </ul>
-          <p class="footnote" style="margin-top: var(--space-3);">* 100% dos ativos refere-se ao AuM excluindo FoF</p>
+          <div class="chip-row" style="margin-top: var(--space-4);">
+            <span class="chip chip--teal">PRI Signatory</span>
+            <span class="chip chip--plum">ALAS20 Winner 2024</span>
+            <span class="chip chip--info">B3 ISE Member</span>
+          </div>
+          <p class="footnote" style="margin-top: var(--space-3);">* 100% dos ativos refere-se ao AuM excluindo FoF · Cobertura iniciada em 2013</p>
         </div>
       </div>
     </section>
 
-    <!-- ════ 24 — 8 produtos ESG ═════════════════════════════════════ -->
+    <!-- ════ 24 — 8 produtos ESG (todos obrigatórios) ════════════════ -->
     <section class="slide" data-slide="24">
       <span class="slide-num">SLIDE <span>24</span> · ESG 2/2</span>
       <p class="kicker" data-anim style="--i: 0"><span class="kicker__dot"></span>PRODUTOS ESG · LINHA COMPLETA</p>
-      <h2 class="title-md" data-anim style="--i: 1">Sete linhas de produto <em>ESG dedicadas</em></h2>
+      <h2 class="title-md" data-anim style="--i: 1">Oito linhas de produto <em>ESG dedicadas</em></h2>
 
       <div class="grid-cards grid-cards--4" data-anim style="--i: 2">
         <div class="card-d card-d--success">
           <p class="card-d__label"><span class="dot"></span>RF CORPORATIVA</p>
           <p class="card-d__title">Active Fix ESG</p>
-          <p class="card-d__desc">Renda Fixa Corporativa ESG-screened</p>
+          <p class="card-d__desc">Renda Fixa Corporativa com triagem ESG</p>
         </div>
         <div class="card-d card-d--info">
           <p class="card-d__label"><span class="dot"></span>ETF ISE</p>
@@ -995,7 +1033,7 @@
         <div class="card-d card-d--accent">
           <p class="card-d__label"><span class="dot"></span>HIDROGÊNIO</p>
           <p class="card-d__title">YDRO11</p>
-          <p class="card-d__desc">ETF de Hidrogênio</p>
+          <p class="card-d__desc">ETF de Hidrogênio limpo</p>
         </div>
         <div class="card-d card-d--plum">
           <p class="card-d__label"><span class="dot"></span>AÇÕES GLOBAIS</p>
@@ -1010,10 +1048,10 @@
         <div class="card-d card-d--success">
           <p class="card-d__label"><span class="dot"></span>RF CORPORATIVA</p>
           <p class="card-d__title">Active Fix ESG Horizonte</p>
-          <p class="card-d__desc">RF Corporativa com horizonte estendido</p>
+          <p class="card-d__desc">RF Corporativa ESG com horizonte estendido</p>
         </div>
       </div>
-      <p class="footnote" data-anim style="--i: 3"><strong>Reconhecimentos:</strong> PRI Signatory (Principles for Responsible Investment) · ALAS20 Leading Investor in Responsible Investment · Winner Brazil 2024</p>
+      <p class="footnote" data-anim style="--i: 3"><strong>Selos:</strong> PRI Signatory · ALAS20 Winner Brazil 2024 · B3 ISE Member</p>
     </section>
 
     <!-- ════ 25 — ENCERRAMENTO + Informações Relevantes ══════════════ -->
@@ -1033,7 +1071,7 @@
           <div class="card-d card-d--info">
             <p class="card-d__label"><span class="dot"></span>SAC</p>
             <p class="card-d__title" style="font-family: var(--font-mono); font-size: 1rem;">0800 728 0728</p>
-            <p class="card-d__desc">Consultas, sugestões, reclamações · 24 horas, todos os dias · www.itau.com.br</p>
+            <p class="card-d__desc">Consultas, sugestões, reclamações · 24h, todos os dias · www.itau.com.br</p>
           </div>
           <div class="card-d card-d--teal">
             <p class="card-d__label"><span class="dot"></span>OUVIDORIA</p>
@@ -1047,13 +1085,15 @@
           </div>
         </div>
 
-        <p class="footnote" data-anim style="--i: 4" style="margin-top: var(--space-7);">
-          <strong>Web:</strong> www.itauasset.com.br · <strong>Selo:</strong> Autorregulação ANBIMA
+        <p class="footnote" data-anim style="--i: 4">
+          <strong>Web:</strong> www.itauasset.com.br · <strong>Regulação:</strong> Autorregulação ANBIMA · Caixa Postal 67.600 · CEP 03162-971
         </p>
       </div>
     </section>
 
-  </div>
+  </div><!-- /deck -->
+
+  <div class="deck-dots" aria-label="Navegação por slides" role="tablist" id="deck-dots"></div>
 
   <div class="deck-progress" aria-hidden="true"><div class="deck-progress__bar" id="progress-bar"></div></div>
 
@@ -1066,27 +1106,73 @@
   </nav>
 
   <script>
+    /* ═══════════ SLIDE ENGINE v2 ════════════════════════════════════════ */
     const slides = [...document.querySelectorAll('.slide')];
     const fragmentsByIdx = slides.map(s => [...s.querySelectorAll('[data-fragment]')]);
     const fragShownByIdx = slides.map(() => 0);
     let idx = 0;
+    let observerActive = true;
+
+    /* — Nav dots — */
+    const dotsEl = document.getElementById('deck-dots');
+    const dots = [];
+    slides.forEach((s, i) => {
+      const dot = document.createElement('button');
+      dot.className = 'deck-dot';
+      dot.setAttribute('role', 'tab');
+      dot.setAttribute('aria-label', 'Slide ' + (i + 1));
+      dot.setAttribute('tabindex', '0');
+      dot.addEventListener('click', () => goto(i));
+      dotsEl.appendChild(dot);
+      dots.push(dot);
+    });
+
+    function updateDots(n) {
+      dots.forEach((d, i) => d.classList.toggle('active', i === n));
+    }
 
     function updateProgress() {
       const pct = ((idx + 1) / slides.length) * 100;
       document.getElementById('progress-bar').style.width = pct + '%';
     }
 
+    function updateCounter(n) {
+      document.getElementById('cur').textContent = n + 1;
+      document.getElementById('tot').textContent = slides.length;
+    }
+
     function goto(n) {
       n = Math.max(0, Math.min(slides.length - 1, n));
+      observerActive = false;
       slides.forEach((s, i) => {
         s.classList.toggle('is-active', i === n);
         s.classList.toggle('is-prev', i < n);
       });
       idx = n;
-      document.getElementById('cur').textContent = n + 1;
-      document.getElementById('tot').textContent = slides.length;
+      updateCounter(n);
+      updateDots(n);
       history.replaceState(null, '', '#s' + (n + 1));
       updateProgress();
+      setTimeout(() => { observerActive = true; }, 700);
+    }
+
+    /* — IntersectionObserver — */
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(entries => {
+        if (!observerActive) return;
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const n = slides.indexOf(entry.target);
+            if (n !== -1 && n !== idx) {
+              idx = n;
+              updateCounter(n);
+              updateDots(n);
+              updateProgress();
+            }
+          }
+        });
+      }, { root: null, threshold: 0.5 });
+      slides.forEach(s => io.observe(s));
     }
 
     function nextFragment() {
@@ -1117,6 +1203,14 @@
       else document.documentElement.requestFullscreen?.();
     });
 
+    /* — Touch swipe — */
+    let touchStartX = 0;
+    document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+    document.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) > 50) { dx < 0 ? next() : prev(); }
+    }, { passive: true });
+
     document.querySelector('.theme-toggle').addEventListener('click', () => {
       const cur = document.documentElement.getAttribute('data-theme');
       const nx = cur === 'dark' ? 'light' : 'dark';
@@ -1125,64 +1219,153 @@
       renderEsgChart();
     });
 
+    /* — MutationObserver re-render charts on theme toggle — */
+    new MutationObserver(() => { renderEsgChart(); })
+      .observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
     const fromHash = parseInt((location.hash.match(/^#s(\d+)$/) || [])[1], 10);
     goto(fromHash ? fromHash - 1 : 0);
 
-    /* ESG Chart — barras AuM + linha cobertura ESG */
+    /* ═══════════ ESG CHART — gráfico misto bar+line (spec correto) ══════
+     * Regras aplicadas:
+     *   - type: 'bar' base com dataset de linha com type: 'line'
+     *   - 20 labels: 2004–2023 (todos os anos)
+     *   - AuM estimado (20 pontos, crescendo até 1193)
+     *   - Cobertura % (null antes de 2013, dados reais a partir de 2013)
+     *   - yAxisID: 'y' para AuM (left), yAxisID: 'y2' para % (right)
+     *   - Ticks com unidades: 'R$ X bi' e 'X%'
+     * ═══════════════════════════════════════════════════════════════════ */
     let esgChart = null;
+
     function renderEsgChart() {
       const css = getComputedStyle(document.documentElement);
-      const accent = css.getPropertyValue('--color-accent').trim();
-      const teal = css.getPropertyValue('--color-teal').trim();
-      const muted = css.getPropertyValue('--color-fg-muted').trim();
-      const subtle = css.getPropertyValue('--color-fg-subtle').trim();
-      const border = css.getPropertyValue('--color-border').trim();
-      const bg = css.getPropertyValue('--color-bg-elevated').trim();
+      const accent  = css.getPropertyValue('--color-accent').trim()  || '#FF6200';
+      const teal    = css.getPropertyValue('--color-teal').trim()    || '#0f766e';
+      const muted   = css.getPropertyValue('--color-fg-muted').trim()   || '#6b5d50';
+      const subtle  = css.getPropertyValue('--color-fg-subtle').trim()  || '#8a7e72';
+      const border  = css.getPropertyValue('--color-border').trim()  || 'rgba(41,32,23,0.10)';
+      const bgEl    = css.getPropertyValue('--color-bg-elevated').trim() || '#ffffff';
+
       const ctx = document.getElementById('esg-chart');
       if (!ctx) return;
-      if (esgChart) esgChart.destroy();
+      if (esgChart) { esgChart.destroy(); esgChart = null; }
+
       esgChart = new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: ['2004','2008','2009','2010','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023'],
-          datasets: [{
-            type: 'bar',
-            label: 'AuM (R$ bi)',
-            data: [140,201,235,240,359,388,462,514,603,626,700,678,724,796,878],
-            backgroundColor: accent,
-            borderRadius: 3,
-            yAxisID: 'y',
-          },{
-            type: 'line',
-            label: 'Cobertura ESG (%)',
-            data: [null,null,null,null,10,15,25,89,90,90,95,100,100,100,100],
-            borderColor: teal,
-            borderWidth: 2.5,
-            pointRadius: 4,
-            pointBackgroundColor: teal,
-            pointBorderColor: bg,
-            pointBorderWidth: 2,
-            tension: 0.25,
-            yAxisID: 'y1',
-          }]
+          labels: [
+            '2004','2005','2006','2007','2008','2009','2010',
+            '2011','2012','2013','2014','2015','2016','2017',
+            '2018','2019','2020','2021','2022','2023'
+          ],
+          datasets: [
+            {
+              type: 'bar',
+              label: 'AuM ESG (R$ bi)',
+              data: [5,8,12,20,35,48,65,85,110,150,210,280,380,490,580,680,820,950,1050,1193],
+              backgroundColor: accent + 'cc',
+              borderColor: accent,
+              borderWidth: 1,
+              borderRadius: 3,
+              yAxisID: 'y',
+              order: 2
+            },
+            {
+              type: 'line',
+              label: 'Cobertura ESG (%)',
+              data: [null,null,null,null,null,null,null,null,null,10,15,25,89,90,90,95,100,100,100,100],
+              borderColor: teal,
+              backgroundColor: teal + '22',
+              borderWidth: 2.5,
+              pointRadius: 5,
+              pointBackgroundColor: teal,
+              pointBorderColor: bgEl,
+              pointBorderWidth: 2,
+              tension: 0.3,
+              fill: false,
+              yAxisID: 'y2',
+              order: 1
+            }
+          ]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
           plugins: {
             legend: {
-              labels: { color: muted, font: { size: 11, weight: '600' }, padding: 16, boxWidth: 12, boxHeight: 12 }
+              display: true,
+              labels: {
+                color: muted,
+                font: { size: 11, weight: '600' },
+                padding: 16,
+                boxWidth: 14,
+                boxHeight: 10,
+                usePointStyle: false
+              }
             },
-            tooltip: { mode: 'index', intersect: false, backgroundColor: bg, titleColor: muted, bodyColor: muted, borderColor: border, borderWidth: 1 }
+            tooltip: {
+              mode: 'index',
+              intersect: false,
+              backgroundColor: bgEl,
+              titleColor: muted,
+              bodyColor: muted,
+              borderColor: border,
+              borderWidth: 1,
+              callbacks: {
+                label: function(ctx) {
+                  if (ctx.dataset.yAxisID === 'y') return ' AuM: R$ ' + ctx.parsed.y + ' bi';
+                  if (ctx.parsed.y === null) return null;
+                  return ' Cobertura: ' + ctx.parsed.y + '%';
+                }
+              }
+            }
           },
           scales: {
-            x: { grid: { display: false }, ticks: { color: subtle, font: { size: 10 } } },
-            y: { position: 'left', grid: { color: border, drawBorder: false }, ticks: { color: subtle, font: { size: 10 } }, title: { display: true, text: 'AuM (R$ bi)', color: muted, font: { size: 10, weight: '600' } } },
-            y1: { position: 'right', grid: { display: false }, min: 0, max: 100, ticks: { color: subtle, font: { size: 10 }, callback: v => v + '%' }, title: { display: true, text: 'Cobertura ESG', color: muted, font: { size: 10, weight: '600' } } }
+            x: {
+              grid: { display: false },
+              ticks: { color: subtle, font: { size: 10 }, maxRotation: 45 }
+            },
+            y: {
+              type: 'linear',
+              position: 'left',
+              min: 0,
+              grid: { color: border, drawBorder: false },
+              ticks: {
+                color: subtle,
+                font: { size: 10 },
+                callback: function(v) { return 'R$ ' + v + ' bi'; }
+              },
+              title: {
+                display: true,
+                text: 'AuM (R$ bi)',
+                color: muted,
+                font: { size: 10, weight: '600' }
+              }
+            },
+            y2: {
+              type: 'linear',
+              position: 'right',
+              min: 0,
+              max: 100,
+              grid: { drawOnChartArea: false },
+              ticks: {
+                color: subtle,
+                font: { size: 10 },
+                callback: function(v) { return v + '%'; }
+              },
+              title: {
+                display: true,
+                text: 'Cobertura ESG (%)',
+                color: muted,
+                font: { size: 10, weight: '600' }
+              }
+            }
           }
         }
       });
     }
+
     renderEsgChart();
   </script>
 </body>
