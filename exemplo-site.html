@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciativa Dados Itaú</title>
+
+  <script>
+    (function() {
+      try {
+        var t = localStorage.getItem('theme') ||
+                (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --itau-orange: #FF6200;
+      --itau-orange-2: #F88104;
+      --itau-orange-3: #FA9F09;
+      --itau-blue-3: #3B85FA;
+
+      --color-bg: #ffffff;
+      --color-bg-elevated: #faf8f5;
+      --color-bg-sunken: #f4f1ec;
+      --color-fg: #1a1a1a;
+      --color-fg-muted: #525252;
+      --color-fg-subtle: #8a8a8a;
+      --color-border: #e8e4dd;
+      --color-border-strong: #d4cec3;
+      --color-accent: var(--itau-orange);
+      --color-accent-hover: var(--itau-orange-2);
+
+      --font-text: 'Itau Text', 'Inter', -apple-system, system-ui, sans-serif;
+      --font-display: 'Itau Display', 'Inter', -apple-system, system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+
+      --size-h1: 3rem; --size-h2: 1.875rem; --size-h3: 1.375rem;
+      --size-lead: 1.25rem; --size-body: 1.0625rem;
+      --size-small: 0.9375rem; --size-xs: 0.8125rem;
+
+      --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem;
+      --space-4: 1rem; --space-5: 1.5rem; --space-6: 2rem;
+      --space-7: 2.5rem; --space-8: 3rem; --space-10: 4rem;
+      --space-12: 5rem; --space-16: 6rem;
+
+      --content-max: 720px;
+      --header-h: 64px;
+      --radius-sm: 4px; --radius: 8px; --radius-lg: 12px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
+      --shadow-lg: 0 4px 6px rgba(0,0,0,0.05), 0 10px 24px rgba(0,0,0,0.08);
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --ease-out: cubic-bezier(0, 0, 0.2, 1);
+      --duration-fast: 150ms; --duration: 250ms;
+    }
+
+    [data-theme="dark"] {
+      --color-bg: #14110d;
+      --color-bg-elevated: #1c1814;
+      --color-bg-sunken: #221d18;
+      --color-fg: #e8eaed;
+      --color-fg-muted: #a8a39a;
+      --color-fg-subtle: #6e6a62;
+      --color-border: #2f2a23;
+      --color-border-strong: #403a32;
+      --color-accent: var(--itau-orange-3);
+      --color-accent-hover: var(--itau-orange-2);
+      --shadow: 0 1px 3px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.3);
+      --shadow-lg: 0 4px 6px rgba(0,0,0,0.4), 0 10px 24px rgba(0,0,0,0.5);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--font-text);
+      font-size: var(--size-body);
+      line-height: 1.65;
+      color: var(--color-fg);
+      background: var(--color-bg);
+      -webkit-font-smoothing: antialiased;
+      transition: background var(--duration-fast), color var(--duration-fast);
+    }
+
+    /* ─── Header ───────────────────────────────────── */
+    .topbar {
+      position: sticky; top: 0; z-index: 50;
+      height: var(--header-h);
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--color-border);
+      display: flex; align-items: center;
+      padding: 0 var(--space-6);
+    }
+    [data-theme="dark"] .topbar { background: rgba(20,17,13,0.85); }
+    .topbar__inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; gap: var(--space-6);
+      width: 100%;
+    }
+    .topbar__brand {
+      display: flex; align-items: center; gap: var(--space-3);
+      font-weight: 600; text-decoration: none; color: var(--color-fg);
+      font-size: 0.9375rem;
+    }
+    .topbar__logo { width: 28px; height: 28px; border-radius: 6px; }
+    .topbar__nav { display: flex; gap: var(--space-1); margin-left: var(--space-5); }
+    .topbar__link {
+      padding: var(--space-2) var(--space-3);
+      font-size: var(--size-small);
+      color: var(--color-fg-muted);
+      text-decoration: none;
+      border-radius: var(--radius-sm);
+      transition: all var(--duration-fast);
+      cursor: pointer;
+      background: transparent; border: 0; font: inherit;
+    }
+    .topbar__link:hover { color: var(--color-fg); background: var(--color-bg-elevated); }
+    .topbar__link.is-active { color: var(--color-fg); font-weight: 500; }
+    .topbar__spacer { flex: 1; }
+    .theme-toggle {
+      width: 36px; height: 36px;
+      display: grid; place-items: center;
+      background: transparent;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      cursor: pointer; color: var(--color-fg);
+      font-size: 15px;
+      transition: all var(--duration-fast);
+    }
+    .theme-toggle:hover { background: var(--color-bg-elevated); border-color: var(--color-border-strong); }
+
+    /* ─── Layout ───────────────────────────────────── */
+    .page { max-width: 1100px; margin: 0 auto; padding: 0 var(--space-6); }
+    .section { padding: var(--space-12) 0; }
+
+    /* ─── Views (SPA) ─────────────────────────────── */
+    .view {
+      display: none;
+      opacity: 0;
+      animation: fadeIn 400ms var(--ease-out) forwards;
+    }
+    .view.is-active { display: block; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .view { animation: none; opacity: 1; }
+    }
+
+    /* ─── Tipografia ──────────────────────────────── */
+    h1, h2, h3 {
+      font-family: var(--font-display);
+      color: var(--color-fg);
+      letter-spacing: -0.015em;
+      line-height: 1.2;
+    }
+    h1 { font-size: var(--size-h1); font-weight: 700; margin: 0 0 var(--space-5); letter-spacing: -0.025em; line-height: 1.1; }
+    h2 { font-size: var(--size-h2); font-weight: 700; margin: 0 0 var(--space-4); }
+    h3 { font-size: var(--size-h3); font-weight: 600; margin: var(--space-6) 0 var(--space-3); }
+    p { margin: 0 0 var(--space-4); max-width: 65ch; color: var(--color-fg); }
+    .lead {
+      font-size: var(--size-lead); line-height: 1.5;
+      color: var(--color-fg-muted); font-weight: 400;
+      max-width: 60ch; margin-bottom: var(--space-6);
+    }
+    a { color: var(--color-accent); text-decoration: none; transition: color var(--duration-fast); }
+    a:hover { color: var(--color-accent-hover); text-decoration: underline; text-underline-offset: 3px; }
+    strong { font-weight: 600; }
+    code:not(pre code) {
+      font-family: var(--font-mono); font-size: 0.875em;
+      background: var(--color-bg-sunken); padding: 0.12em 0.4em;
+      border-radius: var(--radius-sm); border: 1px solid var(--color-border);
+    }
+    ul, ol { padding-left: var(--space-5); margin: 0 0 var(--space-4); }
+    li { margin-bottom: var(--space-2); max-width: 65ch; }
+
+    .kicker {
+      display: inline-block;
+      font-size: var(--size-xs); font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--color-accent); margin-bottom: var(--space-3);
+    }
+
+    /* ─── Hero ─────────────────────────────────────── */
+    .hero {
+      padding: var(--space-12) 0 var(--space-10);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .hero h1 { max-width: 18ch; }
+    .hero__meta {
+      display: flex; gap: var(--space-5); margin-top: var(--space-6);
+      font-size: var(--size-small); color: var(--color-fg-muted);
+    }
+    .hero__meta strong { color: var(--color-fg); }
+
+    /* ─── Cards ────────────────────────────────────── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--space-4); margin: var(--space-7) 0;
+    }
+    .card {
+      display: flex; flex-direction: column;
+      padding: var(--space-5);
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      text-decoration: none; color: inherit;
+      transition: all var(--duration) var(--ease);
+      cursor: pointer;
+    }
+    .card:hover {
+      border-color: var(--color-border-strong);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+    .card__cat {
+      font-size: var(--size-xs); font-weight: 500;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--color-fg-subtle); margin-bottom: var(--space-3);
+    }
+    .card__title {
+      font-family: var(--font-display);
+      font-size: 1.0625rem; font-weight: 600;
+      margin: 0 0 var(--space-2); color: var(--color-fg);
+      line-height: 1.3;
+    }
+    .card__desc {
+      font-size: var(--size-small); color: var(--color-fg-muted);
+      margin: 0; flex: 1;
+    }
+    .card__arrow {
+      margin-top: var(--space-4);
+      color: var(--color-accent); font-weight: 600;
+      transition: transform var(--duration) var(--ease);
+    }
+    .card:hover .card__arrow { transform: translateX(4px); }
+
+    /* ─── Callouts ─────────────────────────────────── */
+    .callout {
+      display: flex; gap: var(--space-4);
+      padding: var(--space-4) var(--space-5);
+      margin: var(--space-5) 0;
+      border-left: 3px solid var(--itau-blue-3);
+      border-radius: var(--radius);
+      background: rgba(5, 32, 183, 0.06);
+      max-width: 65ch;
+    }
+    [data-theme="dark"] .callout { background: rgba(59, 133, 250, 0.10); }
+    .callout__icon {
+      flex-shrink: 0; width: 22px; height: 22px;
+      display: grid; place-items: center;
+      border-radius: 50%; background: var(--itau-blue-3); color: white;
+      font-weight: 700; font-size: 0.75rem; margin-top: 2px;
+    }
+    .callout__title { font-weight: 600; margin: 0 0 var(--space-1); font-size: var(--size-small); }
+    .callout p { margin: 0; font-size: var(--size-small); color: var(--color-fg); }
+
+    /* ─── Métricas ─────────────────────────────────── */
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: var(--space-4); margin: var(--space-6) 0;
+    }
+    .metric {
+      padding: var(--space-5);
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+    }
+    .metric__label {
+      font-size: var(--size-xs); color: var(--color-fg-subtle);
+      letter-spacing: 0.04em; text-transform: uppercase;
+      margin: 0 0 var(--space-2);
+    }
+    .metric__value {
+      font-family: var(--font-display);
+      font-size: 1.75rem; font-weight: 700;
+      margin: 0; letter-spacing: -0.02em;
+    }
+
+    /* ─── Timeline ─────────────────────────────────── */
+    .timeline { list-style: none; padding: 0; position: relative; margin: var(--space-6) 0; }
+    .timeline::before {
+      content: ''; position: absolute;
+      left: 7px; top: 8px; bottom: 8px;
+      width: 2px; background: var(--color-border);
+    }
+    .timeline__item { position: relative; padding-left: var(--space-7); padding-bottom: var(--space-6); }
+    .timeline__item::before {
+      content: ''; position: absolute; left: 0; top: 6px;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: var(--color-accent);
+      box-shadow: 0 0 0 4px var(--color-bg);
+    }
+    .timeline__date {
+      font-family: var(--font-mono); font-size: var(--size-xs);
+      color: var(--color-fg-subtle); letter-spacing: 0.04em;
+      text-transform: uppercase; margin: 0 0 var(--space-1);
+    }
+    .timeline__title {
+      font-family: var(--font-display);
+      font-size: var(--size-h3); font-weight: 600;
+      margin: 0 0 var(--space-2);
+    }
+
+    /* ─── Resource list ────────────────────────────── */
+    .res-list { display: flex; flex-direction: column; gap: var(--space-2); margin: var(--space-5) 0; }
+    .res-item {
+      display: flex; align-items: center;
+      padding: var(--space-4) var(--space-5);
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      text-decoration: none; color: inherit;
+      transition: all var(--duration-fast);
+    }
+    .res-item:hover { border-color: var(--color-accent); }
+    .res-item__body { flex: 1; }
+    .res-item__title { font-weight: 600; margin: 0 0 var(--space-1); font-size: var(--size-small); }
+    .res-item__desc { font-size: var(--size-small); color: var(--color-fg-muted); margin: 0; }
+    .res-item__arrow { color: var(--color-fg-subtle); margin-left: var(--space-4); }
+    .res-item:hover .res-item__arrow { color: var(--color-accent); }
+    .res-tag {
+      font-family: var(--font-mono); font-size: var(--size-xs);
+      padding: 3px 8px;
+      background: var(--color-bg-sunken);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      color: var(--color-fg-muted);
+      margin-right: var(--space-4);
+    }
+
+    /* ─── Footer ───────────────────────────────────── */
+    .footer {
+      margin-top: var(--space-16);
+      padding: var(--space-8) 0;
+      border-top: 1px solid var(--color-border);
+    }
+    .footer__inner {
+      max-width: 1100px; margin: 0 auto; padding: 0 var(--space-6);
+      display: flex; justify-content: space-between; gap: var(--space-5);
+      flex-wrap: wrap;
+      font-size: var(--size-small); color: var(--color-fg-muted);
+    }
+    .footer__brand { display: flex; align-items: center; gap: var(--space-3); }
+    .footer__brand img { width: 24px; height: 24px; border-radius: 4px; }
+    .footer__links { display: flex; gap: var(--space-5); }
+    .footer__links button {
+      background: transparent; border: 0; padding: 0;
+      color: var(--color-fg-muted); font: inherit; cursor: pointer;
+    }
+    .footer__links button:hover { color: var(--color-accent); }
+
+    @media (max-width: 768px) {
+      .topbar { padding: 0 var(--space-4); }
+      .topbar__nav { margin-left: var(--space-2); gap: 0; }
+      .topbar__link { padding: var(--space-2); font-size: var(--size-xs); }
+      h1 { font-size: 2.25rem; }
+      h2 { font-size: 1.625rem; }
+      .footer__inner { flex-direction: column; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar__inner">
+      <button class="topbar__brand" data-route="home">
+        <img src="../logos/itau.png" alt="" class="topbar__logo">
+        <span>Iniciativa Dados</span>
+      </button>
+      <nav class="topbar__nav">
+        <button class="topbar__link" data-route="home">Visão geral</button>
+        <button class="topbar__link" data-route="sobre">Sobre</button>
+        <button class="topbar__link" data-route="recursos">Recursos</button>
+      </nav>
+      <div class="topbar__spacer"></div>
+      <button class="theme-toggle" data-theme-toggle aria-label="Alternar tema">
+        <span data-theme-icon>☾</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- VIEW: HOME -->
+    <article class="view" data-view="home">
+      <div class="page">
+        <section class="hero">
+          <p class="kicker">Iniciativa Estratégica · 2024–2026</p>
+          <h1>Dados em tempo real,<br>como capacidade do banco.</h1>
+          <p class="lead">
+            Substituímos os pipelines noturnos por fluxos contínuos de dados — versionados,
+            observáveis e disponíveis para qualquer time produzir e consumir.
+          </p>
+          <div class="hero__meta">
+            <span><strong>47</strong> squads em produção</span>
+            <span><strong>2,3 bilhões</strong> de eventos/dia</span>
+            <span>Padrão recomendado pelo CIO</span>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>O que essa iniciativa faz</h2>
+          <p class="lead">Três frentes. Cada card abre uma seção dedicada.</p>
+          <div class="cards">
+            <button class="card" data-route="sobre">
+              <p class="card__cat">Sobre</p>
+              <h3 class="card__title">A história da iniciativa</h3>
+              <p class="card__desc">Origem, decisões de arquitetura, time responsável e marcos importantes desde janeiro de 2024.</p>
+              <span class="card__arrow">→ Ler</span>
+            </button>
+            <button class="card" data-route="recursos">
+              <p class="card__cat">Recursos</p>
+              <h3 class="card__title">SDK, CLI, conectores e suporte</h3>
+              <p class="card__desc">Tudo que está disponível agora para sua squad começar a produzir e consumir dados na plataforma.</p>
+              <span class="card__arrow">→ Acessar</span>
+            </button>
+            <button class="card" onclick="document.getElementById('novidades').scrollIntoView({behavior:'smooth'})">
+              <p class="card__cat">Mantenha-se em dia</p>
+              <h3 class="card__title">Novidades recentes</h3>
+              <p class="card__desc">Lançamentos, ajustes e itens do roadmap publicados nas últimas semanas pelo time de plataforma.</p>
+              <span class="card__arrow">↓ Ver abaixo</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>Em números</h2>
+          <p>Outubro de 2025. Crescimento consistente desde os primeiros pilotos, há 18 meses.</p>
+          <div class="metrics">
+            <div class="metric"><p class="metric__label">Squads em produção</p><p class="metric__value">47</p></div>
+            <div class="metric"><p class="metric__label">Eventos / dia</p><p class="metric__value">2,3B</p></div>
+            <div class="metric"><p class="metric__label">Latência mediana</p><p class="metric__value">8 ms</p></div>
+            <div class="metric"><p class="metric__label">Disponibilidade</p><p class="metric__value">99,98%</p></div>
+          </div>
+        </section>
+
+        <section class="section" id="novidades">
+          <h2>Novidades recentes</h2>
+          <p class="lead">Mudanças relevantes dos últimos 30 dias.</p>
+          <ul class="timeline">
+            <li class="timeline__item">
+              <p class="timeline__date">14 OUT 2025</p>
+              <h3 class="timeline__title">SDK 2.4.1 disponível</h3>
+              <p>Correção em retry exponencial quando consumidor está atrás do schema. Atualização recomendada.</p>
+            </li>
+            <li class="timeline__item">
+              <p class="timeline__date">07 OUT 2025</p>
+              <h3 class="timeline__title">Novo conector: Elastic</h3>
+              <p>Conector oficial para busca full-text. Mantido pelo time de Plataforma. Beta aberto.</p>
+            </li>
+            <li class="timeline__item">
+              <p class="timeline__date">30 SET 2025</p>
+              <h3 class="timeline__title">Painel de observabilidade redesenhado</h3>
+              <p>Novo painel Grafana com drill-down por partição e correlação com SLOs por área.</p>
+            </li>
+          </ul>
+        </section>
+
+        <section class="section">
+          <h2>Próximos passos</h2>
+          <p>Se você quer começar a usar, esses são os três caminhos:</p>
+          <ol>
+            <li><button onclick="route('recursos')" style="background:none;border:0;color:var(--color-accent);font:inherit;text-decoration:underline;cursor:pointer;padding:0;">Acessar os recursos</button> — SDK, CLI e documentação técnica.</li>
+            <li>Conversar com o time em <code>#plat-dados</code> sobre o seu caso de uso.</li>
+            <li><button onclick="route('sobre')" style="background:none;border:0;color:var(--color-accent);font:inherit;text-decoration:underline;cursor:pointer;padding:0;">Entender a iniciativa</button> antes de decidir como integrar.</li>
+          </ol>
+          <aside class="callout">
+            <div class="callout__icon">i</div>
+            <div>
+              <p class="callout__title">Sem urgência institucional</p>
+              <p>A adoção é opt-in, time a time. Migração de pipelines existentes acontece no ritmo de cada squad — sem prazos arbitrários impostos.</p>
+            </div>
+          </aside>
+        </section>
+      </div>
+    </article>
+
+    <!-- VIEW: SOBRE -->
+    <article class="view" data-view="sobre">
+      <div class="page">
+        <section class="hero">
+          <p class="kicker">Sobre a iniciativa</p>
+          <h1>Por que essa iniciativa existe.</h1>
+          <p class="lead">
+            Em janeiro de 2024, o banco operava o fluxo de dados entre sistemas com pipelines batch
+            rodando à noite. Decisões críticas — risco, fraude, contábil — esperavam pelo dia seguinte.
+            Essa iniciativa nasceu para mudar isso.
+          </p>
+        </section>
+
+        <section class="section">
+          <h2>O problema que estávamos resolvendo</h2>
+          <p>Antes da plataforma, o Itaú tinha mais de 200 pipelines distintos para transferir dados entre sistemas. Cada time mantinha o seu. Custo de operação espalhado, sem padrão, sem observabilidade unificada.</p>
+          <p>Pior: nenhum desses pipelines era tempo real. Latência mediana de horas. Decisões de produto, risco e atendimento ficavam reféns do ciclo noturno.</p>
+          <aside class="callout">
+            <div class="callout__icon">i</div>
+            <div>
+              <p class="callout__title">Em uma frase</p>
+              <p>A plataforma existe para que <strong>dado mude de sistema em segundos, com contrato versionado</strong> — não em horas, sem garantia.</p>
+            </div>
+          </aside>
+        </section>
+
+        <section class="section">
+          <h2>Princípios que orientam a iniciativa</h2>
+          <p class="lead">Quatro decisões que não voltam atrás.</p>
+          <h3>1. Schema-first</h3>
+          <p>Todo dado entra e sai por um schema versionado. Quebras são bloqueadas em CI, não em produção.</p>
+          <h3>2. Event-driven por padrão</h3>
+          <p>Não existe "batch noturno". Mudanças propagam em segundos via streams. Batch é caso especial, não regra.</p>
+          <h3>3. Multi-região nativo</h3>
+          <p>Latência regional é resolvida no design, não no SLA. Dados se replicam entre SP, RJ e DF conforme política.</p>
+          <h3>4. Self-service com guard-rails</h3>
+          <p>Times criam tópicos sem ticket. Limites e RBAC garantem que self-service não vira caos.</p>
+        </section>
+
+        <section class="section">
+          <h2>Como chegamos aqui</h2>
+          <p>Quatro marcos que descrevem a trajetória.</p>
+          <ol class="timeline">
+            <li class="timeline__item">
+              <p class="timeline__date">Janeiro 2024</p>
+              <h3 class="timeline__title">RFC aprovada</h3>
+              <p>Event-driven, schemas versionados, multi-região. Recusamos a tentação de "Kafka caseiro".</p>
+            </li>
+            <li class="timeline__item">
+              <p class="timeline__date">Julho 2024</p>
+              <h3 class="timeline__title">Três pilotos em produção</h3>
+              <p>Risco, fraude e analytics. Latência mediana caiu 60×. Decisões em segundos.</p>
+            </li>
+            <li class="timeline__item">
+              <p class="timeline__date">Março 2025</p>
+              <h3 class="timeline__title">Adesão orgânica</h3>
+              <p>12 squads adotaram sem campanha interna. Times migraram porque viram os pilotos funcionando.</p>
+            </li>
+            <li class="timeline__item">
+              <p class="timeline__date">Setembro 2025</p>
+              <h3 class="timeline__title">Padrão de fato</h3>
+              <p>47 squads em produção. CIO adota como padrão recomendado para todo fluxo entre sistemas.</p>
+            </li>
+          </ol>
+        </section>
+
+        <section class="section">
+          <h2>O time</h2>
+          <p>A iniciativa é mantida pelo time de Plataforma de Dados — 8 engenheiros responsáveis pelo desenvolvimento, operação e evolução. Squads de produto são consumidores e produtores, não operam infraestrutura.</p>
+          <p>Para contato: <code>#plat-dados</code> no Slack, ou abra um RFC no repositório <code>plat-dados/rfcs</code>.</p>
+        </section>
+
+        <section class="section">
+          <p>Para colocar a mão na massa, vá direto para os <button onclick="route('recursos')" style="background:none;border:0;color:var(--color-accent);font:inherit;text-decoration:underline;cursor:pointer;padding:0;">recursos disponíveis</button>. Para acompanhar novidades, volte para a <button onclick="route('home')" style="background:none;border:0;color:var(--color-accent);font:inherit;text-decoration:underline;cursor:pointer;padding:0;">visão geral</button>.</p>
+        </section>
+      </div>
+    </article>
+
+    <!-- VIEW: RECURSOS -->
+    <article class="view" data-view="recursos">
+      <div class="page">
+        <section class="hero">
+          <p class="kicker">Recursos disponíveis</p>
+          <h1>Tudo que sua squad precisa<br>para começar.</h1>
+          <p class="lead">
+            SDK, CLI, conectores, documentação e suporte. Cada recurso aponta para
+            onde a informação está mantida — esse é um índice, não a fonte da verdade.
+          </p>
+        </section>
+
+        <section class="section">
+          <h2>Onboarding</h2>
+          <p>Comece por aqui se você nunca usou a plataforma.</p>
+          <div class="res-list">
+            <a href="#" class="res-item">
+              <span class="res-tag">/quickstart</span>
+              <div class="res-item__body">
+                <p class="res-item__title">Seu primeiro tópico em 15 minutos</p>
+                <p class="res-item__desc">Do <code>npm install</code> ao primeiro evento publicado em produção.</p>
+              </div>
+              <span class="res-item__arrow">→</span>
+            </a>
+            <a href="#" class="res-item">
+              <span class="res-tag">/setup</span>
+              <div class="res-item__body">
+                <p class="res-item__title">Configuração do ambiente local</p>
+                <p class="res-item__desc">SSO, proxy corporativo, certificados — setup que se faz uma vez.</p>
+              </div>
+              <span class="res-item__arrow">→</span>
+            </a>
+            <a href="#" class="res-item">
+              <span class="res-tag">/conceitos</span>
+              <div class="res-item__body">
+                <p class="res-item__title">Conceitos fundamentais</p>
+                <p class="res-item__desc">Tópico, schema, materialização, replay — o vocabulário compartilhado.</p>
+              </div>
+              <span class="res-item__arrow">→</span>
+            </a>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>Ferramentas</h2>
+          <p>SDK, CLI e portal — três interfaces para a mesma plataforma.</p>
+          <div class="res-list">
+            <a href="#" class="res-item">
+              <span class="res-tag">npm</span>
+              <div class="res-item__body">
+                <p class="res-item__title">SDK TypeScript — @itau/dados-sdk</p>
+                <p class="res-item__desc">Para projetos Node.js e front-end. Versão atual: 2.4.1.</p>
+              </div>
+              <span class="res-item__arrow">→</span>
+            </a>
+            <a href="#" class="res-item">
+              <span class="res-tag">pip</span>
+              <div class="res-item__body">
+                <p class="res-item__title">SDK Python — itau-dados</p>
+                <p class="res-item__desc">Para data engineering, notebooks e jobs analíticos.</p>
+              </div>
+              <span class="res-item__arrow">→</span>
+            </a>
+            <a href="#" class="res-item">
+              <span class="res-tag">maven</span>
+              <div class="res-item__body">
+                <p class="res-item__title">SDK Java — br.com.itau:dados-sdk</p>
+                <p class="res-item__desc">Para serviços JVM em produção. Compatível com Java 17+.</p>
+              </div>
+              <span class="res-item__arrow">→</span>
+            </a>
+            <a href="#" class="res-item">
+              <span class="res-tag">cli</span>
+              <div class="res-item__body">
+                <p class="res-item__title">CLI <code>dados</code></p>
+                <p class="res-item__desc">Para criar tópicos, gerenciar schemas, fazer replay.</p>
+              </div>
+              <span class="res-item__arrow">→</span>
+            </a>
+            <a href="#" class="res-item">
+              <span class="res-tag">web</span>
+              <div class="res-item__body">
+                <p class="res-item__title">Portal web — dados.cloud.itau</p>
+                <p class="res-item__desc">Interface gráfica para descoberta, RBAC e observabilidade.</p>
+              </div>
+              <span class="res-item__arrow">→</span>
+            </a>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>Conectores</h2>
+          <p>Pontes oficiais para sistemas externos. Mantidas pelo time de Plataforma.</p>
+          <div class="res-list">
+            <a href="#" class="res-item">
+              <span class="res-tag">sink</span>
+              <div class="res-item__body">
+                <p class="res-item__title">Snowflake (warehouse principal)</p>
+                <p class="res-item__desc">Sincronização de tópicos para o data warehouse com batching configurável.</p>
+              </div>
+              <span class="res-item__arrow">→</span>
+            </a>
+            <a href="#" class="res-item">
+              <span class="res-tag">source</span>
+              <div class="res-item__body">
+                <p class="res-item__title">Oracle CDC (legado de risco e crédito)</p>
+                <p class="res-item__desc">Change data capture para Oracle on-premise.</p>
+              </div>
+              <span class="res-item__arrow">→</span>
+            </a>
+            <a href="#" class="res-item">
+              <span class="res-tag">source</span>
+              <div class="res-item__body">
+                <p class="res-item__title">Postgres CDC</p>
+                <p class="res-item__desc">CDC via logical replication. Sistemas modernos.</p>
+              </div>
+              <span class="res-item__arrow">→</span>
+            </a>
+            <a href="#" class="res-item">
+              <span class="res-tag">sink</span>
+              <div class="res-item__body">
+                <p class="res-item__title">S3 Sink</p>
+                <p class="res-item__desc">Archive e exportação para S3 em Parquet.</p>
+              </div>
+              <span class="res-item__arrow">→</span>
+            </a>
+            <a href="#" class="res-item">
+              <span class="res-tag">sink · beta</span>
+              <div class="res-item__body">
+                <p class="res-item__title">Elastic (busca full-text)</p>
+                <p class="res-item__desc">Beta — inscrições abertas.</p>
+              </div>
+              <span class="res-item__arrow">→</span>
+            </a>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>Documentação e suporte</h2>
+          <p>Para aprofundar e para resolver problemas.</p>
+          <div class="res-list">
+            <a href="#" class="res-item">
+              <span class="res-tag">handbook</span>
+              <div class="res-item__body">
+                <p class="res-item__title">Handbook técnico completo</p>
+                <p class="res-item__desc">Documentação canônica. Architecture, contratos, operação.</p>
+              </div>
+              <span class="res-item__arrow">→</span>
+            </a>
+            <a href="#" class="res-item">
+              <span class="res-tag">runbooks</span>
+              <div class="res-item__body">
+                <p class="res-item__title">Runbooks de incidentes comuns</p>
+                <p class="res-item__desc">Diagnóstico passo-a-passo para lag, schema rejection, throttling.</p>
+              </div>
+              <span class="res-item__arrow">→</span>
+            </a>
+            <a href="#" class="res-item">
+              <span class="res-tag">slack</span>
+              <div class="res-item__body">
+                <p class="res-item__title">Canal de suporte — #plat-dados-suporte</p>
+                <p class="res-item__desc">Dúvidas em horário comercial. Resposta em até 4h úteis.</p>
+              </div>
+              <span class="res-item__arrow">→</span>
+            </a>
+            <a href="#" class="res-item">
+              <span class="res-tag">slack</span>
+              <div class="res-item__body">
+                <p class="res-item__title">On-call — #plat-dados-oncall</p>
+                <p class="res-item__desc">Para incidentes em produção. SLA primeiro contato: 15 min, 24/7.</p>
+              </div>
+              <span class="res-item__arrow">→</span>
+            </a>
+          </div>
+        </section>
+
+        <aside class="callout">
+          <div class="callout__icon">i</div>
+          <div>
+            <p class="callout__title">Não encontrou o que precisa?</p>
+            <p>Abra uma issue em <code>plat-dados/issues</code> descrevendo o caso de uso — vamos avaliar se faz sentido como recurso da plataforma.</p>
+          </div>
+        </aside>
+      </div>
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <div class="footer__inner">
+      <div class="footer__brand">
+        <img src="../logos/itau.png" alt="">
+        <span>Iniciativa Dados · Itaú · 2025</span>
+      </div>
+      <div class="footer__links">
+        <button data-route="home">Visão geral</button>
+        <button data-route="sobre">Sobre</button>
+        <button data-route="recursos">Recursos</button>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ─── Theme toggle ────────────────────────────────
+    (function() {
+      const root = document.documentElement;
+      const update = () => {
+        const isDark = root.getAttribute('data-theme') === 'dark';
+        document.querySelectorAll('[data-theme-icon]').forEach(i => i.textContent = isDark ? '☀' : '☾');
+      };
+      update();
+      document.querySelectorAll('[data-theme-toggle]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          root.setAttribute('data-theme', next);
+          try { localStorage.setItem('theme', next); } catch (e) {}
+          update();
+        });
+      });
+    })();
+
+    // ─── SPA Router (hash-based) ─────────────────────
+    const validRoutes = ['home', 'sobre', 'recursos'];
+
+    function route(name) {
+      if (!validRoutes.includes(name)) name = 'home';
+      document.querySelectorAll('.view').forEach(v => {
+        v.classList.remove('is-active');
+        v.style.animation = 'none';
+      });
+      const target = document.querySelector(`.view[data-view="${name}"]`);
+      // Force reflow para reanimar
+      void target.offsetWidth;
+      target.style.animation = '';
+      target.classList.add('is-active');
+
+      document.querySelectorAll('[data-route]').forEach(btn => {
+        const isActive = btn.dataset.route === name;
+        if (btn.classList.contains('topbar__link')) {
+          btn.classList.toggle('is-active', isActive);
+          if (isActive) btn.setAttribute('aria-current', 'page');
+          else btn.removeAttribute('aria-current');
+        }
+      });
+
+      window.location.hash = '#' + name;
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      document.title = name === 'home'
+        ? 'Iniciativa Dados Itaú'
+        : (name.charAt(0).toUpperCase() + name.slice(1)) + ' — Iniciativa Dados Itaú';
+    }
+
+    document.querySelectorAll('[data-route]').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        route(el.dataset.route);
+      });
+    });
+
+    window.addEventListener('hashchange', () => {
+      const h = (window.location.hash || '').replace('#', '');
+      if (validRoutes.includes(h)) route(h);
+    });
+
+    // Inicialização
+    const initial = (window.location.hash || '').replace('#', '');
+    route(validRoutes.includes(initial) ? initial : 'home');
+  </script>
+
+</body>
+</html>

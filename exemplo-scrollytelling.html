@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plataforma de Dados — Relatório 2025</title>
+
+  <script>
+    (function() {
+      try {
+        var t = localStorage.getItem('theme') ||
+                (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --itau-orange: #FF6200;
+      --itau-orange-2: #F88104;
+      --itau-orange-3: #FA9F09;
+      --itau-blue-3: #3B85FA;
+      --itau-yellow: #FBC305;
+
+      --color-bg: #ffffff;
+      --color-bg-elevated: #faf8f5;
+      --color-bg-sunken: #f4f1ec;
+      --color-fg: #1a1a1a;
+      --color-fg-muted: #525252;
+      --color-fg-subtle: #8a8a8a;
+      --color-border: #e8e4dd;
+      --color-border-strong: #d4cec3;
+      --color-accent: var(--itau-orange);
+      --color-accent-hover: var(--itau-orange-2);
+
+      --font-text: 'Itau Text', 'Inter', -apple-system, system-ui, sans-serif;
+      --font-display: 'Itau Display', 'Inter', -apple-system, system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+
+      --size-h1: 4rem;
+      --size-h2: 2.25rem;
+      --size-h3: 1.5rem;
+      --size-lead: 1.375rem;
+      --size-body: 1.0625rem;
+      --size-small: 0.9375rem;
+      --size-xs: 0.8125rem;
+
+      --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem;
+      --space-4: 1rem; --space-5: 1.5rem; --space-6: 2rem;
+      --space-7: 2.5rem; --space-8: 3rem; --space-10: 4rem; --space-12: 5rem; --space-16: 6rem;
+
+      --content-max: 720px;
+      --radius-sm: 4px; --radius: 8px; --radius-lg: 12px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
+      --shadow-lg: 0 4px 6px rgba(0,0,0,0.05), 0 10px 24px rgba(0,0,0,0.08);
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --ease-out: cubic-bezier(0, 0, 0.2, 1);
+      --duration-fast: 150ms; --duration: 250ms;
+    }
+
+    [data-theme="dark"] {
+      --color-bg: #14110d;
+      --color-bg-elevated: #1c1814;
+      --color-bg-sunken: #221d18;
+      --color-fg: #e8eaed;
+      --color-fg-muted: #a8a39a;
+      --color-fg-subtle: #6e6a62;
+      --color-border: #2f2a23;
+      --color-border-strong: #403a32;
+      --color-accent: var(--itau-orange-3);
+      --color-accent-hover: var(--itau-orange-2);
+      --shadow: 0 1px 3px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.3);
+      --shadow-lg: 0 4px 6px rgba(0,0,0,0.4), 0 10px 24px rgba(0,0,0,0.5);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--font-text);
+      font-size: var(--size-body);
+      line-height: 1.65;
+      color: var(--color-fg);
+      background: var(--color-bg);
+      -webkit-font-smoothing: antialiased;
+      transition: background var(--duration-fast), color var(--duration-fast);
+    }
+
+    /* ─── Progress bar ────────────────────────────── */
+    .progress {
+      position: fixed; top: 0; left: 0;
+      height: 2px; width: 0%;
+      background: var(--color-accent);
+      z-index: 100;
+      transition: width 60ms linear;
+    }
+
+    /* ─── Floating theme toggle ───────────────────── */
+    .theme-toggle {
+      position: fixed; top: var(--space-5); right: var(--space-5);
+      z-index: 90;
+      width: 38px; height: 38px;
+      display: grid; place-items: center;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      cursor: pointer; color: var(--color-fg);
+      font-size: 15px;
+      box-shadow: var(--shadow);
+      transition: all var(--duration-fast);
+    }
+    .theme-toggle:hover {
+      border-color: var(--color-border-strong);
+      background: var(--color-bg-elevated);
+    }
+
+    /* ─── Hero ─────────────────────────────────────── */
+    .hero {
+      min-height: 90vh;
+      display: flex; flex-direction: column;
+      justify-content: center;
+      padding: var(--space-16) var(--space-6) var(--space-10);
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .hero__kicker {
+      display: flex; align-items: center; gap: var(--space-3);
+      font-size: var(--size-xs);
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-fg-muted);
+      margin-bottom: var(--space-6);
+    }
+    .hero__kicker img { width: 24px; height: 24px; border-radius: 4px; }
+    .hero__kicker__dot { width: 4px; height: 4px; border-radius: 50%; background: var(--color-fg-subtle); }
+    .hero__title {
+      font-family: var(--font-display);
+      font-size: var(--size-h1);
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      font-weight: 700;
+      margin: 0 0 var(--space-5);
+      max-width: 14ch;
+    }
+    .hero__title em {
+      color: var(--color-accent);
+      font-style: normal;
+      font-weight: 700;
+    }
+    .hero__lead {
+      font-size: var(--size-lead);
+      line-height: 1.45;
+      color: var(--color-fg-muted);
+      max-width: 50ch;
+      margin: 0 0 var(--space-8);
+    }
+    .hero__meta {
+      display: flex; gap: var(--space-5);
+      font-size: var(--size-xs);
+      color: var(--color-fg-subtle);
+      letter-spacing: 0.02em;
+    }
+    .hero__meta strong { color: var(--color-fg); font-weight: 600; }
+    .hero__scroll {
+      display: inline-flex; align-items: center; gap: var(--space-2);
+      margin-top: var(--space-10);
+      font-size: var(--size-xs);
+      color: var(--color-fg-subtle);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .hero__scroll__arrow { animation: bounce 2s ease-in-out infinite; }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(4px); }
+    }
+
+    /* ─── Seções de leitura ───────────────────────── */
+    .story { max-width: 1000px; margin: 0 auto; padding: 0 var(--space-6); }
+    section.section {
+      padding: var(--space-12) 0;
+      max-width: var(--content-max);
+      margin: 0 auto;
+    }
+    section.section--wide { max-width: 1000px; }
+    .section__kicker {
+      font-size: var(--size-xs);
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-accent);
+      margin-bottom: var(--space-3);
+    }
+    h2 {
+      font-family: var(--font-display);
+      font-size: var(--size-h2);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      font-weight: 700;
+      margin: 0 0 var(--space-5);
+      color: var(--color-fg);
+    }
+    h3 {
+      font-family: var(--font-display);
+      font-size: var(--size-h3);
+      font-weight: 600;
+      margin: var(--space-7) 0 var(--space-3);
+      color: var(--color-fg);
+    }
+    p {
+      margin: 0 0 var(--space-4);
+      max-width: 60ch;
+      color: var(--color-fg);
+    }
+    p.lead {
+      font-size: var(--size-lead);
+      line-height: 1.5;
+      color: var(--color-fg-muted);
+      font-weight: 400;
+      margin-bottom: var(--space-6);
+    }
+
+    /* Reveal animation */
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out);
+    }
+    [data-reveal].is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      [data-reveal] { opacity: 1; transform: none; transition: none; }
+    }
+
+    /* ─── Big numbers ─────────────────────────────── */
+    .numbers {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-6);
+      margin: var(--space-7) 0;
+    }
+    .number {
+      padding: var(--space-5) 0;
+      border-top: 2px solid var(--color-fg);
+    }
+    .number__value {
+      font-family: var(--font-display);
+      font-size: 3.5rem;
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin: 0 0 var(--space-2);
+      color: var(--color-fg);
+    }
+    .number__value span { color: var(--color-accent); }
+    .number__label {
+      font-size: var(--size-small);
+      color: var(--color-fg-muted);
+      line-height: 1.4;
+      margin: 0;
+    }
+
+    /* ─── Sticky chart section ────────────────────── */
+    .sticky-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-10);
+      max-width: 1100px;
+      margin: var(--space-16) auto;
+      padding: 0 var(--space-6);
+    }
+    .sticky-section__viz {
+      position: sticky;
+      top: 10vh;
+      height: 80vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: var(--space-6);
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+    }
+    .sticky-section__viz canvas {
+      max-width: 100%;
+      max-height: 100%;
+    }
+    .sticky-section__viz__caption {
+      font-size: var(--size-xs);
+      color: var(--color-fg-subtle);
+      text-align: center;
+      margin-top: var(--space-3);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .sticky-section__steps { display: flex; flex-direction: column; gap: 80vh; }
+    .step {
+      min-height: 60vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .step__num {
+      font-family: var(--font-mono);
+      font-size: var(--size-xs);
+      letter-spacing: 0.12em;
+      color: var(--color-accent);
+      font-weight: 500;
+      margin-bottom: var(--space-3);
+    }
+    .step h3 {
+      font-family: var(--font-display);
+      font-size: 1.625rem;
+      line-height: 1.2;
+      margin: 0 0 var(--space-4);
+      color: var(--color-fg);
+    }
+    .step p {
+      color: var(--color-fg-muted);
+      margin: 0 0 var(--space-3);
+    }
+    .step.is-active h3 { color: var(--color-accent); }
+
+    /* ─── Timeline ────────────────────────────────── */
+    .timeline {
+      list-style: none;
+      padding: 0;
+      position: relative;
+      margin: var(--space-7) 0;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 7px; top: 8px; bottom: 8px;
+      width: 2px;
+      background: var(--color-border);
+    }
+    .timeline__item {
+      position: relative;
+      padding-left: var(--space-7);
+      padding-bottom: var(--space-6);
+    }
+    .timeline__item::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 6px;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: var(--color-accent);
+      box-shadow: 0 0 0 4px var(--color-bg);
+    }
+    .timeline__date {
+      font-family: var(--font-mono);
+      font-size: var(--size-xs);
+      color: var(--color-fg-subtle);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin: 0 0 var(--space-1);
+    }
+    .timeline__title {
+      font-family: var(--font-display);
+      font-size: var(--size-h3);
+      font-weight: 600;
+      margin: 0 0 var(--space-2);
+      color: var(--color-fg);
+    }
+    .timeline__item p {
+      margin: 0;
+      color: var(--color-fg-muted);
+      font-size: var(--size-small);
+    }
+
+    /* ─── Quote ───────────────────────────────────── */
+    .quote {
+      margin: var(--space-10) 0;
+      padding: var(--space-6) var(--space-8);
+      border-left: 3px solid var(--color-accent);
+    }
+    .quote__text {
+      font-family: var(--font-display);
+      font-size: 1.625rem;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+      color: var(--color-fg);
+      margin: 0 0 var(--space-3);
+    }
+    .quote__cite {
+      font-size: var(--size-small);
+      color: var(--color-fg-muted);
+      font-style: normal;
+      display: block;
+    }
+    .quote__cite strong { color: var(--color-fg); font-weight: 600; }
+
+    /* ─── Final ───────────────────────────────────── */
+    .final {
+      padding: var(--space-16) var(--space-6);
+      background: var(--color-bg-elevated);
+      border-top: 1px solid var(--color-border);
+      margin-top: var(--space-12);
+    }
+    .final__inner {
+      max-width: var(--content-max);
+      margin: 0 auto;
+    }
+    .final h2 { font-size: 2.5rem; max-width: 16ch; }
+    .footer {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: var(--space-7) var(--space-6);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: var(--size-xs);
+      color: var(--color-fg-subtle);
+      letter-spacing: 0.04em;
+    }
+    .footer img { width: 24px; height: 24px; border-radius: 4px; }
+
+    /* ─── Responsivo ──────────────────────────────── */
+    @media (max-width: 768px) {
+      :root { --size-h1: 2.5rem; --size-h2: 1.75rem; }
+      .number__value { font-size: 2.5rem; }
+      .sticky-section { grid-template-columns: 1fr; gap: var(--space-6); }
+      .sticky-section__viz { position: relative; top: 0; height: 50vh; }
+      .sticky-section__steps { gap: var(--space-8); }
+      .step { min-height: auto; }
+      .quote__text { font-size: 1.25rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="progress" id="progress"></div>
+  <button class="theme-toggle" data-theme-toggle aria-label="Alternar tema">
+    <span data-theme-icon>☾</span>
+  </button>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="hero__kicker">
+      <img src="../logos/itau.png" alt="">
+      <span>Plataforma de Dados</span>
+      <span class="hero__kicker__dot"></span>
+      <span>Relatório anual</span>
+      <span class="hero__kicker__dot"></span>
+      <span>2025</span>
+    </div>
+    <h1 class="hero__title">De pipelines noturnos a <em>fluxos em tempo real</em>.</h1>
+    <p class="hero__lead">
+      Em 18 meses, o jeito como o Itaú produz e consome dados mudou.
+      Esse é o relato de como chegamos aqui — em números, decisões e prazos.
+    </p>
+    <div class="hero__meta">
+      <span><strong>6 min</strong> de leitura</span>
+      <span><strong>5</strong> capítulos</span>
+      <span>Atualizado em <strong>outubro de 2025</strong></span>
+    </div>
+    <div class="hero__scroll">
+      <span>Role para começar</span>
+      <span class="hero__scroll__arrow">↓</span>
+    </div>
+  </header>
+
+  <main class="story">
+
+    <!-- Capítulo 1: Onde estamos -->
+    <section class="section" data-reveal>
+      <p class="section__kicker">Capítulo 1 — Onde estamos</p>
+      <h2>O ano em três números.</h2>
+      <p class="lead">
+        Quando o projeto começou, em janeiro de 2024, a plataforma rodava com um time piloto de 3 squads.
+        Em outubro de 2025, ela conecta o banco inteiro.
+      </p>
+      <div class="numbers">
+        <div class="number">
+          <p class="number__value"><span data-counter data-to="47">0</span></p>
+          <p class="number__label">Squads usando ativamente em produção</p>
+        </div>
+        <div class="number">
+          <p class="number__value"><span data-counter data-to="2300" data-suffix="M+">0</span></p>
+          <p class="number__label">Eventos processados por dia</p>
+        </div>
+        <div class="number">
+          <p class="number__value"><span data-counter data-to="60" data-suffix="×">0</span></p>
+          <p class="number__label">Redução de latência mediana vs. pipeline legado</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Capítulo 2: Como chegamos aqui -->
+    <section class="section" data-reveal>
+      <p class="section__kicker">Capítulo 2 — Como chegamos aqui</p>
+      <h2>Quatro marcos.</h2>
+      <p class="lead">
+        Não foi uma virada. Foi um caminho de pilotos cuidadosos, decisões de arquitetura
+        e adoção orgânica time a time.
+      </p>
+      <ol class="timeline">
+        <li class="timeline__item">
+          <p class="timeline__date">Janeiro 2024</p>
+          <h4 class="timeline__title">Decisão de arquitetura</h4>
+          <p>RFC aprovada. Optamos por event-driven multi-região com schemas versionados, abandonando a tentação de fazer "Kafka caseiro".</p>
+        </li>
+        <li class="timeline__item">
+          <p class="timeline__date">Julho 2024</p>
+          <h4 class="timeline__title">Três pilotos em produção</h4>
+          <p>Times de risco, fraude e analytics. Latência mediana caiu 60× em relação ao pipeline batch. Decisões de crédito que levavam horas começaram a tomar segundos.</p>
+        </li>
+        <li class="timeline__item">
+          <p class="timeline__date">Março 2025</p>
+          <h4 class="timeline__title">Adesão orgânica</h4>
+          <p>12 squads adotaram a plataforma <em>sem campanha interna</em>. Times migraram porque viram os pilotos funcionando, não porque foram empurrados.</p>
+        </li>
+        <li class="timeline__item">
+          <p class="timeline__date">Setembro 2025</p>
+          <h4 class="timeline__title">Padrão de fato</h4>
+          <p>47 squads em produção. CIO de Tecnologia adota a plataforma como padrão recomendado para todo fluxo entre sistemas.</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- Sticky chart section: 3 steps que mudam o gráfico -->
+    <div class="sticky-section">
+      <div class="sticky-section__viz">
+        <canvas id="evento-chart" aria-label="Gráfico de eventos por mês"></canvas>
+        <p class="sticky-section__viz__caption" id="chart-caption">Eventos processados — todo 2024</p>
+      </div>
+      <div class="sticky-section__steps">
+        <div class="step" data-step="1">
+          <p class="step__num">01 — Janeiro a Junho 2024</p>
+          <h3>Pilotos cuidadosos.</h3>
+          <p>
+            Três squads, volumes pequenos, foco em provar o modelo.
+            Pico de 80 milhões de eventos no mês — o que o pipeline legado fazia em um dia.
+          </p>
+          <p>
+            Decisão deliberada: <strong>preferimos calibrar a plataforma com tráfego real
+            antes de escalar</strong>. Cada incidente nesse período virou aprendizado de arquitetura.
+          </p>
+        </div>
+        <div class="step" data-step="2">
+          <p class="step__num">02 — Julho 2024 a Março 2025</p>
+          <h3>Adesão acelera.</h3>
+          <p>
+            Pilotos viram referência. Outros times procuram o time de Plataforma —
+            invertendo o usual onde a plataforma precisa <em>vender-se</em> internamente.
+          </p>
+          <p>
+            Em março, processamos 850 milhões de eventos no mês — <strong>10× o pico de 2024</strong>.
+            E os pilotos originais continuam funcionando sem ajuste.
+          </p>
+        </div>
+        <div class="step" data-step="3">
+          <p class="step__num">03 — Abril a Outubro 2025</p>
+          <h3>Padrão estabelecido.</h3>
+          <p>
+            Onboarding caiu para 15 minutos. Documentação amadureceu.
+            O time de Plataforma deixou de explicar o que a plataforma <em>é</em> e passou
+            a evoluir o que ela <em>faz</em>.
+          </p>
+          <p>
+            Outubro fechou em 2,3 bilhões de eventos no mês — e o gráfico ainda está crescendo
+            em curva, não em platô.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quote -->
+    <section class="section" data-reveal>
+      <blockquote class="quote">
+        <p class="quote__text">
+          "A maior surpresa não foi a capacidade técnica.
+          Foi a adesão sem campanha. Os times migraram porque viram outros times
+          ganhando tempo de verdade."
+        </p>
+        <cite class="quote__cite">
+          <strong>Líder técnico, Plataforma de Dados</strong> — entrevista, setembro de 2025
+        </cite>
+      </blockquote>
+    </section>
+
+    <!-- Capítulo 3: 2026 -->
+    <section class="section" data-reveal>
+      <p class="section__kicker">Capítulo 3 — Próximo ano</p>
+      <h2>O que vem em 2026.</h2>
+      <p class="lead">
+        Três frentes definidas no roadmap. As três respondem a feedback consistente
+        de times consumidores ao longo de 2025.
+      </p>
+
+      <h3>Materialização declarativa</h3>
+      <p>
+        Hoje, criar uma view materializada exige código. Vamos abstrair via DSL declarativa
+        — descreva o resultado, a plataforma decide o pipeline. Beta no primeiro trimestre.
+      </p>
+
+      <h3>Cross-region replication automática</h3>
+      <p>
+        Hoje, replicação é decisão explícita por tópico. Vamos torná-la default opinionada
+        com opt-out, baseada em sensibilidade do dado e SLA do consumidor.
+      </p>
+
+      <h3>Compatibilidade com outros sistemas externos</h3>
+      <p>
+        Mais conectores oficiais e o gateway HTTP em GA, abrindo a plataforma para linguagens
+        sem SDK nativo. Sem perder a garantia de schema versionado.
+      </p>
+    </section>
+
+  </main>
+
+  <!-- Fim -->
+  <section class="final" data-reveal>
+    <div class="final__inner">
+      <p class="section__kicker">Para terminar</p>
+      <h2>Não é o fim de uma migração. É o início de uma capacidade.</h2>
+      <p class="lead">
+        O Itaú agora opera dados em tempo real como padrão. Em 2026, o time de Plataforma
+        deixa de provar uma plataforma e passa a evoluir um produto interno usado pelo banco inteiro.
+      </p>
+      <p>
+        Para feedback, sugestões ou perguntas sobre esse relatório, fale com o time
+        em <strong>#plat-dados</strong> ou abra um RFC.
+      </p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div style="display: flex; align-items: center; gap: var(--space-2);">
+      <img src="../logos/itau.png" alt="">
+      <span>PLATAFORMA DE DADOS · ITAÚ · 2025</span>
+    </div>
+    <span>Versão 1.0 · Outubro 2025</span>
+  </footer>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <script>
+    // ─── Theme toggle ────────────────────────────────
+    (function() {
+      const root = document.documentElement;
+      const updateIcon = () => {
+        const isDark = root.getAttribute('data-theme') === 'dark';
+        document.querySelectorAll('[data-theme-icon]').forEach(i => i.textContent = isDark ? '☀' : '☾');
+      };
+      updateIcon();
+      document.querySelectorAll('[data-theme-toggle]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          root.setAttribute('data-theme', next);
+          try { localStorage.setItem('theme', next); } catch (e) {}
+          updateIcon();
+          if (window.__chart) updateChart(window.__currentStep || 1);
+        });
+      });
+    })();
+
+    // ─── Progress bar ────────────────────────────────
+    (function() {
+      const bar = document.getElementById('progress');
+      function update() {
+        const h = document.documentElement;
+        const max = h.scrollHeight - h.clientHeight;
+        const pct = max > 0 ? (h.scrollTop / max) * 100 : 0;
+        bar.style.width = pct + '%';
+      }
+      update();
+      window.addEventListener('scroll', update, { passive: true });
+    })();
+
+    // ─── Reveal on scroll ────────────────────────────
+    (function() {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('is-visible');
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -10% 0px' });
+      document.querySelectorAll('[data-reveal]').forEach(el => io.observe(el));
+    })();
+
+    // ─── Counters ────────────────────────────────────
+    (function() {
+      const co = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target;
+          const from = 0;
+          const to = +el.dataset.to;
+          const dur = +el.dataset.duration || 1400;
+          const suffix = el.dataset.suffix || '';
+          const start = performance.now();
+          function tick(now) {
+            const t = Math.min(1, (now - start) / dur);
+            const eased = 1 - Math.pow(1 - t, 3);
+            const val = Math.round(from + (to - from) * eased);
+            el.textContent = val.toLocaleString('pt-BR') + suffix;
+            if (t < 1) requestAnimationFrame(tick);
+          }
+          requestAnimationFrame(tick);
+          co.unobserve(el);
+        });
+      }, { threshold: 0.5 });
+      document.querySelectorAll('[data-counter]').forEach(c => co.observe(c));
+    })();
+
+    // ─── Sticky chart ────────────────────────────────
+    const dadosPorStep = {
+      1: {
+        label: 'Eventos processados — Jan a Jun 2024 (milhões)',
+        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+        values: [12, 18, 28, 42, 60, 80]
+      },
+      2: {
+        label: 'Eventos processados — Jul 2024 a Mar 2025 (milhões)',
+        labels: ['Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez', 'Jan', 'Fev', 'Mar'],
+        values: [110, 180, 240, 320, 410, 520, 620, 730, 850]
+      },
+      3: {
+        label: 'Eventos processados — Abr a Out 2025 (milhões)',
+        labels: ['Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out'],
+        values: [1000, 1280, 1500, 1720, 1950, 2180, 2300]
+      }
+    };
+
+    function getCssVar(name) {
+      return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    }
+
+    function makeChart() {
+      const ctx = document.getElementById('evento-chart').getContext('2d');
+      window.__chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: dadosPorStep[1].labels,
+          datasets: [{
+            data: dadosPorStep[1].values,
+            backgroundColor: getCssVar('--color-accent'),
+            borderRadius: 4,
+            borderSkipped: false,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: { duration: 600, easing: 'easeOutCubic' },
+          plugins: { legend: { display: false }, tooltip: {
+            backgroundColor: getCssVar('--color-fg'),
+            titleColor: getCssVar('--color-bg'),
+            bodyColor: getCssVar('--color-bg'),
+            padding: 10, borderRadius: 6
+          } },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: getCssVar('--color-fg-muted'), font: { family: 'JetBrains Mono', size: 11 } } },
+            y: { grid: { color: getCssVar('--color-border') }, ticks: { color: getCssVar('--color-fg-muted'), font: { family: 'JetBrains Mono', size: 11 } } }
+          }
+        }
+      });
+    }
+    function updateChart(step) {
+      if (!window.__chart) return;
+      window.__currentStep = step;
+      const d = dadosPorStep[step];
+      window.__chart.data.labels = d.labels;
+      window.__chart.data.datasets[0].data = d.values;
+      window.__chart.data.datasets[0].backgroundColor = getCssVar('--color-accent');
+      window.__chart.options.scales.x.ticks.color = getCssVar('--color-fg-muted');
+      window.__chart.options.scales.y.ticks.color = getCssVar('--color-fg-muted');
+      window.__chart.options.scales.y.grid.color = getCssVar('--color-border');
+      window.__chart.update();
+      document.getElementById('chart-caption').textContent = d.label;
+    }
+
+    if (window.Chart) {
+      makeChart();
+      const steps = document.querySelectorAll('.step');
+      const so = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            steps.forEach(s => s.classList.remove('is-active'));
+            e.target.classList.add('is-active');
+            updateChart(+e.target.dataset.step);
+          }
+        });
+      }, { rootMargin: '-40% 0px -40% 0px' });
+      steps.forEach(s => so.observe(s));
+    }
+  </script>
+
+</body>
+</html>

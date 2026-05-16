@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plataforma de Dados — Pitch</title>
+
+  <script>
+    (function() {
+      try {
+        var t = localStorage.getItem('theme') ||
+                (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --itau-orange: #FF6200;
+      --itau-orange-2: #F88104;
+      --itau-orange-3: #FA9F09;
+      --itau-blue-3: #3B85FA;
+      --itau-yellow: #FBC305;
+
+      --color-bg: #ffffff;
+      --color-bg-elevated: #faf8f5;
+      --color-bg-sunken: #f4f1ec;
+      --color-fg: #1a1a1a;
+      --color-fg-muted: #525252;
+      --color-fg-subtle: #8a8a8a;
+      --color-border: #e8e4dd;
+      --color-border-strong: #d4cec3;
+      --color-accent: var(--itau-orange);
+      --color-accent-hover: var(--itau-orange-2);
+
+      --font-text: 'Itau Text', 'Inter', -apple-system, system-ui, sans-serif;
+      --font-display: 'Itau Display', 'Inter', -apple-system, system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+
+      --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+      --duration-slide: 600ms;
+      --duration-fade: 700ms;
+      --duration: 250ms;
+    }
+
+    [data-theme="dark"] {
+      --color-bg: #14110d;
+      --color-bg-elevated: #1c1814;
+      --color-bg-sunken: #221d18;
+      --color-fg: #e8eaed;
+      --color-fg-muted: #a8a39a;
+      --color-fg-subtle: #6e6a62;
+      --color-border: #2f2a23;
+      --color-border-strong: #403a32;
+      --color-accent: var(--itau-orange-3);
+      --color-accent-hover: var(--itau-orange-2);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+    body {
+      font-family: var(--font-text);
+      color: var(--color-fg);
+      background: var(--color-bg);
+      -webkit-font-smoothing: antialiased;
+      transition: background var(--duration), color var(--duration);
+      overscroll-behavior: none;
+    }
+
+    /* ─── Deck container ──────────────────────────── */
+    .deck {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex; flex-direction: column;
+      justify-content: center;
+      padding: 8vh 10vw;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(40px);
+      transition: opacity var(--duration-fade) var(--ease-out),
+                  transform var(--duration-slide) var(--ease-in-out);
+    }
+    .slide.is-prev { transform: translateX(-40px); }
+    .slide.is-active {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+
+    /* ─── Entrada staggered dos elementos ─────────── */
+    .slide [data-anim] {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out);
+    }
+    .slide.is-active [data-anim] {
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: calc(var(--anim-i, 0) * 80ms + 200ms);
+    }
+
+    /* Hero típico do deck: blur in opcional */
+    .slide.is-active [data-anim="hero"] {
+      animation: heroIn 900ms var(--ease-out) 100ms both;
+    }
+    @keyframes heroIn {
+      from { opacity: 0; filter: blur(16px); transform: translateY(20px); }
+      to { opacity: 1; filter: blur(0); transform: translateY(0); }
+    }
+
+    /* Fragments ─────────────────────────────────── */
+    .slide [data-fragment] {
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 500ms var(--ease-out), transform 500ms var(--ease-out);
+    }
+    .slide [data-fragment].is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .slide, .slide [data-anim], .slide [data-fragment] {
+        transition: none !important;
+        animation: none !important;
+        opacity: 1;
+        transform: none !important;
+        filter: none !important;
+      }
+    }
+
+    /* ─── Tipografia dentro dos slides ────────────── */
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--color-fg-muted);
+      margin-bottom: 28px;
+    }
+    .kicker__dot { width: 4px; height: 4px; border-radius: 50%; background: var(--color-fg-subtle); }
+    .kicker img { width: 28px; height: 28px; border-radius: 6px; }
+    .kicker--accent { color: var(--color-accent); }
+
+    .title-xl {
+      font-family: var(--font-display);
+      font-size: clamp(2.75rem, 6.5vw, 6rem);
+      line-height: 1.02;
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      margin: 0 0 32px;
+      max-width: 18ch;
+      color: var(--color-fg);
+    }
+    .title-xl em {
+      color: var(--color-accent);
+      font-style: normal;
+      font-weight: 800;
+    }
+    .title-lg {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4.5vw, 3.5rem);
+      line-height: 1.1;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      margin: 0 0 24px;
+      max-width: 22ch;
+      color: var(--color-fg);
+    }
+    .title-md {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 2.5vw, 2.25rem);
+      line-height: 1.15;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 0 0 20px;
+      color: var(--color-fg);
+    }
+    .lead {
+      font-size: clamp(1.125rem, 1.6vw, 1.5rem);
+      line-height: 1.45;
+      color: var(--color-fg-muted);
+      max-width: 50ch;
+      margin: 0 0 32px;
+      font-weight: 400;
+    }
+
+    .meta {
+      display: flex;
+      gap: 32px;
+      margin-top: 64px;
+      font-size: 0.875rem;
+      color: var(--color-fg-subtle);
+      letter-spacing: 0.02em;
+    }
+    .meta strong { color: var(--color-fg); font-weight: 600; }
+
+    /* ─── Big number slide ────────────────────────── */
+    .big-num {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+    }
+    .big-num__val {
+      font-family: var(--font-display);
+      font-size: clamp(5rem, 16vw, 14rem);
+      line-height: 0.9;
+      font-weight: 800;
+      letter-spacing: -0.05em;
+      color: var(--color-fg);
+      margin: 0;
+    }
+    .big-num__val span { color: var(--color-accent); }
+    .big-num__label {
+      font-size: clamp(1.125rem, 1.6vw, 1.5rem);
+      color: var(--color-fg-muted);
+      margin: 24px 0 0;
+      max-width: 32ch;
+      text-align: center;
+    }
+
+    /* ─── Triple metrics ──────────────────────────── */
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5vw;
+      margin: 48px 0 0;
+    }
+    .metric {
+      border-top: 3px solid var(--color-fg);
+      padding-top: 24px;
+    }
+    .metric__val {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin: 0 0 12px;
+    }
+    .metric__val span { color: var(--color-accent); }
+    .metric__label {
+      font-size: 1rem;
+      color: var(--color-fg-muted);
+      margin: 0; max-width: 22ch;
+      line-height: 1.4;
+    }
+
+    /* ─── Lista com fragments ─────────────────────── */
+    .list {
+      list-style: none;
+      padding: 0;
+      margin: 32px 0 0;
+      display: flex; flex-direction: column;
+      gap: 24px;
+      max-width: 36ch;
+    }
+    .list__item {
+      display: flex; gap: 24px;
+      font-size: clamp(1.125rem, 1.6vw, 1.5rem);
+      line-height: 1.4;
+      color: var(--color-fg);
+      max-width: 38ch;
+    }
+    .list__num {
+      flex-shrink: 0;
+      width: 32px; height: 32px;
+      display: grid; place-items: center;
+      border-radius: 50%;
+      background: var(--color-accent);
+      color: white;
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-top: 6px;
+    }
+    .list__body strong { display: block; font-weight: 600; margin-bottom: 4px; }
+    .list__body span { color: var(--color-fg-muted); font-size: 1rem; line-height: 1.5; display: block; max-width: 36ch; }
+
+    /* ─── Two-column ──────────────────────────────── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5vw;
+      align-items: center;
+    }
+    .two-col__visual {
+      padding: 32px;
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: 16px;
+      aspect-ratio: 4/3;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ─── Section divider slide ───────────────────── */
+    .divider {
+      display: flex; flex-direction: column;
+      align-items: flex-start; justify-content: center;
+    }
+    .divider__num {
+      font-family: var(--font-mono);
+      font-size: 1.25rem;
+      color: var(--color-accent);
+      letter-spacing: 0.1em;
+      margin-bottom: 32px;
+      font-weight: 500;
+    }
+
+    /* ─── Quote slide ─────────────────────────────── */
+    .quote-slide {
+      max-width: 24ch;
+    }
+    .quote-slide__text {
+      font-family: var(--font-display);
+      font-size: clamp(1.75rem, 3.5vw, 3rem);
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      font-weight: 600;
+      color: var(--color-fg);
+      margin: 0 0 32px;
+      max-width: 18ch;
+    }
+    .quote-slide__text::before {
+      content: '"';
+      color: var(--color-accent);
+      font-size: 1.2em;
+      line-height: 0;
+      vertical-align: -0.1em;
+      margin-right: 0.05em;
+    }
+    .quote-slide__cite {
+      font-size: 1rem;
+      color: var(--color-fg-muted);
+      font-style: normal;
+      display: block;
+    }
+    .quote-slide__cite strong { color: var(--color-fg); font-weight: 600; display: block; }
+
+    /* ─── Timeline horizontal slide ───────────────── */
+    .timeline-h {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+      margin-top: 48px;
+      position: relative;
+    }
+    .timeline-h::before {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; top: 16px;
+      height: 2px;
+      background: var(--color-border);
+    }
+    .timeline-h__item { position: relative; padding-top: 48px; }
+    .timeline-h__item::before {
+      content: '';
+      position: absolute;
+      top: 9px; left: 0;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: var(--color-accent);
+      box-shadow: 0 0 0 4px var(--color-bg);
+    }
+    .timeline-h__date {
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      color: var(--color-accent);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin: 0 0 8px;
+    }
+    .timeline-h__title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin: 0 0 8px;
+      color: var(--color-fg);
+    }
+    .timeline-h__desc { font-size: 0.9375rem; color: var(--color-fg-muted); margin: 0; line-height: 1.5; }
+
+    /* ─── Cards 3-up ──────────────────────────────── */
+    .cards3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 40px;
+    }
+    .card3 {
+      padding: 32px;
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      display: flex; flex-direction: column;
+    }
+    .card3__icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      background: var(--color-accent);
+      display: grid; place-items: center;
+      color: white;
+      font-weight: 800;
+      font-size: 1.25rem;
+      margin-bottom: 20px;
+    }
+    .card3__title {
+      font-family: var(--font-display);
+      font-size: 1.25rem; font-weight: 700;
+      margin: 0 0 12px; color: var(--color-fg);
+      line-height: 1.25;
+    }
+    .card3__desc { font-size: 1rem; color: var(--color-fg-muted); margin: 0; line-height: 1.5; }
+
+    /* ─── Closing slide ───────────────────────────── */
+    .closing {
+      display: flex; flex-direction: column;
+      align-items: flex-start; justify-content: center;
+    }
+    .closing__sig {
+      display: flex; align-items: center; gap: 16px;
+      margin-top: 48px;
+      padding-top: 32px;
+      border-top: 1px solid var(--color-border);
+      font-size: 0.9375rem;
+      color: var(--color-fg-muted);
+    }
+    .closing__sig img { width: 28px; height: 28px; border-radius: 6px; }
+
+    /* ─── Controles ────────────────────────────────── */
+    .deck-controls {
+      position: fixed; bottom: 24px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; align-items: center; gap: 4px;
+      padding: 6px;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--color-border);
+      border-radius: 999px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      z-index: 50;
+      transition: opacity 400ms ease;
+    }
+    [data-theme="dark"] .deck-controls { background: rgba(20, 17, 13, 0.85); }
+    body.is-idle .deck-controls { opacity: 0.3; }
+    body.is-idle .deck-controls:hover { opacity: 1; }
+    body.is-fullscreen.is-idle .deck-controls { opacity: 0; pointer-events: none; }
+
+    .ctrl {
+      width: 36px; height: 36px;
+      display: grid; place-items: center;
+      background: transparent; border: 0;
+      border-radius: 50%;
+      cursor: pointer;
+      color: var(--color-fg);
+      font-size: 16px;
+      transition: background var(--duration);
+    }
+    .ctrl:hover { background: var(--color-bg-elevated); }
+    .ctrl:disabled { opacity: 0.3; cursor: default; }
+    .ctrl:disabled:hover { background: transparent; }
+
+    .deck-counter {
+      padding: 0 14px;
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      color: var(--color-fg-muted);
+      letter-spacing: 0.04em;
+      font-weight: 500;
+    }
+    .deck-counter strong { color: var(--color-fg); font-weight: 600; }
+
+    .deck-sep {
+      width: 1px; height: 18px;
+      background: var(--color-border);
+      margin: 0 4px;
+    }
+
+    /* ─── Progress bar ────────────────────────────── */
+    .deck-progress {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: transparent;
+      z-index: 60;
+    }
+    .deck-progress__bar {
+      height: 100%;
+      background: var(--color-accent);
+      transition: width 500ms var(--ease-out);
+    }
+
+    /* ─── Click zones laterais ────────────────────── */
+    .click-zone {
+      position: absolute; top: 0; bottom: 0;
+      width: 12vw; z-index: 5;
+      cursor: pointer;
+    }
+    .click-zone--left { left: 0; }
+    .click-zone--right { right: 0; }
+
+    /* ─── Mobile ──────────────────────────────────── */
+    @media (max-width: 768px) {
+      .slide { padding: 6vh 6vw; }
+      .metrics { grid-template-columns: 1fr; gap: 24px; }
+      .two-col { grid-template-columns: 1fr; gap: 24px; }
+      .timeline-h { grid-template-columns: 1fr 1fr; }
+      .cards3 { grid-template-columns: 1fr; }
+      .click-zone { width: 25vw; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="deck-progress"><div class="deck-progress__bar" id="progress-bar"></div></div>
+
+  <main class="deck" id="deck">
+
+    <!-- 1. CAPA -->
+    <section class="slide" data-slide="1">
+      <div data-anim style="--anim-i: 0">
+        <div class="kicker">
+          <img src="../logos/itau.png" alt="">
+          <span>Plataforma de Dados</span>
+          <span class="kicker__dot"></span>
+          <span>Itaú · 2025</span>
+        </div>
+      </div>
+      <h1 class="title-xl" data-anim="hero">
+        De pipelines noturnos<br>a <em>fluxos em tempo real</em>.
+      </h1>
+      <p class="lead" data-anim style="--anim-i: 2">
+        18 meses transformando como o banco produz e consome dados.
+        O que mudou, o que aprendemos, o que vem em 2026.
+      </p>
+      <div class="meta" data-anim style="--anim-i: 3">
+        <span><strong>Plataforma de Dados</strong></span>
+        <span>·</span>
+        <span><strong>Outubro 2025</strong></span>
+        <span>·</span>
+        <span>All Hands</span>
+      </div>
+    </section>
+
+    <!-- 2. O PROBLEMA -->
+    <section class="slide" data-slide="2">
+      <p class="kicker kicker--accent" data-anim style="--anim-i: 0">Onde estávamos</p>
+      <h2 class="title-lg" data-anim style="--anim-i: 1">
+        Em janeiro de 2024, dados levavam horas.
+      </h2>
+      <p class="lead" data-anim style="--anim-i: 2">
+        Mais de 200 pipelines distintos transferindo dados entre sistemas. Cada time mantinha
+        os seus. Custo de operação espalhado, latência mediana de horas, decisões de risco e
+        produto reféns do ciclo noturno.
+      </p>
+      <div class="meta" data-anim style="--anim-i: 3">
+        <span><strong>200+</strong> pipelines isolados</span>
+        <span>·</span>
+        <span>Latência mediana: <strong>4-6h</strong></span>
+        <span>·</span>
+        <span>Sem padrão de schema</span>
+      </div>
+    </section>
+
+    <!-- 3. BIG NUMBER -->
+    <section class="slide" data-slide="3">
+      <div class="big-num">
+        <p class="kicker kicker--accent" data-anim style="--anim-i: 0">Hoje, em 1 dia</p>
+        <p class="big-num__val" data-anim="hero">
+          <span data-counter data-to="2300" data-suffix="M+">0</span>
+        </p>
+        <p class="big-num__label" data-anim style="--anim-i: 2">
+          eventos processados pela plataforma. 60× mais rápido que o pipeline legado.
+        </p>
+      </div>
+    </section>
+
+    <!-- 4. TRÊS MÉTRICAS -->
+    <section class="slide" data-slide="4">
+      <p class="kicker kicker--accent" data-anim style="--anim-i: 0">O ano em três números</p>
+      <h2 class="title-md" data-anim style="--anim-i: 1">
+        Crescimento orgânico, sem campanha interna.
+      </h2>
+      <div class="metrics">
+        <div class="metric" data-anim style="--anim-i: 2">
+          <p class="metric__val"><span data-counter data-to="47">0</span></p>
+          <p class="metric__label">Squads em produção</p>
+        </div>
+        <div class="metric" data-anim style="--anim-i: 3">
+          <p class="metric__val"><span data-counter data-to="60" data-suffix="×">0</span></p>
+          <p class="metric__label">Redução de latência vs. legado</p>
+        </div>
+        <div class="metric" data-anim style="--anim-i: 4">
+          <p class="metric__val">99,98<span>%</span></p>
+          <p class="metric__label">Disponibilidade observada</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. SECTION DIVIDER -->
+    <section class="slide" data-slide="5">
+      <div class="divider">
+        <p class="divider__num" data-anim style="--anim-i: 0">02 — Como chegamos aqui</p>
+        <h2 class="title-xl" data-anim="hero">Não foi virada.<br>Foi caminho.</h2>
+      </div>
+    </section>
+
+    <!-- 6. TIMELINE HORIZONTAL -->
+    <section class="slide" data-slide="6">
+      <p class="kicker kicker--accent" data-anim style="--anim-i: 0">Quatro marcos</p>
+      <h2 class="title-md" data-anim style="--anim-i: 1">Do RFC à adoção como padrão.</h2>
+      <div class="timeline-h">
+        <div class="timeline-h__item" data-anim style="--anim-i: 2">
+          <p class="timeline-h__date">Jan 2024</p>
+          <h3 class="timeline-h__title">RFC aprovada</h3>
+          <p class="timeline-h__desc">Event-driven, schemas versionados, multi-região. Sem Kafka caseiro.</p>
+        </div>
+        <div class="timeline-h__item" data-anim style="--anim-i: 3">
+          <p class="timeline-h__date">Jul 2024</p>
+          <h3 class="timeline-h__title">3 pilotos vivos</h3>
+          <p class="timeline-h__desc">Risco, fraude, analytics. Latência caiu 60×. Decisões em segundos.</p>
+        </div>
+        <div class="timeline-h__item" data-anim style="--anim-i: 4">
+          <p class="timeline-h__date">Mar 2025</p>
+          <h3 class="timeline-h__title">12 squads</h3>
+          <p class="timeline-h__desc">Adesão orgânica. Migração sem campanha. Times vinham pedindo.</p>
+        </div>
+        <div class="timeline-h__item" data-anim style="--anim-i: 5">
+          <p class="timeline-h__date">Set 2025</p>
+          <h3 class="timeline-h__title">Padrão de fato</h3>
+          <p class="timeline-h__desc">47 squads. CIO adota como recomendado para fluxo entre sistemas.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. QUOTE -->
+    <section class="slide" data-slide="7">
+      <div class="quote-slide">
+        <p class="quote-slide__text" data-anim="hero">
+          A maior surpresa não foi a capacidade técnica. Foi a adesão sem campanha.
+        </p>
+        <cite class="quote-slide__cite" data-anim style="--anim-i: 2">
+          <strong>Líder técnico, Plataforma de Dados</strong>
+          <span>Entrevista interna, setembro de 2025</span>
+        </cite>
+      </div>
+    </section>
+
+    <!-- 8. POR QUE FUNCIONOU - cards 3-up -->
+    <section class="slide" data-slide="8">
+      <p class="kicker kicker--accent" data-anim style="--anim-i: 0">Três razões</p>
+      <h2 class="title-md" data-anim style="--anim-i: 1">Por que a adoção foi orgânica.</h2>
+      <div class="cards3">
+        <div class="card3" data-anim style="--anim-i: 2">
+          <div class="card3__icon">01</div>
+          <h3 class="card3__title">Pilotos provaram antes</h3>
+          <p class="card3__desc">Times tinham referências reais para visitar. Não foi promessa — foi demo funcionando.</p>
+        </div>
+        <div class="card3" data-anim style="--anim-i: 3">
+          <div class="card3__icon">02</div>
+          <h3 class="card3__title">Self-service real</h3>
+          <p class="card3__desc">Sem ticket pra criar tópico. SDK funciona em 15 minutos. Sem fricção.</p>
+        </div>
+        <div class="card3" data-anim style="--anim-i: 4">
+          <div class="card3__icon">03</div>
+          <h3 class="card3__title">Migração no ritmo de cada time</h3>
+          <p class="card3__desc">Adotar quando faz sentido pro time, não quando uma diretriz manda.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. SECTION DIVIDER 2 -->
+    <section class="slide" data-slide="9">
+      <div class="divider">
+        <p class="divider__num" data-anim style="--anim-i: 0">03 — 2026</p>
+        <h2 class="title-xl" data-anim="hero">O que vem agora.</h2>
+      </div>
+    </section>
+
+    <!-- 10. PRÓXIMOS PASSOS COM FRAGMENTS -->
+    <section class="slide" data-slide="10">
+      <p class="kicker kicker--accent" data-anim style="--anim-i: 0">Roadmap 2026</p>
+      <h2 class="title-md" data-anim style="--anim-i: 1">Três frentes definidas.</h2>
+      <ol class="list" style="margin-top: 24px;">
+        <li class="list__item" data-fragment="1">
+          <span class="list__num">1</span>
+          <div class="list__body">
+            <strong>Materialização declarativa</strong>
+            <span>Descreva o resultado em DSL. A plataforma escolhe o pipeline. Beta no Q1.</span>
+          </div>
+        </li>
+        <li class="list__item" data-fragment="2">
+          <span class="list__num">2</span>
+          <div class="list__body">
+            <strong>Replicação cross-region automática</strong>
+            <span>Default opinionada com opt-out. Sensibilidade do dado decide a política.</span>
+          </div>
+        </li>
+        <li class="list__item" data-fragment="3">
+          <span class="list__num">3</span>
+          <div class="list__body">
+            <strong>Gateway HTTP em GA</strong>
+            <span>Linguagens sem SDK nativo entram. Sem perder garantia de schema versionado.</span>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- 11. BIG NUMBER FINAL -->
+    <section class="slide" data-slide="11">
+      <div class="big-num">
+        <p class="kicker kicker--accent" data-anim style="--anim-i: 0">Meta 2026</p>
+        <p class="big-num__val" data-anim="hero">
+          <span data-counter data-to="100" data-suffix="%">0</span>
+        </p>
+        <p class="big-num__label" data-anim style="--anim-i: 2">
+          dos fluxos novos entre sistemas críticos rodando na plataforma. Padrão, não exceção.
+        </p>
+      </div>
+    </section>
+
+    <!-- 12. CLOSING -->
+    <section class="slide" data-slide="12">
+      <div class="closing">
+        <p class="kicker kicker--accent" data-anim style="--anim-i: 0">Para terminar</p>
+        <h2 class="title-xl" data-anim="hero">
+          Obrigado.<br>Perguntas?
+        </h2>
+        <p class="lead" data-anim style="--anim-i: 2">
+          Para acompanhar, sugerir ou criticar: <strong>#plat-dados</strong> no Slack.
+          Para mudanças estruturais, abra um RFC em <strong>plat-dados/rfcs</strong>.
+        </p>
+        <div class="closing__sig" data-anim style="--anim-i: 3">
+          <img src="../logos/itau.png" alt="">
+          <span>Plataforma de Dados · Itaú · Outubro 2025</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="click-zone click-zone--left" data-prev-zone aria-hidden="true"></div>
+    <div class="click-zone click-zone--right" data-next-zone aria-hidden="true"></div>
+
+  </main>
+
+  <nav class="deck-controls" aria-label="Controles do deck">
+    <button class="ctrl" data-prev aria-label="Slide anterior">←</button>
+    <span class="deck-counter"><strong id="current-slide">1</strong> / <span id="total-slides">12</span></span>
+    <button class="ctrl" data-next aria-label="Próximo slide">→</button>
+    <div class="deck-sep"></div>
+    <button class="ctrl" data-theme-toggle aria-label="Alternar tema"><span data-theme-icon>☾</span></button>
+    <button class="ctrl" data-fullscreen aria-label="Tela cheia">⛶</button>
+  </nav>
+
+  <script>
+    // ─── Theme toggle ────────────────────────────────
+    (function() {
+      const root = document.documentElement;
+      const update = () => {
+        const isDark = root.getAttribute('data-theme') === 'dark';
+        document.querySelectorAll('[data-theme-icon]').forEach(i => i.textContent = isDark ? '☀' : '☾');
+      };
+      update();
+      document.querySelectorAll('[data-theme-toggle]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          root.setAttribute('data-theme', next);
+          try { localStorage.setItem('theme', next); } catch (e) {}
+          update();
+        });
+      });
+    })();
+
+    // ─── Deck engine ─────────────────────────────────
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const total = slides.length;
+    document.getElementById('total-slides').textContent = total;
+
+    const state = {
+      current: 1,
+      fragment: 0,
+      animating: false,
+    };
+
+    function fragmentsOf(slideIdx) {
+      return slides[slideIdx - 1].querySelectorAll('[data-fragment]');
+    }
+
+    function applyFragments(slideIdx, visibleCount) {
+      const frags = fragmentsOf(slideIdx);
+      frags.forEach((f, i) => f.classList.toggle('is-visible', i < visibleCount));
+    }
+
+    function runCounters(slideIdx) {
+      const slide = slides[slideIdx - 1];
+      slide.querySelectorAll('[data-counter]').forEach(el => {
+        if (el.dataset.ran === '1') return;
+        el.dataset.ran = '1';
+        const to = +el.dataset.to;
+        const suffix = el.dataset.suffix || '';
+        const dur = +el.dataset.duration || 1200;
+        const start = performance.now();
+        function tick(now) {
+          const t = Math.min(1, (now - start) / dur);
+          const eased = 1 - Math.pow(1 - t, 3);
+          const val = Math.round(to * eased);
+          el.textContent = val.toLocaleString('pt-BR') + suffix;
+          if (t < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+      });
+    }
+
+    function render(targetIdx, direction = 1) {
+      targetIdx = Math.max(1, Math.min(total, targetIdx));
+      slides.forEach((s, i) => {
+        const idx = i + 1;
+        s.classList.toggle('is-active', idx === targetIdx);
+        s.classList.toggle('is-prev', idx < targetIdx);
+        if (idx !== targetIdx) {
+          // reset fragments e counters quando sai do slide
+          fragmentsOf(idx).forEach(f => f.classList.remove('is-visible'));
+          s.querySelectorAll('[data-counter]').forEach(el => {
+            el.dataset.ran = '0';
+            el.textContent = '0';
+          });
+        }
+      });
+      state.current = targetIdx;
+      state.fragment = 0;
+      applyFragments(targetIdx, 0);
+      runCounters(targetIdx);
+      document.getElementById('current-slide').textContent = targetIdx;
+      document.getElementById('progress-bar').style.width = ((targetIdx / total) * 100) + '%';
+      window.location.hash = '#' + targetIdx;
+      // Toggle disabled state
+      document.querySelector('[data-prev]').disabled = targetIdx === 1;
+      document.querySelector('[data-next]').disabled = targetIdx === total && state.fragment >= fragmentsOf(targetIdx).length;
+    }
+
+    function next() {
+      const frags = fragmentsOf(state.current);
+      if (state.fragment < frags.length) {
+        state.fragment++;
+        applyFragments(state.current, state.fragment);
+        document.querySelector('[data-next]').disabled = state.current === total && state.fragment >= frags.length;
+        return;
+      }
+      if (state.current < total) render(state.current + 1, 1);
+    }
+
+    function prev() {
+      const frags = fragmentsOf(state.current);
+      if (state.fragment > 0) {
+        state.fragment--;
+        applyFragments(state.current, state.fragment);
+        return;
+      }
+      if (state.current > 1) render(state.current - 1, -1);
+    }
+
+    function goTo(idx) {
+      render(idx);
+    }
+
+    // ─── Inicialização via hash ──────────────────────
+    const initial = parseInt((window.location.hash || '').replace('#', ''), 10);
+    render(Number.isFinite(initial) && initial >= 1 && initial <= total ? initial : 1);
+
+    window.addEventListener('hashchange', () => {
+      const h = parseInt((window.location.hash || '').replace('#', ''), 10);
+      if (Number.isFinite(h) && h !== state.current) render(h);
+    });
+
+    // ─── Controles ──────────────────────────────────
+    document.querySelector('[data-next]').addEventListener('click', next);
+    document.querySelector('[data-prev]').addEventListener('click', prev);
+    document.querySelector('[data-next-zone]').addEventListener('click', next);
+    document.querySelector('[data-prev-zone]').addEventListener('click', prev);
+
+    document.querySelector('[data-fullscreen]').addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+        document.body.classList.add('is-fullscreen');
+      } else {
+        document.exitFullscreen();
+        document.body.classList.remove('is-fullscreen');
+      }
+    });
+    document.addEventListener('fullscreenchange', () => {
+      document.body.classList.toggle('is-fullscreen', !!document.fullscreenElement);
+    });
+
+    // ─── Teclado ────────────────────────────────────
+    document.addEventListener('keydown', (e) => {
+      if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+      switch (e.key) {
+        case 'ArrowRight':
+        case 'PageDown':
+        case ' ':
+          e.preventDefault(); next(); break;
+        case 'ArrowLeft':
+        case 'PageUp':
+          e.preventDefault(); prev(); break;
+        case 'Home':
+          e.preventDefault(); goTo(1); break;
+        case 'End':
+          e.preventDefault(); goTo(total); break;
+        case 'f':
+        case 'F':
+          document.querySelector('[data-fullscreen]').click(); break;
+      }
+    });
+
+    // ─── Swipe touch ────────────────────────────────
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) < 50) return;
+      if (dx < 0) next(); else prev();
+    }, { passive: true });
+
+    // ─── Idle: esconde controles após 3s sem mouse move ──
+    let idleTimer;
+    function resetIdle() {
+      document.body.classList.remove('is-idle');
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => document.body.classList.add('is-idle'), 3000);
+    }
+    ['mousemove', 'keydown', 'touchstart', 'click'].forEach(ev =>
+      document.addEventListener(ev, resetIdle, { passive: true })
+    );
+    resetIdle();
+  </script>
+
+</body>
+</html>
