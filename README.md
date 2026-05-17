@@ -31,7 +31,7 @@
 
 ---
 
-## Comandos (26)
+## Comandos (27)
 
 > ### 🧭 Não sabe por onde começar? Siga por aqui.
 >
@@ -90,6 +90,22 @@
 | `/aplicar-tema` | Troca tema (neutro ↔ itau) em documento existente. |
 | `/converter-modelo` | Converte entre modelos compatíveis (handbook ↔ scrollytelling, hub ↔ site). |
 | `/distill` | Reduz handbook longo a sumário enxuto preservando hierarquia. |
+
+### 🎨 Refinamento de design — `/slideless <verbo>` (5 verbos)
+*Aplica transformações de design sênior a documentos existentes. Verbos compõem em sequência.*
+
+| Comando | O que faz |
+|---|---|
+| `/slideless bolder` | **Amplifica designs tímidos** — tipografia hero +30%, glow atmosférico reforçado, números-âncora circulados, whitespace generoso. Para quando o doc gerado ficou medíocre. |
+| `/slideless quieter` | **Reduz designs ruidosos** — tipografia -15%, cores muted, transições mais lentas, fallback serif editorial. Para quando o doc tá gritando demais. |
+| `/slideless animate` | **Movimento intencional** — heroIn, Auto-Animate FLIP entre slides, counters animados, stagger reveals. Sempre respeita `prefers-reduced-motion`. |
+| `/slideless delight` | **Micro-interações sem cafonice** — hover lifts em cards, cursor-aware spotlight no hero, shimmer na progress bar, parallax sutil. Sem confetti, sem easter eggs. |
+| `/slideless overdrive` | **Tecnicamente extraordinário** — WebGL/Canvas generative no hero, custom Chart.js plugins, variable font animation, cinematic transitions. Showpiece técnico (até 2-3 MB). |
+
+**Composição típica:**
+- `bolder` + `animate` → executivo com peso e movimento
+- `quieter` + `delight` → editorial refinado
+- `bolder` + `overdrive` → showpiece de alto perfil
 
 ### Qualidade (4)
 *Audita e melhora documentos existentes.*
