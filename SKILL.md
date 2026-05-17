@@ -106,6 +106,17 @@ Os comandos vivem em [commands/](commands/) — cada arquivo `.md` é um slash c
 | `/converter-modelo <novo>` | Converte entre modelos compatíveis (handbook ↔ scrollytelling, hub ↔ site) |
 | `/distill` | Reduz handbook longo a sumário enxuto preservando hierarquia |
 
+### Refinamento de design — `/slideless <verbo>` (5 verbos)
+| Comando | Função |
+|---|---|
+| `/slideless bolder` | Amplifica designs tímidos — tipografia hero +30%, glow reforçado, números-âncora circulados via Rough Notation |
+| `/slideless quieter` | Reduz designs ruidosos — tipografia -15%, cores muted, motion calma, fallback serif editorial |
+| `/slideless animate` | Adiciona movimento intencional — heroIn, Auto-Animate FLIP, counters, stagger reveals (respeita prefers-reduced-motion) |
+| `/slideless delight` | Micro-interações sem cafonice — hover lifts, cursor-aware spotlight no hero, shimmer na progress bar, parallax sutil |
+| `/slideless overdrive` | Tecnicamente extraordinário — WebGL/Canvas no hero, custom Chart.js plugins, variable font animation, cinematic transitions. Liberdade de arquivo até 2-3 MB |
+
+Verbos compõem em sequência (`bolder` + `animate`, `quieter` + `delight`). Sempre preservam 100% do conteúdo.
+
 ### Qualidade (4)
 | Comando | Função |
 |---|---|
