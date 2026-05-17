@@ -691,12 +691,9 @@ Sem `data-auto-animate` nos slides → transição normal. Respeita `prefers-red
   <li data-fragment="current-visible">Ponto B</li>
   <li data-fragment="current-visible">Ponto C</li>
 </ul>
-
-<!-- Destaque sequencial em linha de tabela -->
-<tr data-fragment="highlight-current">
-  <td>Asgard</td><td>RV Unconstrained</td><td>R$ 18,5 bi</td>
-</tr>
 ```
+
+> **Tabelas não usam fragmentos.** Toda `.data-table` dentro de `.slide` ganha automaticamente hover apresentador-controlado pelo engine (ver § Tabelas com hover apresentador, abaixo). Forçar `highlight-current` linha-a-linha cria slides "fantasma" no contador e tira do apresentador a liberdade de destacar o que importa no momento.
 
 ### 7. Rough Notation — marcações manuais
 CDN: `rough-notation@0.6.1` (já no template). Ativa ao entrar no slide ou via `data-mark-at`.
@@ -720,14 +717,22 @@ Escala o font-size para preencher o container. Ideal para títulos de compriment
 ```
 Aplica ResizeObserver — re-calcula ao redimensionar viewport.
 
-### 10. Scroll View — `?view=scroll`
-Adicionar `?view=scroll` à URL converte o deck em página scrollável com `scroll-snap`.
+### 10. Tabelas com hover apresentador
+Toda `.data-table` dentro de `.slide` ganha CSS automático no template: o apresentador passa o mouse sobre qualquer linha durante a apresentação — ela recebe background accent + texto bold; as demais linhas ficam com opacidade 0.4. Sem fragmentos, sem keyboard. O apresentador escolhe o que destacar, quando e em que ordem.
+
+```html
+<!-- Não precisa de fragmento nenhum. Mouse hover faz tudo. -->
+<table class="data-table">
+  <thead><tr><th>Fundo</th><th>Tipo</th><th class="num">AuM</th></tr></thead>
+  <tbody>
+    <tr><td>Asgard</td><td>RV Unconstrained</td><td class="num">R$ 18,5 bi</td></tr>
+    <tr><td>Carbyne</td><td>Multimercado</td><td class="num">R$ 12,1 bi</td></tr>
+    <tr><td>Eagle Polaris</td><td>RV Long Bias</td><td class="num">R$ 9,8 bi</td></tr>
+  </tbody>
+</table>
 ```
-arquivo.html?view=scroll
-```
-- Ativa automaticamente em viewports estreitas (`< 600px`)
-- Fragmentos e navegação continuam funcionando
-- Ideal para compartilhar link para leitura em mobile
+
+Comportamento: `tbody:hover tr { opacity: 0.4 }` + `tbody:hover tr:hover { opacity: 1; background: accent-dim; color: accent; font-weight: 700 }`. Respeita `prefers-reduced-motion` (sem transição). Não tem efeito por toque/keyboard — é desktop-first, porque deck é apresentado em desktop/fullscreen.
 
 ### 11. Posicionamento relativo de fragmentos
 `data-fragment-index` com valores relativos: `+1`, `+2` em vez de índice absoluto.
@@ -848,9 +853,19 @@ Cada `<section>` pode ter background próprio, animado independentemente do cont
 ## Pitfalls conhecidos do engine (NUNCA repetir)
 
 ### Tabelas com fragmentos
-**Errado:** aplicar `data-fragment="highlight-current"` em `<tr>` sem ajustar o CSS base. A regra `.slide [data-fragment] { opacity: 0 }` torna a tabela inteira invisível e ela aparece linha-a-linha como se cada linha fosse um fragmento de fade-in.
+**Errado:** aplicar `data-fragment` (qualquer tipo, incluindo `highlight-current`) em `<tr>` para percorrer linhas via teclado. Cria slides "fantasma" no contador, força ordem pré-definida, e tira do apresentador o controle sobre o que destacar quando.
 
-**Correto:** o CSS base do template já exclui `highlight-current` e `strike` do `opacity:0`. A tabela aparece completa desde o start; o `highlight-current` apenas muda a cor/peso da linha quando ela vira o fragmento ativo. Se você gera um novo template, **sempre use o seletor `:not([data-fragment="highlight-current"]):not([data-fragment="strike"])`** no fragment base.
+**Correto:** o template já aplica hover apresentador-controlado em toda `.data-table` dentro de `.slide`. O apresentador passa o mouse sobre uma linha durante a apresentação — ela ganha background accent + bold, demais ficam muted. Sem fragmentos, sem keyboard. Ver § Tabelas com hover apresentador.
+
+```html
+<!-- ❌ ERRADO: força ordem, gasta steps de navegação -->
+<tr data-fragment="highlight-current"><td>Linha A</td>...</tr>
+<tr data-fragment="highlight-current"><td>Linha B</td>...</tr>
+
+<!-- ✅ CERTO: tabela completa, apresentador controla com o mouse -->
+<tr><td>Linha A</td>...</tr>
+<tr><td>Linha B</td>...</tr>
+```
 
 ### Slide-num colidindo com título (REGRA CANÔNICA)
 
@@ -887,6 +902,29 @@ Padding do `.slide`: `clamp(64px, 8vh, 90px)` no topo + `clamp(56px, 7vh, 80px)`
 
 **Correto:** snapshot do viewport real em CSS variables (`--slide-w`, `--slide-h`) ao entrar em overview; `transform: scale(--ov-scale)` no slide com `transform-origin: top left`; compensar com `margin-right/bottom` negativo proporcional. No overview, forçar todos os `[data-fragment]` e `[data-anim]` a `opacity:1`.
 
+### Título vazando do slide (overflow horizontal/vertical)
+**Sintoma:** título `.title-mega` ou `.fact-val` excede a viewport — texto cortado pela borda, conteúdo escondido atrás da HUD. Acontece com clamps puro-`vw` em viewports baixos (notebook 1366×768 ou ultrawide curto).
+
+**Causa-raiz:** clamps que só escalam por `vw` ignoram a altura disponível. Em ultrawide (2511×914), `vw` gera tipo gigante mas a altura é insuficiente para múltiplas linhas.
+
+**Correto:** clamps incluem ambos `vw` **e** `vh`:
+```css
+--size-mega: clamp(2.75rem, 1.6rem + 2.4vw + 2vh, 5.5rem);
+--size-giga: clamp(3.5rem, 2rem + 3vw + 3vh, 9rem);
+```
+Plus o template aplica:
+- CSS guard: `.slide { contain: layout paint }` + `.slide > *:not(.slide-bg):not(.slide-num) { max-width: 100%; min-width: 0 }`
+- JS `autoFitSlide(slide)` ao virar slide ativo: reduz iterativamente o font-size dos títulos (`.title-mega/xl/lg`, `.fact-val`, `.statement-text`, `.quote-text`, `.big-num__val`) até o conteúdo caber. Idempotente (reseta inline antes de medir). Re-executa em `resize`.
+- Console warning `[slideless] slide N overflows even after autoFitSlide` quando nem o autoFit resolve — indica que o gerador colocou texto demais em uma classe gigante.
+
+**Char limits** (respeitar antes de gerar):
+| Classe | Limite | Se exceder |
+|---|---|---|
+| `.title-mega` / `.fact-val` / `.statement-text` | ≤ 50 chars | Dividir em 2 elementos ou usar `.title-lg` |
+| `.title-xl` | ≤ 70 chars | Trocar para `.title-lg` |
+| `.title-lg` | ≤ 90 chars | Trocar para `.title-md` |
+| `.lead-deck` | ≤ 220 chars | Quebrar em duas frases |
+
 ---
 
 ## Checklist deck
@@ -898,10 +936,13 @@ Padding do `.slide`: `clamp(64px, 8vh, 90px)` no topo + `clamp(56px, 7vh, 80px)`
 - [ ] Tipografia usa `clamp()`?
 - [ ] Variedade de layouts (pelo menos 5 tipos, incluindo semânticos)?
 - [ ] Fragments onde há itens sequenciais — com tipos corretos (current-visible em listas)?
+- [ ] Tabelas **sem** fragmentos linha-a-linha (hover apresentador faz o destaque)?
 - [ ] Auto-Animate em slides de evolução numérica?
 - [ ] Rough Notation em KPIs e citações-chave?
 - [ ] Dark mode sem flash?
-- [ ] Scroll view funciona em mobile (`?view=scroll`)?
+- [ ] Overview (tecla O) rola quando há mais slides do que cabem no viewport?
+- [ ] **Nada vaza da viewport** em 1366×768 (notebook baixo)? Sem warning `[slideless] slide N overflows` no console?
+- [ ] Títulos respeitam char limits (mega ≤50, xl ≤70, lg ≤90, lead ≤220)?
 - [ ] Conteúdo 100% da fonte (nada omitido)?
 - [ ] Gráficos onde há dados temporais/comparativos?
 - [ ] Tabelas onde há listas de itens com atributos?

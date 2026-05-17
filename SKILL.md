@@ -1,6 +1,6 @@
 ---
 name: slideless
-description: Substitui PowerPoint por documentos web interativos HTML single-file para comunicação interna do Itaú. Cinco modelos cobrem do material denso e navegável até apresentação linear estilo pitch moderno — handbook (sidebar + scrollspy + TOC estilo GitLab Handbook), hub (portal de cards categorizáveis), scrollytelling (narrativa única com reveal-on-scroll), site (SPA single-file com hash routing) e deck (slide-by-slide com animações stagger, fragments, keyboard nav, fullscreen). Tudo entregue como UM arquivo HTML portátil com CSS e JS inline. Use quando o usuário pedir handbook, manual, central de conhecimento, onboarding, política interna, hub de recursos, central de serviços, relatório anual interativo, narrativa de projeto, microsite, página interna de produto, pitch, all-hands, deck moderno, ou qualquer comunicação interna que se beneficie de navegação não-linear, dark mode nativo, densidade variável e interatividade real. Inclui tema neutro (azul) e tema corporativo Itaú (laranja oficial #FF6200 + fontes Itaú Display/Text), ambos com dark mode. Anti-pattern central: NÃO gera "PPT estilizado em HTML" — distingue documento web de slide (tipografia gigante é proibida fora do modelo `deck`).
+description: Substitui PowerPoint por documentos web interativos HTML single-file para comunicação interna do Itaú. Seis modelos cobrem do material denso e navegável até apresentação linear estilo pitch moderno — handbook (sidebar + scrollspy + TOC estilo GitLab Handbook), hub (portal de cards categorizáveis), scrollytelling (narrativa única com reveal-on-scroll), site (SPA single-file com hash routing), deck (slide-by-slide com animações stagger, fragments, keyboard nav, fullscreen) e report (relatório editorial denso com sumário executivo, TOC numerada, footnotes e CSS @print otimizado para PDF estilo Itaú Pesquisa Macro). Tudo entregue como UM arquivo HTML portátil com CSS e JS inline. Use quando o usuário pedir handbook, manual, central de conhecimento, onboarding, política interna, hub de recursos, central de serviços, relatório anual interativo, narrativa de projeto, microsite, página interna de produto, pitch, all-hands, deck moderno, ou qualquer comunicação interna que se beneficie de navegação não-linear, dark mode nativo, densidade variável e interatividade real. Inclui tema neutro (azul) e tema corporativo Itaú (laranja oficial #FF6200 + fontes Itaú Display/Text), ambos com dark mode. Anti-pattern central: NÃO gera "PPT estilizado em HTML" — distingue documento web de slide (tipografia gigante é proibida fora do modelo `deck`).
 ---
 
 # slideless
@@ -17,7 +17,7 @@ Todo modelo entrega **um único HTML** com CSS e JS inline. Portátil, hospedáv
 
 ---
 
-## Cinco modelos
+## Seis modelos
 
 O usuário escolhe o modelo no briefing. Quando ambíguo, use [references/decisao-modelo.md](references/decisao-modelo.md).
 
@@ -53,16 +53,32 @@ O usuário escolhe o modelo no briefing. Quando ambíguo, use [references/decisa
 
 **Importante:** `deck` é o **único** modelo onde tipografia gigante (4-6rem+) é apropriada — porque é viewport-cheio e apresentação ao vivo. Em todos os outros modelos a tipografia é editorial (h1 ~2.5rem). Ver [references/anti-patterns.md](references/anti-patterns.md).
 
+### `report` — relatório editorial denso (PDF-friendly)
+**Use quando:** relatório anual interativo, white paper, análise de pesquisa, documento executivo longo que será **lido com calma e exportado para PDF**.
+**Estrutura:** capa + sumário executivo destacado + TOC sticky numerada + seções numeradas (1., 2., 3.) + footnotes formatadas com link mútuo. CSS `@page A4` rigoroso para impressão limpa.
+**Referência mental:** Itaú Pesquisa Macro reports, McKinsey Global Institute, Goldman Sachs research, World Bank working papers.
+**Doc:** [references/modelos/report.md](references/modelos/report.md) — **Template vazio:** [assets/templates/template-report.html](assets/templates/template-report.html).
+
+**Quando usar report vs scrollytelling vs handbook:** report é o único com sumário executivo formal + footnotes numeradas + CSS @print otimizado. Conteúdo narrativo curto → scrollytelling. Documentação de processo → handbook. Análise/estudo formal de leitura calma → **report**.
+
 ---
 
 ## Princípios transversais
 
-1. **Single-file por padrão.** CSS e JS inline. Fontes via Google Fonts, gráficos via CDN.
-2. **Dark mode nativo.** Toggle no header, persistência via `localStorage`, boot script antes do CSS pintar (sem flash). Detalhes em [references/design-system.md](references/design-system.md).
-3. **Animações funcionais.** Reveal-on-scroll, números que contam, fade-in. Nunca parallax dramático, glow decorativo, ou animação só por animação.
-4. **Interatividade real.** Toggles funcionam, tabs trocam, callouts informam, código copia, gráficos respondem.
-5. **Acessibilidade.** WCAG AA, `aria-*` correto, keyboard navigation, `prefers-reduced-motion` respeitado, foco visível.
-6. **Conteúdo real obrigatório.** Sem conteúdo real fornecido pelo usuário, **não gerar lorem-ipsum nem inventar dados internos do Itaú.** Protocolo em [references/protocolo-sem-conteudo.md](references/protocolo-sem-conteudo.md).
+1. **Single-file por padrão.** CSS e JS inline. Fontes via Google Fonts, gráficos via CDN. Tamanho-alvo até 1MB para modelos editoriais (handbook/hub/site/scrollytelling/report); deck/`overdrive` pode chegar a **5MB** quando o conteúdo justifica (WebGL, Three.js, fonte variable embutida).
+2. **Nada vaza da viewport.** Todo conteúdo de um slide/seção precisa caber visualmente — sem clipping, sem scroll horizontal, sem texto cortado pela HUD. **Inviolável**. O template-deck aplica overflow guard (`.slide { contain }` + `.slide > * { max-width: 100% }`) e `autoFitSlide()` JS que reduz iterativamente o título se o conteúdo exceder o viewport. Mas isso é a rede de segurança — o gerador deve respeitar os char limits abaixo:
+   | Classe | Limite recomendado | Quando exceder |
+   |---|---|---|
+   | `.title-mega` / `.fact-val` / `.statement-text` | **≤ 50 chars** (1-2 linhas em viewport baixo) | Divida em 2 elementos (`<em>` + texto) ou troque para `.title-lg` |
+   | `.title-xl` | ≤ 70 chars | Troque para `.title-lg` |
+   | `.title-lg` | ≤ 90 chars | Troque para `.title-md` |
+   | `.lead-deck` | ≤ 220 chars | Quebre em duas frases ou use `.title-md` + lead curto |
+   Sempre testar em viewport 1366×768 (notebook baixo) — se aparecer warning `[slideless] slide N overflows even after autoFitSlide` no console, o slide está denso demais.
+3. **Dark mode nativo.** Toggle no header, persistência via `localStorage`, boot script antes do CSS pintar (sem flash). Detalhes em [references/design-system.md](references/design-system.md).
+4. **Animações funcionais.** Reveal-on-scroll, números que contam, fade-in. Nunca parallax dramático, glow decorativo, ou animação só por animação.
+5. **Interatividade real.** Toggles funcionam, tabs trocam, callouts informam, código copia, gráficos respondem.
+6. **Acessibilidade.** WCAG AA, `aria-*` correto, keyboard navigation, `prefers-reduced-motion` respeitado, foco visível.
+7. **Conteúdo real obrigatório.** Sem conteúdo real fornecido pelo usuário, **não gerar lorem-ipsum nem inventar dados internos do Itaú.** Protocolo em [references/protocolo-sem-conteudo.md](references/protocolo-sem-conteudo.md).
 
 ---
 
@@ -70,7 +86,7 @@ O usuário escolhe o modelo no briefing. Quando ambíguo, use [references/decisa
 
 Os comandos vivem em [commands/](commands/) — cada arquivo `.md` é um slash command que pode ser invocado independentemente. Argumentos opcionais entre `<…>`.
 
-### Criação (5)
+### Criação (6 modelos + wizard)
 | Comando | Função |
 |---|---|
 | `/criar` | **Wizard para áreas de negócios** — faz 5 perguntas em português comum e escolhe o modelo automaticamente, sem precisar conhecer a diferença entre deck/handbook/hub/etc. |
@@ -79,6 +95,7 @@ Os comandos vivem em [commands/](commands/) — cada arquivo `.md` é um slash c
 | `/slideless-scrollytelling <tópico>` | Cria scrollytelling com reveal e sticky chart |
 | `/slideless-site <tópico>` | Cria SPA single-file com hash routing |
 | `/slideless-deck <tópico>` | Cria deck moderno com keyboard nav |
+| `/slideless-report <tópico>` | Cria relatório editorial denso (sumário executivo + TOC numerada + footnotes + CSS @print otimizado para PDF) |
 | `/slideless-report <tópico>` | Cria relatório editorial denso, otimizado para impressão/PDF |
 | `/estruturar <conteúdo>` | Analisa conteúdo bruto e propõe mapa estruturado para aprovação antes de gerar |
 
@@ -106,16 +123,16 @@ Os comandos vivem em [commands/](commands/) — cada arquivo `.md` é um slash c
 | `/converter-modelo <novo>` | Converte entre modelos compatíveis (handbook ↔ scrollytelling, hub ↔ site) |
 | `/distill` | Reduz handbook longo a sumário enxuto preservando hierarquia |
 
-### Refinamento de design — `/slideless <verbo>` (5 verbos)
+### Refinamento de design (5 comandos independentes)
 | Comando | Função |
 |---|---|
-| `/slideless bolder` | Amplifica designs tímidos — tipografia hero +30%, glow reforçado, números-âncora circulados via Rough Notation |
-| `/slideless quieter` | Reduz designs ruidosos — tipografia -15%, cores muted, motion calma, fallback serif editorial |
-| `/slideless animate` | Adiciona movimento intencional — heroIn, Auto-Animate FLIP, counters, stagger reveals (respeita prefers-reduced-motion) |
-| `/slideless delight` | Micro-interações sem cafonice — hover lifts, cursor-aware spotlight no hero, shimmer na progress bar, parallax sutil |
-| `/slideless overdrive` | Tecnicamente extraordinário — WebGL/Canvas no hero, custom Chart.js plugins, variable font animation, cinematic transitions. Liberdade de arquivo até 2-3 MB |
+| `/slideless-bolder` | Amplifica designs tímidos — tipografia hero +30%, glow reforçado, números-âncora circulados via Rough Notation |
+| `/slideless-quieter` | Reduz designs ruidosos — tipografia -15%, cores muted, motion calma, fallback serif editorial |
+| `/slideless-animate` | Adiciona movimento intencional — heroIn, Auto-Animate FLIP, counters, stagger reveals (respeita prefers-reduced-motion) |
+| `/slideless-delight` | Micro-interações sem cafonice — hover lifts, cursor-aware spotlight no hero, shimmer na progress bar, parallax sutil |
+| `/slideless-overdrive` | Tecnicamente extraordinário — WebGL/Canvas no hero, custom Chart.js plugins, variable font animation, cinematic transitions. Comando interativo: pergunta quais efeitos aplicar (multi-seleção). Liberdade de arquivo até 5 MB |
 
-Verbos compõem em sequência (`bolder` + `animate`, `quieter` + `delight`). Sempre preservam 100% do conteúdo.
+Os 5 verbos compõem em sequência (`/slideless-bolder` + `/slideless-animate`, `/slideless-quieter` + `/slideless-delight`). Sempre preservam 100% do conteúdo.
 
 ### Qualidade (4)
 | Comando | Função |
@@ -226,6 +243,7 @@ Para cada tipo de conteúdo, usar o template correto:
 | Narrativa scroll-triggered | template-scrollytelling | references/modelos/scrollytelling.md |
 | Multi-view com abas | template-site | references/modelos/site.md |
 | Apresentação linear ao vivo | template-deck | references/modelos/deck.md + slide-patterns.md |
+| Relatório editorial denso (PDF-friendly) | template-report | references/modelos/report.md |
 | CSS patterns novos | — | references/css-patterns.md |
 | Slide layouts | — | references/slide-patterns.md |
 
@@ -280,10 +298,10 @@ Para cada tipo de conteúdo, usar o template correto:
 - **Overview** (`O`): grade de todos os slides. Gerar decks longos sabendo que o apresentador pode navegar via overview.
 - **Auto-Animate**: usar `data-auto-animate` + `data-id` em slides consecutivos onde o mesmo elemento muda de escala/posição (ex: KPI que cresce de card para big-num).
 - **Layouts semânticos**: usar `layout-fact` para KPIs isolados, `layout-quote` para citações, `layout-two-cols` para comparações, `layout-statement` para one-liners. Nunca improvizar layout inline quando existe semântico.
-- **Tipos de fragmento**: usar `current-visible` para listas onde o contexto de cada item importa (spotlight); `highlight-current` para percorrer linhas de tabela; `grow` para revelar KPIs com impacto.
+- **Tipos de fragmento**: usar `current-visible` para listas onde o contexto de cada item importa (spotlight); `grow` para revelar KPIs com impacto. **Não usar `highlight-current` em linhas de tabela** — tabelas no deck têm hover apresentador-controlado nativo (passa o mouse sobre uma linha → destaca; demais ficam muted).
 - **Rough Notation**: `data-mark="circle"` em números-âncora, `data-mark="underline"` em termos-chave. Ativa automático ao entrar no slide. Cor default = `--color-accent`.
 - **AutoFitText**: `data-fit-text` em títulos de comprimento variável. Nunca hardcodar font-size menor só para caber.
-- **Scroll View**: ao gerar link para o deck, mencionar que `?view=scroll` ativa versão scrollável para leitura em mobile.
+- **Tabelas com hover apresentador**: toda `.data-table` dentro de `.slide` ganha hover automático — o apresentador passa o mouse sobre qualquer linha durante a apresentação e ela ganha destaque (background accent + bold); as demais ficam muted. Nunca usar fragmentos linha-a-linha em tabelas.
 - **Posicionamento relativo**: usar `data-fragment-index="+1"` em listas — nunca índices absolutos sequenciais que quebram ao reordenar.
 - **Background por slide**: slides de seção/divisor usam `data-background-color="var(--itau-orange)"` (tema itaú) para identidade visual forte.
 - **Code Stepping**: blocos de código com narrativa progressiva usam `data-line-numbers="1-3|5-7|10"`.
@@ -350,4 +368,5 @@ slideless/
 | "microsite", "site interno", "página com várias abas" | `site` |
 | "pitch", "apresentação", "deck", "all-hands" (ao vivo) | `deck` |
 | "deck pra distribuir como leitura" | `scrollytelling` (não `deck`) |
+| "relatório anual", "white paper", "documento executivo PDF" | `report` |
 | "página de divulgação interna" | `hub` ou `scrollytelling` — perguntar |

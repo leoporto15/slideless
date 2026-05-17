@@ -3,1607 +3,596 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Itaú Asset Management — Institucional</title>
+<title>Itaú Asset Management — Site Institucional</title>
+
 <script>
   (function(){
-    var s=localStorage.getItem('theme');
-    if(s==='dark'||(!s&&matchMedia('(prefers-color-scheme:dark)').matches)){
-      document.documentElement.setAttribute('data-theme','dark');
-    }
+    try {
+      var t = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', t);
+    } catch(e){ document.documentElement.setAttribute('data-theme','light'); }
   })();
 </script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
 <style>
-/* ── DESIGN TOKENS ────────────────────────────────────────────────────────── */
 :root {
-  --itau-orange: #FF6200; --itau-orange-2: #F88104; --itau-orange-3: #FA9F09;
-  --itau-blue-3: #3B85FA; --itau-yellow: #FBC305;
-  --color-accent: var(--itau-orange); --color-accent-dim: rgba(255,98,0,0.08);
-  --color-info: var(--itau-blue-3); --color-info-dim: rgba(59,133,250,0.08);
-  --color-success: #4d7c0f; --color-success-dim: rgba(77,124,15,0.08);
-  --color-sage: #65a30d; --color-sage-dim: rgba(101,163,13,0.08);
-  --color-teal: #0f766e; --color-teal-dim: rgba(15,118,110,0.08);
-  --color-plum: #9f1239; --color-plum-dim: rgba(159,18,57,0.08);
-  --color-warn: var(--itau-yellow); --color-warn-dim: rgba(251,195,5,0.12);
-  --color-bg: #faf7f5; --color-bg-elevated: #ffffff; --color-bg-sunken: #f4f1ec;
-  --color-fg: #292017; --color-fg-muted: #6b5d50; --color-fg-subtle: #8a7e72;
-  --color-border: rgba(41,32,23,0.10); --color-border-strong: rgba(41,32,23,0.18);
-  --font-display: 'Fraunces', Georgia, serif;
-  --font-text: 'Inter', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-  --size-xs: clamp(0.75rem,0.7rem+0.2vw,0.875rem);
-  --size-small: clamp(0.875rem,0.85rem+0.15vw,1rem);
-  --size-body: clamp(1rem,0.95rem+0.2vw,1.125rem);
-  --size-lead: clamp(1.15rem,1.05rem+0.5vw,1.4rem);
-  --size-h2: clamp(1.6rem,1.3rem+1.2vw,2.25rem);
-  --size-h1: clamp(2.25rem,1.8rem+2vw,3.5rem);
-  --space-1:0.25rem;--space-2:0.5rem;--space-3:0.75rem;--space-4:1rem;--space-5:1.5rem;
-  --space-6:2rem;--space-7:2.5rem;--space-8:3rem;--space-10:4rem;--space-12:5rem;
-  --header-h:56px;--radius:10px;--radius-lg:16px;
+  --itau-orange:#FF6200; --itau-orange-2:#F88104; --itau-orange-3:#FA9F09;
+  --itau-blue-3:#3B85FA; --itau-yellow:#FBC305; --itau-warm-black:#14110d;
+  --color-accent:var(--itau-orange); --color-accent-dim:rgba(255,98,0,0.08); --color-accent-fg:#ffffff;
+  --color-accent-hover:var(--itau-orange-2);
+  --color-info:var(--itau-blue-3); --color-info-dim:rgba(59,133,250,0.08);
+  --color-success:#4d7c0f; --color-success-dim:rgba(77,124,15,0.08);
+  --color-sage:#65a30d; --color-sage-dim:rgba(101,163,13,0.08);
+  --color-teal:#0f766e; --color-teal-dim:rgba(15,118,110,0.08);
+  --color-plum:#9f1239; --color-plum-dim:rgba(159,18,57,0.08);
+  --color-warn:var(--itau-yellow); --color-warn-dim:rgba(251,195,5,0.12);
+  --color-bg:#faf7f5; --color-bg-elevated:#ffffff; --color-bg-sunken:#f4f1ec;
+  --color-fg:#292017; --color-fg-muted:#6b5d50; --color-fg-subtle:#8a7e72;
+  --color-border:rgba(41,32,23,0.10); --color-border-strong:rgba(41,32,23,0.18);
+  --font-display:'Fraunces',Georgia,serif;
+  --font-text:'Inter',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --size-xs:clamp(0.75rem,0.7rem + 0.2vw,0.875rem);
+  --size-small:clamp(0.875rem,0.85rem + 0.15vw,1rem);
+  --size-body:clamp(1rem,0.95rem + 0.2vw,1.125rem);
+  --size-lead:clamp(1.15rem,1.05rem + 0.5vw,1.4rem);
+  --size-h3:clamp(1.2rem,1.1rem + 0.5vw,1.5rem);
+  --size-h2:clamp(1.7rem,1.4rem + 1.3vw,2.4rem);
+  --size-h1:clamp(2.4rem,1.9rem + 2.2vw,3.7rem);
+  --space-1:.25rem; --space-2:.5rem; --space-3:.75rem; --space-4:1rem; --space-5:1.5rem;
+  --space-6:2rem; --space-7:2.5rem; --space-8:3rem; --space-10:4rem; --space-12:5rem;
+  --header-h:60px;
+  --radius-sm:4px; --radius:10px; --radius-lg:16px;
   --shadow-sm:0 2px 4px rgba(41,32,23,0.06);
-  --shadow-lg:0 12px 32px rgba(41,32,23,0.12),0 4px 12px rgba(41,32,23,0.06);
-  --ease-out:cubic-bezier(0.22,1,0.36,1);--duration-fast:150ms;
+  --shadow-lg:0 12px 32px rgba(41,32,23,0.12);
+  --ease-out:cubic-bezier(0.22,1,0.36,1);
+  --duration-fast:150ms; --duration:250ms;
 }
-[data-theme="dark"] {
-  --color-bg:#14110d;--color-bg-elevated:#1c1814;--color-bg-sunken:#221d18;
-  --color-fg:#ede5dd;--color-fg-muted:#b8aa9a;--color-fg-subtle:#786e62;
-  --color-border:rgba(237,229,221,0.10);--color-border-strong:rgba(237,229,221,0.20);
-  --color-accent:var(--itau-orange-3);--color-accent-dim:rgba(250,159,9,0.10);
+[data-theme="dark"]{
+  --color-bg:#14110d; --color-bg-elevated:#1c1814; --color-bg-sunken:#221d18;
+  --color-fg:#ede5dd; --color-fg-muted:#b8aa9a; --color-fg-subtle:#786e62;
+  --color-border:rgba(237,229,221,0.10); --color-border-strong:rgba(237,229,221,0.20);
+  --color-accent:var(--itau-orange-3); --color-accent-dim:rgba(250,159,9,0.10);
   --color-info-dim:rgba(59,133,250,0.12);
-  --color-success:#a3e635;--color-success-dim:rgba(163,230,53,0.10);
-  --color-teal:#5eead4;--color-teal-dim:rgba(94,234,212,0.10);
-  --color-plum:#fb7185;--color-plum-dim:rgba(251,113,133,0.10);
+  --color-success:#a3e635; --color-success-dim:rgba(163,230,53,0.10);
+  --color-sage:#bef264; --color-sage-dim:rgba(190,242,100,0.10);
+  --color-teal:#5eead4; --color-teal-dim:rgba(94,234,212,0.10);
+  --color-plum:#fb7185; --color-plum-dim:rgba(251,113,133,0.10);
   --shadow-sm:0 2px 4px rgba(0,0,0,0.4);
   --shadow-lg:0 12px 32px rgba(0,0,0,0.5);
 }
 
-/* ── RESET ────────────────────────────────────────────────────────────────── */
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+*,*::before,*::after{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
 body{
-  font-family:var(--font-text);
-  font-size:var(--size-body);
-  color:var(--color-fg);
-  background:var(--color-bg);
-  min-height:100vh;
-  line-height:1.65;
+  margin:0; font-family:var(--font-text); font-size:var(--size-body);
+  line-height:1.65; color:var(--color-fg); background:var(--color-bg);
   background-image:
-    radial-gradient(ellipse 70% 55% at 85% 0%, rgba(255,98,0,0.10) 0%, transparent 60%),
-    radial-gradient(ellipse 65% 50% at 10% 100%, rgba(59,133,250,0.10) 0%, transparent 60%);
+    radial-gradient(ellipse 80% 60% at 80% 0%, rgba(255,98,0,0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 20% 100%, rgba(59,133,250,0.06) 0%, transparent 55%);
   background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  overflow-wrap:break-word;
 }
-[data-theme="dark"] body,
-[data-theme="dark"]{
-  background-image:
-    radial-gradient(ellipse 70% 55% at 85% 0%, rgba(250,159,9,0.08) 0%, transparent 60%),
-    radial-gradient(ellipse 65% 50% at 10% 100%, rgba(59,133,250,0.10) 0%, transparent 60%);
-}
-img,svg{display:block;max-width:100%}
-a{color:inherit;text-decoration:none}
-ul,ol{list-style:none}
-button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
+:focus-visible{ outline:2px solid var(--color-accent); outline-offset:3px; }
+h1,h2,h3,h4{ font-family:var(--font-display); color:var(--color-fg); line-height:1.15; letter-spacing:-0.025em; font-weight:700; margin:0; }
+h1{ font-size:var(--size-h1); letter-spacing:-0.04em; margin:0 0 var(--space-4); }
+h2{ font-size:var(--size-h2); margin:var(--space-8) 0 var(--space-4); }
+h3{ font-size:var(--size-h3); font-weight:600; margin:var(--space-6) 0 var(--space-3); }
+h4{ font-size:1.05rem; font-weight:600; margin:0 0 var(--space-2); }
+p{ margin:0 0 var(--space-4); max-width:64ch; }
+.lead{ font-size:var(--size-lead); line-height:1.5; color:var(--color-fg-muted); margin-bottom:var(--space-6); max-width:60ch; }
+a{ color:var(--color-accent); text-decoration:none; }
+a:hover{ text-decoration:underline; }
+strong{ font-weight:700; color:var(--color-fg); }
+ul,ol{ padding-left:var(--space-5); margin:0 0 var(--space-4); }
+li{ margin-bottom:var(--space-2); max-width:62ch; }
 
-/* ── LAYOUT ────────────────────────────────────────────────────────────────── */
-.container{width:100%;max-width:1100px;margin-inline:auto;padding-inline:var(--space-5)}
-.section{padding-block:var(--space-10)}
-.section + .section{padding-top:0}
+/* Topbar */
+.topbar{ position:sticky; top:0; z-index:100; height:var(--header-h); background:rgba(255,255,255,0.85); backdrop-filter:blur(12px); border-bottom:1px solid var(--color-border); display:flex; align-items:center; padding:0 var(--space-5); gap:var(--space-5); }
+[data-theme="dark"] .topbar{ background:rgba(20,17,13,0.85); }
+.topbar__brand{ display:flex; align-items:center; gap:var(--space-3); font-weight:700; font-size:1rem; text-decoration:none; color:var(--color-fg); font-family:var(--font-display); letter-spacing:-0.01em; }
+.topbar__logo{ width:30px; height:30px; border-radius:7px; background:var(--color-accent); display:grid; place-items:center; color:white; font-weight:800; font-size:0.75rem; flex-shrink:0; }
+.topnav{ display:flex; gap:var(--space-1); flex-wrap:wrap; }
+.topnav__link{ padding:var(--space-2) var(--space-3); font-size:var(--size-small); color:var(--color-fg-muted); text-decoration:none; border-radius:var(--radius-sm); transition:all var(--duration-fast); font-weight:500; }
+.topnav__link:hover{ color:var(--color-fg); background:var(--color-bg-elevated); }
+.topnav__link.is-active{ color:var(--color-accent); background:var(--color-bg-elevated); }
+.topbar__spacer{ flex:1; }
+.theme-toggle{ width:36px; height:36px; display:grid; place-items:center; background:var(--color-bg-elevated); border:1px solid var(--color-border); border-radius:999px; cursor:pointer; color:var(--color-fg); font:inherit; transition:all var(--duration-fast); }
 
-/* ── HEADER ───────────────────────────────────────────────────────────────── */
-.topbar{
-  position:sticky;top:0;z-index:100;
-  height:var(--header-h);
-  background:color-mix(in srgb, var(--color-bg) 80%, transparent);
-  backdrop-filter:blur(16px) saturate(1.4);
-  -webkit-backdrop-filter:blur(16px) saturate(1.4);
-  border-bottom:1px solid var(--color-border);
-  display:flex;align-items:center;
-}
-.topbar__inner{
-  display:flex;align-items:center;gap:var(--space-5);
-  width:100%;max-width:1100px;margin-inline:auto;padding-inline:var(--space-5);
-}
-.topbar__brand{
-  display:flex;align-items:center;gap:10px;
-  font-family:var(--font-display);font-weight:800;font-size:1.1rem;
-  letter-spacing:-0.01em;white-space:nowrap;flex-shrink:0;
-}
-.topbar__brand-icon{
-  width:32px;height:32px;border-radius:8px;
-  background:var(--color-accent);
-  display:flex;align-items:center;justify-content:center;
-  color:#fff;font-family:var(--font-display);font-weight:800;font-size:0.95rem;
-}
-.topnav{display:flex;align-items:center;gap:2px;flex:1;overflow-x:auto;scrollbar-width:none}
-.topnav::-webkit-scrollbar{display:none}
-.topnav__link{
-  font-size:var(--size-small);font-weight:500;white-space:nowrap;
-  padding:5px 12px;border-radius:8px;
-  transition:background var(--duration-fast),color var(--duration-fast);
-  color:var(--color-fg-muted);
-}
-.topnav__link:hover{background:var(--color-bg-sunken);color:var(--color-fg)}
-.topnav__link.is-active{background:var(--color-accent-dim);color:var(--color-accent);font-weight:600}
-.topbar__actions{margin-left:auto;display:flex;align-items:center;gap:var(--space-2);flex-shrink:0}
-.btn-theme{
-  width:34px;height:34px;border-radius:var(--radius);
-  border:1px solid var(--color-border);
-  display:flex;align-items:center;justify-content:center;
-  background:var(--color-bg-elevated);
-  color:var(--color-fg-muted);
-  font-size:1rem;
-  transition:background var(--duration-fast),border-color var(--duration-fast);
-}
-.btn-theme:hover{background:var(--color-bg-sunken);color:var(--color-fg)}
+/* View */
+.view{ display:none; opacity:0; transition:opacity 220ms var(--ease-out); max-width:1100px; margin:0 auto; padding:var(--space-10) var(--space-6) var(--space-12); }
+.view.is-active{ display:block; opacity:1; }
 
-/* ── VIEWS ────────────────────────────────────────────────────────────────── */
-.view{display:block}
-.view[hidden]{display:none}
+.view__hero{ margin-bottom:var(--space-8); }
+.view__hero .kicker{ display:inline-flex; align-items:center; gap:10px; font-family:var(--font-mono); font-size:0.75rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--color-accent); font-weight:600; margin:0 0 var(--space-4); }
+.view__hero .kicker__dot{ width:8px; height:8px; border-radius:50%; background:var(--color-accent); box-shadow:0 0 12px var(--color-accent); }
 
-/* ── TYPOGRAPHY ───────────────────────────────────────────────────────────── */
-.display-1{
-  font-family:var(--font-display);font-size:var(--size-h1);
-  font-weight:800;line-height:1.1;letter-spacing:-0.02em;
-}
-.h2{
-  font-family:var(--font-display);font-size:var(--size-h2);
-  font-weight:700;line-height:1.2;letter-spacing:-0.015em;
-}
-.h3{font-family:var(--font-display);font-size:1.4rem;font-weight:700;line-height:1.25}
-.lead{font-size:var(--size-lead);color:var(--color-fg-muted);line-height:1.6}
-.mono{font-family:var(--font-mono)}
-.text-accent{color:var(--color-accent)}
-.text-muted{color:var(--color-fg-muted)}
-.text-subtle{color:var(--color-fg-subtle)}
+/* Reveal */
+[data-reveal]{ opacity:0; transform:translateY(20px); transition:opacity 600ms var(--ease-out), transform 600ms var(--ease-out); }
+[data-reveal].is-visible{ opacity:1; transform:none; }
 
-/* ── SECTION HEADER ───────────────────────────────────────────────────────── */
-.section-label{
-  font-family:var(--font-mono);font-size:0.6875rem;font-weight:600;
-  letter-spacing:0.12em;text-transform:uppercase;
-  color:var(--color-accent);margin-bottom:var(--space-3);
-  display:flex;align-items:center;gap:8px;
-}
-.section-label::before{
-  content:'';display:block;width:16px;height:2px;
-  background:var(--color-accent);border-radius:2px;
-}
+/* Metrics */
+.metrics{ display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:var(--space-5); margin:var(--space-6) 0 var(--space-8); padding:var(--space-5); background:var(--color-bg-elevated); border:1px solid var(--color-border); border-radius:var(--radius-lg); box-shadow:var(--shadow-sm); }
+.metric{ border-top:3px solid currentColor; padding-top:var(--space-3); color:var(--color-accent); }
+.metric--info{ color:var(--color-info); } .metric--sage{ color:var(--color-sage); } .metric--teal{ color:var(--color-teal); }
+.metric__val{ font-family:var(--font-display); font-size:clamp(1.5rem,1.1rem + 1.5vw,2.2rem); font-weight:800; line-height:1; margin:0 0 var(--space-2); letter-spacing:-0.035em; color:var(--color-fg); }
+.metric__val span{ color:currentColor; }
+.metric__label{ font-size:var(--size-small); color:var(--color-fg-muted); margin:0; line-height:1.4; max-width:22ch; }
 
-/* ── CALLOUT ──────────────────────────────────────────────────────────────── */
-.callout{
-  border:1px solid;border-radius:var(--radius-lg);
-  padding:var(--space-5);display:flex;gap:var(--space-4);align-items:flex-start;
-}
-.callout--info{background:var(--color-info-dim);border-color:var(--color-info);color:var(--color-fg)}
-.callout--warn{background:var(--color-warn-dim);border-color:var(--color-warn);color:var(--color-fg)}
-.callout--success{background:var(--color-success-dim);border-color:var(--color-success);color:var(--color-fg)}
-.callout--accent{background:var(--color-accent-dim);border-color:var(--color-accent);color:var(--color-fg)}
-.callout__icon{font-size:1.3rem;flex-shrink:0;margin-top:2px}
-.callout__body{font-size:var(--size-body);line-height:1.6}
-.callout__body strong{font-weight:700}
+/* Cards */
+.cards{ display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); gap:var(--space-4); margin:var(--space-5) 0; }
+.pill-card{ padding:var(--space-5); background:var(--color-bg-elevated); border:1px solid var(--color-border); border-radius:var(--radius); border-top:3px solid var(--color-accent); box-shadow:var(--shadow-sm); min-width:0; transition:all var(--duration-fast); }
+.pill-card:hover{ transform:translateY(-2px); box-shadow:var(--shadow-lg); border-color:var(--color-accent); }
+.pill-card--info{ border-top-color:var(--color-info); }
+.pill-card--teal{ border-top-color:var(--color-teal); }
+.pill-card--plum{ border-top-color:var(--color-plum); }
+.pill-card--sage{ border-top-color:var(--color-sage); }
+.pill-card--success{ border-top-color:var(--color-success); }
+.pill-card__label{ display:inline-flex; align-items:center; gap:8px; font-family:var(--font-mono); font-size:0.7rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--color-accent); margin:0 0 var(--space-2); }
+.pill-card--info .pill-card__label{ color:var(--color-info); }
+.pill-card--teal .pill-card__label{ color:var(--color-teal); }
+.pill-card--plum .pill-card__label{ color:var(--color-plum); }
+.pill-card--sage .pill-card__label{ color:var(--color-sage); }
+.pill-card--success .pill-card__label{ color:var(--color-success); }
+.pill-card__label .dot{ width:6px; height:6px; border-radius:50%; background:currentColor; }
+.pill-card__title{ font-family:var(--font-display); font-size:1.1rem; font-weight:700; margin:0 0 var(--space-2); color:var(--color-fg); }
+.pill-card__desc{ font-size:var(--size-small); color:var(--color-fg-muted); margin:0; line-height:1.55; }
 
-/* ── BADGE ────────────────────────────────────────────────────────────────── */
-.badge {
-  display:inline-flex;align-items:center;gap:5px;
-  font-family:var(--font-mono);font-size:0.6875rem;font-weight:700;
-  padding:3px 9px;border-radius:6px;text-transform:uppercase;letter-spacing:0.06em;
-}
-.badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
-.badge--accent{background:var(--color-accent-dim);color:var(--color-accent)}
-.badge--info{background:var(--color-info-dim);color:var(--color-info)}
-.badge--teal{background:var(--color-teal-dim);color:var(--color-teal)}
-.badge--success{background:var(--color-success-dim);color:var(--color-success)}
-.badge--warn{background:var(--color-warn-dim);color:var(--itau-yellow)}
-.badge--plum{background:var(--color-plum-dim);color:var(--color-plum)}
+/* Tabela */
+.table-wrap{ width:100%; overflow-x:auto; border:1px solid var(--color-border); border-radius:var(--radius); margin:var(--space-5) 0; }
+.data-table{ width:100%; border-collapse:collapse; font-size:var(--size-small); }
+.data-table th{ background:var(--color-bg-sunken); font-family:var(--font-mono); font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; padding:10px 14px; text-align:left; border-bottom:2px solid var(--color-border-strong); color:var(--color-fg-muted); }
+.data-table td{ padding:11px 14px; border-bottom:1px solid var(--color-border); color:var(--color-fg); vertical-align:top; }
+.data-table tbody tr:nth-child(even){ background:var(--color-bg-sunken); }
+.data-table tbody tr:hover{ background:var(--color-accent-dim); }
 
-/* ── CARD ─────────────────────────────────────────────────────────────────── */
-.card{
-  background:var(--color-bg-elevated);
-  border:1px solid var(--color-border);
-  border-radius:var(--radius-lg);
-  padding:var(--space-6);
-  box-shadow:var(--shadow-sm);
-}
-.card--accent{border-color:var(--color-accent);border-width:2px}
+/* Timeline */
+.timeline{ list-style:none; padding:0; margin:var(--space-6) 0; position:relative; }
+.timeline::before{ content:''; position:absolute; left:8px; top:0; bottom:0; width:2px;
+  background:linear-gradient(to bottom, var(--color-accent) 0%, var(--color-border) 30%, var(--color-border) 100%); }
+.timeline__item{ position:relative; padding-left:var(--space-7); margin-bottom:var(--space-5); }
+.timeline__dot{ position:absolute; left:0; top:6px; width:18px; height:18px; border-radius:50%; background:var(--color-accent); box-shadow:0 0 0 4px var(--color-bg); }
+.timeline__date{ font-family:var(--font-mono); font-size:var(--size-xs); color:var(--color-accent); text-transform:uppercase; letter-spacing:0.06em; margin:0 0 var(--space-1); font-weight:700; }
+.timeline__title{ font-family:var(--font-display); font-size:1.0625rem; margin:0 0 var(--space-1); font-weight:700; }
+.timeline__desc{ font-size:var(--size-small); color:var(--color-fg-muted); margin:0; }
 
-/* ── TABLE ────────────────────────────────────────────────────────────────── */
-.table-wrap{
-  width:100%;overflow-x:auto;
-  border:1px solid var(--color-border);border-radius:var(--radius-lg);
-}
-.data-table{width:100%;border-collapse:collapse;font-size:var(--size-small)}
-.data-table thead{position:sticky;top:0;z-index:2}
-.data-table th{
-  background:var(--color-bg-sunken);
-  font-family:var(--font-mono);font-size:0.6875rem;font-weight:700;
-  text-transform:uppercase;letter-spacing:0.1em;
-  padding:12px 16px;border-bottom:2px solid var(--color-border-strong);
-  color:var(--color-fg-muted);white-space:nowrap;
-}
-.data-table td{padding:13px 16px;border-bottom:1px solid var(--color-border);color:var(--color-fg)}
-.data-table tbody tr:nth-child(even){background:var(--color-bg-sunken)}
-.data-table tbody tr:last-child td{border-bottom:none}
-.data-table td strong{font-weight:600}
+/* Quote */
+.quote{ border-left:4px solid var(--color-accent); padding:var(--space-3) var(--space-6); margin:var(--space-6) 0; }
+.quote p{ font-family:var(--font-display); font-size:1.25rem; font-style:italic; font-weight:600; color:var(--color-fg); margin:0; line-height:1.3; }
 
-/* ── STAT GRID ────────────────────────────────────────────────────────────── */
-.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:var(--space-4)}
-.stat-card{
-  background:var(--color-bg-elevated);border:1px solid var(--color-border);
-  border-radius:var(--radius-lg);padding:var(--space-5);
-  box-shadow:var(--shadow-sm);
-}
-.stat-card__label{
-  font-family:var(--font-mono);font-size:0.6875rem;font-weight:600;
-  text-transform:uppercase;letter-spacing:0.1em;color:var(--color-fg-subtle);
-  margin-bottom:var(--space-2);
-}
-.stat-card__value{
-  font-family:var(--font-display);font-size:clamp(1.7rem,1.4rem+1vw,2.5rem);
-  font-weight:800;line-height:1;letter-spacing:-0.02em;color:var(--color-accent);
-}
-.stat-card__sub{font-size:var(--size-xs);color:var(--color-fg-muted);margin-top:var(--space-2)}
+/* Contact */
+.contact-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:var(--space-4); margin:var(--space-5) 0; }
+.contact-card{ padding:var(--space-5); background:var(--color-bg-elevated); border:1px solid var(--color-border); border-radius:var(--radius); }
+.contact-card__label{ font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--color-accent); margin:0 0 var(--space-2); font-weight:600; }
+.contact-card__val{ font-family:var(--font-display); font-size:1.15rem; font-weight:700; color:var(--color-fg); margin:0 0 var(--space-1); }
+.contact-card__desc{ font-size:var(--size-small); color:var(--color-fg-muted); margin:0; }
 
-/* ── AUM BARS ─────────────────────────────────────────────────────────────── */
-.aum-bars{display:flex;flex-direction:column;gap:var(--space-4)}
-.aum-bar-item{}
-.aum-bar-meta{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:var(--space-2)}
-.aum-bar-label{font-size:var(--size-small);font-weight:600;color:var(--color-fg)}
-.aum-bar-values{font-family:var(--font-mono);font-size:var(--size-xs);color:var(--color-fg-muted)}
-.aum-bar-track{
-  height:8px;background:var(--color-bg-sunken);border-radius:99px;overflow:hidden;
-  border:1px solid var(--color-border);
-}
-.aum-bar-fill{
-  height:100%;border-radius:99px;
-  width:0%;
-  transition:width 1.2s var(--ease-out);
-}
-.aum-bar-fill--0{background:linear-gradient(90deg,var(--itau-orange),var(--itau-orange-2))}
-.aum-bar-fill--1{background:linear-gradient(90deg,var(--itau-blue-3),#60a5fa)}
-.aum-bar-fill--2{background:linear-gradient(90deg,var(--color-teal),#14b8a6)}
-.aum-bar-fill--3{background:linear-gradient(90deg,var(--color-plum),#e11d48)}
-.aum-bar-fill--4{background:linear-gradient(90deg,var(--itau-yellow),#fde68a)}
+/* Callout */
+.callout{ display:flex; gap:var(--space-4); padding:var(--space-4) var(--space-5); margin:var(--space-5) 0; border-left:3px solid var(--color-info); background:var(--color-info-dim); border-radius:var(--radius); }
+.callout__icon{ flex-shrink:0; width:24px; height:24px; display:grid; place-items:center; border-radius:50%; background:var(--color-info); color:white; font-weight:700; font-size:0.75rem; margin-top:2px; }
+.callout__title{ font-weight:700; margin:0 0 var(--space-1); font-size:var(--size-small); }
+.callout__content p{ margin:0; font-size:var(--size-small); }
 
-/* ── TIMELINE ─────────────────────────────────────────────────────────────── */
-.timeline{
-  display:flex;flex-wrap:wrap;gap:var(--space-3);
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{ transition-duration:0.01ms !important; animation-duration:0.01ms !important; }
+  [data-reveal]{ opacity:1; transform:none; }
 }
-.timeline-item{
-  display:flex;gap:var(--space-3);align-items:flex-start;
-  background:var(--color-bg-elevated);border:1px solid var(--color-border);
-  border-radius:var(--radius);padding:var(--space-3) var(--space-4);
-  min-width:200px;flex:1;
+@media print{
+  .topnav, .theme-toggle{ display:none; }
+  .view, .view[hidden]{ display:block !important; opacity:1 !important; }
+  .view + .view{ page-break-before:always; }
 }
-.timeline-item__year{
-  font-family:var(--font-mono);font-weight:700;font-size:0.8rem;
-  color:var(--color-accent);white-space:nowrap;flex-shrink:0;padding-top:2px;
-}
-.timeline-item__text{font-size:var(--size-xs);color:var(--color-fg-muted);line-height:1.4}
-
-/* ── POSICIONAMENTO CARDS ─────────────────────────────────────────────────── */
-.attr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--space-5)}
-.attr-card{
-  background:var(--color-bg-elevated);border:1px solid var(--color-border);
-  border-radius:var(--radius-lg);padding:var(--space-6);
-  box-shadow:var(--shadow-sm);
-  display:flex;flex-direction:column;gap:var(--space-4);
-}
-.attr-card__icon{
-  width:48px;height:48px;border-radius:14px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.5rem;
-}
-.attr-card__icon--orange{background:var(--color-accent-dim)}
-.attr-card__icon--blue{background:var(--color-info-dim)}
-.attr-card__icon--teal{background:var(--color-teal-dim)}
-.attr-card__title{font-family:var(--font-display);font-size:1.35rem;font-weight:700}
-.attr-card__body{font-size:var(--size-small);color:var(--color-fg-muted);line-height:1.6}
-
-/* ── PILARES ──────────────────────────────────────────────────────────────── */
-.pilares-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:var(--space-4)}
-.pilar-card{
-  background:var(--color-bg-elevated);border:1px solid var(--color-border);
-  border-left:3px solid var(--color-accent);
-  border-radius:var(--radius);padding:var(--space-4) var(--space-5);
-  box-shadow:var(--shadow-sm);
-}
-.pilar-card__title{font-weight:700;margin-bottom:var(--space-2);font-size:var(--size-body)}
-.pilar-card__body{font-size:var(--size-small);color:var(--color-fg-muted);line-height:1.55}
-
-/* ── ESTRUTURA 3 CAMADAS ──────────────────────────────────────────────────── */
-.camadas-stack{display:flex;flex-direction:column;gap:var(--space-3)}
-.camada{
-  border:1px solid var(--color-border);border-radius:var(--radius-lg);
-  padding:var(--space-4) var(--space-5);background:var(--color-bg-elevated);
-  box-shadow:var(--shadow-sm);
-}
-.camada--top{border-left:4px solid var(--itau-orange)}
-.camada--core{border-left:4px solid var(--itau-blue-3)}
-.camada--base{border-left:4px solid var(--color-teal)}
-.camada__label{
-  font-family:var(--font-mono);font-size:0.6875rem;font-weight:700;
-  text-transform:uppercase;letter-spacing:0.1em;margin-bottom:var(--space-2);
-}
-.camada--top .camada__label{color:var(--itau-orange)}
-.camada--core .camada__label{color:var(--itau-blue-3)}
-.camada--base .camada__label{color:var(--color-teal)}
-.camada__pills{display:flex;flex-wrap:wrap;gap:var(--space-2)}
-.camada__pill{
-  font-size:var(--size-xs);font-weight:600;
-  padding:4px 10px;border-radius:6px;
-  background:var(--color-bg-sunken);
-  border:1px solid var(--color-border);
-  color:var(--color-fg);
-}
-
-/* ── ATRIBUTOS 7 ──────────────────────────────────────────────────────────── */
-.attrs7-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:var(--space-3)}
-.attr7-item{
-  background:var(--color-bg-elevated);border:1px solid var(--color-border);
-  border-radius:var(--radius);padding:var(--space-3) var(--space-4);
-  font-size:var(--size-small);color:var(--color-fg);
-  display:flex;align-items:center;gap:10px;box-shadow:var(--shadow-sm);
-}
-.attr7-item::before{
-  content:'';width:8px;height:8px;border-radius:50%;flex-shrink:0;
-  background:var(--color-accent);
-}
-
-/* ── DIRETORIA GRID ───────────────────────────────────────────────────────── */
-.diretoria-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:var(--space-4)}
-.dir-card{
-  background:var(--color-bg-elevated);border:1px solid var(--color-border);
-  border-radius:var(--radius-lg);padding:var(--space-4);
-  box-shadow:var(--shadow-sm);display:flex;gap:var(--space-3);align-items:center;
-}
-.dir-card__avatar{
-  width:44px;height:44px;border-radius:50%;flex-shrink:0;
-  background:linear-gradient(135deg, var(--color-accent-dim), var(--color-info-dim));
-  border:2px solid var(--color-border);
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--font-display);font-weight:800;font-size:1rem;color:var(--color-accent);
-}
-.dir-card__name{font-size:var(--size-small);font-weight:700;line-height:1.3}
-.dir-card__role{font-size:var(--size-xs);color:var(--color-fg-muted);margin-top:3px;line-height:1.3}
-.dir-card--cio{border-color:var(--color-accent);border-width:2px}
-.dir-card--cio .dir-card__avatar{background:var(--color-accent);color:#fff}
-
-/* ── ESTRATEGIAS ──────────────────────────────────────────────────────────── */
-.estrategias-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:var(--space-3)}
-.estrat-pill{
-  background:var(--color-bg-elevated);border:1px solid var(--color-border);
-  border-radius:var(--radius);padding:var(--space-3) var(--space-4);
-  font-size:var(--size-small);font-weight:500;color:var(--color-fg);
-  display:flex;align-items:center;gap:8px;
-}
-.estrat-pill::before{
-  content:'';width:8px;height:8px;border-radius:50%;flex-shrink:0;
-  background:var(--color-accent);
-}
-
-.itnow-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:var(--space-3)}
-.itnow-card{
-  background:var(--color-bg-elevated);border:1px solid var(--color-border);
-  border-radius:var(--radius-lg);padding:var(--space-4);
-  box-shadow:var(--shadow-sm);
-}
-.itnow-card__cat{
-  font-family:var(--font-mono);font-size:0.6875rem;font-weight:600;
-  text-transform:uppercase;letter-spacing:0.1em;color:var(--color-fg-subtle);
-  margin-bottom:var(--space-2);
-}
-.itnow-card__title{font-weight:700;font-size:var(--size-small);margin-bottom:var(--space-2)}
-.itnow-card__tickers{display:flex;flex-wrap:wrap;gap:var(--space-2)}
-
-/* ── CHART CONTAINERS ─────────────────────────────────────────────────────── */
-.chart-wrap{
-  position:relative;background:var(--color-bg-elevated);
-  border:1px solid var(--color-border);border-radius:var(--radius-lg);
-  padding:var(--space-5);box-shadow:var(--shadow-sm);
-}
-.chart-title{font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:var(--space-4)}
-.chart-canvas-wrap{position:relative}
-.chart-donut-wrap{max-width:340px;margin:0 auto}
-
-/* ── DONUT + TABLE LAYOUT ─────────────────────────────────────────────────── */
-.split-layout{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-5);align-items:start}
-@media(max-width:720px){.split-layout{grid-template-columns:1fr}}
-
-/* ── HORIZONTAL BAR (MESAS) ───────────────────────────────────────────────── */
-.hbar-wrap{
-  background:var(--color-bg-elevated);border:1px solid var(--color-border);
-  border-radius:var(--radius-lg);padding:var(--space-5);box-shadow:var(--shadow-sm);
-  margin-bottom:var(--space-5);
-}
-.hbar-list{display:flex;flex-direction:column;gap:var(--space-4)}
-.hbar-item{}
-.hbar-meta{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
-.hbar-name{font-size:var(--size-small);font-weight:600}
-.hbar-val{font-family:var(--font-mono);font-size:var(--size-xs);color:var(--color-fg-muted)}
-.hbar-track{height:10px;background:var(--color-bg-sunken);border-radius:99px;overflow:hidden;border:1px solid var(--color-border)}
-.hbar-fill{height:100%;border-radius:99px;width:0;transition:width 1.1s var(--ease-out)}
-.hbar-fill--0{background:linear-gradient(90deg,var(--itau-orange),var(--itau-orange-3))}
-.hbar-fill--1{background:linear-gradient(90deg,var(--itau-blue-3),#93c5fd)}
-.hbar-fill--2{background:linear-gradient(90deg,var(--color-teal),#2dd4bf)}
-.hbar-fill--3{background:linear-gradient(90deg,var(--color-plum),#fb7185)}
-
-/* ── ESG QUOTE ────────────────────────────────────────────────────────────── */
-.esg-quote{
-  border-left:4px solid var(--color-accent);
-  padding:var(--space-4) var(--space-5);
-  background:var(--color-accent-dim);border-radius:0 var(--radius-lg) var(--radius-lg) 0;
-  font-family:var(--font-display);font-size:1.15rem;font-style:italic;
-  line-height:1.55;color:var(--color-fg);margin-block:var(--space-6);
-}
-
-/* ── CONTACT CARDS ────────────────────────────────────────────────────────── */
-.contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:var(--space-5)}
-.contact-card{
-  background:var(--color-bg-elevated);border:1px solid var(--color-border);
-  border-radius:var(--radius-lg);padding:var(--space-5) var(--space-6);
-  box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:var(--space-3);
-}
-.contact-card__icon{
-  width:44px;height:44px;border-radius:12px;
-  background:var(--color-accent-dim);display:flex;align-items:center;justify-content:center;
-  font-size:1.3rem;
-}
-.contact-card__label{font-family:var(--font-mono);font-size:0.6875rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-fg-subtle)}
-.contact-card__value{font-family:var(--font-display);font-size:1.3rem;font-weight:700;color:var(--color-fg)}
-.contact-card__detail{font-size:var(--size-xs);color:var(--color-fg-muted);line-height:1.5}
-.contact-card__link{
-  font-size:var(--size-small);color:var(--color-accent);font-weight:500;
-  display:inline-flex;align-items:center;gap:5px;
-}
-.contact-card__link:hover{text-decoration:underline}
-
-/* ── FOOTER ───────────────────────────────────────────────────────────────── */
-.footer{
-  border-top:1px solid var(--color-border);
-  padding:var(--space-6) 0;
-  font-size:var(--size-xs);color:var(--color-fg-subtle);
-}
-.footer__inner{
-  display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:var(--space-3);
-}
-.footer__badges{display:flex;gap:var(--space-3);flex-wrap:wrap}
-
-/* ── HERO ─────────────────────────────────────────────────────────────────── */
-.hero{padding-block:var(--space-12) var(--space-10)}
-.hero__eyebrow{
-  font-family:var(--font-mono);font-size:0.75rem;font-weight:600;
-  letter-spacing:0.14em;text-transform:uppercase;color:var(--color-accent);
-  margin-bottom:var(--space-4);display:flex;align-items:center;gap:8px;
-}
-.hero__eyebrow::before{content:'';display:block;width:20px;height:2px;background:var(--color-accent);border-radius:2px}
-.hero__title{margin-bottom:var(--space-5)}
-.hero__title em{font-style:italic;color:var(--color-accent)}
-.hero__lead{max-width:680px;margin-bottom:var(--space-8)}
-
-/* ── DIVIDER ─────────────────────────────────────────────────────────────────*/
-.divider{height:1px;background:var(--color-border);margin-block:var(--space-8)}
-
-/* ── RESPONSIVE ───────────────────────────────────────────────────────────── */
-@media(max-width:600px){
-  .topnav{gap:0}
-  .topnav__link{padding:5px 9px;font-size:0.75rem}
-  .hero{padding-block:var(--space-8) var(--space-7)}
-}
-
-/* ── ANIMATIONS ───────────────────────────────────────────────────────────── */
-@keyframes fadeUp {
-  from{opacity:0;transform:translateY(20px)}
-  to{opacity:1;transform:translateY(0)}
-}
-.fade-up{animation:fadeUp 0.6s var(--ease-out) both}
-.fade-up--1{animation-delay:0.1s}
-.fade-up--2{animation-delay:0.2s}
-.fade-up--3{animation-delay:0.3s}
-.fade-up--4{animation-delay:0.4s}
-
-/* ── COUNTER ──────────────────────────────────────────────────────────────── */
-.counter-target{display:inline}
 </style>
 </head>
+
 <body>
 
-<!-- ── HEADER ──────────────────────────────────────────────────────────────── -->
-<header class="topbar" role="banner">
-  <div class="topbar__inner">
-    <a href="#home" class="topbar__brand" aria-label="Itaú Asset Management — Início">
-      <div class="topbar__brand-icon" aria-hidden="true">IA</div>
-      <span>Itaú Asset</span>
-    </a>
-    <nav class="topnav" role="navigation" aria-label="Navegação principal">
-      <a class="topnav__link" href="#home">Sobre</a>
-      <a class="topnav__link" href="#posicionamento">Posicionamento</a>
-      <a class="topnav__link" href="#estrategias">Estratégias</a>
-      <a class="topnav__link" href="#esg">ESG &amp; Inteligência</a>
-      <a class="topnav__link" href="#contato">Contato</a>
-    </nav>
-    <div class="topbar__actions">
-      <button class="btn-theme" id="themeBtn" aria-label="Alternar tema claro/escuro" title="Alternar tema">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-        </svg>
-      </button>
-    </div>
-  </div>
+<header class="topbar">
+  <a href="#home" class="topbar__brand">
+    <span class="topbar__logo" aria-hidden="true">IA</span>
+    <span>Itaú Asset Management</span>
+  </a>
+  <nav class="topnav" aria-label="Navegação principal">
+    <a href="#home" class="topnav__link">Home</a>
+    <a href="#areas" class="topnav__link">Áreas de gestão</a>
+    <a href="#multimesas" class="topnav__link">Multimesas</a>
+    <a href="#jornada" class="topnav__link">Jornada</a>
+    <a href="#esg" class="topnav__link">ESG</a>
+    <a href="#governanca" class="topnav__link">Governança</a>
+    <a href="#contato" class="topnav__link">Contato</a>
+  </nav>
+  <span class="topbar__spacer"></span>
+  <button class="theme-toggle" type="button" aria-label="Alternar tema"><span aria-hidden="true">◐</span></button>
 </header>
 
-<!-- ════════════════════════════════════════════════════════════════════════ -->
-<!-- VIEW: #home ──────────────────────────────────────────────────────────── -->
-<!-- ════════════════════════════════════════════════════════════════════════ -->
-<main id="main">
-<section class="view" id="home">
+<main>
 
-  <!-- Hero -->
-  <div class="container">
-    <div class="hero">
-      <p class="hero__eyebrow" aria-label="Seção: Sobre a Itaú Asset">Sobre a Itaú Asset</p>
-      <h1 class="display-1 hero__title fade-up">
-        A maior gestora<br>de recursos <em>do Brasil</em>
-      </h1>
-      <p class="lead hero__lead fade-up fade-up--1">
-        Sofisticada, democrática e internacional. Com mais de 60 anos de experiência e +300 profissionais, gerimos <strong>R$ 1,193 trilhão</strong> sob mais de 2,6 milhões de clientes. Presença em Nova York, Argentina e Chile.
-      </p>
-    </div>
-  </div>
+  <!-- ── HOME ── -->
+  <article class="view is-active" id="home">
+    <section class="view__hero">
+      <p class="kicker"><span class="kicker__dot"></span>Itaú Asset Management · 2024</p>
+      <h1>A maior gestora privada da América Latina</h1>
+      <p class="lead">Mais de 60 anos de experiência, R$ 1,19 trilhão sob gestão, 2,6 milhões de clientes e 14,5% de market share. Plataforma sofisticada no modelo, democrática no acesso e internacional nas possibilidades.</p>
+    </section>
 
-  <!-- KPIs -->
-  <div class="container section" style="padding-top:0">
-    <div class="stat-grid fade-up fade-up--2">
-      <div class="stat-card">
-        <div class="stat-card__label">Assets Under Management</div>
-        <div class="stat-card__value">R$&nbsp;<span class="counter-target" data-target="1193" data-suffix=" bi">0</span></div>
-        <div class="stat-card__sub">bilhões geridos em carteira total</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-card__label">Clientes</div>
-        <div class="stat-card__value"><span class="counter-target" data-target="26" data-suffix=" mi" data-decimal="1">0</span></div>
-        <div class="stat-card__sub">2,6 milhões de investidores atendidos</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-card__label">Market Share</div>
-        <div class="stat-card__value"><span class="counter-target" data-target="145" data-suffix="%" data-decimal="1">0</span></div>
-        <div class="stat-card__sub">participação no mercado brasileiro</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-card__label">Títulos Públicos</div>
-        <div class="stat-card__value">R$&nbsp;<span class="counter-target" data-target="647" data-suffix=" bi">0</span></div>
-        <div class="stat-card__sub">em Títulos do Tesouro Nacional sob gestão</div>
-      </div>
+    <div class="metrics" data-reveal>
+      <div class="metric"><p class="metric__val">R$ <span>1,19</span> tri</p><p class="metric__label">AuM — Local R$ 1,171 tri + Offshore R$ 60 bi</p></div>
+      <div class="metric metric--info"><p class="metric__val"><span>2,6</span> mi</p><p class="metric__label">clientes atendidos</p></div>
+      <div class="metric metric--sage"><p class="metric__val"><span>14,5</span>%</p><p class="metric__label">market share no Brasil</p></div>
+      <div class="metric metric--teal"><p class="metric__val">+<span>300</span></p><p class="metric__label">profissionais dedicados</p></div>
     </div>
 
-    <!-- Callout info -->
-    <div class="callout callout--info" style="margin-top:var(--space-6)">
-      <span class="callout__icon" aria-hidden="true">ℹ️</span>
-      <div class="callout__body">
-        <strong>14,5% de market share</strong> no setor de gestão de recursos do Brasil — R$ 647 bi em títulos do Tesouro Nacional sob gestão direta, consolidando a Itaú Asset como a maior detentora individual de dívida soberana no país.
+    <section data-reveal>
+      <h2>Quem somos</h2>
+      <p>A Itaú Asset Management é a área especializada em gestão de recursos do Itaú Unibanco. Reúne mais de 60 anos de experiência, equipe de mais de 300 profissionais e atua no Brasil e no exterior — com presença em Nova York, Argentina e Chile.</p>
+
+      <div class="quote">
+        <p>"Sofisticada no modelo, democrática no acesso, internacional nas possibilidades."</p>
       </div>
+    </section>
+
+    <section data-reveal>
+      <h2>Três pilares</h2>
+      <div class="cards">
+        <div class="pill-card"><p class="pill-card__label"><span class="dot"></span>Pilar 01</p><h4 class="pill-card__title">Sofisticada no modelo</h4><p class="pill-card__desc">Estratégias de gestão ativa antes restritas a uma elite financeira, agora em escala industrial.</p></div>
+        <div class="pill-card pill-card--info"><p class="pill-card__label"><span class="dot"></span>Pilar 02</p><h4 class="pill-card__title">Democrática no acesso</h4><p class="pill-card__desc">2,6 milhões de clientes acessam a mesma plataforma usada por institucionais.</p></div>
+        <div class="pill-card pill-card--teal"><p class="pill-card__label"><span class="dot"></span>Pilar 03</p><h4 class="pill-card__title">Internacional nas possibilidades</h4><p class="pill-card__desc">Acesso simplificado a alternativas internacionais via plataforma global.</p></div>
+      </div>
+    </section>
+
+    <section data-reveal>
+      <h2>Sete atributos do modelo</h2>
+      <div class="cards">
+        <div class="pill-card"><p class="pill-card__label"><span class="dot"></span>01</p><h4 class="pill-card__title">Sofisticação + democratização</h4><p class="pill-card__desc">Alta complexidade em produtos acessíveis.</p></div>
+        <div class="pill-card pill-card--info"><p class="pill-card__label"><span class="dot"></span>02</p><h4 class="pill-card__title">Alternativas internacionais</h4><p class="pill-card__desc">Diversificação geográfica para todos os perfis.</p></div>
+        <div class="pill-card pill-card--sage"><p class="pill-card__label"><span class="dot"></span>03</p><h4 class="pill-card__title">Atração de talentos</h4><p class="pill-card__desc">Modelo Multimesas com autonomia operacional.</p></div>
+        <div class="pill-card pill-card--teal"><p class="pill-card__label"><span class="dot"></span>04</p><h4 class="pill-card__title">Proximidade com cliente</h4><p class="pill-card__desc">Distribuição global dedicada.</p></div>
+        <div class="pill-card pill-card--plum"><p class="pill-card__label"><span class="dot"></span>05</p><h4 class="pill-card__title">Presença digital</h4><p class="pill-card__desc">itnow.com.br e itauasset.com.br.</p></div>
+        <div class="pill-card pill-card--success"><p class="pill-card__label"><span class="dot"></span>06</p><h4 class="pill-card__title">Educação do investidor</h4><p class="pill-card__desc">Conteúdo e eventos.</p></div>
+        <div class="pill-card"><p class="pill-card__label"><span class="dot"></span>07</p><h4 class="pill-card__title">Performance sustentável</h4><p class="pill-card__desc">Resultados consistentes ao longo de ciclos.</p></div>
+      </div>
+    </section>
+  </article>
+
+  <!-- ── ÁREAS DE GESTÃO ── -->
+  <article class="view" id="areas" hidden>
+    <section class="view__hero">
+      <p class="kicker"><span class="kicker__dot"></span>Áreas de Gestão</p>
+      <h1>Arquitetura da plataforma</h1>
+      <p class="lead">Soluções de topo, quatro pilares core e seis capacidades de base sustentam toda a operação da Itaú Asset.</p>
+    </section>
+
+    <section data-reveal>
+      <h2>Soluções de topo</h2>
+      <div class="cards">
+        <div class="pill-card"><p class="pill-card__label"><span class="dot"></span>Wrapper</p><h4 class="pill-card__title">Mandatos Personalizados</h4><p class="pill-card__desc">Global Institutional Solutions — mandatos customizados para institucionais.</p></div>
+        <div class="pill-card pill-card--info"><p class="pill-card__label"><span class="dot"></span>Wrapper</p><h4 class="pill-card__title">Soluções em Asset Allocation</h4><p class="pill-card__desc">Multi Asset Class — combinações otimizadas entre classes.</p></div>
+      </div>
+    </section>
+
+    <section data-reveal>
+      <h2>Quatro pilares core</h2>
+      <div class="cards">
+        <div class="pill-card"><p class="pill-card__label"><span class="dot"></span>Core 01</p><h4 class="pill-card__title">Beta / Indexado</h4><p class="pill-card__desc">Eficiência e escala. R$ 174,49 bi total, R$ 18,77 bi em ETFs. Head: Renato Eid.</p></div>
+        <div class="pill-card pill-card--info"><p class="pill-card__label"><span class="dot"></span>Core 02</p><h4 class="pill-card__title">Renda Fixa Ativa</h4><p class="pill-card__desc">R$ 647 bi títulos públicos (12,2% dívida BR) + R$ 355 bi privados. Head: Luís Wetzel.</p></div>
+        <div class="pill-card pill-card--teal"><p class="pill-card__label"><span class="dot"></span>Core 03</p><h4 class="pill-card__title">Crédito</h4><p class="pill-card__desc">Infra, Agro, Imobiliário, Op. Estruturadas. Head: Fayga Delbem.</p></div>
+        <div class="pill-card pill-card--plum"><p class="pill-card__label"><span class="dot"></span>Core 04</p><h4 class="pill-card__title">Retorno Absoluto</h4><p class="pill-card__desc">R$ 113,5 bi. Independência e autonomia das mesas.</p></div>
+      </div>
+    </section>
+
+    <section data-reveal>
+      <h2>Estratégias Beta — detalhe</h2>
+      <p>R$ 18,77 bi em ETFs e mais de R$ 174,49 bi em gestão indexada total.</p>
+
+      <h3>9 Fundos</h3>
+      <ul>
+        <li>Renda Fixa Local · Moedas · Renda Variável Local · Alavancados</li>
+        <li>Renda Variável Global · Renda Fixa Global · Smart Beta · Commodities · Temáticos</li>
+      </ul>
+      <h3>4 ETFs listados</h3>
+      <ul>
+        <li>Renda Fixa Local · Renda Variável Local · Renda Variável Global · Criptomoedas</li>
+      </ul>
+      <p>Saiba mais em <a href="https://www.itnow.com.br" target="_blank" rel="noopener">www.itnow.com.br</a>.</p>
+    </section>
+
+    <section data-reveal>
+      <h2>Seis capacidades de base</h2>
+      <div class="cards">
+        <div class="pill-card pill-card--info"><p class="pill-card__label"><span class="dot"></span>Base</p><h4 class="pill-card__title">Pesquisa Econômica</h4><p class="pill-card__desc">10 economistas. Cobertura global. 1º em projeções de juros BC.</p></div>
+        <div class="pill-card pill-card--teal"><p class="pill-card__label"><span class="dot"></span>Base</p><h4 class="pill-card__title">Data Science</h4><p class="pill-card__desc">5 cientistas de dados aplicando ML.</p></div>
+        <div class="pill-card"><p class="pill-card__label"><span class="dot"></span>Base</p><h4 class="pill-card__title">Portfolio Analytics</h4><p class="pill-card__desc">Risco e atribuição quantitativa.</p></div>
+        <div class="pill-card pill-card--sage"><p class="pill-card__label"><span class="dot"></span>Base</p><h4 class="pill-card__title">Trading</h4><p class="pill-card__desc">Execução com cobertura 24h.</p></div>
+        <div class="pill-card pill-card--plum"><p class="pill-card__label"><span class="dot"></span>Base</p><h4 class="pill-card__title">Integração ESG</h4><p class="pill-card__desc">100% dos ativos cobertos.</p></div>
+        <div class="pill-card pill-card--success"><p class="pill-card__label"><span class="dot"></span>Base</p><h4 class="pill-card__title">Operações</h4><p class="pill-card__desc">Backoffice, compliance, suporte.</p></div>
+      </div>
+    </section>
+  </article>
+
+  <!-- ── MULTIMESAS ── -->
+  <article class="view" id="multimesas" hidden>
+    <section class="view__hero">
+      <p class="kicker"><span class="kicker__dot"></span>Modelo Multimesas</p>
+      <h1>Holding de assets independentes</h1>
+      <p class="lead">Estruturado em 2019, ultrapassou R$ 100 bilhões em 2022. Oito mesas com autonomia de decisão e infraestrutura compartilhada.</p>
+    </section>
+
+    <div class="metrics" data-reveal>
+      <div class="metric"><p class="metric__val">R$ <span>113,5</span> bi</p><p class="metric__label">Retorno Absoluto</p></div>
+      <div class="metric metric--teal"><p class="metric__val">R$ <span>89,8</span> bi</p><p class="metric__label">Crédito Estruturado + RF Unconstrained</p></div>
+      <div class="metric metric--info"><p class="metric__val">R$ <span>18,5</span> bi</p><p class="metric__label">Macro</p></div>
+      <div class="metric metric--sage"><p class="metric__val">R$ <span>5,2</span> bi</p><p class="metric__label">Equities</p></div>
     </div>
 
-    <!-- AuM breakdown bars -->
-    <div style="margin-top:var(--space-8)">
-      <p class="section-label">Composição do AuM</p>
-      <h2 class="h2" style="margin-bottom:var(--space-6)">Breakdown por estratégia</h2>
-      <div class="aum-bars" id="aumBars">
-        <div class="aum-bar-item">
-          <div class="aum-bar-meta">
-            <span class="aum-bar-label">Títulos Públicos</span>
-            <span class="aum-bar-values mono">R$ 647 bi &nbsp;·&nbsp; 54%</span>
-          </div>
-          <div class="aum-bar-track"><div class="aum-bar-fill aum-bar-fill--0" data-pct="54"></div></div>
-        </div>
-        <div class="aum-bar-item">
-          <div class="aum-bar-meta">
-            <span class="aum-bar-label">Títulos Privados / Crédito</span>
-            <span class="aum-bar-values mono">R$ 355 bi &nbsp;·&nbsp; 30%</span>
-          </div>
-          <div class="aum-bar-track"><div class="aum-bar-fill aum-bar-fill--1" data-pct="30"></div></div>
-        </div>
-        <div class="aum-bar-item">
-          <div class="aum-bar-meta">
-            <span class="aum-bar-label">Gestão Indexada (itnow + Beta)</span>
-            <span class="aum-bar-values mono">R$ 174,49 bi &nbsp;·&nbsp; 15%</span>
-          </div>
-          <div class="aum-bar-track"><div class="aum-bar-fill aum-bar-fill--2" data-pct="15"></div></div>
-        </div>
-        <div class="aum-bar-item">
-          <div class="aum-bar-meta">
-            <span class="aum-bar-label">Retorno Absoluto (Multimesas)</span>
-            <span class="aum-bar-values mono">R$ 113,5 bi &nbsp;·&nbsp; 9,5%</span>
-          </div>
-          <div class="aum-bar-track"><div class="aum-bar-fill aum-bar-fill--3" data-pct="9.5"></div></div>
-        </div>
-        <div class="aum-bar-item">
-          <div class="aum-bar-meta">
-            <span class="aum-bar-label">ETFs itnow</span>
-            <span class="aum-bar-values mono">R$ 18,77 bi &nbsp;·&nbsp; 1,6%</span>
-          </div>
-          <div class="aum-bar-track"><div class="aum-bar-fill aum-bar-fill--4" data-pct="1.6"></div></div>
-        </div>
+    <section data-reveal>
+      <h2>Oito mesas</h2>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Mesa</th><th>Estratégia</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Crédito Estruturado</strong></td><td>Infra / Agro / Imobiliário / Op. Estruturadas</td></tr>
+            <tr><td><strong>Asgard</strong></td><td>RV Unconstrained</td></tr>
+            <tr><td><strong>Janeiro</strong></td><td>Macro / RF Unconstrained</td></tr>
+            <tr><td><strong>Optimus</strong></td><td>Macro / RF / Long Bias</td></tr>
+            <tr><td><strong>Legend</strong></td><td>Macro / RF Unconstrained</td></tr>
+            <tr><td><strong>Hunter</strong></td><td>RV / Multimercado L/S</td></tr>
+            <tr><td><strong>Artax</strong></td><td>Macro / RF Unconstrained</td></tr>
+            <tr><td><strong>Aurora Yield Plus</strong></td><td>Multimercado — Juros e Moedas</td></tr>
+          </tbody>
+        </table>
       </div>
-    </div>
+      <p style="font-size: var(--size-small); color: var(--color-fg-subtle);">Indicadores adicionais: <strong>GD</strong> (Global Dinâmico Multimercado) e <strong>E</strong> (fundo dedicado). Head Multimesas: <strong>Arlindo Penteado</strong>.</p>
+    </section>
 
-    <!-- Timeline — 11 marcos exatos da fonte -->
-    <div style="margin-top:var(--space-10)">
-      <p class="section-label">Nossa trajetória</p>
-      <h2 class="h2" style="margin-bottom:var(--space-5)">60+ anos de história</h2>
-      <div class="timeline">
-        <div class="timeline-item">
-          <span class="timeline-item__year">1957</span>
-          <span class="timeline-item__text">Fundação do Banco Itaú, raiz da gestora</span>
-        </div>
-        <div class="timeline-item">
-          <span class="timeline-item__year">1997</span>
-          <span class="timeline-item__text">Consolidação da área de gestão de recursos do Itaú</span>
-        </div>
-        <div class="timeline-item">
-          <span class="timeline-item__year">2004</span>
-          <span class="timeline-item__text">Início da política ESG &amp; sustentabilidade</span>
-        </div>
-        <div class="timeline-item">
-          <span class="timeline-item__year">2005</span>
-          <span class="timeline-item__text">Expansão internacional: Argentina e Chile</span>
-        </div>
-        <div class="timeline-item">
-          <span class="timeline-item__year">2011</span>
-          <span class="timeline-item__text">Fusão Itaú–Unibanco consolida escala inédita</span>
-        </div>
-        <div class="timeline-item">
-          <span class="timeline-item__year">2013</span>
-          <span class="timeline-item__text">Abertura do escritório em Nova York</span>
-        </div>
-        <div class="timeline-item">
-          <span class="timeline-item__year">2016</span>
-          <span class="timeline-item__text">Lançamento da plataforma de Multimesas</span>
-        </div>
-        <div class="timeline-item">
-          <span class="timeline-item__year">2019</span>
-          <span class="timeline-item__text">PRI Signatory — compromisso ESG formal</span>
-        </div>
-        <div class="timeline-item">
-          <span class="timeline-item__year">2020</span>
-          <span class="timeline-item__text">100% de cobertura ESG na matriz de decisão</span>
-        </div>
-        <div class="timeline-item">
-          <span class="timeline-item__year">2021</span>
-          <span class="timeline-item__text">Lançamento da plataforma itnow ETFs</span>
-        </div>
-        <div class="timeline-item">
-          <span class="timeline-item__year">2022</span>
-          <span class="timeline-item__text">AuM supera R$ 1 trilhão sob gestão</span>
-        </div>
+    <section data-reveal>
+      <h2>Marcos do modelo</h2>
+      <ul>
+        <li><strong>2005</strong> — Início da mesa de Retorno Absoluto.</li>
+        <li><strong>2019</strong> — Estruturação formal do modelo Multimesas + 40 talentos incorporados.</li>
+        <li><strong>2020</strong> — Liderança consolidada em Retorno Absoluto.</li>
+        <li><strong>2022</strong> — +R$ 100 bilhões em Multimesas (marco do modelo).</li>
+      </ul>
+    </section>
+  </article>
+
+  <!-- ── JORNADA ── -->
+  <article class="view" id="jornada" hidden>
+    <section class="view__hero">
+      <p class="kicker"><span class="kicker__dot"></span>Jornada</p>
+      <h1>1957 → 2022 — Seis décadas de pioneirismo</h1>
+      <p class="lead">Onze marcos resumem a trajetória da Itaú Asset Management.</p>
+    </section>
+
+    <section data-reveal>
+      <ol class="timeline">
+        <li class="timeline__item"><span class="timeline__dot"></span><p class="timeline__date">1957</p><h4 class="timeline__title">1º fundo RV BR</h4><p class="timeline__desc">Primeiro fundo de Renda Variável do Brasil.</p></li>
+        <li class="timeline__item"><span class="timeline__dot"></span><p class="timeline__date">1997</p><h4 class="timeline__title">Itaú K2 — primeiro multimercado</h4><p class="timeline__desc">Embrião do que viria a ser Retorno Absoluto.</p></li>
+        <li class="timeline__item"><span class="timeline__dot"></span><p class="timeline__date">2004</p><h4 class="timeline__title">PIBB — 1º ETF do Brasil + ABN Argentina</h4><p class="timeline__desc">Pioneirismo em ETF + aquisição internacional.</p></li>
+        <li class="timeline__item"><span class="timeline__dot"></span><p class="timeline__date">2005</p><h4 class="timeline__title">Mesa de Retorno Absoluto</h4><p class="timeline__desc">Início da equipe dedicada.</p></li>
+        <li class="timeline__item"><span class="timeline__dot"></span><p class="timeline__date">2011</p><h4 class="timeline__title">Itaú Asset Nova York</h4><p class="timeline__desc">Expansão internacional.</p></li>
+        <li class="timeline__item"><span class="timeline__dot"></span><p class="timeline__date">2013</p><h4 class="timeline__title">ETF IPSA — 1º ETF do Chile</h4><p class="timeline__desc">Liderança em Beta na América Latina.</p></li>
+        <li class="timeline__item"><span class="timeline__dot"></span><p class="timeline__date">2016</p><h4 class="timeline__title">+R$ 500 bilhões sob gestão</h4><p class="timeline__desc">Marco do meio trilhão.</p></li>
+        <li class="timeline__item"><span class="timeline__dot"></span><p class="timeline__date">2019</p><h4 class="timeline__title">Modelo Multimesas + 40 talentos + IMAB11</h4><p class="timeline__desc">Estruturação do modelo + lançamento do ETF de RF.</p></li>
+        <li class="timeline__item"><span class="timeline__dot"></span><p class="timeline__date">2020</p><h4 class="timeline__title">Líderes em Retorno Absoluto</h4><p class="timeline__desc">Liderança consolidada.</p></li>
+        <li class="timeline__item"><span class="timeline__dot"></span><p class="timeline__date">2021</p><h4 class="timeline__title">6 ETFs Temáticos Internacionais</h4><p class="timeline__desc">Exposição global temática.</p></li>
+        <li class="timeline__item"><span class="timeline__dot"></span><p class="timeline__date">2022</p><h4 class="timeline__title">+R$ 100 bi em Multimesas</h4><p class="timeline__desc">Modelo Multimesas consolidado.</p></li>
+      </ol>
+    </section>
+
+    <section data-reveal>
+      <h2>Reconhecimentos da trajetória</h2>
+      <div class="cards">
+        <div class="pill-card pill-card--info"><p class="pill-card__label"><span class="dot"></span>Rating</p><h4 class="pill-card__title">S&amp;P Global AMP-1'</h4><p class="pill-card__desc">Avaliação máxima de processos (nov/2020).</p></div>
+        <div class="pill-card"><p class="pill-card__label"><span class="dot"></span>Guia FGV</p><h4 class="pill-card__title">15× Melhor Gestora</h4></div>
+        <div class="pill-card pill-card--plum"><p class="pill-card__label"><span class="dot"></span>ESG</p><h4 class="pill-card__title">ALAS20 Winner Brazil 2024</h4></div>
+        <div class="pill-card pill-card--teal"><p class="pill-card__label"><span class="dot"></span>2019</p><h4 class="pill-card__title">1º e 3º — InfoMoney</h4></div>
+        <div class="pill-card pill-card--sage"><p class="pill-card__label"><span class="dot"></span>PRI</p><h4 class="pill-card__title">PRI Signatory</h4></div>
+        <div class="pill-card pill-card--success"><p class="pill-card__label"><span class="dot"></span>Histórico</p><h4 class="pill-card__title">+60 anos de experiência</h4></div>
       </div>
-    </div>
-  </div>
-</section>
+    </section>
+  </article>
 
-<!-- ════════════════════════════════════════════════════════════════════════ -->
-<!-- VIEW: #posicionamento ────────────────────────────────────────────────── -->
-<!-- ════════════════════════════════════════════════════════════════════════ -->
-<section class="view" id="posicionamento" hidden>
-  <div class="container">
-    <div class="hero" style="padding-bottom:var(--space-8)">
-      <p class="hero__eyebrow">Posicionamento</p>
-      <h1 class="display-1 hero__title">Como nos<br><em>posicionamos</em></h1>
-      <p class="lead hero__lead">Três pilares de identidade, sete atributos estratégicos e quatro pilares core definem como servimos cada segmento do mercado — do investidor de varejo ao mandato institucional de maior complexidade.</p>
-    </div>
+  <!-- ── ESG ── -->
+  <article class="view" id="esg" hidden>
+    <section class="view__hero">
+      <p class="kicker"><span class="kicker__dot"></span>ESG</p>
+      <h1>Investimento responsável</h1>
+      <p class="lead">100% dos ativos cobertos por critérios socioambientais. Oito produtos dedicados. Vencedora ALAS20 Brazil 2024.</p>
+    </section>
 
-    <!-- 3 Pilares de identidade -->
-    <div class="attr-grid section" style="padding-top:0;margin-top:0">
-      <div class="attr-card">
-        <div class="attr-card__icon attr-card__icon--orange" aria-hidden="true">🎯</div>
-        <h2 class="attr-card__title">Sofisticada</h2>
-        <p class="attr-card__body">Derivativos, crédito estruturado, ETFs temáticos e mandatos complexos. Oferecemos instrumentos avançados para cada nível de apetite a risco, com equipes altamente especializadas e processo rigoroso de gestão de portfólio.</p>
-      </div>
-      <div class="attr-card">
-        <div class="attr-card__icon attr-card__icon--blue" aria-hidden="true">🌐</div>
-        <h2 class="attr-card__title">Democrática</h2>
-        <p class="attr-card__body">Desde R$ 1 no varejo até mandatos institucionais exclusivos com bilhões sob gestão. Acreditamos que alta qualidade em gestão de recursos não deve ser privilégio — qualquer investidor brasileiro merece excelência.</p>
-      </div>
-      <div class="attr-card">
-        <div class="attr-card__icon attr-card__icon--teal" aria-hidden="true">🌎</div>
-        <h2 class="attr-card__title">Internacional</h2>
-        <p class="attr-card__body">Gestão global com presença em Nova York, Argentina e Chile. Portfólios denominados em dólar, parceiros internacionais e acesso a mercados globais para proteger e multiplicar patrimônio além das fronteiras brasileiras.</p>
-      </div>
-    </div>
-
-    <div class="divider"></div>
-
-    <!-- 7 Atributos estratégicos -->
-    <div style="margin-bottom:var(--space-8)">
-      <p class="section-label">7 Atributos estratégicos</p>
-      <h2 class="h2" style="margin-bottom:var(--space-5)">O que nos diferencia</h2>
-      <div class="attrs7-grid">
-        <div class="attr7-item">Estratégias sofisticadas</div>
-        <div class="attr7-item">Acesso simplificado</div>
-        <div class="attr7-item">Atração de talentos</div>
-        <div class="attr7-item">Proximidade com o cliente</div>
-        <div class="attr7-item">Presença digital</div>
-        <div class="attr7-item">Educação do investidor</div>
-        <div class="attr7-item">Performance sustentável</div>
-      </div>
-    </div>
-
-    <div class="divider"></div>
-
-    <!-- 4 Pilares core -->
-    <div style="margin-bottom:var(--space-8)">
-      <p class="section-label">4 Pilares core</p>
-      <h2 class="h2" style="margin-bottom:var(--space-5)">O que sustenta nossa gestão</h2>
-      <div class="pilares-grid">
-        <div class="pilar-card">
-          <div class="pilar-card__title">⚙️ Beta / Indexado</div>
-          <p class="pilar-card__body">Maior plataforma de gestão passiva do país. R$ 174,49 bi em estratégias indexadas com processos industrializados, tecnologia proprietária e ETFs itnow cobrindo todas as classes de ativos.</p>
-        </div>
-        <div class="pilar-card">
-          <div class="pilar-card__title">📈 Renda Fixa Ativa</div>
-          <p class="pilar-card__body">Times especializados em Macro, Juros e Moedas. Gestão ativa com profundo conhecimento da curva de juros brasileira e histórico robusto de geração de alfa frente ao CDI.</p>
-        </div>
-        <div class="pilar-card">
-          <div class="pilar-card__title">🏦 Crédito</div>
-          <p class="pilar-card__body">R$ 89,8 bi em crédito estruturado e RF Unconstrained. Infra, Agro, Imob e Operações Estruturadas com avaliação criteriosa de risco de crédito e diversificação entre setores.</p>
-        </div>
-        <div class="pilar-card">
-          <div class="pilar-card__title">🔁 Retorno Absoluto</div>
-          <p class="pilar-card__body">R$ 113,5 bi em 8 mesas independentes de gestão ativa. Macro, Equities e Multimercado com mandato de retorno absoluto e independência de decisão por mesa.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="divider"></div>
-
-    <!-- Estrutura 3 camadas -->
-    <div style="margin-bottom:var(--space-8)">
-      <p class="section-label">Estrutura organizacional</p>
-      <h2 class="h2" style="margin-bottom:var(--space-5)">3 Camadas de capacidade</h2>
-      <div class="camadas-stack">
-        <div class="camada camada--top">
-          <div class="camada__label">Camada Top — Clientes &amp; Alocação</div>
-          <div class="camada__pills">
-            <span class="camada__pill">Mandatos Institucionais</span>
-            <span class="camada__pill">Asset Allocation</span>
-          </div>
-        </div>
-        <div class="camada camada--core">
-          <div class="camada__label">Core — 4 Pilares de Gestão</div>
-          <div class="camada__pills">
-            <span class="camada__pill">Beta / Indexado</span>
-            <span class="camada__pill">Renda Fixa Ativa</span>
-            <span class="camada__pill">Crédito</span>
-            <span class="camada__pill">Retorno Absoluto</span>
-          </div>
-        </div>
-        <div class="camada camada--base">
-          <div class="camada__label">Base — 6 Capacidades Habilitadoras</div>
-          <div class="camada__pills">
-            <span class="camada__pill">Pesquisa Econômica</span>
-            <span class="camada__pill">Data Science</span>
-            <span class="camada__pill">Analytics</span>
-            <span class="camada__pill">Trading</span>
-            <span class="camada__pill">ESG</span>
-            <span class="camada__pill">Operações</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="divider"></div>
-
-    <!-- Diretoria — 12 pessoas da fonte -->
-    <div style="margin-bottom:var(--space-10)">
-      <p class="section-label">Liderança</p>
-      <h2 class="h2" style="margin-bottom:var(--space-6)">Diretoria Executiva</h2>
-      <div class="diretoria-grid">
-        <div class="dir-card dir-card--cio">
-          <div class="dir-card__avatar" aria-hidden="true">CS</div>
-          <div>
-            <div class="dir-card__name">Carlos Augusto Salamonde</div>
-            <div class="dir-card__role">CIO — Chief Investment Officer</div>
-          </div>
-        </div>
-        <div class="dir-card">
-          <div class="dir-card__avatar" aria-hidden="true">PB</div>
-          <div>
-            <div class="dir-card__name">Pedro G. Boainain</div>
-            <div class="dir-card__role">Diretor</div>
-          </div>
-        </div>
-        <div class="dir-card">
-          <div class="dir-card__avatar" aria-hidden="true">AP</div>
-          <div>
-            <div class="dir-card__name">Arlindo Penteado</div>
-            <div class="dir-card__role">Diretor</div>
-          </div>
-        </div>
-        <div class="dir-card">
-          <div class="dir-card__avatar" aria-hidden="true">SC</div>
-          <div>
-            <div class="dir-card__name">Stefano Catinella</div>
-            <div class="dir-card__role">Diretor</div>
-          </div>
-        </div>
-        <div class="dir-card">
-          <div class="dir-card__avatar" aria-hidden="true">SC</div>
-          <div>
-            <div class="dir-card__name">Sylvio Castro</div>
-            <div class="dir-card__role">Diretor</div>
-          </div>
-        </div>
-        <div class="dir-card">
-          <div class="dir-card__avatar" aria-hidden="true">KA</div>
-          <div>
-            <div class="dir-card__name">Kahlil Adam</div>
-            <div class="dir-card__role">Diretor</div>
-          </div>
-        </div>
-        <div class="dir-card">
-          <div class="dir-card__avatar" aria-hidden="true">TW</div>
-          <div>
-            <div class="dir-card__name">Thomas Wu</div>
-            <div class="dir-card__role">Diretor</div>
-          </div>
-        </div>
-        <div class="dir-card">
-          <div class="dir-card__avatar" aria-hidden="true">FB</div>
-          <div>
-            <div class="dir-card__name">Fernando Brantes</div>
-            <div class="dir-card__role">Diretor</div>
-          </div>
-        </div>
-        <div class="dir-card">
-          <div class="dir-card__avatar" aria-hidden="true">RE</div>
-          <div>
-            <div class="dir-card__name">Renato Eid</div>
-            <div class="dir-card__role">Diretor</div>
-          </div>
-        </div>
-        <div class="dir-card">
-          <div class="dir-card__avatar" aria-hidden="true">FD</div>
-          <div>
-            <div class="dir-card__name">Fayga Delbem</div>
-            <div class="dir-card__role">Diretora</div>
-          </div>
-        </div>
-        <div class="dir-card">
-          <div class="dir-card__avatar" aria-hidden="true">LW</div>
-          <div>
-            <div class="dir-card__name">Luís Wetzel</div>
-            <div class="dir-card__role">Diretor</div>
-          </div>
-        </div>
-        <div class="dir-card">
-          <div class="dir-card__avatar" aria-hidden="true">SP</div>
-          <div>
-            <div class="dir-card__name">Scott Piper</div>
-            <div class="dir-card__role">Diretor</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ════════════════════════════════════════════════════════════════════════ -->
-<!-- VIEW: #estrategias ───────────────────────────────────────────────────── -->
-<!-- ════════════════════════════════════════════════════════════════════════ -->
-<section class="view" id="estrategias" hidden>
-  <div class="container">
-    <div class="hero" style="padding-bottom:var(--space-8)">
-      <p class="hero__eyebrow">Estratégias de Gestão</p>
-      <h1 class="display-1 hero__title">Amplitude e<br><em>especialização</em></h1>
-      <p class="lead hero__lead">Duas grandes verticais — Asset Core / Beta e Multimesas de Retorno Absoluto — com estratégias para todos os perfis de risco e horizonte de investimento.</p>
-    </div>
-
-    <!-- A) Asset Core -->
-    <div class="section" style="padding-top:0">
-      <p class="section-label">Asset Core / Beta</p>
-      <h2 class="h2" style="margin-bottom:var(--space-2)">Estratégias passivas e beta</h2>
-      <p style="color:var(--color-fg-muted);margin-bottom:var(--space-5)">R$ 174,49 bilhões em gestão — 9 estratégias cobrindo todas as classes de ativos</p>
-
-      <div class="estrategias-grid" style="margin-bottom:var(--space-7)">
-        <div class="estrat-pill">RF Local</div>
-        <div class="estrat-pill">Moedas</div>
-        <div class="estrat-pill">RV Local</div>
-        <div class="estrat-pill">Alavancados</div>
-        <div class="estrat-pill">RV Global</div>
-        <div class="estrat-pill">RF Global</div>
-        <div class="estrat-pill">Smart Beta</div>
-        <div class="estrat-pill">Commodities</div>
-        <div class="estrat-pill">Temáticos</div>
+    <section data-reveal>
+      <div class="quote">
+        <p>"Incluir critérios socioambientais na decisão de investimento ou aplicar em ativos selecionados por critérios socioambientais — nós fazemos os dois."</p>
       </div>
 
-      <!-- itnow ETFs -->
-      <div style="margin-bottom:var(--space-8)">
-        <div style="display:flex;align-items:baseline;gap:var(--space-4);flex-wrap:wrap;margin-bottom:var(--space-5)">
-          <h3 class="h3">ETF itnow</h3>
-          <span class="badge badge--accent">R$ 18,77 bi</span>
-          <span class="badge badge--info">+R$ 174,49 bi gestão indexada</span>
-          <a href="https://www.itnow.com.br" target="_blank" rel="noopener" style="font-size:var(--size-xs);color:var(--color-info);font-family:var(--font-mono)">www.itnow.com.br ↗</a>
-        </div>
-        <div class="itnow-grid">
-          <div class="itnow-card">
-            <div class="itnow-card__cat">RF Local</div>
-            <div class="itnow-card__title">ETFs de Renda Fixa Local</div>
-            <div class="itnow-card__tickers">
-              <span class="badge badge--info">ETF RF Local</span>
-            </div>
-          </div>
-          <div class="itnow-card">
-            <div class="itnow-card__cat">RV Local</div>
-            <div class="itnow-card__title">ETFs de Renda Variável Local</div>
-            <div class="itnow-card__tickers">
-              <span class="badge badge--accent">ETF RV Local</span>
-            </div>
-          </div>
-          <div class="itnow-card">
-            <div class="itnow-card__cat">RV Global</div>
-            <div class="itnow-card__title">ETFs de Ações Internacionais</div>
-            <div class="itnow-card__tickers">
-              <span class="badge badge--teal">ETF RV Global</span>
-            </div>
-          </div>
-          <div class="itnow-card">
-            <div class="itnow-card__cat">Criptomoedas</div>
-            <div class="itnow-card__title">ETFs de Ativos Digitais</div>
-            <div class="itnow-card__tickers">
-              <span class="badge badge--plum">ETF Cripto</span>
-            </div>
-          </div>
+      <div class="callout">
+        <span class="callout__icon" aria-hidden="true">i</span>
+        <div class="callout__content">
+          <p class="callout__title">100% dos ativos cobertos*</p>
+          <p>Todos os ativos sob gestão (excluindo FoF) passam por análise socioambiental integrada.</p>
         </div>
       </div>
+    </section>
 
-      <div class="divider"></div>
+    <section data-reveal>
+      <h2>Práticas</h2>
+      <ul>
+        <li><strong>Engajamento com empresas</strong> — diálogo direto sobre temas materiais.</li>
+        <li><strong>Voto em assembleias</strong> — alinhado a políticas socioambientais.</li>
+        <li><strong>Educação dos investidores</strong> — materiais e eventos.</li>
+      </ul>
 
-      <!-- B) Multimesas -->
-      <div>
-        <p class="section-label">Retorno Absoluto</p>
-        <h2 class="h2" style="margin-bottom:var(--space-2)">Multimesas de Gestão Ativa</h2>
-        <p style="color:var(--color-fg-muted);margin-bottom:var(--space-5)">R$ 113,5 bilhões — 8 mesas independentes com estratégias de retorno absoluto</p>
-
-        <!-- Horizontal bars — 4 segmentos da fonte -->
-        <div class="hbar-wrap">
-          <p class="chart-title">AuM por segmento — Retorno Absoluto (R$ bi)</p>
-          <div class="hbar-list" id="mesaBars">
-            <div class="hbar-item">
-              <div class="hbar-meta">
-                <span class="hbar-name">Retorno Absoluto (total)</span>
-                <span class="hbar-val mono">R$ 113,5 bi</span>
-              </div>
-              <div class="hbar-track"><div class="hbar-fill hbar-fill--0" data-pct="100"></div></div>
-            </div>
-            <div class="hbar-item">
-              <div class="hbar-meta">
-                <span class="hbar-name">Crédito Estruturado + RF Unconstrained</span>
-                <span class="hbar-val mono">R$ 89,8 bi</span>
-              </div>
-              <div class="hbar-track"><div class="hbar-fill hbar-fill--1" data-pct="79"></div></div>
-            </div>
-            <div class="hbar-item">
-              <div class="hbar-meta">
-                <span class="hbar-name">Macro</span>
-                <span class="hbar-val mono">R$ 18,5 bi</span>
-              </div>
-              <div class="hbar-track"><div class="hbar-fill hbar-fill--2" data-pct="16"></div></div>
-            </div>
-            <div class="hbar-item">
-              <div class="hbar-meta">
-                <span class="hbar-name">Equities</span>
-                <span class="hbar-val mono">R$ 5,2 bi</span>
-              </div>
-              <div class="hbar-track"><div class="hbar-fill hbar-fill--3" data-pct="5"></div></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Donut chart + table -->
-        <div class="split-layout" style="margin-bottom:var(--space-8)">
-          <div class="chart-wrap">
-            <p class="chart-title">AuM — Distribuição Multimesas</p>
-            <div class="chart-canvas-wrap chart-donut-wrap">
-              <canvas id="donutMesas" height="300" aria-label="Gráfico de distribuição AuM multimesas" role="img"></canvas>
-            </div>
-          </div>
-
-          <div>
-            <p class="section-label" style="margin-top:var(--space-2)">8 Mesas de Gestão</p>
-            <h3 class="h3" style="margin-bottom:var(--space-4)">Estrutura por mesa</h3>
-            <div class="table-wrap">
-              <table class="data-table" aria-label="Tabela de mesas de gestão">
-                <thead>
-                  <tr>
-                    <th scope="col">Mesa</th>
-                    <th scope="col">Estratégias</th>
-                    <th scope="col">Categoria</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><strong>Crédito Estruturado</strong></td>
-                    <td>Infra · Agro · Imob · Op. Estruturadas</td>
-                    <td><span class="badge badge--info">Crédito</span></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Asgard</strong></td>
-                    <td>RV Unconstrained</td>
-                    <td><span class="badge badge--accent">Renda Variável</span></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Janeiro</strong></td>
-                    <td>Macro · RF Unconstrained</td>
-                    <td><span class="badge badge--teal">Macro</span></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Optimus</strong></td>
-                    <td>Macro · RF · Long Bias</td>
-                    <td><span class="badge badge--teal">Macro</span></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Legend</strong></td>
-                    <td>Macro · RF Unconstrained</td>
-                    <td><span class="badge badge--teal">Macro</span></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Hunter</strong></td>
-                    <td>RV/Multimercado L/S</td>
-                    <td><span class="badge badge--accent">Renda Variável</span></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Artax</strong></td>
-                    <td>Macro · RF Unconstrained</td>
-                    <td><span class="badge badge--teal">Macro</span></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Aurora Yield Plus</strong></td>
-                    <td>Multimercado Juros e Moedas</td>
-                    <td><span class="badge badge--success">Macro</span></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+      <h2>Histórico — cobertura ESG (%)</h2>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Ano</th><th>Cobertura</th></tr></thead>
+          <tbody>
+            <tr><td>2013</td><td>10%</td></tr>
+            <tr><td>2014</td><td>15%</td></tr>
+            <tr><td>2015</td><td>25%</td></tr>
+            <tr><td>2016</td><td>89%</td></tr>
+            <tr><td>2017</td><td>90%</td></tr>
+            <tr><td>2018</td><td>90%</td></tr>
+            <tr><td>2019</td><td>95%</td></tr>
+            <tr><td>2020</td><td>100%</td></tr>
+            <tr><td>2021</td><td>100%</td></tr>
+            <tr><td>2022</td><td>100%</td></tr>
+            <tr><td>2023</td><td>100%</td></tr>
+          </tbody>
+        </table>
       </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<!-- ════════════════════════════════════════════════════════════════════════ -->
-<!-- VIEW: #esg ───────────────────────────────────────────────────────────── -->
-<!-- ════════════════════════════════════════════════════════════════════════ -->
-<section class="view" id="esg" hidden>
-  <div class="container">
-    <div class="hero" style="padding-bottom:var(--space-8)">
-      <p class="hero__eyebrow">ESG &amp; Inteligência</p>
-      <h1 class="display-1 hero__title"><em>Sustentabilidade</em><br>como método</h1>
-      <p class="lead hero__lead">Não apenas um rótulo. ESG embarcado em 100% da matriz de decisão de investimentos — apoiado por inteligência econômica de ponta e ciência de dados proprietária.</p>
-    </div>
-
-    <!-- Pesquisa & Data Science -->
-    <div class="section" style="padding-top:0">
-      <p class="section-label">Inteligência Proprietária</p>
-      <h2 class="h2" style="margin-bottom:var(--space-5)">Pesquisa &amp; Data Science</h2>
-      <div class="stat-grid" style="margin-bottom:var(--space-6)">
-        <div class="stat-card">
-          <div class="stat-card__label">Economistas</div>
-          <div class="stat-card__value"><span class="counter-target" data-target="10">0</span></div>
-          <div class="stat-card__sub">cobrindo todos os continentes</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-card__label">Ranking BCB</div>
-          <div class="stat-card__value">1<span style="font-size:1.2rem">º</span></div>
-          <div class="stat-card__sub">1º lugar projeções de juros Banco Central</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-card__label">Cientistas de Dados</div>
-          <div class="stat-card__value"><span class="counter-target" data-target="5">0</span></div>
-          <div class="stat-card__sub">modelos proprietários ativos</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-card__label">Cobertura ESG</div>
-          <div class="stat-card__value"><span class="counter-target" data-target="100">0</span><span style="font-size:1.5rem">%</span></div>
-          <div class="stat-card__sub">cobertura de todos os ativos da carteira</div>
-        </div>
+    <section data-reveal>
+      <h2>Oito produtos ESG dedicados</h2>
+      <div class="cards">
+        <div class="pill-card"><p class="pill-card__label"><span class="dot"></span>Fundo</p><h4 class="pill-card__title">Active Fix ESG</h4></div>
+        <div class="pill-card pill-card--info"><p class="pill-card__label"><span class="dot"></span>ETF</p><h4 class="pill-card__title">ISUS11</h4></div>
+        <div class="pill-card pill-card--teal"><p class="pill-card__label"><span class="dot"></span>ETF</p><h4 class="pill-card__title">GOVE11</h4></div>
+        <div class="pill-card pill-card--plum"><p class="pill-card__label"><span class="dot"></span>ETF</p><h4 class="pill-card__title">REVE11</h4></div>
+        <div class="pill-card pill-card--sage"><p class="pill-card__label"><span class="dot"></span>ETF</p><h4 class="pill-card__title">YDRO11</h4></div>
+        <div class="pill-card pill-card--success"><p class="pill-card__label"><span class="dot"></span>Index</p><h4 class="pill-card__title">Itaú Index ESG Água</h4></div>
+        <div class="pill-card"><p class="pill-card__label"><span class="dot"></span>Index</p><h4 class="pill-card__title">Itaú Index ESG Energia Limpa</h4></div>
+        <div class="pill-card pill-card--info"><p class="pill-card__label"><span class="dot"></span>Fundo</p><h4 class="pill-card__title">Active Fix ESG Horizonte</h4></div>
       </div>
 
-      <div class="divider"></div>
+      <h3>Selos e compromissos</h3>
+      <ul>
+        <li><strong>PRI</strong> (Principles for Responsible Investment) — signatária.</li>
+        <li><strong>ALAS20 Winner Brazil 2024</strong>.</li>
+      </ul>
+      <p style="font-size: var(--size-xs); color: var(--color-fg-subtle);">* 100% dos ativos, excluindo Fund of Funds.</p>
+    </section>
+  </article>
 
-      <!-- Gráfico misto ESG — bar + line no mesmo Chart.js -->
-      <div style="margin-bottom:var(--space-8)">
-        <p class="section-label">Evolução ESG 2004–2023</p>
-        <h2 class="h2" style="margin-bottom:var(--space-2)">AuM ESG &amp; Cobertura socioambiental</h2>
-        <p style="color:var(--color-fg-muted);margin-bottom:var(--space-5)">Evolução do AuM com critérios ESG (barras) e percentual de ativos cobertos na matriz de decisão (linha) — 2004 a 2023</p>
-        <div class="chart-wrap">
-          <div class="chart-canvas-wrap" style="height:380px;position:relative">
-            <canvas id="mixedEsg" aria-label="Gráfico misto: AuM ESG em barras e cobertura ESG em linha" role="img"></canvas>
-          </div>
+  <!-- ── GOVERNANÇA ── -->
+  <article class="view" id="governanca" hidden>
+    <section class="view__hero">
+      <p class="kicker"><span class="kicker__dot"></span>Governança</p>
+      <h1>Diretoria e estrutura</h1>
+      <p class="lead">Liderança encabeçada por <strong>Carlos Augusto Salamonde (CAS)</strong>, Diretor de Gestão de Investimentos Globais.</p>
+    </section>
+
+    <section data-reveal>
+      <h2>Liderança</h2>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Nome</th><th>Cargo</th><th>Área</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Carlos Augusto Salamonde</strong> (CAS)</td><td>Diretor</td><td>Gestão de Investimentos Globais</td></tr>
+            <tr><td><strong>Pedro G. Boainain</strong></td><td>Head</td><td>Asset Core</td></tr>
+            <tr><td><strong>Arlindo Penteado</strong></td><td>Head</td><td>Multimesas</td></tr>
+            <tr><td><strong>Stefano Catinella</strong></td><td>Head</td><td>Distribuição Global</td></tr>
+            <tr><td><strong>Sylvio Castro</strong></td><td>Head</td><td>Global Solutions e FoF</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section data-reveal>
+      <h2>Sub-áreas e diretorias transversais</h2>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Nome</th><th>Função</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Kahlil Adam</strong></td><td>Head de Estratégias Internacionais</td></tr>
+            <tr><td><strong>Thomas Wu</strong></td><td>Pesquisa Econômica Estratégica</td></tr>
+            <tr><td><strong>Fernando Brantes</strong></td><td>COO</td></tr>
+            <tr><td><strong>Renato Eid</strong></td><td>Head de Beta</td></tr>
+            <tr><td><strong>Fayga Delbem</strong></td><td>Head de Crédito</td></tr>
+            <tr><td><strong>Luís Wetzel</strong></td><td>Head de Renda Fixa</td></tr>
+            <tr><td><strong>Scott Piper</strong></td><td>Head de LatAm Equities</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section data-reveal>
+      <h2>Pesquisa &amp; Data Science</h2>
+      <div class="cards">
+        <div class="pill-card"><p class="pill-card__label"><span class="dot"></span>Equipe</p><h4 class="pill-card__title">10 economistas</h4><p class="pill-card__desc">Cobertura global. Especialistas BR em <strong>Inflação e juros</strong>, <strong>Atividade</strong> e <strong>Política e fiscal</strong>. 1º em projeções de juros BC.</p></div>
+        <div class="pill-card pill-card--teal"><p class="pill-card__label"><span class="dot"></span>Equipe</p><h4 class="pill-card__title">5 cientistas de dados</h4><p class="pill-card__desc">Métodos &amp; Tecnologia, profundidade em temas, acesso a consultores.</p></div>
+      </div>
+      <p>Temas recentes cobertos: <strong>Coronavírus</strong>, <strong>Eleições</strong> e <strong>Projetos de Lei</strong>.</p>
+    </section>
+  </article>
+
+  <!-- ── CONTATO ── -->
+  <article class="view" id="contato" hidden>
+    <section class="view__hero">
+      <p class="kicker"><span class="kicker__dot"></span>Contato e SAC</p>
+      <h1>Fale com a Itaú Asset</h1>
+      <p class="lead">Segmento do Itaú Unibanco responsável pela gestão de recursos, sob autorregulação ANBIMA.</p>
+    </section>
+
+    <section data-reveal>
+      <h2>Canais oficiais</h2>
+      <div class="contact-grid">
+        <div class="contact-card"><p class="contact-card__label">Atendimento</p><p class="contact-card__val">(11) 3631-2555</p><p class="contact-card__desc">Telefone direto institucional.</p></div>
+        <div class="contact-card"><p class="contact-card__label">SAC</p><p class="contact-card__val">0800 728 0728</p><p class="contact-card__desc">24h — <a href="https://www.itau.com.br" target="_blank" rel="noopener">www.itau.com.br</a></p></div>
+        <div class="contact-card"><p class="contact-card__label">Ouvidoria</p><p class="contact-card__val">0800 570 0011</p><p class="contact-card__desc">Dias úteis, 9h às 18h.</p></div>
+        <div class="contact-card"><p class="contact-card__label">Acessibilidade</p><p class="contact-card__val">0800 722 1722</p><p class="contact-card__desc">24h — deficientes auditivos e de fala.</p></div>
+      </div>
+    </section>
+
+    <section data-reveal>
+      <h2>Correspondência</h2>
+      <p><strong>Caixa Postal 67.600</strong> — CEP 03162-971</p>
+      <p>Site oficial: <a href="https://www.itauasset.com.br" target="_blank" rel="noopener">www.itauasset.com.br</a></p>
+      <p>Plataforma de ETFs e Beta: <a href="https://www.itnow.com.br" target="_blank" rel="noopener">www.itnow.com.br</a></p>
+
+      <div class="callout">
+        <span class="callout__icon" aria-hidden="true">i</span>
+        <div class="callout__content">
+          <p class="callout__title">Autorregulação ANBIMA</p>
+          <p>A Itaú Asset Management adere ao código de autorregulação para administração e gestão de recursos da ANBIMA.</p>
         </div>
       </div>
+    </section>
+  </article>
 
-      <!-- ESG Quote -->
-      <blockquote class="esg-quote">
-        "Incluir critérios socioambientais em toda a matriz de decisão de investimentos é mais importante do que lançar produtos com o rótulo. Nós fazemos os dois."
-      </blockquote>
-
-      <!-- Reconhecimentos -->
-      <div style="display:flex;gap:var(--space-3);flex-wrap:wrap;align-items:center;margin-bottom:var(--space-8)">
-        <span class="badge badge--success" style="font-size:0.75rem;padding:6px 12px">PRI Signatory</span>
-        <span class="badge badge--accent" style="font-size:0.75rem;padding:6px 12px">ALAS20 Winner Brazil 2024</span>
-        <span class="badge badge--info" style="font-size:0.75rem;padding:6px 12px">B3 ISE Member</span>
-      </div>
-
-      <div class="divider"></div>
-
-      <!-- 8 Produtos ESG — tabela completa -->
-      <div>
-        <p class="section-label">Portfólio ESG</p>
-        <h2 class="h2" style="margin-bottom:var(--space-5)">8 Produtos com critérios socioambientais</h2>
-        <div class="table-wrap">
-          <table class="data-table" aria-label="Tabela de produtos ESG">
-            <thead>
-              <tr>
-                <th scope="col">Produto</th>
-                <th scope="col">Ticker</th>
-                <th scope="col">Categoria</th>
-                <th scope="col">Descrição</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Active Fix ESG</strong></td>
-                <td><span class="mono" style="font-size:0.8rem;color:var(--color-fg-subtle)">—</span></td>
-                <td><span class="badge badge--info">RF Corporativa</span></td>
-                <td>Renda Fixa Corporativa ESG-screened</td>
-              </tr>
-              <tr>
-                <td><strong>iShares ISE</strong></td>
-                <td><span class="badge badge--success">ISUS11</span></td>
-                <td><span class="badge badge--teal">ETF</span></td>
-                <td>Índice de Sustentabilidade Empresarial B3</td>
-              </tr>
-              <tr>
-                <td><strong>iShares IGCT</strong></td>
-                <td><span class="badge badge--success">GOVE11</span></td>
-                <td><span class="badge badge--teal">ETF</span></td>
-                <td>Governança Corporativa Trade</td>
-              </tr>
-              <tr>
-                <td><strong>iShares Economia Verde</strong></td>
-                <td><span class="badge badge--success">REVE11</span></td>
-                <td><span class="badge badge--teal">ETF</span></td>
-                <td>ETF de Economia Verde e descarbonização</td>
-              </tr>
-              <tr>
-                <td><strong>iShares Hidrogênio Verde</strong></td>
-                <td><span class="badge badge--success">YDRO11</span></td>
-                <td><span class="badge badge--teal">ETF</span></td>
-                <td>ETF de Hidrogênio Verde — transição energética</td>
-              </tr>
-              <tr>
-                <td><strong>Itaú Index ESG Água</strong></td>
-                <td><span class="mono" style="font-size:0.8rem;color:var(--color-fg-subtle)">—</span></td>
-                <td><span class="badge badge--accent">Ações Globais</span></td>
-                <td>Ativos hídricos e saneamento globais</td>
-              </tr>
-              <tr>
-                <td><strong>Itaú Index ESG Energia Limpa</strong></td>
-                <td><span class="mono" style="font-size:0.8rem;color:var(--color-fg-subtle)">—</span></td>
-                <td><span class="badge badge--accent">Ações Globais</span></td>
-                <td>Energia renovável e eficiência energética global</td>
-              </tr>
-              <tr>
-                <td><strong>Active Fix ESG Horizonte</strong></td>
-                <td><span class="mono" style="font-size:0.8rem;color:var(--color-fg-subtle)">—</span></td>
-                <td><span class="badge badge--info">RF Corporativa</span></td>
-                <td>Horizonte estendido — vencimentos longos ESG-screened</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ════════════════════════════════════════════════════════════════════════ -->
-<!-- VIEW: #contato ───────────────────────────────────────────────────────── -->
-<!-- ════════════════════════════════════════════════════════════════════════ -->
-<section class="view" id="contato" hidden>
-  <div class="container">
-    <div class="hero" style="padding-bottom:var(--space-8)">
-      <p class="hero__eyebrow">Canais de Atendimento</p>
-      <h1 class="display-1 hero__title">Fale com<br><em>a Itaú Asset</em></h1>
-      <p class="lead hero__lead">Atendimento especializado para investidores, gestores e parceiros institucionais. Múltiplos canais para garantir a melhor experiência.</p>
-    </div>
-
-    <div class="contact-grid section" style="padding-top:0">
-      <div class="contact-card">
-        <div class="contact-card__icon" aria-hidden="true">📞</div>
-        <div>
-          <div class="contact-card__label">Atendimento Direto</div>
-          <div class="contact-card__value">(11) 3631-2555</div>
-        </div>
-        <p class="contact-card__detail">Atendimento especializado Itaú Asset Management para clientes institucionais e assessores de investimento.</p>
-      </div>
-
-      <div class="contact-card">
-        <div class="contact-card__icon" aria-hidden="true">🌐</div>
-        <div>
-          <div class="contact-card__label">SAC — 24 horas, todos os dias</div>
-          <div class="contact-card__value">0800 728 0728</div>
-        </div>
-        <p class="contact-card__detail">Serviço de Atendimento ao Consumidor disponível 24 horas, todos os dias.</p>
-        <a href="https://www.itau.com.br" target="_blank" rel="noopener" class="contact-card__link">www.itau.com.br ↗</a>
-      </div>
-
-      <div class="contact-card">
-        <div class="contact-card__icon" aria-hidden="true">🔍</div>
-        <div>
-          <div class="contact-card__label">Ouvidoria — Dias úteis 9h–18h</div>
-          <div class="contact-card__value">0800 570 0011</div>
-        </div>
-        <p class="contact-card__detail">Caixa Postal 67.600, CEP 03162-971, São Paulo — SP.</p>
-      </div>
-
-      <div class="contact-card">
-        <div class="contact-card__icon" aria-hidden="true">♿</div>
-        <div>
-          <div class="contact-card__label">Deficientes Auditivos/Fala — 24h</div>
-          <div class="contact-card__value">0800 722 1722</div>
-        </div>
-        <p class="contact-card__detail">Atendimento especializado para deficientes auditivos e de fala, disponível 24 horas, todos os dias.</p>
-      </div>
-    </div>
-
-    <div style="margin-bottom:var(--space-10)">
-      <div class="callout callout--accent">
-        <span class="callout__icon" aria-hidden="true">🏦</span>
-        <div class="callout__body">
-          <strong>Portal institucional:</strong>
-          <a href="https://www.itauasset.com.br" target="_blank" rel="noopener" style="color:var(--color-accent);font-weight:600"> www.itauasset.com.br ↗</a>
-          — Informações sobre fundos, regulamentos, lâminas, relatórios e demais documentos regulatórios.
-          A Itaú Asset Management é regulada pela CVM e autorregulada pela ANBIMA.
-        </div>
-      </div>
-
-      <div style="margin-top:var(--space-5)">
-        <div class="callout callout--warn">
-          <span class="callout__icon" aria-hidden="true">⚠️</span>
-          <div class="callout__body" style="font-size:var(--size-small)">
-            <strong>Aviso importante:</strong> Rentabilidade passada não representa garantia de rentabilidade futura. A rentabilidade divulgada não é líquida de impostos. Os fundos de investimento não contam com garantia do administrador, do gestor, de qualquer mecanismo de seguro ou, ainda, do Fundo Garantidor de Créditos (FGC). Ao investir, considere os fatores de risco descritos nos regulamentos e prospectos dos fundos. Leia o regulamento e o prospecto do fundo antes de investir.
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 </main>
 
-<!-- ── FOOTER ──────────────────────────────────────────────────────────────── -->
-<footer class="footer" role="contentinfo">
-  <div class="container">
-    <div class="footer__inner">
-      <div>
-        <p style="font-weight:700;margin-bottom:4px">Itaú Asset Management</p>
-        <p>A maior gestora de recursos do Brasil &mdash; R$ 1,193 trilhão sob gestão</p>
-      </div>
-      <div class="footer__badges">
-        <span class="badge badge--success">PRI Signatory</span>
-        <span class="badge badge--info">ANBIMA</span>
-        <span class="badge badge--accent">Autorregulada</span>
-      </div>
-      <p style="text-align:right">
-        <a href="https://www.itauasset.com.br" target="_blank" rel="noopener" style="color:var(--color-accent)">www.itauasset.com.br ↗</a>
-      </p>
-    </div>
-  </div>
-</footer>
-
-<!-- ── SCRIPTS ─────────────────────────────────────────────────────────────── -->
 <script>
-/* ── THEME TOGGLE ─────────────────────────────────────────────────────────── */
-const themeBtn = document.getElementById('themeBtn');
-function applyTheme(dark) {
-  document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
-  localStorage.setItem('theme', dark ? 'dark' : 'light');
-  /* Re-init charts with new colors */
-  if (chartsReady.esg) {
-    destroyChart('mixed');
-    chartsReady.esg = false;
-    initEsgCharts();
-  }
-  if (chartsReady.estrategias) {
-    destroyChart('donut');
-    chartsReady.estrategias = false;
-    initEstrategiasCharts();
-  }
-}
-themeBtn.addEventListener('click', () => {
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-  applyTheme(!isDark);
+document.querySelector('.theme-toggle')?.addEventListener('click', () => {
+  const cur = document.documentElement.getAttribute('data-theme');
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  try { localStorage.setItem('theme', next); } catch {}
 });
 
-/* ── COUNTER ANIMATION ────────────────────────────────────────────────────── */
-function animateCounter(el) {
-  const target = parseFloat(el.dataset.target);
-  const suffix = el.dataset.suffix || '';
-  const decimal = parseInt(el.dataset.decimal || '0');
-  const dur = 1400;
-  const start = performance.now();
-  function tick(now) {
-    const t = Math.min((now - start) / dur, 1);
-    const ease = 1 - Math.pow(1 - t, 3);
-    const val = target * ease;
-    el.textContent = (decimal > 0 ? (val / Math.pow(10, decimal)).toFixed(1) : Math.round(val)) + suffix;
-    if (t < 1) requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-}
-
-function runCounters(scope) {
-  (scope || document).querySelectorAll('.counter-target:not([data-counted])').forEach(el => {
-    el.setAttribute('data-counted','1');
-    animateCounter(el);
-  });
-}
-
-/* ── AUM BARS ANIMATION ───────────────────────────────────────────────────── */
-function animateBars(selector) {
-  document.querySelectorAll(selector + ':not([data-animated])').forEach(el => {
-    el.setAttribute('data-animated','1');
-    requestAnimationFrame(() => {
-      el.style.width = el.dataset.pct + '%';
-    });
-  });
-}
-
-/* ── CHARTS STATE ─────────────────────────────────────────────────────────── */
-const chartsReady = { estrategias: false, esg: false };
-let donutChart = null;
-let mixedChart = null;
-
-function destroyChart(which) {
-  if (which === 'donut' && donutChart) { donutChart.destroy(); donutChart = null; }
-  if (which === 'mixed' && mixedChart) { mixedChart.destroy(); mixedChart = null; }
-}
-
-function getCSSVar(name) {
-  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-}
-
-/* ── ESTRATEGIAS CHARTS ───────────────────────────────────────────────────── */
-function initEstrategiasCharts() {
-  chartsReady.estrategias = true;
-
-  /* Animate horizontal bars */
-  animateBars('.hbar-fill');
-
-  /* Donut — Multimesas breakdown */
-  const ctx = document.getElementById('donutMesas');
-  if (!ctx || donutChart) return;
-
-  const fgMuted = getCSSVar('--color-fg-muted');
-  const bgEl = getCSSVar('--color-bg-elevated');
-
-  donutChart = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: ['Crédito Estruturado + RF Unconstrained', 'Macro', 'Equities'],
-      datasets: [{
-        data: [89.8, 18.5, 5.2],
-        backgroundColor: [
-          'rgba(59,133,250,0.85)',
-          'rgba(15,118,110,0.85)',
-          'rgba(159,18,57,0.85)'
-        ],
-        borderColor: bgEl || '#fff',
-        borderWidth: 3,
-        hoverOffset: 8
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: true,
-      cutout: '62%',
-      animation: { animateRotate: true, duration: 1200 },
-      plugins: {
-        legend: {
-          position: 'bottom',
-          labels: {
-            color: fgMuted || '#6b5d50',
-            font: { family: "'JetBrains Mono', monospace", size: 11 },
-            padding: 16,
-            usePointStyle: true
-          }
-        },
-        tooltip: {
-          callbacks: {
-            label: (ctx) => ` R$ ${ctx.parsed} bi`
-          }
-        }
-      }
-    }
-  });
-}
-
-/* ── ESG MIXED CHART — bar + line no mesmo Chart.js ──────────────────────── */
-function initEsgCharts() {
-  chartsReady.esg = true;
-
-  /* Animate counters in ESG view */
-  runCounters(document.getElementById('esg'));
-
-  const ctx = document.getElementById('mixedEsg');
-  if (!ctx || mixedChart) return;
-
-  const accent    = getCSSVar('--color-accent')    || '#FF6200';
-  const info      = getCSSVar('--color-info')      || '#3B85FA';
-  const fgMuted   = getCSSVar('--color-fg-muted')  || '#6b5d50';
-  const border    = getCSSVar('--color-border')     || 'rgba(41,32,23,0.10)';
-  const fg        = getCSSVar('--color-fg')         || '#292017';
-  const bgSunken  = getCSSVar('--color-bg-sunken')  || '#f4f1ec';
-
-  /* Todos os 20 pontos/labels da fonte — nenhum omitido */
-  const labels = [
-    '2004','2005','2006','2007','2008','2009','2010','2011','2012','2013',
-    '2014','2015','2016','2017','2018','2019','2020','2021','2022','2023'
-  ];
-
-  /* Dataset 1 — barras AuM ESG (R$ bi) — eixo Y esquerdo */
-  const aumData = [5,8,12,20,35,48,65,85,110,150,210,280,380,490,580,680,820,950,1050,1193];
-
-  /* Dataset 2 — linha cobertura ESG (%) — eixo Y2 direito */
-  const coberturaData = [null,null,null,null,null,null,null,null,null,10,15,25,89,90,90,95,100,100,100,100];
-
-  mixedChart = new Chart(ctx, {
-    data: {
-      labels: labels,
-      datasets: [
-        {
-          type: 'bar',
-          label: 'AuM ESG (R$ bi)',
-          yAxisID: 'y',
-          data: aumData,
-          backgroundColor: accent.startsWith('#')
-            ? accent + '99'
-            : accent.replace(')', ',0.6)').replace('rgb(','rgba('),
-          borderColor: accent,
-          borderWidth: 1,
-          borderRadius: 4,
-          order: 2
-        },
-        {
-          type: 'line',
-          label: 'Cobertura ESG (%)',
-          yAxisID: 'y2',
-          data: coberturaData,
-          borderColor: info,
-          backgroundColor: 'transparent',
-          borderWidth: 2.5,
-          pointBackgroundColor: info,
-          pointBorderColor: '#fff',
-          pointBorderWidth: 2,
-          pointRadius: 3,
-          pointHoverRadius: 6,
-          fill: false,
-          tension: 0.4,
-          spanGaps: false,
-          order: 1
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      animation: { duration: 1200 },
-      interaction: { mode: 'index', intersect: false },
-      scales: {
-        x: {
-          ticks: {
-            color: fgMuted,
-            font: { family: "'JetBrains Mono', monospace", size: 10 },
-            maxRotation: 45,
-            minRotation: 0
-          },
-          grid: { color: border }
-        },
-        y: {
-          min: 0,
-          position: 'left',
-          ticks: {
-            color: fgMuted,
-            font: { family: "'JetBrains Mono', monospace", size: 10 },
-            callback: v => 'R$ ' + v + ' bi'
-          },
-          grid: { color: border },
-          title: {
-            display: true,
-            text: 'AuM ESG (R$ bi)',
-            color: fgMuted,
-            font: { family: "'Inter', sans-serif", size: 11 }
-          }
-        },
-        y2: {
-          min: 0,
-          max: 100,
-          position: 'right',
-          ticks: {
-            color: info,
-            font: { family: "'JetBrains Mono', monospace", size: 10 },
-            callback: v => v + '%'
-          },
-          grid: { drawOnChartArea: false },
-          title: {
-            display: true,
-            text: 'Cobertura ESG (%)',
-            color: info,
-            font: { family: "'Inter', sans-serif", size: 11 }
-          }
-        }
-      },
-      plugins: {
-        legend: {
-          labels: {
-            color: fg,
-            font: { family: "'Inter', sans-serif", size: 12 },
-            usePointStyle: true,
-            padding: 18
-          }
-        },
-        tooltip: {
-          callbacks: {
-            label: function(ctx) {
-              if (ctx.dataset.yAxisID === 'y') {
-                return ' AuM ESG: R$ ' + ctx.parsed.y + ' bi';
-              }
-              return ctx.parsed.y !== null
-                ? ' Cobertura: ' + ctx.parsed.y + '%'
-                : ' Cobertura: —';
-            }
-          }
-        }
-      }
-    }
-  });
-}
-
-/* ── HASH ROUTER ──────────────────────────────────────────────────────────── */
 function route() {
-  const id = (location.hash || '#home').slice(1) || 'home';
-  document.querySelectorAll('.view').forEach(v => { v.hidden = v.id !== id; });
-  document.querySelectorAll('.topnav__link').forEach(a => {
-    a.classList.toggle('is-active', a.getAttribute('href') === '#' + id);
+  const id = (location.hash || '#home').slice(1);
+  let found = false;
+  document.querySelectorAll('.view').forEach(v => {
+    const on = v.id === id;
+    v.classList.toggle('is-active', on);
+    v.hidden = !on;
+    if (on) found = true;
   });
+  if (!found) {
+    const first = document.querySelector('.view');
+    if (first) { first.classList.add('is-active'); first.hidden = false; }
+  }
+  document.querySelectorAll('.topnav__link').forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === '#' + id));
   window.scrollTo({ top: 0, behavior: 'instant' });
-
-  /* Activate view-specific init */
-  if (id === 'home') {
-    runCounters(document.getElementById('home'));
-    setTimeout(() => animateBars('.aum-bar-fill'), 120);
-  }
-  if (id === 'esg') {
-    setTimeout(() => { if (!chartsReady.esg) initEsgCharts(); }, 80);
-  }
-  if (id === 'estrategias') {
-    setTimeout(() => { if (!chartsReady.estrategias) initEstrategiasCharts(); }, 80);
-  }
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.view.is-active [data-reveal]').forEach(el => el.classList.add('is-visible'));
+  });
 }
-
 addEventListener('hashchange', route);
-addEventListener('DOMContentLoaded', () => {
-  route();
-  /* Trigger home animations if starting on home */
-  if (!location.hash || location.hash === '#home') {
-    setTimeout(() => animateBars('.aum-bar-fill'), 300);
-    setTimeout(() => runCounters(), 200);
-  }
-});
+addEventListener('DOMContentLoaded', route);
+
+const rio = new IntersectionObserver(es => {
+  es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); rio.unobserve(e.target); } });
+}, { threshold: 0.10 });
+document.querySelectorAll('[data-reveal]').forEach(el => rio.observe(el));
 </script>
+
 </body>
 </html>

@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brasil x Trump 2 — Comércio Exterior · Handbook · Pesquisa Macro Itaú</title>
+
+  <script>
+    (function() {
+      try {
+        var t = localStorage.getItem('theme') ||
+                (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+
+  <style>
+    /* ═════════════ TEMA ITAU ═════════════ */
+    :root {
+      --itau-orange:     #FF6200;
+      --itau-orange-2:   #F88104;
+      --itau-orange-3:   #FA9F09;
+      --itau-blue-3:     #3B85FA;
+      --itau-yellow:     #FBC305;
+      --itau-warm-black: #14110d;
+
+      --color-accent:        var(--itau-orange);
+      --color-accent-dim:    rgba(255, 98, 0, 0.08);
+      --color-accent-fg:     #ffffff;
+      --color-info:          var(--itau-blue-3);
+      --color-info-dim:      rgba(59, 133, 250, 0.08);
+      --color-success:       #4d7c0f;
+      --color-success-dim:   rgba(77, 124, 15, 0.08);
+      --color-sage:          #65a30d;
+      --color-sage-dim:      rgba(101, 163, 13, 0.08);
+      --color-teal:          #0f766e;
+      --color-teal-dim:      rgba(15, 118, 110, 0.08);
+      --color-plum:          #9f1239;
+      --color-plum-dim:      rgba(159, 18, 57, 0.08);
+      --color-warn:          var(--itau-yellow);
+      --color-warn-dim:      rgba(251, 195, 5, 0.12);
+      --color-danger:        #b91c1c;
+      --color-danger-dim:    rgba(185, 28, 28, 0.08);
+
+      --color-bg:            #faf7f5;
+      --color-bg-elevated:   #ffffff;
+      --color-bg-sunken:     #f4f1ec;
+      --color-fg:            #292017;
+      --color-fg-muted:      #6b5d50;
+      --color-fg-subtle:     #8a7e72;
+      --color-border:        rgba(41, 32, 23, 0.10);
+      --color-border-strong: rgba(41, 32, 23, 0.18);
+      --color-accent-hover:  var(--itau-orange-2);
+
+      --font-text:    'Inter', 'Itau Text', system-ui, sans-serif;
+      --font-display: 'Fraunces', 'Itau Display', Georgia, serif;
+      --font-mono:    'JetBrains Mono', 'IBM Plex Mono', Consolas, monospace;
+
+      --size-xs:      clamp(0.75rem, 0.7rem + 0.2vw, 0.875rem);
+      --size-small:   clamp(0.875rem, 0.85rem + 0.15vw, 1rem);
+      --size-body:    clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+      --size-lead:    clamp(1.15rem, 1.05rem + 0.5vw, 1.4rem);
+      --size-h4:      clamp(1rem, 0.95rem + 0.25vw, 1.15rem);
+      --size-h3:      clamp(1.2rem, 1.1rem + 0.5vw, 1.5rem);
+      --size-h2:      clamp(1.6rem, 1.3rem + 1.2vw, 2.25rem);
+      --size-h1:      clamp(2.25rem, 1.8rem + 2vw, 3.5rem);
+
+      --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem;
+      --space-4: 1rem;    --space-5: 1.5rem; --space-6: 2rem;
+      --space-7: 2.5rem;  --space-8: 3rem;   --space-10: 4rem;
+      --space-12: 5rem;   --space-16: 7rem;
+
+      --content-max: 760px;
+      --sidebar-w:   270px;
+      --toc-w:       220px;
+      --header-h:    56px;
+
+      --radius-sm: 4px; --radius: 10px; --radius-lg: 16px;
+      --shadow-xs: 0 1px 2px rgba(41,32,23,0.04);
+      --shadow-sm: 0 2px 4px rgba(41,32,23,0.06), 0 1px 2px rgba(41,32,23,0.04);
+      --shadow:    0 4px 12px rgba(41,32,23,0.08), 0 1px 3px rgba(41,32,23,0.05);
+      --shadow-lg: 0 12px 32px rgba(41,32,23,0.12);
+
+      --ease-out:       cubic-bezier(0.22, 1, 0.36, 1);
+      --duration-fast:  150ms;
+      --duration:       250ms;
+      --duration-hero:  900ms;
+    }
+    [data-theme="dark"] {
+      --color-bg:            #14110d;
+      --color-bg-elevated:   #1c1814;
+      --color-bg-sunken:     #221d18;
+      --color-fg:            #ede5dd;
+      --color-fg-muted:      #b8aa9a;
+      --color-fg-subtle:     #786e62;
+      --color-border:        rgba(237,229,221,0.10);
+      --color-border-strong: rgba(237,229,221,0.20);
+      --color-accent:        var(--itau-orange-3);
+      --color-accent-dim:    rgba(250,159,9,0.10);
+      --color-accent-fg:     #14110d;
+      --color-info-dim:      rgba(59,133,250,0.12);
+      --color-success:       #a3e635;
+      --color-success-dim:   rgba(163,230,53,0.10);
+      --color-sage:          #bef264;
+      --color-sage-dim:      rgba(190,242,100,0.10);
+      --color-teal:          #5eead4;
+      --color-teal-dim:      rgba(94,234,212,0.10);
+      --color-plum:          #fb7185;
+      --color-plum-dim:      rgba(251,113,133,0.10);
+      --color-warn-dim:      rgba(251,195,5,0.12);
+      --color-danger:        #f87171;
+      --color-danger-dim:    rgba(248,113,113,0.10);
+      --shadow-sm: 0 2px 4px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+      --shadow:    0 4px 12px rgba(0,0,0,0.4);
+      --shadow-lg: 0 12px 32px rgba(0,0,0,0.5);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--font-text);
+      font-size: var(--size-body);
+      line-height: 1.7;
+      color: var(--color-fg);
+      background: var(--color-bg);
+      -webkit-font-smoothing: antialiased;
+      transition: background var(--duration-fast), color var(--duration-fast);
+    }
+    :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; border-radius: var(--radius-sm); }
+
+    h1, h2, h3, h4 {
+      font-family: var(--font-display);
+      color: var(--color-fg);
+      line-height: 1.15;
+      letter-spacing: -0.022em;
+      font-weight: 700;
+    }
+    h1 { font-size: var(--size-h1); margin: 0 0 var(--space-4); letter-spacing: -0.030em; }
+    h2 { font-size: var(--size-h2); margin: var(--space-10) 0 var(--space-4); scroll-margin-top: calc(var(--header-h) + var(--space-4)); }
+    h3 { font-size: var(--size-h3); font-weight: 600; margin: var(--space-7) 0 var(--space-3); scroll-margin-top: calc(var(--header-h) + var(--space-4)); }
+    h4 { font-size: var(--size-h4); font-weight: 600; margin: var(--space-5) 0 var(--space-2); }
+    p { margin: 0 0 var(--space-4); max-width: 68ch; color: var(--color-fg); }
+    .lead {
+      font-size: var(--size-lead);
+      line-height: 1.5;
+      color: var(--color-fg-muted);
+      margin-bottom: var(--space-7);
+      font-weight: 400;
+      max-width: 65ch;
+    }
+    a { color: var(--color-accent); text-decoration: none; }
+    a:hover { text-decoration: underline; text-underline-offset: 3px; }
+    strong { font-weight: 700; color: var(--color-fg); }
+    ul, ol { padding-left: var(--space-5); margin: 0 0 var(--space-5); }
+    li { margin-bottom: var(--space-2); max-width: 65ch; }
+    li::marker { color: var(--color-fg-subtle); }
+
+    /* ═════════════ TOPBAR ═════════════ */
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      height: var(--header-h);
+      background: rgba(250,247,245,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--color-border);
+      display: flex; align-items: center;
+      padding: 0 var(--space-5);
+      gap: var(--space-5);
+    }
+    [data-theme="dark"] .topbar { background: rgba(20,17,13,0.85); }
+    .topbar__brand {
+      display: flex; align-items: center; gap: var(--space-3);
+      font-weight: 600; font-size: 0.9375rem;
+      text-decoration: none; color: var(--color-fg);
+    }
+    .topbar__logo {
+      width: 26px; height: 26px; border-radius: 6px;
+      background: var(--color-accent);
+      display: grid; place-items: center;
+      color: var(--color-accent-fg);
+      font-family: var(--font-mono);
+      font-size: 0.75rem; font-weight: 800;
+    }
+    .topbar__divider { width: 1px; height: 20px; background: var(--color-border); }
+    .topbar__breadcrumb {
+      display: flex; align-items: center; gap: var(--space-2);
+      font-size: var(--size-small); color: var(--color-fg-muted);
+    }
+    .topbar__breadcrumb a { color: inherit; text-decoration: none; }
+    .topbar__breadcrumb strong { color: var(--color-fg); font-weight: 500; }
+    .topbar__sep { color: var(--color-fg-subtle); }
+    .topbar__spacer { flex: 1; }
+
+    .theme-toggle {
+      width: 36px; height: 36px;
+      display: grid; place-items: center;
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: 999px; cursor: pointer;
+      color: var(--color-fg); font-size: 14px;
+      transition: all var(--duration-fast);
+    }
+    .theme-toggle:hover { border-color: var(--color-border-strong); transform: translateY(-1px); }
+
+    /* ═════════════ LAYOUT ═════════════ */
+    .layout {
+      display: grid;
+      grid-template-columns: var(--sidebar-w) 1fr var(--toc-w);
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .sidebar {
+      position: sticky; top: var(--header-h);
+      height: calc(100vh - var(--header-h));
+      overflow-y: auto;
+      padding: var(--space-6) var(--space-3) var(--space-8) var(--space-5);
+      border-right: 1px solid var(--color-border);
+    }
+    .sidebar__group { margin-bottom: var(--space-5); }
+    .sidebar__heading {
+      font-family: var(--font-mono);
+      font-size: var(--size-xs); font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--color-fg-subtle);
+      padding: 0 var(--space-3); margin: 0 0 var(--space-2);
+    }
+    .sidebar__list { list-style: none; padding: 0; margin: 0; }
+    .sidebar__list li { margin: 0; }
+    .sidebar__list a {
+      display: block;
+      padding: var(--space-2) var(--space-3);
+      font-size: var(--size-small);
+      color: var(--color-fg-muted);
+      text-decoration: none;
+      border-radius: var(--radius-sm);
+      border-left: 2px solid transparent;
+      margin-left: -2px;
+      transition: all var(--duration-fast);
+    }
+    .sidebar__list a:hover { color: var(--color-fg); background: var(--color-bg-elevated); }
+    .sidebar__list a.is-active {
+      color: var(--color-accent);
+      font-weight: 600;
+      border-left-color: var(--color-accent);
+      background: var(--color-bg-elevated);
+    }
+
+    .content {
+      padding: var(--space-8) var(--space-8) var(--space-16);
+      max-width: 100%; min-width: 0;
+    }
+    .content__inner { max-width: var(--content-max); }
+    .content__meta {
+      display: flex; gap: var(--space-3); align-items: center;
+      font-family: var(--font-mono);
+      font-size: var(--size-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.10em;
+      color: var(--color-fg-subtle);
+      margin-bottom: var(--space-5);
+    }
+    .content__meta .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--color-accent);
+    }
+
+    .toc {
+      position: sticky; top: calc(var(--header-h) + var(--space-5));
+      align-self: start;
+      padding: var(--space-6) var(--space-4);
+      font-size: var(--size-small);
+      max-height: calc(100vh - var(--header-h) - var(--space-6));
+      overflow-y: auto;
+    }
+    .toc__heading {
+      font-family: var(--font-mono);
+      font-size: var(--size-xs); font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--color-fg-subtle);
+      margin: 0 0 var(--space-2);
+    }
+    .toc__list { list-style: none; padding: 0; margin: 0; }
+    .toc__list li { margin: 0; }
+    .toc__list a {
+      display: block;
+      padding: var(--space-1) var(--space-3);
+      color: var(--color-fg-muted);
+      text-decoration: none;
+      border-left: 2px solid transparent;
+      margin-left: -2px;
+      transition: all var(--duration-fast);
+      line-height: 1.5;
+    }
+    .toc__list a:hover { color: var(--color-fg); }
+    .toc__list a.is-active {
+      color: var(--color-accent);
+      border-left-color: var(--color-accent);
+      font-weight: 500;
+    }
+
+    @media (max-width: 1100px) {
+      .toc { display: none; }
+      .layout { grid-template-columns: var(--sidebar-w) 1fr; }
+    }
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .layout { grid-template-columns: 1fr; }
+      .content { padding: var(--space-6) var(--space-5) var(--space-12); }
+    }
+
+    /* ═════════════ COMPONENTES ═════════════ */
+    .callout {
+      display: flex; gap: var(--space-4);
+      padding: var(--space-4) var(--space-5);
+      margin: var(--space-5) 0;
+      border-left: 3px solid;
+      border-radius: var(--radius);
+    }
+    .callout--info   { background: var(--color-info-dim);    border-color: var(--color-info); }
+    .callout--tip    { background: var(--color-success-dim); border-color: var(--color-success); }
+    .callout--warn   { background: var(--color-warn-dim);    border-color: var(--color-warn); }
+    .callout--danger { background: var(--color-danger-dim);  border-color: var(--color-danger); }
+    .callout__icon {
+      flex-shrink: 0; width: 24px; height: 24px;
+      display: grid; place-items: center;
+      border-radius: 50%; font-weight: 700;
+      font-size: 0.75rem; color: white;
+      margin-top: 2px;
+    }
+    .callout--info   .callout__icon { background: var(--color-info); }
+    .callout--tip    .callout__icon { background: var(--color-success); }
+    .callout--warn   .callout__icon { background: var(--color-warn); color: var(--itau-warm-black); }
+    .callout--danger .callout__icon { background: var(--color-danger); }
+    .callout__content { flex: 1; min-width: 0; }
+    .callout__title { font-weight: 700; margin: 0 0 var(--space-1); font-size: var(--size-small); }
+    .callout__content p { margin: 0; font-size: var(--size-small); line-height: 1.55; }
+
+    /* KPI hero */
+    .kpi-hero {
+      background: linear-gradient(135deg, var(--color-bg-elevated), var(--color-bg-sunken));
+      border: 1px solid var(--color-border);
+      border-left: 4px solid var(--color-accent);
+      border-radius: var(--radius-lg);
+      padding: var(--space-7) var(--space-7);
+      margin: var(--space-7) 0;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: var(--space-6);
+      align-items: center;
+      box-shadow: var(--shadow-sm);
+    }
+    .kpi-hero__val {
+      font-family: var(--font-display);
+      font-size: clamp(3.5rem, 7vw, 6rem);
+      font-weight: 900;
+      color: var(--color-accent);
+      line-height: 0.9;
+      letter-spacing: -0.04em;
+    }
+    .kpi-hero__body { min-width: 0; }
+    .kpi-hero__label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--color-fg-muted);
+      margin: 0 0 var(--space-2);
+    }
+    .kpi-hero__desc {
+      font-size: var(--size-lead);
+      line-height: 1.45;
+      margin: 0;
+      color: var(--color-fg);
+    }
+    @media (max-width: 640px) {
+      .kpi-hero { grid-template-columns: 1fr; padding: var(--space-5); }
+    }
+
+    /* Commodity cards */
+    .commodity-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-4);
+      margin: var(--space-6) 0;
+    }
+    .commodity-card {
+      padding: var(--space-4) var(--space-5);
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-left: 4px solid;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-xs);
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: var(--space-5);
+      align-items: center;
+    }
+    .commodity-card--accent  { border-left-color: var(--color-accent); }
+    .commodity-card--info    { border-left-color: var(--color-info); }
+    .commodity-card--teal    { border-left-color: var(--color-teal); }
+    .commodity-card--sage    { border-left-color: var(--color-sage); }
+    .commodity-card--plum    { border-left-color: var(--color-plum); }
+    .commodity-card__label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-fg-muted);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .commodity-card__label::before {
+      content: ''; width: 8px; height: 8px;
+      border-radius: 50%; background: currentColor;
+    }
+    .commodity-card--accent .commodity-card__label  { color: var(--color-accent); }
+    .commodity-card--info .commodity-card__label    { color: var(--color-info); }
+    .commodity-card--teal .commodity-card__label    { color: var(--color-teal); }
+    .commodity-card--sage .commodity-card__label    { color: var(--color-sage); }
+    .commodity-card--plum .commodity-card__label    { color: var(--color-plum); }
+    .commodity-card__body {
+      font-size: var(--size-small);
+      line-height: 1.5;
+      color: var(--color-fg);
+    }
+    .commodity-card__body p { margin: 0; max-width: none; }
+    @media (max-width: 640px) {
+      .commodity-card { grid-template-columns: 1fr; gap: var(--space-2); }
+    }
+
+    /* Tables */
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      background: var(--color-bg-elevated);
+      box-shadow: var(--shadow-xs);
+      margin: var(--space-5) 0;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--size-small);
+    }
+    .data-table thead th {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-fg-muted);
+      background: var(--color-bg-sunken);
+      padding: 11px 14px;
+      text-align: left;
+      border-bottom: 2px solid var(--color-border-strong);
+      white-space: nowrap;
+    }
+    .data-table tbody td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-fg);
+      line-height: 1.45;
+    }
+    .data-table tbody tr:nth-child(even) td { background: var(--color-bg-sunken); }
+    .data-table tbody tr:hover td { background: var(--color-accent-dim); }
+    .data-table td.num, .data-table th.num {
+      text-align: right;
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+    }
+    .data-table td strong { font-weight: 700; }
+
+    /* Chart container */
+    .chart-box {
+      position: relative;
+      width: 100%;
+      height: 360px;
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: var(--space-4);
+      box-shadow: var(--shadow-xs);
+      margin: var(--space-5) 0;
+    }
+    .chart-box canvas { max-width: 100%; }
+    .chart-box__title {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-fg-muted);
+      margin: 0 0 var(--space-3);
+      font-weight: 700;
+    }
+
+    /* Chart pair */
+    .chart-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4);
+      margin: var(--space-5) 0;
+    }
+    .chart-pair > * { min-width: 0; }
+    @media (max-width: 800px) {
+      .chart-pair { grid-template-columns: 1fr; }
+    }
+
+    /* Footnote */
+    .footnote {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--color-fg-subtle);
+      letter-spacing: 0.02em;
+      margin: var(--space-3) 0 var(--space-7);
+      line-height: 1.55;
+      max-width: 90ch;
+    }
+
+    /* Conclusion grid */
+    .conclusion-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-5);
+      margin: var(--space-7) 0;
+    }
+    .conclusion-card {
+      padding: var(--space-5);
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      border-top: 3px solid var(--color-accent);
+    }
+    .conclusion-card__num {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--color-accent);
+      font-weight: 700;
+      margin: 0 0 var(--space-2);
+    }
+    .conclusion-card__title {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin: 0 0 var(--space-2);
+    }
+    .conclusion-card__desc {
+      font-size: var(--size-small);
+      color: var(--color-fg-muted);
+      line-height: 1.5;
+      margin: 0;
+    }
+    @media (max-width: 800px) {
+      .conclusion-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Numbered list */
+    .num-list {
+      list-style: none; padding: 0; margin: var(--space-5) 0;
+      display: flex; flex-direction: column; gap: var(--space-3);
+    }
+    .num-list li {
+      display: grid; grid-template-columns: 32px 1fr;
+      gap: var(--space-4); align-items: start;
+      padding: var(--space-3) var(--space-4);
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      max-width: none;
+    }
+    .num-list li::before {
+      content: counter(num-counter);
+      counter-increment: num-counter;
+      width: 28px; height: 28px;
+      display: grid; place-items: center;
+      border-radius: 50%;
+      background: var(--color-accent);
+      color: var(--color-accent-fg);
+      font-family: var(--font-mono);
+      font-size: 0.75rem; font-weight: 700;
+    }
+    .num-list { counter-reset: num-counter; }
+
+    /* Authors footer */
+    .authors-footer {
+      margin: var(--space-12) 0 0;
+      padding: var(--space-6) 0;
+      border-top: 1px solid var(--color-border);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: var(--space-5);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--color-fg-muted);
+      letter-spacing: 0.04em;
+    }
+    .authors-footer strong {
+      display: block;
+      color: var(--color-fg);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin-bottom: 4px;
+      font-size: 0.875rem;
+    }
+    .authors-footer__right { text-align: right; }
+    @media (max-width: 640px) {
+      .authors-footer { grid-template-columns: 1fr; }
+      .authors-footer__right { text-align: left; }
+    }
+
+    /* Reveal */
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out);
+    }
+    [data-reveal].is-visible { opacity: 1; transform: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+      [data-reveal] { opacity: 1; transform: none; }
+    }
+
+    @media print {
+      .topbar, .sidebar, .toc, .theme-toggle { display: none; }
+      .layout { display: block; }
+      .content { padding: 0; max-width: 100%; }
+      h2 { page-break-after: avoid; }
+      .callout, .commodity-card { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a href="#" class="topbar__brand">
+      <span class="topbar__logo" aria-hidden="true">i</span>
+      <span>Itaú · Pesquisa Macro</span>
+    </a>
+    <span class="topbar__divider"></span>
+    <nav class="topbar__breadcrumb" aria-label="Localização">
+      <a href="#">Comércio Exterior</a>
+      <span class="topbar__sep">/</span>
+      <strong>Brasil x Trump 2</strong>
+    </nav>
+    <span class="topbar__spacer"></span>
+    <button class="theme-toggle" type="button" aria-label="Alternar tema"><span aria-hidden="true">◐</span></button>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="Navegação principal">
+      <nav class="sidebar__group">
+        <p class="sidebar__heading">Conteúdo</p>
+        <ul class="sidebar__list">
+          <li><a href="#visao-geral" class="is-active">Visão geral</a></li>
+          <li><a href="#numero-chave">O número-chave</a></li>
+          <li><a href="#impactos-positivos">Impactos positivos limitados</a></li>
+          <li><a href="#impactos-negativos">Impactos negativos crescentes</a></li>
+          <li><a href="#mercado-chines">Mercado chinês 2022</a></li>
+          <li><a href="#pauta-brasil">Pauta comercial brasileira</a></li>
+          <li><a href="#pauta-eua">Pauta Brasil ↔ EUA</a></li>
+          <li><a href="#contexto-eleicoes">Eleições americanas</a></li>
+        </ul>
+      </nav>
+      <nav class="sidebar__group">
+        <p class="sidebar__heading">Commodities</p>
+        <ul class="sidebar__list">
+          <li><a href="#soja">Soja</a></li>
+          <li><a href="#milho">Milho</a></li>
+          <li><a href="#aco">Aço</a></li>
+          <li><a href="#petroleo">Petróleo</a></li>
+          <li><a href="#minerio">Minério de ferro</a></li>
+        </ul>
+      </nav>
+      <nav class="sidebar__group">
+        <p class="sidebar__heading">Tarifas</p>
+        <ul class="sidebar__list">
+          <li><a href="#tarifas-historicas">Histórico de tarifas</a></li>
+          <li><a href="#tarifas-equiparacao">Cenário de equiparação</a></li>
+          <li><a href="#contraponto">Contraponto: superávit EUA</a></li>
+        </ul>
+      </nav>
+      <nav class="sidebar__group">
+        <p class="sidebar__heading">Síntese</p>
+        <ul class="sidebar__list">
+          <li><a href="#conclusao">Conclusão</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <div class="content__inner">
+        <p class="content__meta">
+          <span class="dot" aria-hidden="true"></span>
+          MACRO INSIGHTS · Janeiro 2025
+        </p>
+        <h1>Brasil: como fica o comércio exterior no governo Trump 2?</h1>
+        <p class="lead">Tese de pesquisa: balanço de riscos assimétrico para o lado negativo. Ganhos limitados pela alta participação brasileira nas importações chinesas; riscos crescentes via tarifas universais ou equiparação.</p>
+
+        <section id="visao-geral" data-reveal>
+          <h2>Visão geral</h2>
+          <p>Com a posse do segundo governo Trump, o Brasil entra em um cenário onde os <strong>ganhos potenciais</strong> de uma nova guerra comercial EUA-China são menores do que em 2018, enquanto os <strong>riscos negativos</strong> são maiores. O ponto central é simples: o Brasil já capturou boa parte do espaço de substituição em commodities-chave (especialmente soja, com cerca de 70% das importações chinesas), e ao mesmo tempo passou a aparecer no radar de tarifas universais ou esquemas de equiparação tarifária defendidos por nomes do governo Trump 2.</p>
+          <p>Este handbook estrutura o argumento em cinco eixos: o tamanho e a composição do mercado chinês para commodities; o detalhamento por produto (soja, milho, aço, petróleo, minério de ferro); o histórico tarifário do primeiro mandato Trump; o cenário simétrico de equiparação tarifária; e o contraponto do superávit comercial dos EUA com o Brasil.</p>
+        </section>
+
+        <section id="numero-chave" data-reveal>
+          <h2>O número-chave</h2>
+          <div class="kpi-hero">
+            <div class="kpi-hero__val">~70%</div>
+            <div class="kpi-hero__body">
+              <p class="kpi-hero__label">Participação Brasil em soja chinesa</p>
+              <p class="kpi-hero__desc">das importações chinesas de <strong>soja</strong> já têm origem brasileira. O espaço para novos ganhos numa eventual segunda guerra comercial é <strong>limitado</strong>.</p>
+            </div>
+          </div>
+          <p class="footnote">Fonte: USDA, GACC, Comex Stat · Pesquisa Macro Itaú</p>
+        </section>
+
+        <section id="impactos-positivos" data-reveal>
+          <h2>Impactos positivos mais limitados do que em 2018</h2>
+          <p>Em 2018, no primeiro mandato Trump, o Brasil capturou ganhos relevantes ao substituir parcialmente os EUA como fornecedor de soja para a China. Nas commodities-chave de 2025, esse espaço de substituição se reduziu substancialmente:</p>
+
+          <div class="commodity-grid">
+            <div class="commodity-card commodity-card--accent">
+              <div class="commodity-card__label">Soja</div>
+              <div class="commodity-card__body"><p><strong>~70% das importações chinesas</strong> já vêm do Brasil. Pouco espaço para crescer participação numa nova rodada de tarifas.</p></div>
+            </div>
+            <div class="commodity-card commodity-card--info">
+              <div class="commodity-card__label">Milho</div>
+              <div class="commodity-card__body"><p>~45% das importações chinesas vêm do Brasil, 30% dos EUA. Mas <strong>produção interna forte e estoques elevados</strong> podem reduzir as importações totais.</p></div>
+            </div>
+            <div class="commodity-card commodity-card--teal">
+              <div class="commodity-card__label">Minério de ferro</div>
+              <div class="commodity-card__body"><p>Austrália responde por ~60%, Brasil por ~20%. <strong>EUA não exportam</strong> minério para a China — sem espaço de substituição.</p></div>
+            </div>
+            <div class="commodity-card commodity-card--sage">
+              <div class="commodity-card__label">Aço</div>
+              <div class="commodity-card__body"><p>Brasil fornece ~10% do aço dos EUA. Canadá e Europa, 20-25% cada. <strong>EUA já são 50% das exportações brasileiras de aço</strong> — limita ganhos adicionais.</p></div>
+            </div>
+            <div class="commodity-card commodity-card--plum">
+              <div class="commodity-card__label">Petróleo</div>
+              <div class="commodity-card__body"><p><strong>45% das exportações brasileiras de petróleo vão para a China</strong> vs 11% para os EUA. Dinâmica menos exposta ao conflito.</p></div>
+            </div>
+          </div>
+
+          <p class="footnote">Quando os EUA têm participação pequena nas importações chinesas (exceto milho/soja), retaliações da China focam em outros itens — caso recente: proibição de exportação de minerais críticos para os EUA.</p>
+        </section>
+
+        <section id="impactos-negativos" data-reveal>
+          <h2>...mas os impactos negativos, desta vez, podem ser maiores</h2>
+          <p>Diferentemente de 2018, quando o Brasil não estava no radar das tarifas americanas, o cenário Trump 2 traz cinco vetores de risco concretos:</p>
+          <ol class="num-list">
+            <li><strong>Tarifas dos EUA sobre produtos brasileiros estão na mesa.</strong> Trump já acusou o Brasil em 2019 de manipulação cambial — naquele momento, BRL/USD estava em R$ 4,00.</li>
+            <li>Eventual <strong>tarifa "universal" de 10%</strong> ou um <strong>Reciprocal Tariff Act</strong> (defendido por Kevin Hassett): Brasil tarifa em média 11,2% produtos dos EUA, enquanto EUA tarifam apenas 1,5% itens brasileiros.</li>
+            <li><strong>Setores mais expostos</strong>: siderurgia (aço foi target em 2018), combustíveis e aviação.</li>
+            <li><strong>Alimentos</strong> (carnes, café) impactados em segundo momento — risco para inflação ao consumidor americano limitaria velocidade.</li>
+            <li>A China pode <strong>comprar mais agro americano</strong> para barrar tarifas — fazendo os impactos positivos para o Brasil ainda menores.</li>
+          </ol>
+          <aside class="callout callout--warn" role="note">
+            <span class="callout__icon">!</span>
+            <div class="callout__content">
+              <p class="callout__title">Balanço assimétrico</p>
+              <p>Balanço de riscos <strong>assimétrico para o lado negativo</strong> para o Brasil.</p>
+            </div>
+          </aside>
+        </section>
+
+        <section id="mercado-chines" data-reveal>
+          <h2>Tamanho do mercado chinês em 2022</h2>
+          <p>Para dimensionar o jogo, vale olhar a pauta de importações chinesas — Brasil é forte fornecedor em soja, minério de ferro e petróleo. Os números mostram a magnitude relativa de cada commodity dentro da cesta total de importações da China:</p>
+
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Produto</th>
+                  <th class="num">% da pauta de importações chinesa</th>
+                  <th class="num">Valor (USD bi)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>Petróleo</strong></td><td class="num">13,3%</td><td class="num">287,0</td></tr>
+                <tr><td><strong>Minério de ferro</strong></td><td class="num">4,8%</td><td class="num">103,0</td></tr>
+                <tr><td><strong>Gás natural</strong></td><td class="num">3,4%</td><td class="num">72,7</td></tr>
+                <tr><td><strong>Ouro</strong></td><td class="num">3,1%</td><td class="num">67,6</td></tr>
+                <tr><td><strong>Soja</strong></td><td class="num">2,5%</td><td class="num">54,0</td></tr>
+                <tr><td><strong>Minério de cobre</strong></td><td class="num">2,3%</td><td class="num">50,5</td></tr>
+                <tr><td><strong>Milho</strong></td><td class="num">0,3%</td><td class="num">6,8</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="footnote">Fonte: General Administration of Customs of China (GACC), 2022.</p>
+        </section>
+
+        <section id="pauta-brasil" data-reveal>
+          <h2>Pauta comercial brasileira — visão geral</h2>
+          <p>Antes de entrar em commodity por commodity, vale entender de onde vem (em produtos) e para onde vai (em destinos) o que o Brasil exporta. Petróleo, soja e minério de ferro dominam a pauta — e a China é, com folga, o principal destino, seguida pelos EUA.</p>
+
+          <div class="chart-pair">
+            <div>
+              <p class="chart-box__title">Top 10 produtos exportados (% da pauta)</p>
+              <div class="chart-box"><canvas id="c-pauta-produtos"></canvas></div>
+            </div>
+            <div>
+              <p class="chart-box__title">Top 12 destinos das exportações (%)</p>
+              <div class="chart-box"><canvas id="c-pauta-destinos"></canvas></div>
+            </div>
+          </div>
+          <p class="footnote">Fonte: Comex Stat · Secex/MDIC, 2023.</p>
+        </section>
+
+        <section id="pauta-eua" data-reveal>
+          <h2>Pauta comercial Brasil ↔ Estados Unidos</h2>
+          <p>O comércio bilateral Brasil-EUA tem perfil distinto da pauta global do Brasil: petróleo bruto e semi-acabados de aço lideram as exportações, enquanto motores e óleos combustíveis dominam as importações vindas dos EUA. É essa estrutura que define quem fica vulnerável a uma rodada de tarifas.</p>
+
+          <div class="chart-pair">
+            <div>
+              <p class="chart-box__title">Top 8 produtos exportados para os EUA</p>
+              <div class="chart-box"><canvas id="c-eua-export"></canvas></div>
+            </div>
+            <div>
+              <p class="chart-box__title">Top 8 produtos importados dos EUA</p>
+              <div class="chart-box"><canvas id="c-eua-import"></canvas></div>
+            </div>
+          </div>
+          <p class="footnote">Fonte: Comex Stat · Secex/MDIC. Pauta bilateral Brasil-EUA 2023.</p>
+        </section>
+
+        <section id="contexto-eleicoes" data-reveal>
+          <h2>Eleições americanas e o impacto no comércio internacional</h2>
+          <p>O fluxo de comércio mundial como % do PIB voltou a crescer na década de 2020 após o choque pandêmico, e o Brasil acompanha — mas em base mais baixa. Paralelamente, o Índice de Incerteza no Comércio (TPU, do Federal Reserve Board) atingiu um pico recente em 2024, refletindo a antecipação da equipe econômica do Trump 2:</p>
+
+          <div class="chart-pair">
+            <div>
+              <p class="chart-box__title">Fluxo de comércio (% PIB) — Brasil vs Global, 2000-2023</p>
+              <div class="chart-box"><canvas id="c-fluxo"></canvas></div>
+            </div>
+            <div>
+              <p class="chart-box__title">Índice de Incerteza no Comércio (TPU), 2014-2024</p>
+              <div class="chart-box"><canvas id="c-incerteza"></canvas></div>
+            </div>
+          </div>
+          <p class="footnote">Fonte: World Bank (% PIB), Trade Policy Uncertainty Index (Federal Reserve Board / Caldara et al.). Pico recente em 2024 reflete antecipação ao 2º mandato Trump.</p>
+        </section>
+
+        <section id="soja" data-reveal>
+          <h2>Soja: maior parte das exportações brasileiras já vai para a China</h2>
+          <p>A soja é o caso mais emblemático da limitação do espaço de substituição. Em 2018-20, durante a primeira guerra comercial, Brasil cresceu e EUA caíram na mesma magnitude na composição das importações chinesas. Hoje, com ~70% de participação, o espaço de avanço adicional é limitado.</p>
+
+          <div class="chart-pair">
+            <div>
+              <p class="chart-box__title">Origem das importações chinesas de soja — Brasil vs EUA (%)</p>
+              <div class="chart-box"><canvas id="c-soja-origem"></canvas></div>
+            </div>
+            <div>
+              <p class="chart-box__title">Balanço mundial de soja 2024/25 Proj. (mm ton)</p>
+              <div class="table-wrap">
+                <table class="data-table">
+                  <thead><tr><th>País</th><th class="num">Est. inicial</th><th class="num">Produção</th><th class="num">Import.</th><th class="num">Cons.</th><th class="num">Export.</th><th class="num">Est. final</th></tr></thead>
+                  <tbody>
+                    <tr><td><strong>Mundo</strong></td><td class="num">112</td><td class="num">424</td><td class="num">179</td><td class="num">406</td><td class="num">182</td><td class="num">128</td></tr>
+                    <tr><td>Brasil</td><td class="num">28</td><td class="num">169</td><td class="num">0</td><td class="num">59</td><td class="num">106</td><td class="num">33</td></tr>
+                    <tr><td>EUA</td><td class="num">9</td><td class="num">119</td><td class="num">1</td><td class="num">69</td><td class="num">50</td><td class="num">10</td></tr>
+                    <tr><td>Argentina</td><td class="num">24</td><td class="num">52</td><td class="num">6</td><td class="num">49</td><td class="num">5</td><td class="num">29</td></tr>
+                    <tr><td>Paraguai</td><td class="num">0</td><td class="num">11</td><td class="num">0</td><td class="num">4</td><td class="num">7</td><td class="num">0</td></tr>
+                    <tr><td>China</td><td class="num">43</td><td class="num">21</td><td class="num">109</td><td class="num">127</td><td class="num">0</td><td class="num">46</td></tr>
+                    <tr><td>União Europeia</td><td class="num">1</td><td class="num">3</td><td class="num">15</td><td class="num">17</td><td class="num">0</td><td class="num">1</td></tr>
+                    <tr><td>México</td><td class="num">0</td><td class="num">0</td><td class="num">7</td><td class="num">7</td><td class="num">0</td><td class="num">0</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <p class="footnote">Fonte: USDA — Foreign Agricultural Service (WASDE), proj. 2024/25.</p>
+        </section>
+
+        <section id="milho" data-reveal>
+          <h2>Milho: avanço limitado por produção e estoque elevados na China</h2>
+          <p>No milho, o quadro é diferente: a produção doméstica chinesa cresceu de cerca de 200 mm ton (2011) para ~295 mm ton (2025 est.), e as importações caíram desde o pico de 2020-21. Mesmo que o Brasil ganhe participação relativa, o tamanho do bolo encolhe.</p>
+
+          <div class="chart-pair">
+            <div>
+              <p class="chart-box__title">Origem das importações chinesas — Brasil vs EUA (%)</p>
+              <div class="chart-box"><canvas id="c-milho-origem"></canvas></div>
+            </div>
+            <div>
+              <p class="chart-box__title">Produção, importação e estoque final na China (mm ton)</p>
+              <div class="chart-box"><canvas id="c-milho-china"></canvas></div>
+            </div>
+          </div>
+          <p class="footnote">Fonte: GACC, USDA. A produção doméstica chinesa cresceu de 200 mm ton (2011) para ~295 mm ton (2025 est.). Importações caíram desde o pico de 2020-21.</p>
+        </section>
+
+        <section id="aco" data-reveal>
+          <h2>Aço: espaço para expansão limitado</h2>
+          <p>Os EUA já são o destino de <strong>~54% das exportações brasileiras de aço</strong>. Isso significa que o Brasil não tem como ganhar muito mais participação — e fica simultaneamente muito exposto a qualquer tarifa setorial adicional. O aço foi target prioritário em 2018.</p>
+
+          <div class="chart-pair">
+            <div>
+              <p class="chart-box__title">Origem das importações de aço dos EUA — 5 principais (%)</p>
+              <div class="chart-box"><canvas id="c-aco-origem"></canvas></div>
+            </div>
+            <div>
+              <p class="chart-box__title">Destinos das exportações brasileiras de aço — top 10 (%)</p>
+              <div class="table-wrap">
+                <table class="data-table">
+                  <thead><tr><th>Destino</th><th class="num">%</th></tr></thead>
+                  <tbody>
+                    <tr><td><strong>Estados Unidos</strong></td><td class="num">54,3</td></tr>
+                    <tr><td>Argentina</td><td class="num">7,2</td></tr>
+                    <tr><td>México</td><td class="num">4,6</td></tr>
+                    <tr><td>Canadá</td><td class="num">3,7</td></tr>
+                    <tr><td>Peru</td><td class="num">2,8</td></tr>
+                    <tr><td>República Dominicana</td><td class="num">2,7</td></tr>
+                    <tr><td>França</td><td class="num">2,4</td></tr>
+                    <tr><td>Colômbia</td><td class="num">1,9</td></tr>
+                    <tr><td>Catar</td><td class="num">1,8</td></tr>
+                    <tr><td>Arábia Saudita</td><td class="num">1,5</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <p class="footnote">Fonte: Comex Stat (Brasil); US ITA (origem importações EUA).</p>
+        </section>
+
+        <section id="petroleo" data-reveal>
+          <h2>Petróleo: dinâmica menos exposta à guerra comercial</h2>
+          <p>O petróleo brasileiro tem perfil de exportação diferente: <strong>44,6% vai para a China</strong> e apenas 12,9% para os EUA. As importações chinesas dos EUA cresceram pós-2017, mas o Oriente Médio segue dominante. A dinâmica é, portanto, menos exposta ao conflito direto EUA-China.</p>
+
+          <div class="chart-pair">
+            <div>
+              <p class="chart-box__title">Origem das importações chinesas — 5 regiões (%)</p>
+              <div class="chart-box"><canvas id="c-petroleo-origem"></canvas></div>
+            </div>
+            <div>
+              <p class="chart-box__title">Destinos das exportações brasileiras — top 8 (%)</p>
+              <div class="table-wrap">
+                <table class="data-table">
+                  <thead><tr><th>Destino</th><th class="num">%</th></tr></thead>
+                  <tbody>
+                    <tr><td><strong>China</strong></td><td class="num">44,6</td></tr>
+                    <tr><td>Estados Unidos</td><td class="num">12,9</td></tr>
+                    <tr><td>Espanha</td><td class="num">10,7</td></tr>
+                    <tr><td>Países Baixos</td><td class="num">7,2</td></tr>
+                    <tr><td>Portugal</td><td class="num">4,9</td></tr>
+                    <tr><td>Chile</td><td class="num">4,3</td></tr>
+                    <tr><td>Singapura</td><td class="num">3,6</td></tr>
+                    <tr><td>Índia</td><td class="num">2,7</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <p class="footnote">Fonte: GACC (origem importações chinesas), Comex Stat (destinos brasileiros). Importações chinesas dos EUA cresceram pós-2017, mas Oriente Médio segue dominante.</p>
+        </section>
+
+        <section id="minerio" data-reveal>
+          <h2>Minério de ferro: dinâmica apartada da questão EUA-China</h2>
+          <p>O minério de ferro é o caso mais claro de dinâmica isolada do conflito comercial. Austrália domina (cerca de 60% das importações chinesas), Brasil é o segundo (~20%), e os <strong>EUA não exportam</strong> minério para a China — não há retaliação possível por essa via.</p>
+
+          <div class="chart-pair">
+            <div>
+              <p class="chart-box__title">Origem das importações chinesas (%)</p>
+              <div class="chart-box"><canvas id="c-minerio-origem"></canvas></div>
+            </div>
+            <div>
+              <p class="chart-box__title">Destinos das exportações brasileiras — top 10 (%)</p>
+              <div class="table-wrap">
+                <table class="data-table">
+                  <thead><tr><th>Destino</th><th class="num">%</th></tr></thead>
+                  <tbody>
+                    <tr><td><strong>China</strong></td><td class="num">66,5</td></tr>
+                    <tr><td>Malásia</td><td class="num">5,4</td></tr>
+                    <tr><td>Japão</td><td class="num">3,4</td></tr>
+                    <tr><td>Omã</td><td class="num">3,2</td></tr>
+                    <tr><td>Bahrein</td><td class="num">3,0</td></tr>
+                    <tr><td>Países Baixos</td><td class="num">2,7</td></tr>
+                    <tr><td>Coreia do Sul</td><td class="num">2,0</td></tr>
+                    <tr><td>Egito</td><td class="num">1,8</td></tr>
+                    <tr><td>Argentina</td><td class="num">1,7</td></tr>
+                    <tr><td>Filipinas</td><td class="num">1,5</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <aside class="callout callout--info" role="note">
+            <span class="callout__icon">i</span>
+            <div class="callout__content">
+              <p>EUA <strong>não exportam</strong> minério de ferro para a China — não há retaliação possível por essa via. Dinâmica praticamente isolada do conflito comercial.</p>
+            </div>
+          </aside>
+        </section>
+
+        <section id="tarifas-historicas" data-reveal>
+          <h2>Tarifas — quais setores foram mais afetados?</h2>
+          <p>Olhando para o primeiro mandato Trump, é possível mapear quais setores brasileiros foram mais tarifados. A média ponderada por exportações, % das tarifas aplicadas pelos EUA em produtos brasileiros, mostra um movimento concentrado em manufaturados e produtos químicos:</p>
+          <div class="chart-box" style="height: 460px"><canvas id="c-tarifas-hist"></canvas></div>
+          <p class="footnote">Fonte: World Integrated Trade Solution (WITS) · USTR. Maior aumento durante 1º mandato Trump: <strong>Manufaturados (+1,5pp)</strong> e Produtos Químicos (+2,4pp).</p>
+        </section>
+
+        <section id="tarifas-equiparacao" data-reveal>
+          <h2>Se Trump equiparar tarifas...</h2>
+          <p>Num cenário hipotético em que as tarifas dos EUA sobem para o nível brasileiro — ou em que se aplique uma tarifa universal de 10% (linha pontilhada) — a maioria das categorias é atingida. Os setores mais expostos seriam manufaturados (+10,4pp) e diversos (+6,9pp).</p>
+          <div class="chart-box" style="height: 460px"><canvas id="c-tarifas-simetrica"></canvas></div>
+          <aside class="callout callout--warn" role="note">
+            <span class="callout__icon">!</span>
+            <div class="callout__content">
+              <p>Setores mais expostos à equiparação: <strong>manufaturados (+10,4pp)</strong> e diversos (+6,9pp).</p>
+            </div>
+          </aside>
+        </section>
+
+        <section id="contraponto" data-reveal>
+          <h2>Contraponto: superávit dos EUA com o Brasil</h2>
+          <p>Um vetor que atenua o risco: o Brasil tem perfil diferente dos "alvos primários" das tarifas Trump (México, Vietnã, China). A balança comercial dos EUA com o Brasil é praticamente neutra (e até superavitária em alguns anos), o que reduz a motivação política para tarifas amplas.</p>
+
+          <div class="chart-pair">
+            <div>
+              <p class="chart-box__title">Balança comercial dos EUA com top 16 parceiros (USD bi, 2023)</p>
+              <div class="chart-box"><canvas id="c-balanca-eua"></canvas></div>
+            </div>
+            <div>
+              <p class="chart-box__title">Saldo comercial EUA vs Brasil (USD bi, 2002-2024)</p>
+              <div class="chart-box"><canvas id="c-saldo-br"></canvas></div>
+            </div>
+          </div>
+          <aside class="callout callout--info" role="note">
+            <span class="callout__icon">i</span>
+            <div class="callout__content">
+              <p>Pauta brasileira mais focada em <strong>produtos básicos</strong> (petróleo, alimentos) → tarifas, se adotadas, devem focar siderurgia e aviação primeiro.</p>
+            </div>
+          </aside>
+        </section>
+
+        <section id="conclusao" data-reveal>
+          <h2>Em suma, balanço assimétrico de riscos</h2>
+          <p>Riscos positivos limitados vs riscos negativos crescentes para o Brasil. Três vetores resumem a tese:</p>
+          <div class="conclusion-grid">
+            <div class="conclusion-card">
+              <p class="conclusion-card__num">01 · Ganhos limitados</p>
+              <h3 class="conclusion-card__title">Pouco espaço a ganhar</h3>
+              <p class="conclusion-card__desc">Brasil já tem alta participação nas importações chinesas de soja (~70%), minério de ferro (~20%) e petróleo. O modelo de substituição 2018-20 não se repete na mesma intensidade.</p>
+            </div>
+            <div class="conclusion-card">
+              <p class="conclusion-card__num">02 · Risco crescente</p>
+              <h3 class="conclusion-card__title">Tarifas na mesa</h3>
+              <p class="conclusion-card__desc">Tarifa universal (10%) ou equiparação podem atingir manufaturados (+10,4pp), siderurgia (54% das exportações de aço) e aviação.</p>
+            </div>
+            <div class="conclusion-card">
+              <p class="conclusion-card__num">03 · Diferencial brasileiro</p>
+              <h3 class="conclusion-card__title">Pauta básica protege</h3>
+              <p class="conclusion-card__desc">Pauta brasileira focada em produtos básicos pode adiar a exposição. Brasil não está entre os alvos primários (México, Vietnã, China).</p>
+            </div>
+          </div>
+
+          <div class="authors-footer">
+            <div>
+              <strong>Pesquisa Macroeconômica · Itaú Unibanco</strong>
+              Mario Mesquita · Economista-Chefe<br>
+              Site: itau.com.br/itaubba-pt/analises-economicas
+            </div>
+            <div class="authors-footer__right">
+              <strong>Autores</strong>
+              Igor Barreto Rose<br>
+              Julia Marasca<br>
+              Janeiro 2025
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <aside class="toc" aria-label="Nesta página">
+      <p class="toc__heading">Nesta página</p>
+      <ul class="toc__list" id="toc-list"></ul>
+    </aside>
+  </div>
+
+  <script>
+    /* Theme toggle */
+    document.querySelector('.theme-toggle')?.addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme');
+      const next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch {}
+      renderAllCharts();
+    });
+
+    /* TOC dinâmico (de h2) */
+    const tocList = document.getElementById('toc-list');
+    document.querySelectorAll('.content section[id]').forEach(sec => {
+      const h2 = sec.querySelector('h2');
+      if (!h2) return;
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = '#' + sec.id;
+      a.textContent = h2.textContent;
+      li.appendChild(a);
+      tocList.appendChild(li);
+    });
+
+    /* Scrollspy compartilhado sidebar + TOC */
+    const links = document.querySelectorAll('.sidebar__list a, .toc__list a');
+    const targets = [...new Set([...links].map(a => a.getAttribute('href')))]
+      .map(h => document.querySelector(h)).filter(Boolean);
+    const spy = new IntersectionObserver(es => {
+      es.forEach(e => {
+        if (!e.isIntersecting) return;
+        const id = '#' + e.target.id;
+        links.forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === id));
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    targets.forEach(t => spy.observe(t));
+
+    /* Reveal on scroll */
+    const rio = new IntersectionObserver(es => {
+      es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); rio.unobserve(e.target); } });
+    }, { threshold: 0.10, rootMargin: '0px 0px -60px 0px' });
+    document.querySelectorAll('[data-reveal]').forEach(el => rio.observe(el));
+
+    /* ═════════════ CHARTS ═════════════ */
+    const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+    const chartInstances = {};
+
+    function destroyAllCharts() {
+      Object.keys(chartInstances).forEach(k => {
+        try { chartInstances[k].destroy(); } catch (e) {}
+        delete chartInstances[k];
+      });
+    }
+
+    function commonOpts(opts = {}) {
+      return {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 500, easing: 'easeOutCubic' },
+        ...opts
+      };
+    }
+
+    function renderAllCharts() {
+      destroyAllCharts();
+      const make = (id, cfg) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        chartInstances[id] = new Chart(el, cfg);
+      };
+
+      make('c-pauta-produtos', {
+        type: 'bar',
+        data: {
+          labels: ['Óleos brutos de petróleo','Soja','Minério de ferro','Açúcares e melaços','Café não torrado','Celulose','Carne bovina fresca','Farelos de soja','Carnes de aves','Óleos combust. de petróleo'],
+          datasets: [{ data: [13.3,12.7,8.9,5.5,3.4,3.1,2.5,2.3,2.1,1.9], backgroundColor: css('--color-accent-dim'), borderColor: css('--color-accent'), borderWidth: 2, borderRadius: 4 }]
+        },
+        options: commonOpts({
+          indexAxis: 'y',
+          plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.parsed.x + '%' } } },
+          scales: {
+            x: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => v + '%' } },
+            y: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 10 } } }
+          }
+        })
+      });
+
+      make('c-pauta-destinos', {
+        type: 'bar',
+        data: {
+          labels: ['China','EUA','Argentina','Países Baixos','Espanha','México','Singapura','Canadá','Japão','Alemanha','Itália','Coreia do Sul'],
+          datasets: [{
+            data: [28.0,12.0,4.1,3.5,2.9,2.3,2.3,1.9,1.7,1.7,1.3,1.3],
+            backgroundColor: ['rgba(15,118,110,0.30)','rgba(255,98,0,0.30)','rgba(107,93,80,0.25)','rgba(107,93,80,0.25)','rgba(107,93,80,0.25)','rgba(107,93,80,0.25)','rgba(107,93,80,0.25)','rgba(107,93,80,0.25)','rgba(107,93,80,0.25)','rgba(107,93,80,0.25)','rgba(107,93,80,0.25)','rgba(107,93,80,0.25)'],
+            borderColor: [css('--color-teal'), css('--color-accent'), css('--color-fg-muted'), css('--color-fg-muted'), css('--color-fg-muted'), css('--color-fg-muted'), css('--color-fg-muted'), css('--color-fg-muted'), css('--color-fg-muted'), css('--color-fg-muted'), css('--color-fg-muted'), css('--color-fg-muted')],
+            borderWidth: 2, borderRadius: 4
+          }]
+        },
+        options: commonOpts({
+          indexAxis: 'y',
+          plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.parsed.x + '%' } } },
+          scales: {
+            x: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => v + '%' } },
+            y: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 10 } } }
+          }
+        })
+      });
+
+      make('c-eua-export', {
+        type: 'bar',
+        data: {
+          labels: ['Óleos brutos petróleo','Semi-acabados ferro/aço','Café não torrado','Celulose','Aeronaves e equip.','Ferro-gusa, spiegel','Óleos combust. petróleo','Carne bovina fresca'],
+          datasets: [{ data: [14.3,8.8,4.7,4.2,2.5,2.2,2.0,1.5], backgroundColor: css('--color-accent-dim'), borderColor: css('--color-accent'), borderWidth: 2, borderRadius: 4 }]
+        },
+        options: commonOpts({
+          indexAxis: 'y',
+          plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.parsed.x + '%' } } },
+          scales: {
+            x: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => v + '%' } },
+            y: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 10 } } }
+          }
+        })
+      });
+
+      make('c-eua-import', {
+        type: 'bar',
+        data: {
+          labels: ['Motores e máq. não-elétricos','Óleos combust. petróleo','Aeronaves e equip.','Gás natural liquefeito','Polímeros de etileno','Outros medicamentos','Instrumentos médicos','Carvão'],
+          datasets: [{ data: [15.2,9.7,4.7,4.1,2.5,2.0,1.8,1.5], backgroundColor: css('--color-info-dim'), borderColor: css('--color-info'), borderWidth: 2, borderRadius: 4 }]
+        },
+        options: commonOpts({
+          indexAxis: 'y',
+          plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.parsed.x + '%' } } },
+          scales: {
+            x: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => v + '%' } },
+            y: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 10 } } }
+          }
+        })
+      });
+
+      make('c-fluxo', {
+        type: 'line',
+        data: {
+          labels: ['2000','2001','2002','2003','2004','2005','2006','2007','2008','2009','2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023'],
+          datasets: [
+            { label: 'Global (% PIB)', data: [37,38,37,38,42,46,48,50,52,42,47,50,49,49,48,46,44,45,46,46,42,49,50,46], borderColor: css('--color-accent'), backgroundColor: css('--color-accent-dim'), fill: true, tension: 0.35, pointRadius: 0, borderWidth: 2.5 },
+            { label: 'Brasil (Export.+Import. % PIB)', data: [16,17,21,23,24,22,22,21,22,17,18,19,21,22,21,20,18,20,22,22,23,30,32,27], borderColor: css('--color-fg'), backgroundColor: 'transparent', fill: false, tension: 0.35, pointRadius: 0, borderWidth: 2.5, borderDash: [5,3] }
+          ]
+        },
+        options: commonOpts({
+          plugins: {
+            legend: { position: 'top', labels: { color: css('--color-fg-muted'), font: { size: 10 }, boxWidth: 14 } },
+            tooltip: { mode: 'index', intersect: false, callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y + '%' } }
+          },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), maxTicksLimit: 8, font: { size: 10 } } },
+            y: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => v + '%' } }
+          }
+        })
+      });
+
+      make('c-incerteza', {
+        type: 'line',
+        data: {
+          labels: ['2014','2015','2016','2017','2018','2019','2020','2021','2022','2023','2024'],
+          datasets: [{ label: 'TPU Index', data: [40,50,80,170,260,170,90,45,50,55,375], borderColor: css('--color-plum'), backgroundColor: css('--color-plum-dim'), fill: true, tension: 0.3, pointRadius: 3, pointHoverRadius: 5, borderWidth: 2.5 }]
+        },
+        options: commonOpts({
+          plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => 'TPU: ' + ctx.parsed.y } } },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 10 } } },
+            y: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted') } }
+          }
+        })
+      });
+
+      make('c-soja-origem', {
+        type: 'line',
+        data: {
+          labels: ['2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023'],
+          datasets: [
+            { label: 'Brasil', data: [40,45,50,45,50,47,55,75,67,60,62,60,70], borderColor: css('--color-accent'), backgroundColor: css('--color-accent-dim'), fill: false, tension: 0.3, pointRadius: 3, borderWidth: 2.5 },
+            { label: 'EUA', data: [40,40,35,35,40,40,35,18,22,30,30,30,25], borderColor: css('--color-info'), backgroundColor: 'transparent', fill: false, tension: 0.3, pointRadius: 3, borderWidth: 2.5, borderDash: [5,3] }
+          ]
+        },
+        options: commonOpts({
+          plugins: {
+            legend: { position: 'top', labels: { color: css('--color-fg-muted'), boxWidth: 14, font: { size: 10 } } },
+            tooltip: { mode: 'index', intersect: false, callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y + '%' } }
+          },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 10 } } },
+            y: { min: 0, max: 100, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => v + '%' } }
+          }
+        })
+      });
+
+      make('c-milho-origem', {
+        type: 'line',
+        data: {
+          labels: ['2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023'],
+          datasets: [
+            { label: 'EUA', data: [97,98,70,50,11,8,25,8,7,11,70,73,28], borderColor: css('--color-info'), backgroundColor: css('--color-info-dim'), fill: false, tension: 0.3, pointRadius: 3, borderWidth: 2.5, borderDash: [5,3] },
+            { label: 'Brasil', data: [0,0,0,0,0,0,0,0,0,0,0,0,45], borderColor: css('--color-accent'), backgroundColor: css('--color-accent-dim'), fill: false, tension: 0.3, pointRadius: 3, borderWidth: 2.5 }
+          ]
+        },
+        options: commonOpts({
+          plugins: {
+            legend: { position: 'top', labels: { color: css('--color-fg-muted'), boxWidth: 14, font: { size: 10 } } },
+            tooltip: { mode: 'index', intersect: false, callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y + '%' } }
+          },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 10 } } },
+            y: { min: 0, max: 100, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => v + '%' } }
+          }
+        })
+      });
+
+      make('c-milho-china', {
+        type: 'line',
+        data: {
+          labels: ['2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023','2024','2025'],
+          datasets: [
+            { label: 'Produção interna', data: [200,210,225,240,250,265,260,260,260,260,265,275,280,290,295], borderColor: css('--color-success'), fill: false, tension: 0.3, pointRadius: 2, borderWidth: 2.5 },
+            { label: 'Estoque final', data: [50,60,90,130,175,210,225,215,195,200,200,200,205,210,205], borderColor: css('--color-teal'), backgroundColor: css('--color-teal-dim'), fill: true, tension: 0.3, pointRadius: 2, borderWidth: 2.5 },
+            { label: 'Importações', data: [5,3,3,3,7,3,3,5,7,29,28,22,18,15,8], borderColor: css('--color-accent'), fill: false, tension: 0.3, pointRadius: 2, borderWidth: 2.5 }
+          ]
+        },
+        options: commonOpts({
+          plugins: {
+            legend: { position: 'top', labels: { color: css('--color-fg-muted'), boxWidth: 14, font: { size: 10 } } },
+            tooltip: { mode: 'index', intersect: false, callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y + ' mm ton' } }
+          },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 10 } } },
+            y: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => v + ' mm ton' } }
+          }
+        })
+      });
+
+      make('c-aco-origem', {
+        type: 'line',
+        data: {
+          labels: ['2015','2016','2017','2018','2019','2020','2021','2022','2023','2024'],
+          datasets: [
+            { label: 'Canadá', data: [14,15,17,17,18,17,22,27,25,23], borderColor: css('--color-info'), fill: false, tension: 0.3, pointRadius: 2, borderWidth: 2 },
+            { label: 'EU', data: [20,22,22,20,18,18,19,21,22,21], borderColor: css('--color-teal'), fill: false, tension: 0.3, pointRadius: 2, borderWidth: 2 },
+            { label: 'México', data: [7,8,8,9,10,11,13,16,14,11], borderColor: css('--color-sage'), fill: false, tension: 0.3, pointRadius: 2, borderWidth: 2 },
+            { label: 'Brasil', data: [7,8,9,9,8,7,8,9,9,10], borderColor: css('--color-accent'), backgroundColor: css('--color-accent-dim'), fill: true, tension: 0.3, pointRadius: 3, borderWidth: 2.5 },
+            { label: 'China', data: [7,5,4,3,3,3,3,2.5,2.5,2.5], borderColor: css('--color-plum'), fill: false, tension: 0.3, pointRadius: 2, borderWidth: 2 }
+          ]
+        },
+        options: commonOpts({
+          plugins: {
+            legend: { position: 'top', labels: { color: css('--color-fg-muted'), boxWidth: 12, font: { size: 10 } } },
+            tooltip: { mode: 'index', intersect: false, callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y + '%' } }
+          },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 10 } } },
+            y: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => v + '%' } }
+          }
+        })
+      });
+
+      make('c-petroleo-origem', {
+        type: 'line',
+        data: {
+          labels: ['2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023'],
+          datasets: [
+            { label: 'Oriente Médio', data: [42,43,40,42,42,40,38,36,36,38,36], borderColor: css('--color-teal'), backgroundColor: css('--color-teal-dim'), fill: true, tension: 0.3, pointRadius: 2, borderWidth: 2.5 },
+            { label: 'Rússia', data: [9,11,13,14,16,17,16,15,14,17,18], borderColor: css('--color-plum'), fill: false, tension: 0.3, pointRadius: 2, borderWidth: 2 },
+            { label: 'África', data: [22,21,18,15,16,18,18,16,12,10,8], borderColor: css('--color-sage'), fill: false, tension: 0.3, pointRadius: 2, borderWidth: 2 },
+            { label: 'Brasil', data: [1,3,4,4,4,7,7,7,6,5,7], borderColor: css('--color-accent'), fill: false, tension: 0.3, pointRadius: 3, borderWidth: 2.5 },
+            { label: 'EUA', data: [0,1,1,3,3,8,5,5,4,3,5], borderColor: css('--color-info'), fill: false, tension: 0.3, pointRadius: 2, borderWidth: 2, borderDash: [5,3] }
+          ]
+        },
+        options: commonOpts({
+          plugins: {
+            legend: { position: 'top', labels: { color: css('--color-fg-muted'), boxWidth: 12, font: { size: 10 } } },
+            tooltip: { mode: 'index', intersect: false, callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y + '%' } }
+          },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 10 } } },
+            y: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => v + '%' } }
+          }
+        })
+      });
+
+      make('c-minerio-origem', {
+        type: 'line',
+        data: {
+          labels: ['2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023'],
+          datasets: [
+            { label: 'Austrália', data: [44,47,52,58,62,61,60,60,61,59,61,65,63], borderColor: css('--color-teal'), backgroundColor: css('--color-teal-dim'), fill: true, tension: 0.3, pointRadius: 2, borderWidth: 2.5 },
+            { label: 'Brasil', data: [23,24,21,19,21,22,23,24,22,21,21,20,21], borderColor: css('--color-accent'), fill: false, tension: 0.3, pointRadius: 3, borderWidth: 2.5 },
+            { label: 'EUA', data: [0,0,0,0,0,0,0,0,0,0,0,0,0], borderColor: css('--color-info'), fill: false, tension: 0.3, pointRadius: 2, borderWidth: 2, borderDash: [5,3] }
+          ]
+        },
+        options: commonOpts({
+          plugins: {
+            legend: { position: 'top', labels: { color: css('--color-fg-muted'), boxWidth: 12, font: { size: 10 } } },
+            tooltip: { mode: 'index', intersect: false, callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y + '%' } }
+          },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 10 } } },
+            y: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => v + '%' } }
+          }
+        })
+      });
+
+      make('c-tarifas-hist', {
+        type: 'bar',
+        data: {
+          labels: ['Alimentos','Comm. não-comestíveis','Combust. minerais','Prod. químicos','Manufaturados','Máq. e transportes','Diversos'],
+          datasets: [
+            { label: 'Início 1º mandato Trump (2016)', data: [3.5,0.5,1.0,0.8,2.1,0.3,4.7], backgroundColor: css('--color-info-dim'), borderColor: css('--color-info'), borderWidth: 2, borderRadius: 3 },
+            { label: 'Fim 1º mandato Trump (2020)',    data: [5.3,0.6,0.3,3.2,3.6,1.3,6.2], backgroundColor: css('--color-accent-dim'), borderColor: css('--color-accent'), borderWidth: 2, borderRadius: 3 },
+            { label: 'Atual',                           data: [3.2,0.1,0.3,1.0,0.2,0.1,2.7], backgroundColor: 'rgba(107,93,80,0.20)', borderColor: css('--color-fg-muted'), borderWidth: 2, borderRadius: 3 }
+          ]
+        },
+        options: commonOpts({
+          plugins: {
+            legend: { position: 'top', labels: { color: css('--color-fg-muted'), font: { size: 11 }, boxWidth: 14 } },
+            tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y + '%' } }
+          },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 10 } } },
+            y: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => v + '%' } }
+          }
+        })
+      });
+
+      const universalLine10 = {
+        id: 'universalLine10',
+        afterDraw(chart) {
+          const { ctx, chartArea, scales } = chart;
+          if (!scales.y) return;
+          const y = scales.y.getPixelForValue(10);
+          ctx.save();
+          ctx.strokeStyle = css('--color-warn');
+          ctx.lineWidth = 2;
+          ctx.setLineDash([6, 4]);
+          ctx.beginPath();
+          ctx.moveTo(chartArea.left, y);
+          ctx.lineTo(chartArea.right, y);
+          ctx.stroke();
+          ctx.fillStyle = css('--color-warn');
+          ctx.font = '11px ' + (css('--font-mono') || 'monospace');
+          ctx.fillText('Tarifa universal 10%', chartArea.right - 130, y - 6);
+          ctx.restore();
+        }
+      };
+      const tsEl = document.getElementById('c-tarifas-simetrica');
+      if (tsEl) {
+        chartInstances['c-tarifas-simetrica'] = new Chart(tsEl, {
+          type: 'bar',
+          data: {
+            labels: ['Alimentos','Comm. não-comestíveis','Combust. minerais','Prod. químicos','Manufaturados','Máq. e transportes','Diversos'],
+            datasets: [
+              { label: 'Tarifa média Brasil em produtos EUA', data: [5.5,2.8,0,5.7,10.5,6.1,9.6], backgroundColor: css('--color-accent-dim'), borderColor: css('--color-accent'), borderWidth: 2, borderRadius: 3 },
+              { label: 'Tarifa média EUA em produtos Brasil', data: [3.2,0.1,0,1.1,0.1,0.1,2.7], backgroundColor: 'rgba(107,93,80,0.20)', borderColor: css('--color-fg-muted'), borderWidth: 2, borderRadius: 3 },
+              { label: 'Potencial aumento se equiparar',      data: [2.3,2.7,0,4.6,10.4,6.0,6.9], backgroundColor: css('--color-plum-dim'), borderColor: css('--color-plum'), borderWidth: 2, borderRadius: 3 }
+            ]
+          },
+          options: commonOpts({
+            plugins: {
+              legend: { position: 'top', labels: { color: css('--color-fg-muted'), font: { size: 11 }, boxWidth: 14 } },
+              tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y + '%' } }
+            },
+            scales: {
+              x: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 10 } } },
+              y: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => v + '%' } }
+            }
+          }),
+          plugins: [universalLine10]
+        });
+      }
+
+      // Balança EUA top 16
+      const balLabels = ['Países Baixos','Hong Kong','UAE','Austrália','Bélgica','Panamá','Reino Unido','Brasil','Coreia do Sul','Canadá','Irlanda','Japão','Alemanha','Vietnã','México','China'];
+      const balData = [40,28,20,15,13,8,5,1,-50,-75,-90,-85,-90,-110,-160,-280];
+      const balColors = balData.map((v, i) => balLabels[i] === 'Brasil' ? css('--color-accent') : (v >= 0 ? css('--color-success') : css('--color-plum')));
+      const balBg = balData.map((v, i) => balLabels[i] === 'Brasil' ? css('--color-accent-dim') : (v >= 0 ? css('--color-success-dim') : css('--color-plum-dim')));
+      make('c-balanca-eua', {
+        type: 'bar',
+        data: { labels: balLabels, datasets: [{ data: balData, backgroundColor: balBg, borderColor: balColors, borderWidth: 2, borderRadius: 3 }] },
+        options: commonOpts({
+          indexAxis: 'y',
+          plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => 'USD ' + ctx.parsed.x + ' bi' } } },
+          scales: {
+            x: { grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => 'USD ' + v + 'bi' } },
+            y: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 10 } } }
+          }
+        })
+      });
+
+      make('c-saldo-br', {
+        type: 'line',
+        data: {
+          labels: ['2002','2004','2006','2008','2010','2012','2014','2016','2018','2020','2022','2024'],
+          datasets: [{ label: 'Saldo EUA-Brasil', data: [-5,-10,-10,-5,3,10,5,5,5,5,13,1], borderColor: css('--color-accent'), backgroundColor: css('--color-accent-dim'), fill: true, tension: 0.3, pointRadius: 4, pointHoverRadius: 6, borderWidth: 2.5 }]
+        },
+        options: commonOpts({
+          plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => 'USD ' + ctx.parsed.y + ' bi' } } },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 10 } } },
+            y: { grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => 'USD ' + v + 'bi' } }
+          }
+        })
+      });
+    }
+
+    if (typeof Chart !== 'undefined') renderAllCharts();
+    else window.addEventListener('load', renderAllCharts);
+  </script>
+</body>
+</html>

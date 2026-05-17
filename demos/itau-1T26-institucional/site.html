@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Itaú 1T26 — Site Institucional</title>
+
+  <script>
+    (function() {
+      try {
+        var t = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800;9..144,900&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+
+  <style>
+:root {
+  --itau-orange:#FF6200; --itau-orange-2:#F88104; --itau-orange-3:#FA9F09;
+  --itau-blue-3:#3B85FA; --itau-yellow:#FBC305; --itau-warm-black:#14110d;
+  --color-accent: var(--itau-orange);
+  --color-accent-dim: rgba(255,98,0,0.08);
+  --color-accent-fg:#ffffff;
+  --color-info: var(--itau-blue-3); --color-info-dim: rgba(59,133,250,0.08);
+  --color-success:#4d7c0f; --color-success-dim: rgba(77,124,15,0.08);
+  --color-sage:#65a30d; --color-sage-dim: rgba(101,163,13,0.08);
+  --color-teal:#0f766e; --color-teal-dim: rgba(15,118,110,0.08);
+  --color-plum:#9f1239; --color-plum-dim: rgba(159,18,57,0.08);
+  --color-warn: var(--itau-yellow); --color-warn-dim: rgba(251,195,5,0.12);
+  --color-bg:#faf7f5; --color-bg-elevated:#ffffff; --color-bg-sunken:#f4f1ec;
+  --color-fg:#292017; --color-fg-muted:#6b5d50; --color-fg-subtle:#8a7e72;
+  --color-border: rgba(41,32,23,0.10); --color-border-strong: rgba(41,32,23,0.18);
+  --color-accent-hover: var(--itau-orange-2);
+  --glow-warm: radial-gradient(ellipse 80% 60% at 80% 0%, rgba(255,98,0,0.10) 0%, transparent 55%);
+  --glow-hero: radial-gradient(ellipse 90% 70% at 50% 0%, rgba(255,98,0,0.14) 0%, transparent 50%);
+  --font-text:'Itau Text','Inter',-apple-system,system-ui,sans-serif;
+  --font-display:'Itau Display','Fraunces','Inter',Georgia,serif;
+  --font-mono:'JetBrains Mono','IBM Plex Mono','SF Mono',Consolas,monospace;
+  --size-xs: clamp(0.75rem, 0.7rem + 0.2vw, 0.875rem);
+  --size-small: clamp(0.875rem, 0.85rem + 0.15vw, 1rem);
+  --size-body: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+  --size-lead: clamp(1.15rem, 1.05rem + 0.5vw, 1.4rem);
+  --size-h3: clamp(1.2rem, 1.1rem + 0.5vw, 1.5rem);
+  --size-h2: clamp(1.6rem, 1.3rem + 1.2vw, 2.25rem);
+  --size-h1: clamp(2.5rem, 1.8rem + 3vw, 4rem);
+  --space-1:0.25rem; --space-2:0.5rem; --space-3:0.75rem; --space-4:1rem;
+  --space-5:1.5rem; --space-6:2rem; --space-7:2.5rem; --space-8:3rem;
+  --space-10:4rem; --space-12:5rem;
+  --header-h:60px; --radius-sm:4px; --radius:10px; --radius-lg:16px;
+  --shadow-xs:0 1px 2px rgba(41,32,23,0.04);
+  --shadow-sm:0 2px 4px rgba(41,32,23,0.06), 0 1px 2px rgba(41,32,23,0.04);
+  --shadow-lg:0 12px 32px rgba(41,32,23,0.12), 0 4px 12px rgba(41,32,23,0.06);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast:150ms;
+}
+[data-theme="dark"] {
+  --color-bg:#14110d; --color-bg-elevated:#1c1814; --color-bg-sunken:#221d18;
+  --color-fg:#ede5dd; --color-fg-muted:#b8aa9a; --color-fg-subtle:#786e62;
+  --color-border: rgba(237,229,221,0.10); --color-border-strong: rgba(237,229,221,0.20);
+  --color-accent: var(--itau-orange-3); --color-accent-hover: var(--itau-orange-2);
+  --color-accent-fg:#14110d; --color-accent-dim: rgba(250,159,9,0.10);
+  --color-success:#a3e635; --color-success-dim: rgba(163,230,53,0.10);
+  --color-sage:#bef264; --color-sage-dim: rgba(190,242,100,0.10);
+  --color-teal:#5eead4; --color-teal-dim: rgba(94,234,212,0.10);
+  --color-plum:#fb7185; --color-plum-dim: rgba(251,113,133,0.10);
+  --glow-warm: radial-gradient(ellipse 80% 60% at 80% 0%, rgba(250,159,9,0.18) 0%, transparent 55%);
+  --glow-hero: radial-gradient(ellipse 90% 70% at 50% 0%, rgba(250,159,9,0.22) 0%, transparent 50%);
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--font-text);
+  font-size: var(--size-body);
+  line-height: 1.7;
+  color: var(--color-fg);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  transition: background var(--duration-fast), color var(--duration-fast);
+}
+body::before {
+  content:''; position: fixed; inset:0;
+  background: var(--glow-hero);
+  pointer-events:none; z-index:-1; opacity:0.5;
+}
+:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; border-radius: var(--radius-sm); }
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  color: var(--color-fg);
+  line-height: 1.1;
+  letter-spacing: -0.022em;
+  font-weight: 700;
+}
+h1 { font-size: var(--size-h1); margin: 0 0 var(--space-5); letter-spacing: -0.030em; }
+h1 em { color: var(--color-accent); font-style: italic; }
+h2 { font-size: var(--size-h2); margin: var(--space-7) 0 var(--space-4); }
+h2 em { color: var(--color-accent); font-style: italic; }
+h3 { font-size: var(--size-h3); font-weight: 600; margin: var(--space-6) 0 var(--space-3); }
+p { margin: 0 0 var(--space-4); max-width: 65ch; color: var(--color-fg); }
+.lead { font-size: var(--size-lead); line-height: 1.55; color: var(--color-fg-muted); margin-bottom: var(--space-7); font-weight: 400; max-width: 62ch; }
+strong { font-weight: 700; color: var(--color-fg); }
+
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  height: var(--header-h);
+  background: rgba(250, 247, 245, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-border);
+  display: flex; align-items: center;
+  padding: 0 var(--space-6);
+  gap: var(--space-6);
+}
+[data-theme="dark"] .topbar { background: rgba(20,17,13,0.85); }
+.topbar__brand {
+  display: flex; align-items: center; gap: var(--space-3);
+  font-weight: 700; font-size: 0.9375rem; text-decoration: none; color: var(--color-fg);
+  font-family: var(--font-display);
+}
+.topbar__logo {
+  width: 28px; height: 28px; border-radius: 6px; flex-shrink: 0;
+  background: var(--color-accent);
+}
+.topnav { display: flex; gap: var(--space-1); }
+.topnav__link {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--size-small);
+  color: var(--color-fg-muted);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  transition: all var(--duration-fast);
+  font-weight: 500;
+}
+.topnav__link:hover { color: var(--color-fg); background: var(--color-bg-elevated); }
+.topnav__link.is-active {
+  color: var(--color-accent); font-weight: 600;
+  background: var(--color-accent-dim);
+}
+.topbar__spacer { flex: 1; }
+.theme-toggle {
+  width: 36px; height: 36px;
+  display: grid; place-items: center;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: 999px; cursor: pointer;
+  color: var(--color-fg); font-size: 14px;
+  transition: all var(--duration-fast);
+}
+.theme-toggle:hover { background: var(--color-bg-sunken); border-color: var(--color-border-strong); }
+
+.view {
+  display: none; opacity: 0;
+  transition: opacity 200ms var(--ease-out);
+  max-width: 1100px; margin: 0 auto;
+  padding: var(--space-10) var(--space-6) var(--space-12);
+}
+.view.is-active { display: block; opacity: 1; }
+
+.view__hero { margin-bottom: var(--space-10); }
+.view__hero .kicker {
+  font-family: var(--font-mono);
+  font-size: var(--size-xs); font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: var(--space-4);
+  display: inline-flex; align-items: center; gap: var(--space-3);
+}
+.view__hero .kicker::before {
+  content:''; width:6px; height:6px; border-radius:50%;
+  background: var(--color-accent); box-shadow: 0 0 12px var(--color-accent);
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-5);
+  margin: var(--space-7) 0;
+}
+.metric {
+  border-top: 3px solid currentColor;
+  padding-top: var(--space-3);
+  color: var(--color-fg);
+  min-width: 0;
+}
+.metric.var-accent  { color: var(--color-accent); }
+.metric.var-info    { color: var(--color-info); }
+.metric.var-success { color: var(--color-success); }
+.metric.var-sage    { color: var(--color-sage); }
+.metric.var-teal    { color: var(--color-teal); }
+.metric.var-plum    { color: var(--color-plum); }
+.metric.var-warn    { color: var(--color-warn); }
+.metric__kicker {
+  font-family: var(--font-mono);
+  font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: currentColor; margin: 0 0 var(--space-2);
+}
+.metric__val {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 1.3rem + 1.2vw, 2.3rem);
+  font-weight: 800; line-height: 1;
+  letter-spacing: -0.035em;
+  margin: 0 0 var(--space-2);
+  color: var(--color-fg);
+}
+.metric__val span { color: currentColor; }
+.metric__label { font-size: 0.875rem; color: var(--color-fg-muted); margin: 0; max-width: 26ch; line-height: 1.45; }
+
+.cards {
+  display: grid;
+  gap: var(--space-4);
+  margin: var(--space-7) 0;
+}
+.cards--2 { grid-template-columns: repeat(2, 1fr); }
+.cards--3 { grid-template-columns: repeat(3, 1fr); }
+.cards--4 { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+@media (max-width: 700px) { .cards--2, .cards--3 { grid-template-columns: 1fr; } }
+.card {
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-xs);
+  min-width: 0;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+.card--accent  { border-top: 3px solid var(--color-accent); }
+.card--info    { border-top: 3px solid var(--color-info); }
+.card--success { border-top: 3px solid var(--color-success); }
+.card--sage    { border-top: 3px solid var(--color-sage); }
+.card--teal    { border-top: 3px solid var(--color-teal); }
+.card--plum    { border-top: 3px solid var(--color-plum); }
+.card__label {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--color-fg-muted);
+  margin: 0 0 var(--space-2);
+}
+.card__label .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.card--accent .card__label  { color: var(--color-accent); }
+.card--info .card__label    { color: var(--color-info); }
+.card--success .card__label { color: var(--color-success); }
+.card--sage .card__label    { color: var(--color-sage); }
+.card--teal .card__label    { color: var(--color-teal); }
+.card--plum .card__label    { color: var(--color-plum); }
+.card__title { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; line-height: 1.2; margin: 0 0 var(--space-2); color: var(--color-fg); }
+.card__desc { font-size: 0.92rem; color: var(--color-fg-muted); margin: 0; line-height: 1.55; }
+
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  margin: var(--space-6) 0;
+}
+.data-table { width: 100%; border-collapse: collapse; font-size: var(--size-small); }
+.data-table th {
+  background: var(--color-bg-sunken);
+  font-family: var(--font-mono);
+  font-size: 0.7rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  padding: 12px 16px; text-align: left;
+  border-bottom: 2px solid var(--color-border-strong);
+  color: var(--color-fg-muted);
+}
+.data-table td {
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-fg); line-height: 1.5;
+}
+.data-table tbody tr:nth-child(even) { background: var(--color-bg-sunken); }
+.data-table strong { color: var(--color-fg); font-family: var(--font-display); }
+
+.timeline { list-style: none; padding: 0; margin: var(--space-6) 0; position: relative; }
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px; top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--color-accent) 0%, var(--color-border) 20%, var(--color-border) 100%);
+}
+.timeline__item { position: relative; padding-left: var(--space-7); margin-bottom: var(--space-6); }
+.timeline__dot {
+  position: absolute; left: 0; top: 6px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 0 4px var(--color-bg), 0 0 12px var(--color-accent);
+}
+.timeline__date { font-family: var(--font-mono); font-size: var(--size-xs); color: var(--color-accent); text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 var(--space-1); font-weight: 700; }
+.timeline__title { font-family: var(--font-display); font-size: 1.0625rem; margin: 0 0 var(--space-1); font-weight: 700; }
+.timeline__desc { font-size: var(--size-small); color: var(--color-fg-muted); margin: 0; line-height: 1.5; }
+
+.callout-box {
+  background: var(--color-accent-dim);
+  border-left: 3px solid var(--color-accent);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius);
+  margin: var(--space-5) 0;
+}
+.callout-box strong { color: var(--color-accent); }
+
+.chart-wrap {
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  margin: var(--space-6) 0;
+  position: relative;
+  height: 380px;
+}
+
+.hero-bignum {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 10vw, 8rem);
+  font-weight: 900; letter-spacing: -0.05em;
+  line-height: 0.95; color: var(--color-accent);
+  margin: var(--space-6) 0;
+}
+.hero-bignum span { color: var(--color-fg); }
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out);
+}
+[data-reveal].is-visible { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] { opacity: 1; transform: none; transition: none; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+@media print {
+  .topnav, .theme-toggle { display: none; }
+  .view, .view[hidden] { display: block !important; opacity: 1 !important; }
+  .view + .view { page-break-before: always; }
+  body::before { display: none; }
+}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a href="#home" class="topbar__brand">
+      <span class="topbar__logo" aria-hidden="true"></span>
+      <span>Itaú Unibanco</span>
+    </a>
+    <nav class="topnav" aria-label="Navegação principal">
+      <a href="#home" class="topnav__link">Home</a>
+      <a href="#cultura" class="topnav__link">Cultura &amp; Jornada</a>
+      <a href="#ecossistema" class="topnav__link">Ecossistema</a>
+      <a href="#esg" class="topnav__link">ESG</a>
+      <a href="#performance" class="topnav__link">Performance</a>
+    </nav>
+    <span class="topbar__spacer"></span>
+    <button class="theme-toggle" type="button" aria-label="Alternar tema"><span aria-hidden="true">◐</span></button>
+  </header>
+
+  <main>
+    <!-- HOME -->
+    <article class="view is-active" id="home">
+      <section class="view__hero">
+        <p class="kicker">RI · 1º Trimestre de 2026 · Resultado Recorrente R$ 12,3 bi</p>
+        <h1>O maior banco da América Latina, em <em>101 anos</em>.</h1>
+        <p class="lead">Banco universal obstinado por encantar o cliente em todas as dimensões — pessoa física, jurídica e atacado. Operações de varejo em 18 países. Único banco da AL no Índice Dow Jones de Sustentabilidade desde sua criação.</p>
+      </section>
+
+      <h2>Números-âncora 1T26</h2>
+      <div class="metrics">
+        <div class="metric var-accent"><p class="metric__kicker">Valor de mercado</p><p class="metric__val">US$ <span>96</span> bi</p><p class="metric__label">em 30/04/2026</p></div>
+        <div class="metric var-info"><p class="metric__kicker">Ativos totais</p><p class="metric__val">R$ <span>3.200</span> bi</p><p class="metric__label">em 31/03/2026</p></div>
+        <div class="metric var-teal"><p class="metric__kicker">Carteira de crédito</p><p class="metric__val">R$ <span>1.483</span> bi</p><p class="metric__label">com garantias e títulos privados</p></div>
+        <div class="metric var-success"><p class="metric__kicker">ROE recorrente</p><p class="metric__val"><span>24,8</span>%</p><p class="metric__label">retorno sobre patrimônio</p></div>
+        <div class="metric var-sage"><p class="metric__kicker">Eficiência</p><p class="metric__val"><span>36,2</span>%</p><p class="metric__label">Brasil · 12m findos mar/26</p></div>
+        <div class="metric var-plum"><p class="metric__kicker">Colaboradores</p><p class="metric__val"><span>91,5</span> mil</p><p class="metric__label">no conglomerado</p></div>
+        <div class="metric var-accent"><p class="metric__kicker">Resultado 1T26</p><p class="metric__val">R$ <span>12,3</span> bi</p><p class="metric__label">94,6% Brasil · 5,4% AL</p></div>
+        <div class="metric var-warn"><p class="metric__kicker">Valor da marca</p><p class="metric__val">US$ <span>9,9</span> bi</p><p class="metric__label">marca mais valiosa da AL</p></div>
+      </div>
+
+      <section data-reveal>
+        <h2>Presença em <em>18 países</em></h2>
+        <p>Operações de varejo em 18 países da América Latina. Banco universal obstinado por encantar o cliente em todas as dimensões: pessoa física, jurídica e atacado.</p>
+      </section>
+
+      <section data-reveal>
+        <h2>Único banco da AL no <em>DJSI</em></h2>
+        <p>Somos o único banco da América Latina no Índice Dow Jones de Sustentabilidade <strong>desde sua criação</strong>. Selos e reconhecimentos: B3 · NYSE · S&amp;P Dow Jones · ISE B3 · Bloomberg Gender-Equality Index · MSCI.</p>
+      </section>
+
+      <section data-reveal>
+        <h2>Vamos <em>conversar?</em></h2>
+        <p>Relações com Investidores — canal direto:</p>
+        <div class="cards cards--3">
+          <div class="card card--accent"><p class="card__label"><span class="dot"></span>Telefone / WhatsApp</p><h3 class="card__title">(11) 2794-3547</h3></div>
+          <div class="card card--accent"><p class="card__label"><span class="dot"></span>E-mail</p><h3 class="card__title">ri@itau-unibanco.com.br</h3></div>
+          <div class="card card--accent"><p class="card__label"><span class="dot"></span>Site</p><h3 class="card__title">itau.com.br/relacoes-com-investidores</h3></div>
+        </div>
+        <p style="font-family:var(--font-mono); font-size:0.75rem; color:var(--color-fg-subtle); line-height:1.6; margin-top:var(--space-6)">Itaú Unibanco Holding S.A. · CNPJ 60.872.504/0001-23 · Praça Alfredo Egydio de Souza Aranha, 100 · Torre Olavo Setubal · São Paulo/SP</p>
+      </section>
+    </article>
+
+    <!-- CULTURA & JORNADA -->
+    <article class="view" id="cultura" hidden>
+      <section class="view__hero">
+        <p class="kicker">Cultura &amp; Jornada</p>
+        <h1>A gente é <em>Ituber</em>, em 101 anos.</h1>
+        <p class="lead">Pra gente, ética é inegociável. Seis dimensões definem nossa cultura — do foco no cliente à diversidade e inclusão — sustentando uma jornada centenária estruturada em três grandes ciclos.</p>
+      </section>
+
+      <h2>Pra gente, <em>ética é inegociável</em></h2>
+      <div class="cards cards--3">
+        <div class="card card--accent"><p class="card__label"><span class="dot"></span>01 · Cliente</p><h3 class="card__title">Trabalha para o cliente</h3><p class="card__desc">Obstinado por encantar · Inovar a partir das necessidades · Simplificar sempre</p></div>
+        <div class="card card--info"><p class="card__label"><span class="dot"></span>02 · Resultado</p><h3 class="card__title">Movido por resultado</h3><p class="card__desc">Ambicioso e eficiente · Crescimento sustentável · Impacto positivo na sociedade</p></div>
+        <div class="card card--teal"><p class="card__label"><span class="dot"></span>03 · Aprendizado</p><h3 class="card__title">Não sabe tudo</h3><p class="card__desc">Olhar pra fora e aprender · Testar, errar, melhorar · Usar dados para decidir</p></div>
+        <div class="card card--sage"><p class="card__label"><span class="dot"></span>04 · Decisão</p><h3 class="card__title">Faz escolhas e decisões</h3><p class="card__desc">Coragem para se posicionar · Saber priorizar · Saber fazer renúncias</p></div>
+        <div class="card card--plum"><p class="card__label"><span class="dot"></span>05 · Time</p><h3 class="card__title">Vai de turma</h3><p class="card__desc">Confiar e trabalhar com autonomia · Ajudar e pedir ajuda · Um só Itaú</p></div>
+        <div class="card card--success"><p class="card__label"><span class="dot"></span>06 · D&amp;I</p><h3 class="card__title">Diversidade e inclusão</h3><p class="card__desc">Diverso como nossos clientes · Aberto a pontos de vista · Ser você mesmo</p></div>
+      </div>
+
+      <section data-reveal>
+        <h2><em>101 anos</em> em três ciclos</h2>
+
+        <h3>1924 → 2000 · Fundação e pioneirismo digital</h3>
+        <ul class="timeline">
+          <li class="timeline__item"><span class="timeline__dot"></span><p class="timeline__date">1924 · 1943</p><h4 class="timeline__title">Origem</h4><p class="timeline__desc">Casa Moreira Salles (Unibanco) e Banco Central de Crédito (Itaú).</p></li>
+          <li class="timeline__item"><span class="timeline__dot"></span><p class="timeline__date">1960</p><h4 class="timeline__title">Cartões</h4><p class="timeline__desc">Primeiros cartões de crédito e débito do Brasil.</p></li>
+          <li class="timeline__item"><span class="timeline__dot"></span><p class="timeline__date">1970</p><h4 class="timeline__title">Processamento</h4><p class="timeline__desc">Uma das 4 principais centrais de processamento de dados do país.</p></li>
+          <li class="timeline__item"><span class="timeline__dot"></span><p class="timeline__date">1979</p><h4 class="timeline__title">Itautec</h4><p class="timeline__desc">Criação da Itautec — braço de tecnologia do grupo.</p></li>
+          <li class="timeline__item"><span class="timeline__dot"></span><p class="timeline__date">1980 · 1983</p><h4 class="timeline__title">Automação</h4><p class="timeline__desc">Início automação bancária, CTO e primeiro caixa eletrônico.</p></li>
+          <li class="timeline__item"><span class="timeline__dot"></span><p class="timeline__date">1990 · 2000</p><h4 class="timeline__title">Internet</h4><p class="timeline__desc">Primeiros provedores · Banco1.net (primeiro banco sem agências).</p></li>
+        </ul>
+      </section>
+
+      <section data-reveal>
+        <h3>2002 → 2020 · Consolidação e transformação digital</h3>
+        <ul class="timeline">
+          <li class="timeline__item"><span class="timeline__dot"></span><p class="timeline__date">2002</p><h4 class="timeline__title">BBA</h4><p class="timeline__desc">Aquisição BBA — maior banco de investimento do Brasil.</p></li>
+          <li class="timeline__item"><span class="timeline__dot"></span><p class="timeline__date">2007</p><h4 class="timeline__title">iPhone · SPB</h4><p class="timeline__desc">Lançamento iPhone + criação do Sistema de Pagamentos Brasileiro.</p></li>
+          <li class="timeline__item"><span class="timeline__dot"></span><p class="timeline__date">2008</p><h4 class="timeline__title">Fusão Itaú+Unibanco</h4><p class="timeline__desc">Fusão histórica + primeiro app de banco do Brasil.</p></li>
+          <li class="timeline__item"><span class="timeline__dot"></span><p class="timeline__date">2012</p><h4 class="timeline__title">R$ 11,1 bi em tech</h4><p class="timeline__desc">Anúncio de investimento em tecnologia, inovação e atendimento.</p></li>
+          <li class="timeline__item"><span class="timeline__dot"></span><p class="timeline__date">2014</p><h4 class="timeline__title">Fintechs</h4><p class="timeline__desc">Fintechs ganham força no mercado brasileiro.</p></li>
+          <li class="timeline__item"><span class="timeline__dot"></span><p class="timeline__date">2019</p><h4 class="timeline__title">ZUP</h4><p class="timeline__desc">Aquisição ZUP acelera transformação digital.</p></li>
+          <li class="timeline__item"><span class="timeline__dot"></span><p class="timeline__date">2020</p><h4 class="timeline__title">PIX · Open Finance</h4><p class="timeline__desc">PIX e Open Finance · Beyond banking · Íon.</p></li>
+        </ul>
+      </section>
+
+      <section data-reveal>
+        <h3>2022 → 2026 · Era do Um só Itaú</h3>
+        <ul class="timeline">
+          <li class="timeline__item"><span class="timeline__dot"></span><p class="timeline__date">2022</p><h4 class="timeline__title">Itaú Shop</h4><p class="timeline__desc">Lançamento da plataforma Itaú Shop — marketplace beyond banking.</p></li>
+          <li class="timeline__item"><span class="timeline__dot"></span><p class="timeline__date">2023</p><h4 class="timeline__title">Feito de Futuro</h4><p class="timeline__desc">Nova marca + Agenda associativa (Ideal, TOTVS).</p></li>
+          <li class="timeline__item"><span class="timeline__dot"></span><p class="timeline__date">2024</p><h4 class="timeline__title">100 anos · Um só Itaú</h4><p class="timeline__desc">Centenário + integração SuperApp e Íon + Orbia/Avenue.</p></li>
+          <li class="timeline__item"><span class="timeline__dot"></span><p class="timeline__date">2025</p><h4 class="timeline__title">ICTi · Itaú Emps</h4><p class="timeline__desc">Instituto de Ciência e Tecnologia · Campanha "Feito" · Itaú Emps.</p></li>
+          <li class="timeline__item"><span class="timeline__dot"></span><p class="timeline__date">2026 →</p><h4 class="timeline__title">Próximo capítulo</h4><p class="timeline__desc">IA generativa em escala · principalidade · beyond banking.</p></li>
+        </ul>
+      </section>
+    </article>
+
+    <!-- ECOSSISTEMA -->
+    <article class="view" id="ecossistema" hidden>
+      <section class="view__hero">
+        <p class="kicker">Ecossistema</p>
+        <h1>Segmentação, produtos e <em>atendimento</em></h1>
+        <p class="lead">Modelo de relacionamento por segmento para pessoa física, jurídica e atacado. Prateleira completa de 16 produtos. Atendimento onde o cliente quiser, do jeito que preferir.</p>
+      </section>
+
+      <h2>Segmentação por <em>perfil</em></h2>
+      <div class="cards cards--2">
+        <div class="card card--accent">
+          <p class="card__label"><span class="dot"></span>Pessoa Física</p>
+          <h3 class="card__title">4 segmentos</h3>
+          <p class="card__desc"><strong>itaú</strong> (renda até R$ 7 mil) · <strong>Uniclass</strong> (R$ 7–15 mil) · <strong>Personnalité</strong> (&gt; R$ 15 mil renda ou R$ 250 mil investidos) · <strong>Private Bank</strong> (&gt; R$ 10 mi investidos).</p>
+        </div>
+        <div class="card card--info">
+          <p class="card__label"><span class="dot"></span>Pessoa Jurídica</p>
+          <h3 class="card__title">4 segmentos + setoriais</h3>
+          <p class="card__desc"><strong>itaú Emps</strong> (microempreendedores) · <strong>itaú Empresas</strong> (MPE) · <strong>itaú BBA</strong> (médias e grandes) · <strong>BBA setoriais</strong>: Agro · Infra/Energia · Tech · Imobiliário · Multinacionais · Inst. Financeiras.</p>
+        </div>
+      </div>
+
+      <h2>Prateleira completa de <em>16 produtos</em></h2>
+      <div class="cards cards--4">
+        <div class="card card--accent"><h3 class="card__title">Adquirência</h3><p class="card__desc">Laranjinha — maquininha</p></div>
+        <div class="card card--info"><h3 class="card__title">Cartões</h3><p class="card__desc">Crédito, débito, múltiplos</p></div>
+        <div class="card card--teal"><h3 class="card__title">Derivativos</h3><p class="card__desc">Proteção e estratégias</p></div>
+        <div class="card card--sage"><h3 class="card__title">Pagamento &amp; Receb.</h3><p class="card__desc">PIX, TED, boletos</p></div>
+        <div class="card card--accent"><h3 class="card__title">Admin. fundos</h3><p class="card__desc">Custódia e administração</p></div>
+        <div class="card card--info"><h3 class="card__title">Consignado</h3><p class="card__desc">Crédito com desconto em folha</p></div>
+        <div class="card card--teal"><h3 class="card__title">Imóveis</h3><p class="card__desc">Financiamento imobiliário</p></div>
+        <div class="card card--sage"><h3 class="card__title">Previd. &amp; Capital.</h3><p class="card__desc">Acumulação e poupança</p></div>
+        <div class="card card--accent"><h3 class="card__title">Conta bancária</h3><p class="card__desc">Corrente, salário, digital</p></div>
+        <div class="card card--info"><h3 class="card__title">Câmbio &amp; Viagem</h3><p class="card__desc">Moedas e remessas</p></div>
+        <div class="card card--teal"><h3 class="card__title">Crédito</h3><p class="card__desc">Pessoal e empresarial</p></div>
+        <div class="card card--sage"><h3 class="card__title">Seguros</h3><p class="card__desc">Auto, vida, residencial</p></div>
+        <div class="card card--plum"><h3 class="card__title">Banco Invest.</h3><p class="card__desc">M&amp;A, ECM, DCM</p></div>
+        <div class="card card--info"><h3 class="card__title">Cash Management</h3><p class="card__desc">Gestão de fluxo corporativo</p></div>
+        <div class="card card--teal"><h3 class="card__title">Investimentos</h3><p class="card__desc">Fundos, RV, RF, ETFs</p></div>
+        <div class="card card--accent"><h3 class="card__title">Veículos</h3><p class="card__desc">Financiamento automotivo</p></div>
+      </div>
+
+      <section data-reveal>
+        <h2>Atendimento — onde o cliente <em>quiser</em></h2>
+        <p>Sete canais remotos: WhatsApp, e-mail, telefone, chat, click to human, bankline e <strong>mobile banking</strong> (100% funcional no App). Presença física relevante.</p>
+        <div class="metrics">
+          <div class="metric var-accent"><p class="metric__val">2,4 <span>mil</span></p><p class="metric__label">pontos físicos no Brasil e AL</p></div>
+          <div class="metric var-teal"><p class="metric__val">12,9 <span>mil</span></p><p class="metric__label">caixas eletrônicos · Brasil + Chile, Colômbia, Paraguai, Uruguai</p></div>
+          <div class="metric var-info"><p class="metric__kicker">Digital PJ</p><p class="metric__val">100<span>%</span></p><p class="metric__label">interações 1T26</p></div>
+          <div class="metric var-success"><p class="metric__kicker">Digital PF</p><p class="metric__val">97<span>%</span></p><p class="metric__label">interações 1T26</p></div>
+        </div>
+      </section>
+
+      <section data-reveal>
+        <h2>Escuta do cliente — líderes ouvindo, <em>em escala</em></h2>
+        <p>Programa contínuo de aproximação entre liderança executiva e clientes finais.</p>
+        <div class="cards cards--3">
+          <div class="card card--accent"><p class="card__label"><span class="dot"></span>Ituber Entende</p><h3 class="card__title">+70 mil ligações</h3><p class="card__desc">Líderes ouvindo clientes — foco em dores e oportunidades.</p></div>
+          <div class="card card--info"><p class="card__label"><span class="dot"></span>Papo de Cliente</p><h3 class="card__title">+60 mil encontros</h3><p class="card__desc">Colaboradores de agências aprimorando a experiência.</p></div>
+          <div class="card card--teal"><p class="card__label"><span class="dot"></span>Ituber Visita</p><h3 class="card__title">+1.000 visitas</h3><p class="card__desc">Conectando lideranças e linha de frente.</p></div>
+        </div>
+      </section>
+
+      <section data-reveal>
+        <h2>Metodologia — quatro disciplinas <em>integradas</em></h2>
+        <p>No centro, o cliente. Design, Tecnologia, Produtos e Dados &amp; IA integrados — não como camadas separadas. A <strong>Inteligência Itaú</strong> entrega soluções de IA generativa conversacional como Pix no WhatsApp, Inteligência de Investimentos e assistente Itaú Emps.</p>
+      </section>
+    </article>
+
+    <!-- ESG -->
+    <article class="view" id="esg" hidden>
+      <section class="view__hero">
+        <p class="kicker">Estratégia ESG</p>
+        <h1>Três frentes e uma <em>base de governança</em>.</h1>
+        <p class="lead">Único banco da América Latina no DJSI desde sua criação. Compromisso de R$ 1 trilhão em finanças sustentáveis até 2030 — R$ 577,6 bi já direcionados entre jan/20 e fev/26.</p>
+      </section>
+
+      <h2>Pilares ESG</h2>
+      <div class="cards cards--3">
+        <div class="card card--accent"><p class="card__label"><span class="dot"></span>Social</p><h3 class="card__title">Diversidade e desenvolvimento</h3><p class="card__desc">Promover diversidade e inclusão; desenvolvimento social e financeiro de pessoas, empresas e comunidades.</p></div>
+        <div class="card card--info"><p class="card__label"><span class="dot"></span>Finanças</p><h3 class="card__title">Finanças sustentáveis</h3><p class="card__desc">Integração de critérios ESG, advocacy de mercado e produtos sustentáveis.</p></div>
+        <div class="card card--teal"><p class="card__label"><span class="dot"></span>Clima</p><h3 class="card__title">Transição climática</h3><p class="card__desc">Resiliência operacional, transição low-carbon, adaptação e mitigação de riscos climáticos.</p></div>
+      </div>
+      <div class="callout-box"><strong>Base transversal:</strong> Governança e conduta — práticas de gestão sustentadas, transparência e gestão de temas materiais.</div>
+
+      <section data-reveal>
+        <h2>Diversidade na força de trabalho</h2>
+        <p><strong>Mulheres 53,6%</strong> · <strong>Negros 30,4%</strong> · <strong>PCD 5%</strong> · <strong>LGBTI+ 10%</strong>. Retenção: 51,1% há +5 anos, média de 8 anos de casa.</p>
+        <div class="metrics">
+          <div class="metric var-accent"><p class="metric__kicker">Liderança mulheres</p><p class="metric__val">36,1<span>%</span></p><p class="metric__label">realizado · obj 35–40%</p></div>
+          <div class="metric var-accent"><p class="metric__kicker">Contrat. mulheres</p><p class="metric__val">51,1<span>%</span></p><p class="metric__label">realizado · obj &gt;50%</p></div>
+          <div class="metric var-teal"><p class="metric__kicker">Negros tempo integral</p><p class="metric__val">29,5<span>%</span></p><p class="metric__label">realizado · obj 27–30%</p></div>
+          <div class="metric var-teal"><p class="metric__kicker">Contrat. negros</p><p class="metric__val">38,5<span>%</span></p><p class="metric__label">realizado · obj &gt;40%</p></div>
+          <div class="metric var-info"><p class="metric__kicker">PCD</p><p class="metric__val">5<span>%</span></p><p class="metric__label">força de trabalho</p></div>
+          <div class="metric var-plum"><p class="metric__kicker">LGBTI+</p><p class="metric__val">10<span>%</span></p><p class="metric__label">força de trabalho</p></div>
+          <div class="metric var-sage"><p class="metric__kicker">&lt; 30 anos</p><p class="metric__val">31,4<span>%</span></p></div>
+          <div class="metric var-sage"><p class="metric__kicker">30–50 anos</p><p class="metric__val">62,3<span>%</span></p></div>
+          <div class="metric var-sage"><p class="metric__kicker">&gt; 50 anos</p><p class="metric__val">6,3<span>%</span></p></div>
+        </div>
+      </section>
+
+      <section data-reveal>
+        <h2>Cadeia ESG &amp; <em>crédito ESG</em></h2>
+        <h3>Fornecedores ESG</h3>
+        <div class="metrics">
+          <div class="metric var-accent"><p class="metric__kicker">Questionário ESG</p><p class="metric__val">73<span>%</span></p><p class="metric__label">atingido · meta 2026</p></div>
+          <div class="metric var-info"><p class="metric__kicker">Censo Diversidade</p><p class="metric__val">47<span>%</span></p><p class="metric__label">meta 2030</p></div>
+          <div class="metric var-teal"><p class="metric__kicker">Inventário Emissões</p><p class="metric__val">56<span>%</span></p><p class="metric__label">meta 2030</p></div>
+          <div class="metric var-success"><p class="metric__kicker">Auditoria ESG Sens.</p><p class="metric__val">98<span>%</span></p><p class="metric__label">meta 2030</p></div>
+        </div>
+        <h3>Crédito ESG · metas até 2030</h3>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Frente</th><th>Realizado</th><th>Meta</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Mulheres</strong></td><td>R$ 23 bi</td><td>R$ 34,7 bi</td><td>9,3% × 2024 · em andamento</td></tr>
+              <tr><td><strong>Microcrédito</strong></td><td>R$ 2,8 bi</td><td>R$ 15 bi</td><td>19% atingido</td></tr>
+              <tr><td><strong>MPE</strong></td><td>R$ 44,7 mi</td><td>R$ 67,1 bi</td><td>67% atingido</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section data-reveal>
+        <h2>Caminho para o <em>Net Zero 2050</em></h2>
+        <p>Redução acumulada de <strong>-11,2%</strong> nas emissões dos Escopos 1+2 (16.634 tCO2e vs baseline 18.738 tCO2e) e <strong>-7,8%</strong> no Escopo 3 (35.288 tCO2e vs baseline 38.263 tCO2e). Meta: <strong>50% até 2030</strong>.</p>
+        <h3>Setores carbono-intensivos · metas 2030</h3>
+        <div class="metrics">
+          <div class="metric var-plum"><p class="metric__kicker">Aço</p><p class="metric__val">23<span>%</span></p></div>
+          <div class="metric var-warn"><p class="metric__kicker">Eletricidade</p><p class="metric__val">63<span>%</span></p></div>
+          <div class="metric var-info"><p class="metric__kicker">Alumínio</p><p class="metric__val">19<span>%</span></p></div>
+          <div class="metric var-accent"><p class="metric__kicker">Transportes</p><p class="metric__val">44<span>%</span></p></div>
+          <div class="metric var-teal"><p class="metric__kicker">Cimento</p><p class="metric__val">23<span>%</span></p></div>
+          <div class="metric"><p class="metric__kicker" style="color:var(--color-plum)">Carvão</p><p class="metric__val">Phase-out</p></div>
+          <div class="metric var-success"><p class="metric__kicker">Milho</p><p class="metric__val">36<span>%</span></p></div>
+          <div class="metric var-success"><p class="metric__kicker">Soja</p><p class="metric__val">25<span>%</span></p></div>
+          <div class="metric var-sage"><p class="metric__kicker">Pecuária</p><p class="metric__val">12<span>%</span></p></div>
+        </div>
+      </section>
+
+      <section data-reveal>
+        <h2>Finanças sustentáveis — <em>R$ 1 trilhão</em></h2>
+        <p class="hero-bignum">R$ <span>1 tri</span></p>
+        <p class="lead">Compromisso em finanças sustentáveis até 2030. <strong>R$ 577,6 bi</strong> já foram direcionados entre jan/20 e fev/26.</p>
+        <div class="chart-wrap" style="height:320px">
+          <canvas id="chart-fin-sust" aria-label="Progresso finanças sustentáveis"></canvas>
+        </div>
+      </section>
+    </article>
+
+    <!-- PERFORMANCE -->
+    <article class="view" id="performance" hidden>
+      <section class="view__hero">
+        <p class="kicker">Performance · 1T26</p>
+        <h1>Geramos valor de forma <em>consistente</em>.</h1>
+        <p class="lead">Resultado recorrente de R$ 12,3 bi no 1T26 · +10,4% YoY. ROE 24,8%. Balanço sólido e bem capitalizado. +26% na criação de valor 1T26 × 1T25.</p>
+      </section>
+
+      <h2>Geração de valor · 2013 → 1T26</h2>
+      <div class="chart-wrap" style="height:440px">
+        <canvas id="chart-valor" aria-label="Geração de valor 2013-1T26"></canvas>
+      </div>
+      <div class="callout-box"><strong>+26%</strong> na criação de valor 1T26 × 1T25. Resultado recorrente gerencial = Custo de capital + Criação de valor.</div>
+
+      <section data-reveal>
+        <h2>Performance financeira · <em>1T26</em></h2>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Métrica</th><th>1T26</th><th>vs 4T25</th><th>vs 1T25</th><th>Hist 1T22→25</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Margem financeira clientes</strong></td><td>R$ 31,5 bi</td><td>-0,7%</td><td>+4,5%</td><td>20,0 · 24,0 · 26,5 · 30,2</td></tr>
+              <tr><td><strong>Margem financeira mercado</strong></td><td>R$ 0,8 bi</td><td>+37,4%</td><td>-11,2%</td><td>1,0 · 0,6 · 1,1 · 0,9</td></tr>
+              <tr><td><strong>Custo do crédito</strong></td><td>R$ 10,0 bi</td><td>+2,5%</td><td>+4,5%</td><td>7,0 · 9,1 · 9,4 · 9,5</td></tr>
+              <tr><td><strong>Receita serviços e seguros</strong></td><td>R$ 14,0 bi</td><td>-5,7%</td><td>+5,3%</td><td>11,6 · 12,4 · 12,7 · 13,3</td></tr>
+              <tr><td><strong>Despesas n/d juros</strong></td><td>R$ 16,2 bi</td><td>-5,0%</td><td>+4,8%</td><td>12,8 · 13,8 · 14,0 · 15,5</td></tr>
+              <tr><td><strong>Resultado recorrente</strong></td><td>R$ 12,3 bi</td><td>-0,3%</td><td>+10,4%</td><td>7,4 · 8,4 · 9,8 · 11,1</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section data-reveal>
+        <h2>Gestão de risco — balanço <em>sólido</em></h2>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Indicador</th><th>1T26</th><th>vs Dez-25</th><th>vs Mar-25</th><th>Hist Mar-22→25</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Carteira de crédito</strong></td><td>R$ 1.483 bi</td><td>-0,5%</td><td>+7,2%</td><td>1.032 · 1.153 · 1.222 · 1.383</td></tr>
+              <tr><td><strong>NPL 90 dias c/ TVM</strong></td><td>1,9%</td><td>0pp</td><td>0pp</td><td>2,6 · 2,9 · 2,7 · 1,9</td></tr>
+              <tr><td><strong>Capital nível 1</strong></td><td>13,4%</td><td>-0,4pp</td><td>-0,7pp</td><td>12,5 · 13,5 · 14,5 · 14,1</td></tr>
+              <tr><td><strong>Funding</strong></td><td>R$ 1.667 bi</td><td>-2,0%</td><td>+10,5%</td><td>1.111 · 1.301 · 1.395 · 1.509</td></tr>
+              <tr><td><strong>LCR · liquidez curto prazo</strong></td><td>195,1%</td><td>-19,9pp</td><td>-1,3pp</td><td>150 · 162 · 194 · 196</td></tr>
+              <tr><td><strong>NSFR · funding estável</strong></td><td>122,0%</td><td>-2,8pp</td><td>-0,3pp</td><td>120 · 129 · 126 · 122</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section data-reveal>
+        <h2>Ganhos de tecnologia &amp; <em>eficiência</em></h2>
+        <div class="metrics">
+          <div class="metric var-accent"><p class="metric__kicker">IA Generativa</p><p class="metric__val">+88<span>%</span></p><p class="metric__label">volume em uso (1T26 x 1T25)</p></div>
+          <div class="metric var-info"><p class="metric__kicker">ML Tradicional</p><p class="metric__val">+35<span>%</span></p><p class="metric__label">volume (1T26 x 1T25)</p></div>
+          <div class="metric var-success"><p class="metric__kicker">Qualidade</p><p class="metric__val">-98<span>%</span></p><p class="metric__label">incidentes alto impacto (vs 1T18)</p></div>
+          <div class="metric var-teal"><p class="metric__kicker">Velocidade</p><p class="metric__val">+2.813<span>%</span></p><p class="metric__label">implantações (vs 1T18)</p></div>
+          <div class="metric var-plum"><p class="metric__kicker">Custo</p><p class="metric__val">-44<span>%</span></p><p class="metric__label">transações únicas (vs 1T18)</p></div>
+          <div class="metric var-sage"><p class="metric__kicker">Squads</p><p class="metric__val">+20 <span>mil</span></p><p class="metric__label">colaboradores em &gt;2,9 mil squads</p></div>
+        </div>
+        <p>Investimento em desenvolvimento de soluções: <strong>+3x</strong> vs 2018. Custos de infraestrutura: <strong>-31%</strong>. Cultura de questionamento contínuo e revisão de processos.</p>
+        <div class="chart-wrap">
+          <canvas id="chart-eficiencia" aria-label="Índice de Eficiência (%)"></canvas>
+        </div>
+      </section>
+
+      <section data-reveal>
+        <h2>Avenidas de <em>crescimento</em></h2>
+        <div class="cards cards--2">
+          <div class="card card--accent"><p class="card__label"><span class="dot"></span>Pessoa Física</p><h3 class="card__title">Principalidade e engajamento</h3><p class="card__desc"><strong>One Itaú</strong> — alavanca de curto prazo. Agenda associativa com prateleira completa. <strong>Beyond banking</strong>: iPhone pra Sempre, Itaú Shop, Samsung no Itaú, Inteligência Financeira.</p></div>
+          <div class="card card--info"><p class="card__label"><span class="dot"></span>Pessoa Jurídica</p><h3 class="card__title">Intensidade de relacionamento</h3><p class="card__desc">Aumento da base de clientes com foco em menor faturamento. <strong>Itaú Emps</strong> com proposta digital específica para microempreendedor.</p></div>
+          <div class="card card--teal"><p class="card__label"><span class="dot"></span>Seguros</p><h3 class="card__title">Penetração na base</h3><p class="card__desc"><strong>+20 produtos</strong> em plataforma aberta com <strong>+15 empresas parceiras</strong>.</p></div>
+          <div class="card card--plum"><p class="card__label"><span class="dot"></span>Corporate</p><h3 class="card__title">Liderança no atacado</h3><p class="card__desc">Banco de atacado líder em <strong>crédito</strong> e <strong>mercado de capitais</strong>.</p></div>
+        </div>
+      </section>
+
+      <section data-reveal>
+        <h2>Guidance <em>2026</em></h2>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Métrica</th><th>Guidance 2026</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Carteira de crédito total</strong><sup>1</sup></td><td>Crescimento entre <strong>5,5% e 9,5%</strong></td></tr>
+              <tr><td><strong>Carteira de crédito — Brasil</strong></td><td>Crescimento entre <strong>6,5% e 10,5%</strong></td></tr>
+              <tr><td><strong>Margem financeira com clientes</strong></td><td>Crescimento entre <strong>5,0% e 9,0%</strong></td></tr>
+              <tr><td><strong>Margem financeira com mercado</strong></td><td>Entre <strong>R$ 2,5 bi e R$ 5,5 bi</strong></td></tr>
+              <tr><td><strong>Custo do crédito</strong><sup>2</sup></td><td>Entre <strong>R$ 38,5 bi e R$ 43,5 bi</strong></td></tr>
+              <tr><td><strong>Receita de serviços e seguros</strong><sup>3</sup></td><td>Crescimento entre <strong>5,0% e 9,0%</strong></td></tr>
+              <tr><td><strong>Despesas não decorrentes de juros</strong></td><td>Crescimento entre <strong>1,5% e 5,5%</strong></td></tr>
+              <tr><td><strong>Alíquota efetiva de IR/CS</strong></td><td>Entre <strong>29,5% e 32,5%</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-family:var(--font-mono); font-size:0.75rem; color:var(--color-fg-subtle); line-height:1.6; margin-top:var(--space-4)">
+          <sup>1</sup> Inclui garantias financeiras prestadas e títulos privados.<br>
+          <sup>2</sup> Composto por despesa de perda esperada, descontos concedidos e recuperação de créditos.<br>
+          <sup>3</sup> Receitas de prestação de serviços + resultado de seguros, previdência e capitalização + despesas com sinistros.
+        </p>
+      </section>
+    </article>
+  </main>
+
+  <script>
+    document.querySelector('.theme-toggle')?.addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme');
+      const next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch {}
+      renderCharts(currentView);
+    });
+
+    let currentView = 'home';
+
+    function route() {
+      const id = (location.hash || '#home').slice(1);
+      let found = false;
+      document.querySelectorAll('.view').forEach(v => {
+        const on = v.id === id;
+        v.classList.toggle('is-active', on);
+        v.hidden = !on;
+        if (on) { found = true; currentView = v.id; }
+      });
+      if (!found) {
+        const first = document.querySelector('.view');
+        if (first) { first.classList.add('is-active'); first.hidden = false; currentView = first.id; }
+      }
+      document.querySelectorAll('.topnav__link').forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === '#' + id));
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      requestAnimationFrame(() => {
+        document.querySelectorAll('.view.is-active [data-reveal]').forEach(el => el.classList.add('is-visible'));
+        renderCharts(currentView);
+      });
+    }
+    addEventListener('hashchange', route);
+    addEventListener('DOMContentLoaded', route);
+
+    const rio = new IntersectionObserver(es => {
+      es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); rio.unobserve(e.target); } });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('[data-reveal]').forEach(el => rio.observe(el));
+
+    /* Charts */
+    const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+    let chartEf=null, chartFs=null, chartValor=null;
+
+    function renderChartEficiencia() {
+      const el = document.getElementById('chart-eficiencia'); if (!el) return;
+      if (chartEf) chartEf.destroy();
+      chartEf = new Chart(el, {
+        type:'line',
+        data:{ labels:['4T24','1T25','2T25','3T25','4T25','1T26'],
+          datasets:[
+            { label:'Acumulado 12m', data:[38.5,38.4,38.5,38.4,38.0,38.0], borderColor: css('--color-accent'), backgroundColor:'transparent', borderWidth:2.5, tension:0.3, pointRadius:4, pointBackgroundColor: css('--color-accent') },
+            { label:'Acumulado 12m Brasil', data:[36.8,36.6,36.7,36.5,36.3,36.2], borderColor: css('--color-info'), backgroundColor:'transparent', borderWidth:2.5, tension:0.3, pointRadius:4, pointBackgroundColor: css('--color-info') },
+            { label:'Trimestre', data:[39.6,37.0,38.0,38.8,38.3,37.1], borderColor: css('--color-fg-muted'), backgroundColor:'transparent', borderWidth:2, borderDash:[5,4], tension:0.3, pointRadius:3, pointBackgroundColor: css('--color-fg-muted') },
+            { label:'Trimestre Brasil', data:[37.4,35.1,36.3,37.1,36.4,34.9], borderColor: css('--color-teal'), backgroundColor:'transparent', borderWidth:2, borderDash:[5,4], tension:0.3, pointRadius:3, pointBackgroundColor: css('--color-teal') }
+          ]
+        },
+        options:{ responsive:true, maintainAspectRatio:false,
+          plugins:{ legend:{ position:'bottom', labels:{ color: css('--color-fg-muted'), font:{ size:11 }, padding:12, usePointStyle:true, pointStyle:'line' } }, tooltip:{ callbacks:{ label: ctx => ctx.dataset.label+': '+ctx.parsed.y+'%' } } },
+          scales:{ x:{ grid:{ display:false }, ticks:{ color: css('--color-fg-muted') } }, y:{ min:30, max:42, grid:{ color: css('--color-border') }, ticks:{ color: css('--color-fg-muted'), callback: v => v+'%' } } } }
+      });
+    }
+    function renderChartFinSust() {
+      const el = document.getElementById('chart-fin-sust'); if (!el) return;
+      if (chartFs) chartFs.destroy();
+      chartFs = new Chart(el, {
+        type:'bar',
+        data:{ labels:['dez/23','dez/24','dez/25','fev/26'], datasets:[{ label:'Progresso (%)', data:[33.3,44.6,56.5,57.7], backgroundColor:[css('--color-accent-dim'),css('--color-accent-dim'),css('--color-accent-dim'),css('--color-accent')], borderColor: css('--color-accent'), borderWidth:2, borderRadius:6 }] },
+        options:{ responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{ legend:{ display:false }, tooltip:{ callbacks:{ label: ctx => 'R$ '+(ctx.parsed.x*10).toFixed(0)+' bi · '+ctx.parsed.x+'%' } } }, scales:{ x:{ min:0, max:100, grid:{ color: css('--color-border') }, ticks:{ color: css('--color-fg-muted'), callback: v => v+'%' } }, y:{ grid:{ display:false }, ticks:{ color: css('--color-fg-muted'), font:{ size:12 } } } } }
+      });
+    }
+    function renderChartValor() {
+      const el = document.getElementById('chart-valor'); if (!el) return;
+      if (chartValor) chartValor.destroy();
+      const labels = ['2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023','2024','2025','1T25','1T26'];
+      chartValor = new Chart(el, {
+        type:'bar',
+        data:{ labels,
+          datasets:[
+            { type:'bar', label:'Custo de capital (R$ bi)', data:[12.3,15.3,15.6,17.7,16.7,16.5,15.6,15.9,17.5,20.6,23.3,24.8,28.3,6.8,6.9], backgroundColor: css('--color-fg-subtle'), borderColor: css('--color-fg-muted'), borderWidth:1, stack:'rev', yAxisID:'y', order:2 },
+            { type:'bar', label:'Criação de valor (R$ bi)', data:[3.5,5.3,8.2,4.4,8.2,9.2,12.8,2.6,9.3,10.2,12.3,16.6,18.5,4.3,5.4], backgroundColor: css('--color-accent-dim'), borderColor: css('--color-accent'), borderWidth:1.5, stack:'rev', yAxisID:'y', order:2 },
+            { type:'line', label:'ROE (%)', data:[20.9,24.1,23.9,20.3,21.8,21.9,23.7,14.5,19.3,20.3,21.0,22.2,23.4,22.5,24.8], borderColor: css('--color-accent'), backgroundColor:'transparent', borderWidth:2.5, tension:0.3, pointRadius:4, pointBackgroundColor: css('--color-accent'), yAxisID:'y2', order:1 },
+            { type:'line', label:'Custo de capital médio (%)', data:[14.8,16.0,16.3,17.0,14.6,14.0,13.0,12.9,13.2,14.3,14.4,13.9,15.0,14.8,14.8], borderColor: css('--color-fg-muted'), backgroundColor:'transparent', borderWidth:2, borderDash:[4,4], tension:0.3, pointRadius:3, pointBackgroundColor: css('--color-fg-muted'), yAxisID:'y2', order:1 }
+          ]
+        },
+        options:{ responsive:true, maintainAspectRatio:false, interaction:{ mode:'index', intersect:false },
+          plugins:{ legend:{ position:'top', align:'end', labels:{ color: css('--color-fg-muted'), font:{ size:11 }, padding:10, boxWidth:14, usePointStyle:true } }, tooltip:{ callbacks:{ label: ctx => { const v=ctx.parsed.y; if(ctx.dataset.yAxisID==='y') return ctx.dataset.label+': R$ '+v+' bi'; return ctx.dataset.label+': '+v+'%'; } } } },
+          scales:{ x:{ stacked:true, grid:{ display:false }, ticks:{ color: css('--color-fg-muted'), font:{ size:10 } } }, y:{ type:'linear', position:'left', stacked:true, min:0, max:50, grid:{ color: css('--color-border') }, ticks:{ color: css('--color-fg-muted'), callback: v => 'R$ '+v+' bi', font:{ size:10 } }, title:{ display:true, text:'Resultado recorrente (R$ bi)', color: css('--color-fg-muted'), font:{ size:11 } } }, y2:{ type:'linear', position:'right', min:0, max:30, grid:{ drawOnChartArea:false }, ticks:{ color: css('--color-fg-muted'), callback: v => v+'%', font:{ size:10 } }, title:{ display:true, text:'ROE / Custo cap. (%)', color: css('--color-fg-muted'), font:{ size:11 } } } } }
+      });
+    }
+    function renderCharts(view) {
+      if (view === 'performance') { renderChartValor(); renderChartEficiencia(); }
+      if (view === 'esg') { renderChartFinSust(); }
+    }
+  </script>
+</body>
+</html>
