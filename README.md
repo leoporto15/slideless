@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-  Skill interna do Itaú para substituir PowerPoint por <strong>documentos web interativos em HTML single-file</strong> em comunicação interna — handbooks, hubs, scrollytelling, microsites e decks modernos.
+  Skill interna do Itaú para substituir PowerPoint por <strong>documentos web interativos em HTML single-file</strong> em comunicação interna — handbooks, hubs, scrollytelling, microsites, decks modernos e relatórios editoriais densos (PDF-friendly).
 </p>
 
 ---
@@ -31,7 +31,7 @@
 
 ---
 
-## Comandos (27)
+## Comandos (30)
 
 > ### 🧭 Não sabe por onde começar? Siga por aqui.
 >
@@ -91,21 +91,21 @@
 | `/converter-modelo` | Converte entre modelos compatíveis (handbook ↔ scrollytelling, hub ↔ site). |
 | `/distill` | Reduz handbook longo a sumário enxuto preservando hierarquia. |
 
-### 🎨 Refinamento de design — `/slideless <verbo>` (5 verbos)
-*Aplica transformações de design sênior a documentos existentes. Verbos compõem em sequência.*
+### 🎨 Refinamento de design (5 comandos independentes)
+*Aplica transformações de design sênior a documentos existentes. Comandos compõem em sequência aplicando um após o outro.*
 
 | Comando | O que faz |
 |---|---|
-| `/slideless bolder` | **Amplifica designs tímidos** — tipografia hero +30%, glow atmosférico reforçado, números-âncora circulados, whitespace generoso. Para quando o doc gerado ficou medíocre. |
-| `/slideless quieter` | **Reduz designs ruidosos** — tipografia -15%, cores muted, transições mais lentas, fallback serif editorial. Para quando o doc tá gritando demais. |
-| `/slideless animate` | **Movimento intencional** — heroIn, Auto-Animate FLIP entre slides, counters animados, stagger reveals. Sempre respeita `prefers-reduced-motion`. |
-| `/slideless delight` | **Micro-interações sem cafonice** — hover lifts em cards, cursor-aware spotlight no hero, shimmer na progress bar, parallax sutil. Sem confetti, sem easter eggs. |
-| `/slideless overdrive` | **Tecnicamente extraordinário** — WebGL/Canvas generative no hero, custom Chart.js plugins, variable font animation, cinematic transitions. Showpiece técnico (até 2-3 MB). |
+| `/slideless-bolder` | **Amplifica designs tímidos** — tipografia hero +30%, glow atmosférico reforçado, números-âncora circulados, whitespace generoso. Para quando o doc gerado ficou medíocre. |
+| `/slideless-quieter` | **Reduz designs ruidosos** — tipografia -15%, cores muted, transições mais lentas, fallback serif editorial. Para quando o doc tá gritando demais. |
+| `/slideless-animate` | **Movimento intencional** — heroIn, Auto-Animate FLIP entre slides, counters animados, stagger reveals. Sempre respeita `prefers-reduced-motion`. |
+| `/slideless-delight` | **Micro-interações sem cafonice** — hover lifts em cards, cursor-aware spotlight no hero, shimmer na progress bar, parallax sutil. Sem confetti, sem easter eggs. |
+| `/slideless-overdrive` | **Tecnicamente extraordinário** — WebGL/Canvas generative no hero, custom Chart.js plugins, variable font animation, cinematic transitions. Comando interativo: pergunta quais efeitos aplicar (A-F, multi-seleção). Showpiece técnico (até 5 MB). |
 
 **Composição típica:**
-- `bolder` + `animate` → executivo com peso e movimento
-- `quieter` + `delight` → editorial refinado
-- `bolder` + `overdrive` → showpiece de alto perfil
+- `/slideless-bolder` + `/slideless-animate` → executivo com peso e movimento
+- `/slideless-quieter` + `/slideless-delight` → editorial refinado
+- `/slideless-bolder` + `/slideless-overdrive` → showpiece de alto perfil
 
 ### Qualidade (4)
 *Audita e melhora documentos existentes.*
@@ -137,7 +137,7 @@ Documentação técnica completa de cada comando em [commands/](commands/).
 | [`scrollytelling`](references/modelos/scrollytelling.md) | narrativa única com reveal + sticky chart | NYT Upshot |
 | [`site`](references/modelos/site.md) | microsite SPA com 2-5 views | Linear, Vercel guides |
 | [`deck`](references/modelos/deck.md) | pitch ao vivo, all-hands (único onde tipografia gigante é OK) | Apple keynote |
-| `report` | relatório editorial denso para diretoria/RI/compliance, otimizado para PDF | Annual reports |
+| [`report`](references/modelos/report.md) | relatório editorial denso para diretoria/RI/compliance, otimizado para PDF — sumário executivo, TOC numerada, footnotes, CSS @print rigoroso | Itaú Pesquisa Macro, McKinsey Global Institute, Goldman Sachs research |
 
 Decisão entre modelos: [references/decisao-modelo.md](references/decisao-modelo.md). **Ou simplesmente use `/criar` — o wizard decide por você.**
 
@@ -150,7 +150,7 @@ slideless/
 ├── SKILL.md                       ← entry point para o agente
 ├── README.md                      ← este arquivo
 ├── .claude-plugin/plugin.json     ← manifest da skill
-├── commands/                      ← 26 slash commands (1 arquivo cada)
+├── commands/                      ← 30 slash commands (1 arquivo cada)
 ├── references/
 │   ├── anti-patterns.md           ← PPT-isms proibidos
 │   ├── design-system.md           ← tokens, dark mode, boot script
@@ -259,5 +259,5 @@ Manter a distinção `handbook` × `deck` é load-bearing — perdê-la é repet
 ## Contribuir
 
 - Antes de adicionar componente novo: ver se cabe em [componentes.md](references/componentes.md) — duplicidade fragmenta o sistema.
-- Antes de adicionar modelo novo: justificar que os 5 existentes não cobrem o caso. O sistema é deliberadamente fechado.
+- Antes de adicionar modelo novo: justificar que os 6 existentes (handbook, hub, scrollytelling, site, deck, report) não cobrem o caso. O sistema é deliberadamente fechado.
 - Cada PR deve passar o validador (`python scripts/validar.py`) nos exemplos afetados.

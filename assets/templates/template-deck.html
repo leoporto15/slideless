@@ -19,7 +19,6 @@
     - Novos tipos de fragmento (current-visible, highlight-current, grow, shrink, etc)
     - Rough Notation (data-mark)
     - AutoFitText (data-fit-text)
-    - Scroll View (?view=scroll)
     - Posicionamento relativo de fragmentos (data-fragment-index="+1")
     - Layouts semânticos (layout-two-cols, layout-fact, layout-quote, layout-statement, etc)
     - Code Stepping (data-line-numbers)
@@ -75,13 +74,17 @@
       opacity: 0.5;
     }
 
+    /* Override local — transições mais rápidas que o token global do tema
+       para garantir resposta snappy a cliques/teclas. Tema usa 650/750ms
+       para outros contextos editoriais; deck precisa de 250/300ms. */
+    .deck { --duration-slide: 280ms; --duration-fade: 250ms; }
     .slide {
       position: absolute; inset: 0;
       display: flex; flex-direction: column; justify-content: center;
       padding: clamp(72px, 9vh, 100px) clamp(48px, 8vw, 120px) clamp(56px, 7vh, 80px);
       opacity: 0;
       pointer-events: none;
-      transform: translateX(60px) scale(0.98);
+      transform: translateX(40px) scale(0.99);
       transition: opacity var(--duration-fade) var(--ease-out),
                   transform var(--duration-slide) var(--ease-emphatic);
       overflow: hidden;
@@ -92,7 +95,7 @@
     @media (max-height: 760px) {
       .slide { justify-content: flex-start; }
     }
-    .slide.is-prev { transform: translateX(-60px) scale(0.98); }
+    .slide.is-prev { transform: translateX(-40px) scale(0.99); }
     .slide.is-active { opacity: 1; transform: translateX(0) scale(1); pointer-events: auto; }
 
     /* Vignette opcional para slides full-bleed */
@@ -168,6 +171,27 @@
       color: var(--color-accent);
       font-weight: 700;
       letter-spacing: 0.06em;
+    }
+
+    /* ─── Overflow guard ─────────────────────────────────────────────
+       NADA vaza do slide. Toda a tipografia mega/giga ganha quebra
+       elástica + min-width 0 nos filhos diretos. Combina com autoFitSlide
+       (JS) que reduz iterativamente o título se o conteúdo ainda exceder
+       o viewport (último recurso). */
+    .slide { contain: layout paint; }
+    .slide > *:not(.slide-bg):not(.slide-num):not([data-overdrive]) {
+      max-width: 100%;
+      min-width: 0;
+    }
+    .slide .title-mega,
+    .slide .title-xl,
+    .slide .title-lg,
+    .slide .fact-val,
+    .slide .statement-text,
+    .slide .quote-text,
+    .slide .big-num__val {
+      overflow-wrap: break-word;
+      hyphens: auto;
     }
 
     .title-xl, .title-mega {
@@ -691,9 +715,13 @@
       --slide-w: 100vw;
       --slide-h: 100vh;
     }
+    /* Em overview, html + body precisam liberar o overflow hidden global
+       definido no engine base; senão a grade de slides não rola quando
+       a quantidade ultrapassa o viewport. */
+    html.is-overview,
     body.is-overview {
       overflow: auto !important;
-      height: auto;
+      height: auto !important;
     }
     body.is-overview .deck {
       position: static !important;
@@ -702,6 +730,7 @@
       grid-template-columns: repeat(auto-fill, calc(var(--slide-w) * var(--ov-scale)));
       gap: 20px;
       padding: 28px;
+      padding-bottom: 80px;
       height: auto !important;
       min-height: 100vh;
       width: 100% !important;
@@ -798,26 +827,32 @@
     /* ─── Feature 9: AutoFitText ────────────────────────────────── */
     [data-fit-text] { white-space: nowrap; display: block; }
 
-    /* ─── Feature 10: Scroll View ───────────────────────────────── */
-    body.scroll-view { overflow: auto; }
-    body.scroll-view .deck {
-      width: 100%;
-      height: auto;
-      overflow: visible;
-      display: block;
+    /* ─── Feature 10: Tabelas com hover apresentador ────────────────
+       O apresentador passa o mouse sobre uma linha durante a apresentação
+       e ela ganha destaque (background accent + bold); as demais ficam
+       muted. Mais flexível que percorrer linha-a-linha via fragmentos
+       — o apresentador escolhe o que destacar, quando e em que ordem.
+       Aplica-se a toda .data-table dentro de .slide automaticamente. */
+    .slide .data-table tbody tr {
+      transition: opacity 200ms var(--ease-out, ease-out),
+                  background 200ms var(--ease-out, ease-out),
+                  color 200ms var(--ease-out, ease-out);
     }
-    body.scroll-view .slide {
-      position: relative;
-      inset: auto;
-      width: 100vw;
-      height: 100svh;
+    .slide .data-table tbody:hover tr { opacity: 0.4; }
+    .slide .data-table tbody:hover tr:hover {
       opacity: 1;
-      transform: none;
-      pointer-events: auto;
-      scroll-snap-align: start;
+      background: var(--color-accent-dim, rgba(255,98,0,0.10)) !important;
     }
-    body.scroll-view { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
-    body.scroll-view .hud { position: sticky; }
+    .slide .data-table tbody:hover tr:hover td {
+      color: var(--color-accent);
+      font-weight: 700;
+    }
+    .slide .data-table tbody:hover tr:hover td strong {
+      color: var(--color-accent);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .slide .data-table tbody tr { transition: none; }
+    }
 
     /* ─── Feature 12: Layouts semânticos ────────────────────────── */
 
@@ -929,14 +964,22 @@
     }
 
     /* ─── Feature 14: Slide background layer ────────────────────── */
-    .slide-bg {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
+    /* `.slide-bg` é o background gerado pelo data-background-* (cor/gradient/imagem).
+       `[data-overdrive]` é a marca para canvas/svg decorativos do /slideless-overdrive
+       (WebGL hero, generative fields). AMBOS ficam na camada 0 e NÃO contam como
+       conteúdo de layout — caso contrário, o canvas absoluto vira inline e empurra
+       título/lead para fora do viewport. */
+    .slide-bg,
+    .slide > [data-overdrive] {
+      position: absolute !important;
+      inset: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      z-index: 0 !important;
       pointer-events: none;
       transition: opacity var(--duration, 300ms) var(--ease-out, ease-out);
     }
-    .slide > :not(.slide-bg) { position: relative; z-index: 1; }
+    .slide > :not(.slide-bg):not([data-overdrive]) { position: relative; z-index: 1; }
 
     /* ─── Keyboard shortcuts overlay (tecla ?) ──────────────────── */
     .shortcuts-overlay {
@@ -1136,7 +1179,6 @@ print(market_share(aum, 8.2e12))  # 14.5%</code></pre>
     <span class="hud__counter"><span id="cur">1</span> / <span id="tot">7</span></span>
     <button class="hud__btn hud__next" type="button" aria-label="Próximo slide">▶</button>
     <button class="hud__btn hud__overview" type="button" aria-label="Visão geral (O)" title="O">⊞</button>
-    <button class="hud__btn hud__scroll" type="button" aria-label="Modo scroll" title="Scroll">↕</button>
     <button class="hud__fs" type="button" aria-label="Alternar fullscreen">⛶</button>
     <button class="theme-toggle" type="button" aria-label="Alternar tema"><span aria-hidden="true">◐</span></button>
   </nav>
@@ -1416,7 +1458,56 @@ print(market_share(aum, 8.2e12))  # 14.5%</code></pre>
 
       // Feature 7: inicializar marcações Rough Notation no novo slide
       requestAnimationFrame(() => initMarks(slides[idx]));
+
+      // Overflow guard — escala títulos do slide ativo até caberem.
+      // Combina com o CSS guard (.slide > * { max-width: 100%; min-width: 0 }).
+      // Executa em RAF para esperar fontes carregarem e layout estabilizar.
+      requestAnimationFrame(() => autoFitSlide(slides[idx]));
     }
+
+    /* ─── autoFitSlide — overflow guard rápido, 1-pass com cache ───
+       Otimizado para nunca bloquear navegação:
+       - 1 medição → calcula scale → aplica via custom property (sem loop)
+       - Resultado cacheado por slide+viewport (skip se já fitado nesse tamanho)
+       - prefers-reduced-motion ainda desliga animações, mas o fit roda igual
+         (overflow é layout, não motion) */
+    let __vwCache = window.innerWidth + 'x' + window.innerHeight;
+    function autoFitSlide(slide) {
+      if (!slide) return;
+      // Cache: se já fitado para este viewport, skip (evita reflow em cliques rápidos)
+      if (slide.__fitFor === __vwCache) return;
+      slide.__fitFor = __vwCache;
+      const targets = slide.querySelectorAll(
+        '.title-mega, .title-xl, .title-lg, .fact-val, .statement-text, .quote-text, .big-num__val'
+      );
+      // Reset any prior inline reduction so a 2nd run from a wider viewport recovers size
+      targets.forEach(t => t.style.removeProperty('font-size'));
+      if (!targets.length) return;
+      // Single measurement + single scale application (no while loop, no reflow storm)
+      requestAnimationFrame(() => {
+        const cw = slide.clientWidth, ch = slide.clientHeight;
+        const sw = slide.scrollWidth, sh = slide.scrollHeight;
+        if (sw <= cw + 1 && sh <= ch + 1) return; // already fits
+        const scale = Math.min(cw / sw, ch / sh) * 0.97; // 3% safety margin
+        if (scale >= 1 || scale <= 0) return;
+        targets.forEach(t => {
+          const cur = parseFloat(getComputedStyle(t).fontSize);
+          const next = Math.max(18, cur * scale);
+          t.style.fontSize = next + 'px';
+        });
+      });
+    }
+    // Re-run guard when viewport resizes (invalidate cache for all slides)
+    let __resizeRaf = 0;
+    window.addEventListener('resize', () => {
+      __vwCache = window.innerWidth + 'x' + window.innerHeight;
+      slides.forEach(s => { s.__fitFor = null; });
+      if (__resizeRaf) cancelAnimationFrame(__resizeRaf);
+      __resizeRaf = requestAnimationFrame(() => {
+        const active = document.querySelector('.slide.is-active');
+        if (active) autoFitSlide(active);
+      });
+    });
 
     function nextFragment() {
       const frags = fragmentsByIdx[idx];
@@ -1478,12 +1569,14 @@ print(market_share(aum, 8.2e12))  # 14.5%</code></pre>
       const willOpen = !document.body.classList.contains('is-overview');
       if (willOpen) {
         snapshotViewportForOverview();
+        document.documentElement.classList.add('is-overview');
         document.body.classList.add('is-overview');
         // Scroll para o slide ativo dentro do overview
         requestAnimationFrame(() => {
           try { slides[idx].scrollIntoView({ behavior: 'auto', block: 'center' }); } catch {}
         });
       } else {
+        document.documentElement.classList.remove('is-overview');
         document.body.classList.remove('is-overview');
         window.scrollTo(0, 0);
       }
@@ -1499,6 +1592,7 @@ print(market_share(aum, 8.2e12))  # 14.5%</code></pre>
       const sl = e.target.closest('.slide');
       if (sl) {
         goto(slides.indexOf(sl));
+        document.documentElement.classList.remove('is-overview');
         document.body.classList.remove('is-overview');
         window.scrollTo(0, 0);
       }
@@ -1540,6 +1634,7 @@ print(market_share(aum, 8.2e12))  # 14.5%</code></pre>
         toggleOverview();
       } else if (e.key === 'Escape') {
         if (document.body.classList.contains('is-overview')) {
+          document.documentElement.classList.remove('is-overview');
           document.body.classList.remove('is-overview');
           window.scrollTo(0, 0);
         } else if (document.fullscreenElement) {
@@ -1560,15 +1655,6 @@ print(market_share(aum, 8.2e12))  # 14.5%</code></pre>
       else document.documentElement.requestFullscreen?.();
     });
     document.querySelector('.hud__overview').addEventListener('click', toggleOverview);
-    document.querySelector('.hud__scroll').addEventListener('click', () => {
-      const url = new URL(location.href);
-      if (url.searchParams.get('view') === 'scroll') {
-        url.searchParams.delete('view');
-      } else {
-        url.searchParams.set('view', 'scroll');
-      }
-      location.href = url.toString();
-    });
 
     document.querySelector('.theme-toggle').addEventListener('click', () => {
       const cur = document.documentElement.getAttribute('data-theme');
@@ -1576,25 +1662,6 @@ print(market_share(aum, 8.2e12))  # 14.5%</code></pre>
       document.documentElement.setAttribute('data-theme', nx);
       try { localStorage.setItem('theme', nx); } catch {}
     });
-
-    /* ─── Feature 10: Scroll View ───────────────────────────────── */
-    if (new URLSearchParams(location.search).get('view') === 'scroll') {
-      document.body.classList.add('scroll-view');
-      const scrollObs = new IntersectionObserver(entries => {
-        entries.forEach(e => {
-          if (e.isIntersecting) {
-            const i = slides.indexOf(e.target);
-            if (i !== -1) {
-              idx = i;
-              updateProgress();
-              const cur = document.getElementById('cur');
-              if (cur) cur.textContent = i + 1;
-            }
-          }
-        });
-      }, { threshold: 0.5 });
-      slides.forEach(s => scrollObs.observe(s));
-    }
 
     /* ─── Inicializar navegação via hash ────────────────────────── */
     const fromHash = parseInt((location.hash.match(/^#s(\d+)$/) || [])[1], 10);

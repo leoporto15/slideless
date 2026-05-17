@@ -285,12 +285,13 @@ Threshold: **4+ linhas OU 3+ colunas → usar `<table>`, nunca bullets**. Ver pa
 </div>
 ```
 
-**Exceção (só deck):** spotlight progressivo de linhas via `data-fragment="highlight-current"` em `<tr>` — o CSS base do template-deck garante que linhas com esse tipo começam visíveis (regra `:not([data-fragment="highlight-current"])` no fragment base). Só a cor/peso muda quando a linha vira o fragmento ativo.
+**No deck**, o spotlight de linha é apresentador-controlado: o template aplica hover automático em toda `.data-table` dentro de `.slide`. O apresentador passa o mouse sobre qualquer linha durante a apresentação — ela ganha background accent + bold; as demais ficam muted. Sem fragmentos, sem keyboard, sem ordem pré-definida. O apresentador decide o que destacar quando.
 
 ```html
+<!-- No deck — nada de fragmento em <tr>. O hover do template faz tudo. -->
 <table class="data-table">
-  <tr data-fragment="highlight-current">...</tr>
-  <tr data-fragment="highlight-current">...</tr>
+  <tr><td>Linha A</td>...</tr>
+  <tr><td>Linha B</td>...</tr>
 </table>
 ```
 
