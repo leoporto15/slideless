@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Central de Recursos — Plataforma de Dados</title>
+  <title>Plataforma de Dados Itaú — Hub</title>
 
   <script>
     (function() {
@@ -19,62 +19,120 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js" defer></script>
 
   <style>
+    /* ─── Tokens — tema itau ────────────────────────────────────────── */
     :root {
-      --itau-orange: #FF6200;
-      --itau-orange-2: #F88104;
-      --itau-orange-3: #FA9F09;
-      --itau-blue-3: #3B85FA;
-      --itau-yellow: #FBC305;
+      --itau-orange:     #FF6200;
+      --itau-orange-2:   #F88104;
+      --itau-orange-3:   #FA9F09;
+      --itau-blue-3:     #3B85FA;
+      --itau-yellow:     #FBC305;
+      --itau-warm-black: #14110d;
 
-      --color-bg: #ffffff;
-      --color-bg-elevated: #faf8f5;
-      --color-bg-sunken: #f4f1ec;
-      --color-fg: #1a1a1a;
-      --color-fg-muted: #525252;
-      --color-fg-subtle: #8a8a8a;
-      --color-border: #e8e4dd;
-      --color-border-strong: #d4cec3;
-      --color-accent: var(--itau-orange);
-      --color-accent-hover: var(--itau-orange-2);
-      --color-accent-fg: #ffffff;
+      --color-accent:        var(--itau-orange);
+      --color-accent-dim:    rgba(255, 98, 0, 0.08);
+      --color-accent-fg:     #ffffff;
+      --color-info:          var(--itau-blue-3);
+      --color-info-dim:      rgba(59, 133, 250, 0.10);
+      --color-success:       #4d7c0f;
+      --color-success-dim:   rgba(77, 124, 15, 0.10);
+      --color-teal:          #0f766e;
+      --color-teal-dim:      rgba(15, 118, 110, 0.10);
+      --color-plum:          #9f1239;
+      --color-plum-dim:      rgba(159, 18, 57, 0.10);
+      --color-warn:          var(--itau-yellow);
+      --color-warn-dim:      rgba(251, 195, 5, 0.12);
+      --color-danger:        #b91c1c;
+      --color-danger-dim:    rgba(185, 28, 28, 0.10);
 
-      --font-text: 'Itau Text', 'Inter', -apple-system, system-ui, sans-serif;
-      --font-display: 'Itau Display', 'Inter', -apple-system, system-ui, sans-serif;
-      --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+      --color-bg:            #faf7f5;
+      --color-bg-elevated:   #ffffff;
+      --color-bg-sunken:     #f4f1ec;
+      --color-fg:            #292017;
+      --color-fg-muted:      #6b5d50;
+      --color-fg-subtle:     #8a7e72;
+      --color-border:        rgba(41, 32, 23, 0.10);
+      --color-border-strong: rgba(41, 32, 23, 0.18);
+      --color-accent-hover:  var(--itau-orange-2);
 
-      --size-h1: 2.75rem; --size-h2: 1.625rem; --size-h3: 1.25rem;
-      --size-lead: 1.1875rem; --size-body: 1rem; --size-small: 0.9375rem; --size-xs: 0.8125rem;
+      --glow-warm:    radial-gradient(ellipse 80% 60% at 80% 0%, rgba(255, 98, 0, 0.10) 0%, transparent 55%);
+      --glow-cool:    radial-gradient(ellipse 70% 50% at 20% 100%, rgba(59, 133, 250, 0.08) 0%, transparent 55%);
+
+      --font-text:    'Itau Text', 'Inter', -apple-system, system-ui, sans-serif;
+      --font-display: 'Itau Display', 'Fraunces', 'Inter', Georgia, serif;
+      --font-mono:    'JetBrains Mono', 'IBM Plex Mono', 'SF Mono', Consolas, monospace;
+
+      --size-xs:      clamp(0.75rem, 0.7rem + 0.2vw, 0.875rem);
+      --size-small:   clamp(0.875rem, 0.85rem + 0.15vw, 1rem);
+      --size-body:    clamp(1rem, 0.95rem + 0.2vw, 1.0625rem);
+      --size-lead:    clamp(1.1rem, 1.02rem + 0.4vw, 1.3rem);
+      --size-h4:      clamp(1rem, 0.95rem + 0.25vw, 1.15rem);
+      --size-h3:      clamp(1.1rem, 1.02rem + 0.4vw, 1.35rem);
+      --size-h2:      clamp(1.5rem, 1.3rem + 0.9vw, 2rem);
+      --size-h1:      clamp(2rem, 1.6rem + 1.6vw, 2.85rem);
+
       --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem;
-      --space-4: 1rem; --space-5: 1.5rem; --space-6: 2rem;
-      --space-7: 2.5rem; --space-8: 3rem; --space-10: 4rem; --space-12: 5rem;
-      --radius-sm: 4px; --radius: 8px; --radius-lg: 12px; --radius-xl: 16px;
-      --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
-      --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
-      --shadow-lg: 0 4px 6px rgba(0,0,0,0.05), 0 10px 24px rgba(0,0,0,0.08);
-      --ease: cubic-bezier(0.22, 1, 0.36, 1);
-      --duration-fast: 150ms; --duration: 250ms;
+      --space-4: 1rem;    --space-5: 1.5rem; --space-6: 2rem;
+      --space-7: 2.5rem;  --space-8: 3rem;   --space-10: 4rem;
+      --space-12: 5rem;   --space-16: 7rem;
+
+      --content-max: 1200px;
+      --header-h:    60px;
+
+      --radius-sm: 4px;
+      --radius:    10px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+
+      --shadow-xs: 0 1px 2px rgba(41, 32, 23, 0.04);
+      --shadow-sm: 0 2px 4px rgba(41, 32, 23, 0.06), 0 1px 2px rgba(41, 32, 23, 0.04);
+      --shadow:    0 4px 12px rgba(41, 32, 23, 0.08), 0 1px 3px rgba(41, 32, 23, 0.05);
+      --shadow-lg: 0 12px 32px rgba(41, 32, 23, 0.12), 0 4px 12px rgba(41, 32, 23, 0.06);
+
+      --ease-out:       cubic-bezier(0.22, 1, 0.36, 1);
+      --duration-fast:    150ms;
+      --duration:         250ms;
+      --duration-hero:    900ms;
     }
 
     [data-theme="dark"] {
-      --color-bg: #14110d;
-      --color-bg-elevated: #1c1814;
-      --color-bg-sunken: #221d18;
-      --color-fg: #e8eaed;
-      --color-fg-muted: #a8a39a;
-      --color-fg-subtle: #6e6a62;
-      --color-border: #2f2a23;
-      --color-border-strong: #403a32;
-      --color-accent: var(--itau-orange-3);
-      --color-accent-hover: var(--itau-orange-2);
-      --color-accent-fg: #14110d;
-      --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
-      --shadow: 0 1px 3px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.3);
-      --shadow-lg: 0 4px 6px rgba(0,0,0,0.4), 0 10px 24px rgba(0,0,0,0.5);
+      --color-bg:            #14110d;
+      --color-bg-elevated:   #1c1814;
+      --color-bg-sunken:     #221d18;
+      --color-fg:            #ede5dd;
+      --color-fg-muted:      #b8aa9a;
+      --color-fg-subtle:     #786e62;
+      --color-border:        rgba(237, 229, 221, 0.10);
+      --color-border-strong: rgba(237, 229, 221, 0.20);
+
+      --color-accent:        var(--itau-orange-3);
+      --color-accent-hover:  var(--itau-orange-2);
+      --color-accent-fg:     #14110d;
+      --color-accent-dim:    rgba(250, 159, 9, 0.12);
+      --color-info-dim:      rgba(59, 133, 250, 0.14);
+      --color-success:       #a3e635;
+      --color-success-dim:   rgba(163, 230, 53, 0.12);
+      --color-teal:          #5eead4;
+      --color-teal-dim:      rgba(94, 234, 212, 0.12);
+      --color-plum:          #fb7185;
+      --color-plum-dim:      rgba(251, 113, 133, 0.12);
+      --color-warn-dim:      rgba(251, 195, 5, 0.14);
+      --color-danger:        #f87171;
+
+      --glow-warm:    radial-gradient(ellipse 80% 60% at 80% 0%, rgba(250, 159, 9, 0.18) 0%, transparent 55%);
+      --glow-cool:    radial-gradient(ellipse 70% 50% at 20% 100%, rgba(59, 133, 250, 0.14) 0%, transparent 55%);
+
+      --shadow-xs: 0 1px 2px rgba(0,0,0,0.4);
+      --shadow-sm: 0 2px 4px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+      --shadow:    0 4px 12px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.3);
+      --shadow-lg: 0 12px 32px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.3);
     }
 
+    /* ─── Reset ─────────────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
@@ -84,106 +142,240 @@
       line-height: 1.65;
       color: var(--color-fg);
       background: var(--color-bg);
+      background-image: var(--glow-warm), var(--glow-cool);
+      background-attachment: fixed;
       -webkit-font-smoothing: antialiased;
-      transition: background var(--duration-fast), color var(--duration-fast);
+      text-rendering: optimizeLegibility;
+      transition: background-color var(--duration-fast), color var(--duration-fast);
+      overflow-wrap: break-word;
     }
 
-    .page { max-width: 1200px; margin: 0 auto; padding: var(--space-6) var(--space-6) var(--space-12); }
+    a { color: var(--color-accent); text-decoration: none; }
+    a:hover { color: var(--color-accent-hover); text-decoration: underline; text-underline-offset: 3px; }
+    strong { font-weight: 700; color: var(--color-fg); }
 
-    /* ─── Header ──────────────────────────────────── */
-    .hero {
-      padding: var(--space-8) 0 var(--space-7);
+    code:not(pre code) {
+      font-family: var(--font-mono); font-size: 0.875em;
+      background: var(--color-bg-sunken);
+      padding: 0.12em 0.4em;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--color-border);
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 3px;
+      border-radius: var(--radius-sm);
+    }
+
+    /* ─── Topbar ────────────────────────────────────────────────────── */
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      height: var(--header-h);
+      background: color-mix(in srgb, var(--color-bg) 82%, transparent);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--color-border);
-      margin-bottom: var(--space-8);
+      display: flex; align-items: center;
+      padding: 0 clamp(var(--space-4), 3vw, var(--space-7));
+      gap: var(--space-5);
     }
-    .hero__top {
+    .topbar__brand {
       display: flex; align-items: center; gap: var(--space-3);
-      margin-bottom: var(--space-6);
+      font-weight: 600; font-size: 0.9375rem;
+      text-decoration: none; color: var(--color-fg);
     }
-    .hero__logo { width: 32px; height: 32px; border-radius: 6px; }
-    .hero__brand { font-weight: 600; font-size: 0.9375rem; }
-    .hero__spacer { flex: 1; }
-    .theme-toggle {
-      width: 36px; height: 36px; display: grid; place-items: center;
-      background: transparent; border: 1px solid var(--color-border);
-      border-radius: var(--radius); cursor: pointer; color: var(--color-fg);
-      font-size: 15px; transition: all var(--duration-fast);
+    .topbar__logo {
+      width: 28px; height: 28px;
+      display: grid; place-items: center;
+      background: var(--color-accent); color: var(--color-accent-fg);
+      border-radius: 6px;
+      font-family: var(--font-display);
+      font-weight: 800; font-size: 0.875rem;
+      letter-spacing: -0.04em;
     }
-    .theme-toggle:hover { background: var(--color-bg-elevated); border-color: var(--color-border-strong); }
-
-    .hero__title {
-      font-family: var(--font-display); font-weight: 700;
-      font-size: var(--size-h1); line-height: 1.1; letter-spacing: -0.02em;
-      margin: 0 0 var(--space-3); max-width: 18ch;
+    .topbar__kicker {
+      font-family: var(--font-mono); font-size: var(--size-xs);
+      color: var(--color-fg-subtle); letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding-left: var(--space-3);
+      border-left: 1px solid var(--color-border);
+      margin-left: var(--space-1);
+      display: none;
     }
-    .hero__lead {
-      font-size: var(--size-lead); line-height: 1.5;
-      color: var(--color-fg-muted); margin: 0; max-width: 55ch;
-    }
-    .hero__meta {
-      display: flex; gap: var(--space-5); margin-top: var(--space-6);
-      font-size: var(--size-small); color: var(--color-fg-muted);
-    }
-    .hero__meta strong { color: var(--color-fg); font-weight: 600; }
-
-    /* ─── Filtros ─────────────────────────────────── */
-    .filters {
-      display: flex; gap: var(--space-2); flex-wrap: wrap;
-      margin-bottom: var(--space-6);
-    }
-    .filters__btn {
-      padding: var(--space-2) var(--space-4);
+    @media (min-width: 720px) { .topbar__kicker { display: inline; } }
+    .topbar__spacer { flex: 1; }
+    .topbar__search {
+      width: 220px; max-width: 30vw;
+      padding: 7px 12px;
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: 999px;
       font: inherit; font-size: var(--size-small);
-      background: transparent; color: var(--color-fg-muted);
+      color: var(--color-fg);
+      transition: border-color var(--duration-fast);
+    }
+    .topbar__search:focus { outline: none; border-color: var(--color-accent); box-shadow: 0 0 0 3px var(--color-accent-dim); }
+    .topbar__search::placeholder { color: var(--color-fg-subtle); }
+    @media (max-width: 600px) { .topbar__search { display: none; } }
+    .theme-toggle {
+      width: 36px; height: 36px;
+      display: grid; place-items: center;
+      background: var(--color-bg-elevated);
       border: 1px solid var(--color-border);
       border-radius: 999px; cursor: pointer;
+      color: var(--color-fg); font-size: 14px;
       transition: all var(--duration-fast);
     }
-    .filters__btn:hover { color: var(--color-fg); border-color: var(--color-border-strong); }
-    .filters__btn.is-active {
-      background: var(--color-fg); color: var(--color-bg);
-      border-color: var(--color-fg); font-weight: 500;
-    }
-    .filters__count { color: var(--color-fg-subtle); margin-left: var(--space-1); font-size: var(--size-xs); }
+    .theme-toggle:hover { background: var(--color-bg-sunken); border-color: var(--color-border-strong); transform: translateY(-1px); }
 
-    /* ─── Grid de cards ───────────────────────────── */
+    /* ─── Page ──────────────────────────────────────────────────────── */
+    .page {
+      max-width: var(--content-max);
+      margin: 0 auto;
+      padding: var(--space-10) clamp(var(--space-4), 3vw, var(--space-7)) var(--space-16);
+    }
+
+    /* ─── Hero ──────────────────────────────────────────────────────── */
+    .hero { margin-bottom: var(--space-10); position: relative; }
+    .hero__kicker {
+      display: inline-flex; align-items: center; gap: var(--space-2);
+      font-family: var(--font-mono); font-size: var(--size-xs);
+      color: var(--color-fg-muted); letter-spacing: 0.12em;
+      text-transform: uppercase; font-weight: 600;
+      margin-bottom: var(--space-4);
+    }
+    .hero__kicker::before {
+      content: ''; width: 7px; height: 7px; border-radius: 50%;
+      background: var(--color-accent);
+    }
+    .hero__title {
+      font-family: var(--font-display);
+      font-size: var(--size-h1);
+      font-weight: 700;
+      line-height: 1.05; letter-spacing: -0.030em;
+      margin: 0 0 var(--space-4); max-width: 22ch;
+      color: var(--color-fg);
+    }
+    .hero__title em {
+      font-style: italic; color: var(--color-accent);
+      font-family: 'Fraunces', 'Itau Display', Georgia, serif;
+    }
+    .hero__lead {
+      font-size: var(--size-lead);
+      line-height: 1.55; color: var(--color-fg-muted);
+      margin: 0; max-width: 58ch; font-weight: 400;
+    }
+    .hero__meta {
+      display: flex; flex-wrap: wrap; gap: clamp(var(--space-4), 3vw, var(--space-6));
+      margin-top: var(--space-6);
+      font-size: var(--size-small); color: var(--color-fg-muted);
+    }
+    .hero__meta span { display: inline-flex; align-items: baseline; gap: var(--space-2); }
+    .hero__meta strong {
+      color: var(--color-fg); font-weight: 700;
+      font-family: var(--font-display); font-size: 1.15em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ─── Filtros ────────────────────────────────────────────────────── */
+    .filters {
+      display: flex; flex-wrap: wrap; gap: var(--space-2);
+      margin: var(--space-7) 0 var(--space-2);
+      padding: var(--space-2) 0;
+    }
+    .filter {
+      display: inline-flex; align-items: center; gap: var(--space-2);
+      padding: 8px 14px;
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: 999px;
+      font: inherit; font-size: var(--size-small); font-weight: 500;
+      color: var(--color-fg-muted); cursor: pointer;
+      transition: all var(--duration-fast) var(--ease-out);
+    }
+    .filter::before {
+      content: ''; width: 7px; height: 7px; border-radius: 50%;
+      background: currentColor; opacity: 0.65;
+    }
+    .filter:hover { color: var(--color-fg); border-color: var(--color-border-strong); transform: translateY(-1px); }
+    .filter.is-active {
+      background: var(--color-fg); color: var(--color-bg);
+      border-color: var(--color-fg);
+    }
+    .filter.is-active::before { background: var(--color-accent); opacity: 1; }
+    .filter[data-filter="catalogo"]    { color: var(--color-accent); }
+    .filter[data-filter="pipelines"]   { color: var(--color-info); }
+    .filter[data-filter="qualidade"]   { color: var(--color-teal); }
+    .filter[data-filter="self-service"]{ color: var(--color-success); }
+    .filter[data-filter="governanca"]  { color: var(--color-plum); }
+    .filter.is-active[data-filter] { color: var(--color-bg); }
+    .filter__count {
+      font-family: var(--font-mono); font-size: 0.6875rem;
+      font-weight: 600;
+      opacity: 0.55;
+    }
+
+    .filters-meta {
+      font-family: var(--font-mono); font-size: var(--size-xs);
+      color: var(--color-fg-subtle); letter-spacing: 0.04em;
+      margin: 0 0 var(--space-5);
+    }
+    .filters-meta strong { color: var(--color-fg-muted); font-weight: 600; }
+
+    /* ─── Grid ──────────────────────────────────────────────────────── */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: var(--space-4);
       margin-bottom: var(--space-12);
     }
+    .grid > * { min-width: 0; }
+
     .card {
       display: flex; flex-direction: column;
       padding: var(--space-5);
       background: var(--color-bg-elevated);
       border: 1px solid var(--color-border);
+      border-top: 3px solid var(--card-color, var(--color-accent));
       border-radius: var(--radius-lg);
       text-decoration: none; color: inherit;
-      transition: all var(--duration) var(--ease);
       cursor: pointer;
       position: relative;
-      overflow: hidden;
+      box-shadow: var(--shadow-xs);
+      transition: transform var(--duration) var(--ease-out),
+                  border-color var(--duration-fast) var(--ease-out),
+                  box-shadow var(--duration) var(--ease-out);
     }
     .card:hover {
+      transform: translateY(-3px);
       border-color: var(--color-border-strong);
-      transform: translateY(-2px);
+      border-top-color: var(--card-color, var(--color-accent));
       box-shadow: var(--shadow-lg);
     }
     .card.is-hidden { display: none; }
-    .card__cat {
-      font-size: var(--size-xs);
-      color: var(--color-fg-subtle);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      font-weight: 500;
+
+    .card__head {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: var(--space-3);
       margin-bottom: var(--space-3);
+    }
+    .card__cat {
+      font-family: var(--font-mono); font-size: var(--size-xs);
+      color: var(--card-color, var(--color-accent));
+      letter-spacing: 0.08em; text-transform: uppercase;
+      font-weight: 600;
+    }
+    .card__num {
+      font-family: var(--font-mono); font-size: 0.6875rem;
+      color: var(--color-fg-subtle); font-weight: 500;
     }
     .card__title {
       font-family: var(--font-display);
-      font-size: 1.0625rem; font-weight: 600;
-      margin: 0 0 var(--space-2); color: var(--color-fg);
-      line-height: 1.3;
+      font-size: 1.0625rem; font-weight: 700;
+      margin: 0 0 var(--space-2);
+      color: var(--color-fg); line-height: 1.25;
+      letter-spacing: -0.012em;
     }
     .card__desc {
       font-size: var(--size-small);
@@ -196,104 +388,25 @@
       margin-top: auto;
       padding-top: var(--space-3);
       border-top: 1px solid var(--color-border);
+      font-size: var(--size-xs);
     }
     .card__tag {
-      font-size: var(--size-xs);
-      color: var(--color-fg-subtle);
       font-family: var(--font-mono);
+      color: var(--color-fg-subtle);
     }
     .card__arrow {
-      color: var(--color-accent); font-weight: 600;
-      transition: transform var(--duration) var(--ease);
+      color: var(--card-color, var(--color-accent));
+      font-weight: 700;
+      transition: transform var(--duration) var(--ease-out);
     }
     .card:hover .card__arrow { transform: translateX(4px); }
 
-    /* ─── Painéis ─────────────────────────────────── */
-    .panels { display: grid; gap: var(--space-8); }
-    .panel {
-      padding: var(--space-8);
-      background: var(--color-bg-elevated);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-xl);
-      scroll-margin-top: var(--space-6);
-    }
-    .panel__head {
-      display: flex; align-items: center; gap: var(--space-3);
-      margin-bottom: var(--space-5);
-      padding-bottom: var(--space-4);
-      border-bottom: 1px solid var(--color-border);
-    }
-    .panel__cat {
-      font-size: var(--size-xs);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--color-accent); font-weight: 600;
-    }
-    .panel__title {
-      font-family: var(--font-display);
-      font-size: var(--size-h2); font-weight: 700;
-      margin: var(--space-1) 0 0; line-height: 1.2;
-      letter-spacing: -0.015em;
-    }
-    .panel__back {
-      margin-left: auto;
-      padding: 6px 12px;
-      font: inherit; font-size: var(--size-xs);
-      background: transparent;
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-sm); cursor: pointer;
-      color: var(--color-fg-muted);
-      transition: all var(--duration-fast);
-    }
-    .panel__back:hover { color: var(--color-fg); border-color: var(--color-border-strong); }
-    .panel p { color: var(--color-fg); margin: 0 0 var(--space-3); max-width: 65ch; }
-    .panel ul { padding-left: var(--space-5); margin: 0 0 var(--space-4); }
-    .panel li { margin-bottom: var(--space-2); max-width: 65ch; }
-
-    .panel__metrics {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: var(--space-3); margin: var(--space-4) 0;
-    }
-    .metric {
-      padding: var(--space-4);
-      background: var(--color-bg);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius);
-    }
-    .metric__label {
-      font-size: var(--size-xs); color: var(--color-fg-subtle);
-      letter-spacing: 0.04em; text-transform: uppercase;
-      margin: 0 0 var(--space-1);
-    }
-    .metric__value {
-      font-family: var(--font-display);
-      font-size: 1.625rem; font-weight: 700;
-      margin: 0; letter-spacing: -0.02em;
-    }
-
-    .panel__links { display: flex; flex-direction: column; gap: var(--space-2); }
-    .panel__link {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: var(--space-3) var(--space-4);
-      background: var(--color-bg);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius);
-      color: var(--color-fg); text-decoration: none;
-      font-size: var(--size-small);
-      transition: all var(--duration-fast);
-    }
-    .panel__link:hover {
-      border-color: var(--color-accent);
-      color: var(--color-accent);
-    }
-    .panel__link__arrow { color: var(--color-fg-subtle); }
-    .panel__link:hover .panel__link__arrow { color: var(--color-accent); }
-
-    code:not(pre code) {
-      font-family: var(--font-mono); font-size: 0.875em;
-      background: var(--color-bg-sunken); padding: 0.15em 0.4em;
-      border-radius: var(--radius-sm); border: 1px solid var(--color-border);
-    }
+    /* Categoria → cor accent via custom property */
+    .card[data-category="catalogo"]     { --card-color: var(--color-accent); }
+    .card[data-category="pipelines"]    { --card-color: var(--color-info); }
+    .card[data-category="qualidade"]    { --card-color: var(--color-teal); }
+    .card[data-category="self-service"] { --card-color: var(--color-success); }
+    .card[data-category="governanca"]   { --card-color: var(--color-plum); }
 
     .empty-state {
       padding: var(--space-12) var(--space-6);
@@ -306,11 +419,248 @@
     }
     .empty-state.is-visible { display: block; }
 
-    @media (max-width: 768px) {
-      .page { padding: var(--space-4); }
-      .hero__title { font-size: 2rem; }
-      .grid { grid-template-columns: 1fr; }
-      .panel { padding: var(--space-5); }
+    /* ─── Painel ativo ──────────────────────────────────────────────── */
+    .panels { display: contents; }
+    .panel {
+      display: none;
+      margin: var(--space-8) 0 var(--space-10);
+      padding: clamp(var(--space-6), 3vw, var(--space-8));
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-left: 4px solid var(--panel-color, var(--color-accent));
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      scroll-margin-top: calc(var(--header-h) + var(--space-4));
+      animation: panelIn 350ms var(--ease-out);
+    }
+    .panel.is-open { display: block; }
+    @keyframes panelIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: none; }
+    }
+    .panel[data-category="catalogo"]     { --panel-color: var(--color-accent); }
+    .panel[data-category="pipelines"]    { --panel-color: var(--color-info); }
+    .panel[data-category="qualidade"]    { --panel-color: var(--color-teal); }
+    .panel[data-category="self-service"] { --panel-color: var(--color-success); }
+    .panel[data-category="governanca"]   { --panel-color: var(--color-plum); }
+
+    .panel__head {
+      display: flex; align-items: flex-start; gap: var(--space-4);
+      padding-bottom: var(--space-5);
+      margin-bottom: var(--space-6);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .panel__head > div:first-child { flex: 1; min-width: 0; }
+    .panel__cat {
+      font-family: var(--font-mono); font-size: var(--size-xs);
+      color: var(--panel-color, var(--color-accent));
+      letter-spacing: 0.08em; text-transform: uppercase;
+      font-weight: 700; margin: 0 0 var(--space-2);
+    }
+    .panel__title {
+      font-family: var(--font-display);
+      font-size: var(--size-h2); font-weight: 700;
+      margin: 0; line-height: 1.15;
+      letter-spacing: -0.020em;
+    }
+    .panel__close {
+      flex-shrink: 0;
+      width: 34px; height: 34px;
+      display: grid; place-items: center;
+      background: transparent; border: 1px solid var(--color-border);
+      border-radius: 999px; cursor: pointer;
+      font: inherit; font-size: 0.875rem;
+      color: var(--color-fg-muted);
+      transition: all var(--duration-fast);
+    }
+    .panel__close:hover {
+      color: var(--color-fg); border-color: var(--color-border-strong);
+      background: var(--color-bg-sunken);
+    }
+    .panel__lead {
+      font-size: var(--size-lead); line-height: 1.55;
+      color: var(--color-fg-muted); margin: 0 0 var(--space-6);
+      max-width: 60ch;
+    }
+    .panel p {
+      margin: 0 0 var(--space-4); max-width: 65ch;
+      color: var(--color-fg);
+    }
+    .panel ul, .panel ol { padding-left: var(--space-5); margin: 0 0 var(--space-5); }
+    .panel li { margin-bottom: var(--space-2); max-width: 65ch; }
+    .panel li::marker { color: var(--color-fg-subtle); }
+
+    .panel__body {
+      display: grid; gap: var(--space-7);
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 880px) {
+      .panel__body.has-aside { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
+    }
+    .panel__body > * { min-width: 0; }
+
+    .panel__metrics {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: var(--space-3); margin: 0 0 var(--space-6);
+    }
+    .metric {
+      padding: var(--space-4) var(--space-4);
+      background: var(--color-bg-sunken);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      border-top: 2px solid var(--panel-color, var(--color-accent));
+    }
+    .metric__label {
+      font-family: var(--font-mono); font-size: var(--size-xs);
+      color: var(--color-fg-subtle);
+      letter-spacing: 0.06em; text-transform: uppercase;
+      margin: 0 0 var(--space-2); font-weight: 600;
+    }
+    .metric__value {
+      font-family: var(--font-display);
+      font-size: 1.6rem; font-weight: 800;
+      margin: 0; letter-spacing: -0.030em;
+      line-height: 1; color: var(--color-fg);
+    }
+    .metric__value span { color: var(--panel-color, var(--color-accent)); }
+    .metric__trend {
+      font-family: var(--font-mono); font-size: 0.6875rem;
+      color: var(--color-fg-subtle); margin: var(--space-2) 0 0;
+    }
+
+    /* ─── Tabela ────────────────────────────────────────────────────── */
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      background: var(--color-bg-sunken);
+    }
+    .data-table {
+      width: 100%; border-collapse: collapse;
+      font-size: var(--size-small);
+    }
+    .data-table th {
+      background: var(--color-bg-sunken);
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 2px solid var(--color-border-strong);
+      color: var(--color-fg-muted);
+      white-space: nowrap;
+    }
+    .data-table td {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--color-border);
+      vertical-align: middle;
+      color: var(--color-fg);
+      line-height: 1.4;
+      background: var(--color-bg-elevated);
+    }
+    .data-table tbody tr:last-child td { border-bottom: none; }
+    .data-table td.num, .data-table th.num {
+      text-align: right;
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+    }
+    .data-table td:first-child { font-weight: 600; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-family: var(--font-mono);
+      font-size: 0.6875rem; font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .badge::before {
+      content: ''; width: 5px; height: 5px;
+      border-radius: 50%; background: currentColor;
+      flex-shrink: 0;
+    }
+    .badge--success { background: var(--color-success-dim); color: var(--color-success); }
+    .badge--info    { background: var(--color-info-dim);    color: var(--color-info); }
+    .badge--warn    { background: var(--color-warn-dim);    color: var(--itau-warm-black); }
+    [data-theme="dark"] .badge--warn { color: var(--color-warn); }
+    .badge--danger  { background: var(--color-danger-dim);  color: var(--color-danger); }
+    .badge--accent  { background: var(--color-accent-dim);  color: var(--color-accent); }
+
+    /* ─── Chart ─────────────────────────────────────────────────────── */
+    .chart-wrap {
+      padding: var(--space-4);
+      background: var(--color-bg-sunken);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      position: relative;
+    }
+    .chart-wrap__title {
+      font-family: var(--font-mono); font-size: var(--size-xs);
+      color: var(--color-fg-muted); letter-spacing: 0.08em;
+      text-transform: uppercase; font-weight: 600;
+      margin: 0 0 var(--space-3);
+    }
+    .chart-wrap canvas { max-width: 100%; height: auto !important; }
+
+    /* ─── Lista de links ────────────────────────────────────────────── */
+    .panel__links { display: flex; flex-direction: column; gap: var(--space-2); margin-top: var(--space-2); }
+    .panel__link {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 14px;
+      background: var(--color-bg-sunken);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      color: var(--color-fg); text-decoration: none;
+      font-size: var(--size-small);
+      transition: all var(--duration-fast);
+    }
+    .panel__link:hover {
+      border-color: var(--panel-color, var(--color-accent));
+      color: var(--panel-color, var(--color-accent));
+      transform: translateX(2px);
+      text-decoration: none;
+    }
+    .panel__link span:last-child { color: var(--color-fg-subtle); }
+    .panel__link:hover span:last-child { color: inherit; }
+
+    /* ─── Empty (sem painel aberto) ─────────────────────────────────── */
+    .panel-empty {
+      padding: var(--space-7); margin: var(--space-8) 0 0;
+      text-align: center;
+      border: 1px dashed var(--color-border);
+      border-radius: var(--radius-lg);
+      color: var(--color-fg-subtle);
+      font-size: var(--size-small);
+      font-family: var(--font-mono);
+      letter-spacing: 0.04em;
+      background: transparent;
+    }
+
+    /* ─── Footer ────────────────────────────────────────────────────── */
+    .footer {
+      margin-top: var(--space-16);
+      padding: var(--space-6) 0;
+      border-top: 1px solid var(--color-border);
+      font-size: var(--size-xs);
+      color: var(--color-fg-subtle);
+      display: flex; flex-wrap: wrap; gap: var(--space-4);
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      letter-spacing: 0.04em;
+    }
+
+    /* ─── Print ─────────────────────────────────────────────────────── */
+    @media print {
+      .topbar, .filters, .theme-toggle, .card__arrow, .panel__close { display: none; }
+      .panel { display: block !important; page-break-inside: avoid; margin-bottom: var(--space-6); }
+      .grid { display: block; }
+      .card { break-inside: avoid; margin-bottom: var(--space-4); }
+      body { background: white; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -319,160 +669,270 @@
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
       }
+      .panel { animation: none; }
+    }
+
+    @media (max-width: 720px) {
+      .page { padding: var(--space-6) var(--space-4) var(--space-12); }
+      .panel__head { flex-direction: column; gap: var(--space-3); }
     }
   </style>
 </head>
 <body>
 
-  <div class="page">
+  <header class="topbar">
+    <a href="#" class="topbar__brand" aria-label="Plataforma de Dados Itaú">
+      <span class="topbar__logo" aria-hidden="true">i</span>
+      Plataforma de Dados
+      <span class="topbar__kicker">Hub interno · v2.4</span>
+    </a>
+    <span class="topbar__spacer"></span>
+    <input class="topbar__search" type="search" placeholder="Buscar recurso…" aria-label="Buscar recurso" data-search>
+    <button class="theme-toggle" data-theme-toggle aria-label="Alternar tema claro/escuro">
+      <span data-theme-icon aria-hidden="true">☾</span>
+    </button>
+  </header>
 
-    <header class="hero">
-      <div class="hero__top">
-        <img src="../logos/itau.png" alt="" class="hero__logo">
-        <span class="hero__brand">Plataforma de Dados</span>
-        <div class="hero__spacer"></div>
-        <button class="theme-toggle" data-theme-toggle aria-label="Alternar tema">
-          <span data-theme-icon>☾</span>
-        </button>
-      </div>
-      <h1 class="hero__title">Central de Recursos</h1>
+  <main class="page">
+
+    <section class="hero">
+      <p class="hero__kicker">Central de recursos · DataOS</p>
+      <h1 class="hero__title">
+        Tudo que o time precisa <em>num lugar só</em>.
+      </h1>
       <p class="hero__lead">
-        Tudo que o time precisa pra produzir e consumir dados na plataforma —
-        do primeiro tópico ao incidente de madrugada.
+        Catálogo, pipelines, qualidade, self-service e governança da Plataforma de Dados Itaú.
+        Cards apontam para o ponto exato — guia, console, runbook ou política — sem precisar
+        adivinhar por onde começar.
       </p>
       <div class="hero__meta">
-        <span><strong>12</strong> recursos</span>
-        <span><strong>4</strong> categorias</span>
-        <span>Atualizado em <strong>15 de outubro de 2025</strong></span>
+        <span><strong>15</strong> recursos</span>
+        <span><strong>5</strong> categorias</span>
+        <span><strong>2.412</strong> tabelas catalogadas</span>
+        <span>Atualizado em <strong>17 mai 2026</strong></span>
       </div>
-    </header>
+    </section>
 
-    <nav class="filters" data-filters>
-      <button class="filters__btn is-active" data-filter="all">Tudo <span class="filters__count">12</span></button>
-      <button class="filters__btn" data-filter="onboarding">Onboarding <span class="filters__count">3</span></button>
-      <button class="filters__btn" data-filter="ferramentas">Ferramentas <span class="filters__count">4</span></button>
-      <button class="filters__btn" data-filter="praticas">Práticas</button>
-      <button class="filters__btn" data-filter="suporte">Suporte</button>
+    <nav class="filters" role="tablist" aria-label="Filtros de categoria" data-filters>
+      <button class="filter is-active" type="button" data-filter="all" role="tab" aria-selected="true">
+        Tudo <span class="filter__count">15</span>
+      </button>
+      <button class="filter" type="button" data-filter="catalogo" role="tab" aria-selected="false">
+        Catálogo <span class="filter__count">3</span>
+      </button>
+      <button class="filter" type="button" data-filter="pipelines" role="tab" aria-selected="false">
+        Pipelines <span class="filter__count">3</span>
+      </button>
+      <button class="filter" type="button" data-filter="qualidade" role="tab" aria-selected="false">
+        Qualidade <span class="filter__count">3</span>
+      </button>
+      <button class="filter" type="button" data-filter="self-service" role="tab" aria-selected="false">
+        Self-service <span class="filter__count">3</span>
+      </button>
+      <button class="filter" type="button" data-filter="governanca" role="tab" aria-selected="false">
+        Governança <span class="filter__count">3</span>
+      </button>
     </nav>
+    <p class="filters-meta"><strong id="visible-count">15</strong> de 15 recursos visíveis · click num card abre o painel</p>
 
-    <section class="grid" id="grid">
+    <section class="grid" id="grid" aria-label="Recursos da plataforma">
 
-      <a class="card" data-category="onboarding" data-panel="painel-primeiro-passo">
-        <div class="card__cat">Onboarding</div>
-        <h3 class="card__title">Seu primeiro tópico em 15 minutos</h3>
-        <p class="card__desc">Do <code>npm install</code> ao primeiro evento publicado em produção. Caminho recomendado para times novos.</p>
+      <!-- ─── CATÁLOGO ─────────────────────────────────────── -->
+      <a class="card" href="#painel-catalogo-busca" data-category="catalogo" data-panel="painel-catalogo-busca">
+        <div class="card__head">
+          <span class="card__cat">Catálogo</span>
+          <span class="card__num">01 / 15</span>
+        </div>
+        <h3 class="card__title">Busca no catálogo</h3>
+        <p class="card__desc">2.412 tabelas com schema, owner, linhagem e estatísticas de uso. Filtra por domínio, classificação e sensibilidade.</p>
         <div class="card__foot">
-          <span class="card__tag">/onboarding/quickstart</span>
+          <span class="card__tag">catalog.dataos.itau</span>
           <span class="card__arrow">→</span>
         </div>
       </a>
 
-      <a class="card" data-category="onboarding" data-panel="painel-setup">
-        <div class="card__cat">Onboarding</div>
-        <h3 class="card__title">Configuração do ambiente local</h3>
-        <p class="card__desc">SSO, proxy corporativo, certificados. O setup que todo dev precisa fazer uma única vez.</p>
+      <a class="card" href="#painel-catalogo-linhagem" data-category="catalogo" data-panel="painel-catalogo-linhagem">
+        <div class="card__head">
+          <span class="card__cat">Catálogo</span>
+          <span class="card__num">02 / 15</span>
+        </div>
+        <h3 class="card__title">Linhagem ponta-a-ponta</h3>
+        <p class="card__desc">Cadeia completa de origem-transformação-consumo: do CDC do Oracle ao dashboard de risco no Power BI.</p>
         <div class="card__foot">
-          <span class="card__tag">/onboarding/setup</span>
+          <span class="card__tag">/lineage</span>
           <span class="card__arrow">→</span>
         </div>
       </a>
 
-      <a class="card" data-category="onboarding" data-panel="painel-conceitos">
-        <div class="card__cat">Onboarding</div>
-        <h3 class="card__title">Conceitos fundamentais</h3>
-        <p class="card__desc">Tópico, schema, materialização, replay. O vocabulário compartilhado entre todos os times.</p>
+      <a class="card" href="#painel-catalogo-glossario" data-category="catalogo" data-panel="painel-catalogo-glossario">
+        <div class="card__head">
+          <span class="card__cat">Catálogo</span>
+          <span class="card__num">03 / 15</span>
+        </div>
+        <h3 class="card__title">Glossário de negócio</h3>
+        <p class="card__desc">487 termos curados por domínio (Crédito, Investimentos, PIX, Cartões). Vincula termo → tabela → métrica.</p>
         <div class="card__foot">
-          <span class="card__tag">/onboarding/conceitos</span>
+          <span class="card__tag">/glossary</span>
           <span class="card__arrow">→</span>
         </div>
       </a>
 
-      <a class="card" data-category="ferramentas" data-panel="painel-sdk">
-        <div class="card__cat">Ferramentas</div>
-        <h3 class="card__title">SDK — TypeScript, Python, Java</h3>
-        <p class="card__desc">Três linguagens de primeira classe. Mesma interface, idioma do seu stack. Versão atual: 2.4.</p>
+      <!-- ─── PIPELINES ────────────────────────────────────── -->
+      <a class="card" href="#painel-pipelines-orchestrator" data-category="pipelines" data-panel="painel-pipelines-orchestrator">
+        <div class="card__head">
+          <span class="card__cat">Pipelines</span>
+          <span class="card__num">04 / 15</span>
+        </div>
+        <h3 class="card__title">Orchestrator (Airflow)</h3>
+        <p class="card__desc">1.847 DAGs em produção. SLA tracking, retry policy padronizada e alertas no Squad Channel automático.</p>
         <div class="card__foot">
-          <span class="card__tag">@itau/dados-sdk</span>
+          <span class="card__tag">airflow.dataos</span>
           <span class="card__arrow">→</span>
         </div>
       </a>
 
-      <a class="card" data-category="ferramentas" data-panel="painel-cli">
-        <div class="card__cat">Ferramentas</div>
-        <h3 class="card__title">CLI <code>dados</code></h3>
-        <p class="card__desc">Interface de linha de comando para criar tópicos, gerenciar schemas, fazer replay e inspecionar streams.</p>
+      <a class="card" href="#painel-pipelines-streaming" data-category="pipelines" data-panel="painel-pipelines-streaming">
+        <div class="card__head">
+          <span class="card__cat">Pipelines</span>
+          <span class="card__num">05 / 15</span>
+        </div>
+        <h3 class="card__title">Streaming (Kafka + Flink)</h3>
+        <p class="card__desc">340 tópicos, schema registry compartilhado, replay de até 14 dias. Throughput agregado de 1,2M msg/s.</p>
         <div class="card__foot">
-          <span class="card__tag">dados --help</span>
+          <span class="card__tag">/streaming</span>
           <span class="card__arrow">→</span>
         </div>
       </a>
 
-      <a class="card" data-category="ferramentas" data-panel="painel-portal">
-        <div class="card__cat">Ferramentas</div>
-        <h3 class="card__title">Portal web</h3>
-        <p class="card__desc">Interface gráfica para descoberta de tópicos, controle de acesso e visualização de métricas em tempo real.</p>
+      <a class="card" href="#painel-pipelines-templates" data-category="pipelines" data-panel="painel-pipelines-templates">
+        <div class="card__head">
+          <span class="card__cat">Pipelines</span>
+          <span class="card__num">06 / 15</span>
+        </div>
+        <h3 class="card__title">Templates dbt</h3>
+        <p class="card__desc">Esqueletos prontos para staging, marts e snapshots. Garantem nomenclatura, testes mínimos e tagueamento de PII.</p>
         <div class="card__foot">
-          <span class="card__tag">dados.cloud.itau</span>
+          <span class="card__tag">dbt-templates@2.1</span>
           <span class="card__arrow">→</span>
         </div>
       </a>
 
-      <a class="card" data-category="ferramentas" data-panel="painel-conectores">
-        <div class="card__cat">Ferramentas</div>
-        <h3 class="card__title">Conectores</h3>
-        <p class="card__desc">Conectores oficiais para data warehouse, CDC de bancos legados, S3 e sistemas analíticos terceiros.</p>
+      <!-- ─── QUALIDADE ────────────────────────────────────── -->
+      <a class="card" href="#painel-qualidade-rules" data-category="qualidade" data-panel="painel-qualidade-rules">
+        <div class="card__head">
+          <span class="card__cat">Qualidade</span>
+          <span class="card__num">07 / 15</span>
+        </div>
+        <h3 class="card__title">Regras de qualidade</h3>
+        <p class="card__desc">Catálogo de 38 regras reutilizáveis: not-null, range, referential integrity, drift, freshness. Aplicáveis via YAML.</p>
         <div class="card__foot">
-          <span class="card__tag">8 conectores</span>
+          <span class="card__tag">/quality/rules</span>
           <span class="card__arrow">→</span>
         </div>
       </a>
 
-      <a class="card" data-category="praticas" data-panel="painel-schemas">
-        <div class="card__cat">Práticas</div>
-        <h3 class="card__title">Design de schemas</h3>
-        <p class="card__desc">Como nomear campos, decidir entre opcional e obrigatório, e evoluir schemas sem quebrar consumidores.</p>
+      <a class="card" href="#painel-qualidade-scorecards" data-category="qualidade" data-panel="painel-qualidade-scorecards">
+        <div class="card__head">
+          <span class="card__cat">Qualidade</span>
+          <span class="card__num">08 / 15</span>
+        </div>
+        <h3 class="card__title">Scorecards por domínio</h3>
+        <p class="card__desc">Score consolidado por tabela e domínio. Tendência mensal, gaps em destaque, plano de ação priorizado.</p>
         <div class="card__foot">
-          <span class="card__tag">/praticas/schemas</span>
+          <span class="card__tag">/quality/scorecards</span>
           <span class="card__arrow">→</span>
         </div>
       </a>
 
-      <a class="card" data-category="praticas" data-panel="painel-versionamento">
-        <div class="card__cat">Práticas</div>
-        <h3 class="card__title">Versionamento e compatibilidade</h3>
-        <p class="card__desc">Quando subir minor vs major. O que pode mudar em backward-compatible. Como conviver com várias versões.</p>
+      <a class="card" href="#painel-qualidade-incidentes" data-category="qualidade" data-panel="painel-qualidade-incidentes">
+        <div class="card__head">
+          <span class="card__cat">Qualidade</span>
+          <span class="card__num">09 / 15</span>
+        </div>
+        <h3 class="card__title">Gestão de incidentes</h3>
+        <p class="card__desc">Workflow padrão: detecção → triagem → owner → RCA → fix. Integrado com Jira e Slack do time afetado.</p>
         <div class="card__foot">
-          <span class="card__tag">/praticas/versoes</span>
+          <span class="card__tag">/quality/incidents</span>
           <span class="card__arrow">→</span>
         </div>
       </a>
 
-      <a class="card" data-category="praticas" data-panel="painel-testes">
-        <div class="card__cat">Práticas</div>
-        <h3 class="card__title">Testes de contrato</h3>
-        <p class="card__desc">Garantir que produtores e consumidores continuem compatíveis ao longo do tempo. Em CI, sem precisar de ambiente.</p>
+      <!-- ─── SELF-SERVICE ─────────────────────────────────── -->
+      <a class="card" href="#painel-self-notebook" data-category="self-service" data-panel="painel-self-notebook">
+        <div class="card__head">
+          <span class="card__cat">Self-service</span>
+          <span class="card__num">10 / 15</span>
+        </div>
+        <h3 class="card__title">Notebooks gerenciados</h3>
+        <p class="card__desc">JupyterLab pré-configurado com acesso ao lakehouse, libs auditadas, secret manager e quota de compute por área.</p>
         <div class="card__foot">
-          <span class="card__tag">/praticas/testes</span>
+          <span class="card__tag">notebooks.dataos</span>
           <span class="card__arrow">→</span>
         </div>
       </a>
 
-      <a class="card" data-category="suporte" data-panel="painel-oncall">
-        <div class="card__cat">Suporte</div>
-        <h3 class="card__title">Como acionar o on-call</h3>
-        <p class="card__desc">Quando acionar, o que incluir no chamado, e o que esperar como SLA. Para incidentes em produção.</p>
+      <a class="card" href="#painel-self-sql" data-category="self-service" data-panel="painel-self-sql">
+        <div class="card__head">
+          <span class="card__cat">Self-service</span>
+          <span class="card__num">11 / 15</span>
+        </div>
+        <h3 class="card__title">SQL Workbench</h3>
+        <p class="card__desc">Editor SQL com autocomplete sobre o catálogo, histórico compartilhado por squad e exportação direta para Power BI.</p>
         <div class="card__foot">
-          <span class="card__tag">#plat-dados-oncall</span>
+          <span class="card__tag">sql.dataos</span>
           <span class="card__arrow">→</span>
         </div>
       </a>
 
-      <a class="card" data-category="suporte" data-panel="painel-runbook">
-        <div class="card__cat">Suporte</div>
-        <h3 class="card__title">Runbooks de incidentes comuns</h3>
-        <p class="card__desc">Diagnóstico passo-a-passo de lag de consumo, schema rejection, throughput throttled e quedas regionais.</p>
+      <a class="card" href="#painel-self-marketplace" data-category="self-service" data-panel="painel-self-marketplace">
+        <div class="card__head">
+          <span class="card__cat">Self-service</span>
+          <span class="card__num">12 / 15</span>
+        </div>
+        <h3 class="card__title">Marketplace de Data Products</h3>
+        <p class="card__desc">126 produtos publicados pelos domínios. Solicitar acesso, conferir contrato de SLO e ver consumidores atuais.</p>
         <div class="card__foot">
-          <span class="card__tag">/runbooks</span>
+          <span class="card__tag">marketplace.dataos</span>
+          <span class="card__arrow">→</span>
+        </div>
+      </a>
+
+      <!-- ─── GOVERNANÇA ───────────────────────────────────── -->
+      <a class="card" href="#painel-gov-classificacao" data-category="governanca" data-panel="painel-gov-classificacao">
+        <div class="card__head">
+          <span class="card__cat">Governança</span>
+          <span class="card__num">13 / 15</span>
+        </div>
+        <h3 class="card__title">Classificação de dados</h3>
+        <p class="card__desc">Política oficial de 4 níveis (Público, Interno, Restrito, Sensível). Auto-detecção de PII via pattern matching.</p>
+        <div class="card__foot">
+          <span class="card__tag">/policy/classification</span>
+          <span class="card__arrow">→</span>
+        </div>
+      </a>
+
+      <a class="card" href="#painel-gov-acesso" data-category="governanca" data-panel="painel-gov-acesso">
+        <div class="card__head">
+          <span class="card__cat">Governança</span>
+          <span class="card__num">14 / 15</span>
+        </div>
+        <h3 class="card__title">Controle de acesso</h3>
+        <p class="card__desc">Solicitação via portal, aprovação pelo data owner, expiração obrigatória. Trilha de auditoria por 5 anos.</p>
+        <div class="card__foot">
+          <span class="card__tag">access.dataos</span>
+          <span class="card__arrow">→</span>
+        </div>
+      </a>
+
+      <a class="card" href="#painel-gov-lgpd" data-category="governanca" data-panel="painel-gov-lgpd">
+        <div class="card__head">
+          <span class="card__cat">Governança</span>
+          <span class="card__num">15 / 15</span>
+        </div>
+        <h3 class="card__title">LGPD &amp; retenção</h3>
+        <p class="card__desc">Mapa de tratamento, base legal por tabela e enforcement automatizado de TTL. Right-to-be-forgotten em até 30 dias.</p>
+        <div class="card__foot">
+          <span class="card__tag">/policy/lgpd</span>
           <span class="card__arrow">→</span>
         </div>
       </a>
@@ -481,233 +941,530 @@
 
     <div class="empty-state" id="empty-state">Nenhum recurso encontrado para essa categoria.</div>
 
-    <section class="panels">
+    <p class="panel-empty" id="panel-empty">Clique num card para abrir o painel com detalhes ↑</p>
 
-      <article class="panel" id="painel-primeiro-passo">
+    <section class="panels" aria-live="polite">
+
+      <!-- ─── CATÁLOGO panels ──────────────────────────────── -->
+      <article class="panel" id="painel-catalogo-busca" data-category="catalogo">
         <header class="panel__head">
           <div>
-            <p class="panel__cat">Onboarding</p>
-            <h2 class="panel__title">Seu primeiro tópico em 15 minutos</h2>
+            <p class="panel__cat">Catálogo · 01</p>
+            <h2 class="panel__title">Busca no catálogo</h2>
           </div>
-          <button class="panel__back" data-back>↑ Voltar ao topo</button>
+          <button class="panel__close" type="button" data-close aria-label="Fechar painel">✕</button>
         </header>
-        <p>O caminho recomendado para qualquer time novo. Esses 5 passos colocam você operando em produção em uma sessão.</p>
-        <ol>
-          <li>Instalar o SDK no projeto: <code>npm install @itau/dados-sdk</code></li>
-          <li>Autenticar via SSO corporativo: <code>dados auth login</code></li>
-          <li>Listar tópicos disponíveis na sua área para confirmar o setup</li>
-          <li>Definir um schema YAML para o seu primeiro tópico</li>
-          <li>Registrar e publicar o primeiro evento</li>
-        </ol>
-        <div class="panel__metrics">
-          <div class="metric"><p class="metric__label">Tempo médio</p><p class="metric__value">15 min</p></div>
-          <div class="metric"><p class="metric__label">Times completaram</p><p class="metric__value">47</p></div>
-          <div class="metric"><p class="metric__label">Taxa de sucesso</p><p class="metric__value">96%</p></div>
+        <p class="panel__lead">
+          O ponto de partida para qualquer análise: encontre a tabela certa em segundos,
+          com schema, owner, classificação e consumo já visíveis na primeira tela.
+        </p>
+        <div class="panel__body has-aside">
+          <div>
+            <div class="panel__metrics">
+              <div class="metric">
+                <p class="metric__label">Tabelas</p>
+                <p class="metric__value"><span>2.412</span></p>
+                <p class="metric__trend">+187 nos últimos 90 dias</p>
+              </div>
+              <div class="metric">
+                <p class="metric__label">Cobertura de owner</p>
+                <p class="metric__value"><span>98%</span></p>
+                <p class="metric__trend">meta 95% — superada</p>
+              </div>
+              <div class="metric">
+                <p class="metric__label">Buscas/dia</p>
+                <p class="metric__value"><span>4,3k</span></p>
+                <p class="metric__trend">+22% em 12 meses</p>
+              </div>
+            </div>
+            <p>O catálogo é alimentado por crawler automático sobre o lakehouse (Iceberg + Delta) e por contribuição direta dos data owners. Cada entrada traz:</p>
+            <ul>
+              <li>Schema completo com tipos, descrições e exemplos de valores</li>
+              <li>Owner técnico + owner de negócio (sempre dois pares)</li>
+              <li>Classificação de sensibilidade e base legal LGPD</li>
+              <li>Estatísticas de consumo: leituras/dia, top consumidores, frequência de atualização</li>
+              <li>Linhagem clicável até a origem e até os consumidores</li>
+            </ul>
+            <div class="panel__links">
+              <a href="#" class="panel__link"><span>Abrir o catálogo (catalog.dataos.itau)</span><span>↗</span></a>
+              <a href="#" class="panel__link"><span>Como cadastrar uma tabela nova</span><span>→</span></a>
+              <a href="#" class="panel__link"><span>API REST do catálogo (OpenAPI 3.1)</span><span>→</span></a>
+            </div>
+          </div>
+          <aside>
+            <div class="chart-wrap">
+              <p class="chart-wrap__title">Tabelas catalogadas — últimos 12 meses</p>
+              <canvas id="chart-catalog-growth" aria-label="Evolução de tabelas catalogadas" height="220"></canvas>
+            </div>
+          </aside>
         </div>
       </article>
 
-      <article class="panel" id="painel-setup">
+      <article class="panel" id="painel-catalogo-linhagem" data-category="catalogo">
         <header class="panel__head">
           <div>
-            <p class="panel__cat">Onboarding</p>
-            <h2 class="panel__title">Configuração do ambiente local</h2>
+            <p class="panel__cat">Catálogo · 02</p>
+            <h2 class="panel__title">Linhagem ponta-a-ponta</h2>
           </div>
-          <button class="panel__back" data-back>↑ Voltar ao topo</button>
+          <button class="panel__close" type="button" data-close aria-label="Fechar painel">✕</button>
         </header>
-        <p>Setup necessário em qualquer máquina que vai produzir ou consumir dados. Faz uma vez, vale para sempre.</p>
-        <div class="panel__links">
-          <a href="#" class="panel__link">Configurar SSO via Azure AD <span class="panel__link__arrow">→</span></a>
-          <a href="#" class="panel__link">Proxy corporativo (proxynew.itau:8443) <span class="panel__link__arrow">→</span></a>
-          <a href="#" class="panel__link">Certificados internos (chain.itau.crt) <span class="panel__link__arrow">→</span></a>
-          <a href="#" class="panel__link">Configuração do CLI (~/.dados/config.yaml) <span class="panel__link__arrow">→</span></a>
+        <p class="panel__lead">
+          Veja exatamente de onde vem cada coluna e quem consome cada tabela. Indispensável
+          antes de mudar qualquer schema em produção.
+        </p>
+        <div class="panel__body">
+          <div>
+            <p>A linhagem é capturada em 3 camadas que se complementam:</p>
+            <ul>
+              <li><strong>Sistema origem → bronze:</strong> via CDC do Oracle/Postgres e Kafka Connect</li>
+              <li><strong>Bronze → silver/gold:</strong> via parsing automático dos modelos dbt e jobs Spark</li>
+              <li><strong>Gold → consumo:</strong> via integração com Power BI, Tableau e notebooks gerenciados</li>
+            </ul>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr><th>Camada</th><th class="num">Datasets</th><th class="num">Edges</th><th>Latência</th><th>Cobertura</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Origem → Bronze</td><td class="num">312</td><td class="num">312</td><td>real-time</td><td><span class="badge badge--success">100%</span></td></tr>
+                  <tr><td>Bronze → Silver</td><td class="num">878</td><td class="num">1.244</td><td>hora</td><td><span class="badge badge--success">98%</span></td></tr>
+                  <tr><td>Silver → Gold</td><td class="num">1.018</td><td class="num">2.106</td><td>hora</td><td><span class="badge badge--success">96%</span></td></tr>
+                  <tr><td>Gold → Consumo</td><td class="num">204</td><td class="num">3.487</td><td>daily snapshot</td><td><span class="badge badge--warn">81%</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="panel__links">
+              <a href="#" class="panel__link"><span>Visualizador interativo de linhagem</span><span>↗</span></a>
+              <a href="#" class="panel__link"><span>Como instrumentar um job custom</span><span>→</span></a>
+            </div>
+          </div>
         </div>
       </article>
 
-      <article class="panel" id="painel-conceitos">
+      <article class="panel" id="painel-catalogo-glossario" data-category="catalogo">
         <header class="panel__head">
           <div>
-            <p class="panel__cat">Onboarding</p>
-            <h2 class="panel__title">Conceitos fundamentais</h2>
+            <p class="panel__cat">Catálogo · 03</p>
+            <h2 class="panel__title">Glossário de negócio</h2>
           </div>
-          <button class="panel__back" data-back>↑ Voltar ao topo</button>
+          <button class="panel__close" type="button" data-close aria-label="Fechar painel">✕</button>
         </header>
-        <p>Vocabulário compartilhado por todos os times que usam a plataforma. Vale a leitura antes de qualquer integração.</p>
-        <ul>
-          <li><strong>Tópico:</strong> stream nomeado de eventos com schema associado.</li>
-          <li><strong>Schema:</strong> contrato versionado em Avro que define a estrutura de eventos.</li>
-          <li><strong>Materialização:</strong> visão derivada (tabela, índice, agregação) calculada a partir de tópicos.</li>
-          <li><strong>Replay:</strong> reprocessamento de eventos passados dentro da janela de retenção.</li>
-          <li><strong>Conector:</strong> ponte entre a plataforma e sistemas externos (warehouse, S3, DBs).</li>
-        </ul>
-      </article>
-
-      <article class="panel" id="painel-sdk">
-        <header class="panel__head">
+        <p class="panel__lead">
+          Vocabulário compartilhado entre negócio e dados. Mesma palavra, mesmo significado,
+          do briefing à query SQL.
+        </p>
+        <div class="panel__body">
           <div>
-            <p class="panel__cat">Ferramentas</p>
-            <h2 class="panel__title">SDK — TypeScript, Python, Java</h2>
+            <div class="panel__metrics">
+              <div class="metric"><p class="metric__label">Termos curados</p><p class="metric__value"><span>487</span></p></div>
+              <div class="metric"><p class="metric__label">Domínios</p><p class="metric__value"><span>11</span></p></div>
+              <div class="metric"><p class="metric__label">Vínculos a tabelas</p><p class="metric__value"><span>1.836</span></p></div>
+            </div>
+            <p>Cada termo do glossário tem definição oficial aprovada pelo data steward do domínio, alternativas comuns (sinônimos a evitar), regras de cálculo quando aplicável e links para as tabelas/colunas que materializam o conceito.</p>
+            <ul>
+              <li><strong>Crédito:</strong> 89 termos — incluindo PD, LGD, EAD, score interno, vintage</li>
+              <li><strong>Investimentos:</strong> 76 termos — AuM, NPS, suitability, perfil, custódia</li>
+              <li><strong>PIX &amp; Pagamentos:</strong> 54 termos — TPV, MED, chave, conciliação</li>
+              <li><strong>Cartões:</strong> 62 termos — limite, fatura, MCC, chargeback, fraude</li>
+              <li>Outros 7 domínios cobertos parcialmente — meta 100% até Q4/2026</li>
+            </ul>
           </div>
-          <button class="panel__back" data-back>↑ Voltar ao topo</button>
-        </header>
-        <p>Três linguagens de primeira classe. Mesma interface, escolha a que combina com o seu stack. Outras linguagens via gateway HTTP.</p>
-        <div class="panel__metrics">
-          <div class="metric"><p class="metric__label">Versão atual</p><p class="metric__value">2.4.1</p></div>
-          <div class="metric"><p class="metric__label">Latência p95</p><p class="metric__value">8ms</p></div>
-          <div class="metric"><p class="metric__label">Cobertura de testes</p><p class="metric__value">94%</p></div>
-        </div>
-        <div class="panel__links">
-          <a href="#" class="panel__link">Guia TypeScript <span class="panel__link__arrow">→</span></a>
-          <a href="#" class="panel__link">Guia Python <span class="panel__link__arrow">→</span></a>
-          <a href="#" class="panel__link">Guia Java <span class="panel__link__arrow">→</span></a>
-          <a href="#" class="panel__link">Changelog <span class="panel__link__arrow">→</span></a>
         </div>
       </article>
 
-      <article class="panel" id="painel-cli">
+      <!-- ─── PIPELINES panels ─────────────────────────────── -->
+      <article class="panel" id="painel-pipelines-orchestrator" data-category="pipelines">
         <header class="panel__head">
           <div>
-            <p class="panel__cat">Ferramentas</p>
-            <h2 class="panel__title">CLI <code style="font-size: 0.8em;">dados</code></h2>
+            <p class="panel__cat">Pipelines · 04</p>
+            <h2 class="panel__title">Orchestrator (Airflow)</h2>
           </div>
-          <button class="panel__back" data-back>↑ Voltar ao topo</button>
+          <button class="panel__close" type="button" data-close aria-label="Fechar painel">✕</button>
         </header>
-        <p>Interface de linha de comando para todas as operações da plataforma. Útil para automação, scripts de CI e exploração rápida.</p>
-        <div class="panel__links">
-          <a href="#" class="panel__link"><code>dados topics</code> — listar, criar, descrever tópicos <span class="panel__link__arrow">→</span></a>
-          <a href="#" class="panel__link"><code>dados schemas</code> — registrar, validar, evoluir schemas <span class="panel__link__arrow">→</span></a>
-          <a href="#" class="panel__link"><code>dados replay</code> — reprocessar eventos de uma janela <span class="panel__link__arrow">→</span></a>
-          <a href="#" class="panel__link"><code>dados consume</code> — consumir um stream em modo interativo <span class="panel__link__arrow">→</span></a>
+        <p class="panel__lead">
+          Airflow gerenciado com observabilidade, alertas padronizados e política de retry
+          comum a todas as áreas. Zero setup para um time novo.
+        </p>
+        <div class="panel__body has-aside">
+          <div>
+            <div class="panel__metrics">
+              <div class="metric"><p class="metric__label">DAGs ativas</p><p class="metric__value"><span>1.847</span></p></div>
+              <div class="metric"><p class="metric__label">Sucesso 30d</p><p class="metric__value"><span>99,2%</span></p></div>
+              <div class="metric"><p class="metric__label">SLA breaches</p><p class="metric__value"><span>0,8%</span></p></div>
+            </div>
+            <p>A política padrão de retry é 3 tentativas com backoff exponencial. SLAs são definidos no próprio DAG e qualquer breach gera notificação automática no Slack do squad dono.</p>
+            <p>Times com DAGs críticas (camada Gold, modelos regulatórios) participam de revisão trimestral de SLA + plano de ação.</p>
+            <div class="panel__links">
+              <a href="#" class="panel__link"><span>Console (airflow.dataos)</span><span>↗</span></a>
+              <a href="#" class="panel__link"><span>Template oficial de DAG em Python</span><span>→</span></a>
+              <a href="#" class="panel__link"><span>Política de SLA e escalation</span><span>→</span></a>
+            </div>
+          </div>
+          <aside>
+            <div class="chart-wrap">
+              <p class="chart-wrap__title">Execuções por dia (últimos 7 dias)</p>
+              <canvas id="chart-airflow" aria-label="Execuções de DAG por dia" height="220"></canvas>
+            </div>
+          </aside>
         </div>
       </article>
 
-      <article class="panel" id="painel-portal">
+      <article class="panel" id="painel-pipelines-streaming" data-category="pipelines">
         <header class="panel__head">
           <div>
-            <p class="panel__cat">Ferramentas</p>
-            <h2 class="panel__title">Portal web</h2>
+            <p class="panel__cat">Pipelines · 05</p>
+            <h2 class="panel__title">Streaming (Kafka + Flink)</h2>
           </div>
-          <button class="panel__back" data-back>↑ Voltar ao topo</button>
+          <button class="panel__close" type="button" data-close aria-label="Fechar painel">✕</button>
         </header>
-        <p>Interface gráfica em <code>dados.cloud.itau</code> para descoberta, administração e observabilidade. Para quem prefere clicar a digitar.</p>
-        <ul>
-          <li>Catálogo navegável de tópicos com filtros por área, owner e tags</li>
-          <li>Diagrama de fluxo: quais produtores alimentam quais consumidores</li>
-          <li>Métricas em tempo real com drill-down até a partição</li>
-          <li>Solicitação de acesso a tópicos privados via workflow integrado ao SSO</li>
-        </ul>
-      </article>
-
-      <article class="panel" id="painel-conectores">
-        <header class="panel__head">
+        <p class="panel__lead">
+          Plataforma de eventos para casos em que latência importa. 340 tópicos compartilhados,
+          schema registry oficial e retenção de 14 dias para replay.
+        </p>
+        <div class="panel__body">
           <div>
-            <p class="panel__cat">Ferramentas</p>
-            <h2 class="panel__title">Conectores</h2>
+            <div class="panel__metrics">
+              <div class="metric"><p class="metric__label">Tópicos</p><p class="metric__value"><span>340</span></p></div>
+              <div class="metric"><p class="metric__label">Throughput pico</p><p class="metric__value"><span>1,2M</span></p><p class="metric__trend">mensagens / segundo</p></div>
+              <div class="metric"><p class="metric__label">Lag p95</p><p class="metric__value"><span>320ms</span></p></div>
+              <div class="metric"><p class="metric__label">Replay window</p><p class="metric__value"><span>14d</span></p></div>
+            </div>
+            <p>Os schemas são versionados em Avro no registry compartilhado. Compatibilidade backward é obrigatória — mudanças breaking exigem novo tópico (v2) e período de coexistência de 90 dias.</p>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead><tr><th>Domínio</th><th class="num">Tópicos</th><th class="num">Throughput</th><th>Maturidade</th></tr></thead>
+                <tbody>
+                  <tr><td>PIX</td><td class="num">28</td><td class="num">680k msg/s</td><td><span class="badge badge--success">Produção</span></td></tr>
+                  <tr><td>Cartões</td><td class="num">52</td><td class="num">240k msg/s</td><td><span class="badge badge--success">Produção</span></td></tr>
+                  <tr><td>Crédito</td><td class="num">76</td><td class="num">112k msg/s</td><td><span class="badge badge--success">Produção</span></td></tr>
+                  <tr><td>Investimentos</td><td class="num">41</td><td class="num">88k msg/s</td><td><span class="badge badge--success">Produção</span></td></tr>
+                  <tr><td>Antifraude</td><td class="num">34</td><td class="num">62k msg/s</td><td><span class="badge badge--success">Produção</span></td></tr>
+                  <tr><td>Open Finance</td><td class="num">18</td><td class="num">14k msg/s</td><td><span class="badge badge--info">Piloto</span></td></tr>
+                  <tr><td>Outros (5 domínios)</td><td class="num">91</td><td class="num">≈ 24k msg/s</td><td><span class="badge badge--info">Misto</span></td></tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-          <button class="panel__back" data-back>↑ Voltar ao topo</button>
-        </header>
-        <p>Conectores oficiais mantidos pelo time de Plataforma. Você liga, configura, e os dados fluem.</p>
-        <div class="panel__links">
-          <a href="#" class="panel__link">Snowflake (warehouse principal) <span class="panel__link__arrow">→</span></a>
-          <a href="#" class="panel__link">Oracle CDC (legado de risco e crédito) <span class="panel__link__arrow">→</span></a>
-          <a href="#" class="panel__link">Postgres CDC (sistemas de produto) <span class="panel__link__arrow">→</span></a>
-          <a href="#" class="panel__link">S3 Sink (archive e exportação) <span class="panel__link__arrow">→</span></a>
-          <a href="#" class="panel__link">Elastic (busca full-text) <span class="panel__link__arrow">→</span></a>
-          <a href="#" class="panel__link">Webhooks genéricos <span class="panel__link__arrow">→</span></a>
         </div>
       </article>
 
-      <article class="panel" id="painel-schemas">
+      <article class="panel" id="painel-pipelines-templates" data-category="pipelines">
         <header class="panel__head">
           <div>
-            <p class="panel__cat">Práticas</p>
-            <h2 class="panel__title">Design de schemas</h2>
+            <p class="panel__cat">Pipelines · 06</p>
+            <h2 class="panel__title">Templates dbt</h2>
           </div>
-          <button class="panel__back" data-back>↑ Voltar ao topo</button>
+          <button class="panel__close" type="button" data-close aria-label="Fechar painel">✕</button>
         </header>
-        <p>Boas práticas extraídas de 18 meses de uso real. Aplicar evita 80% das dores de evolução.</p>
-        <ul>
-          <li>Nomes em <code>snake_case</code> consistentes entre tópicos (<code>cliente_id</code>, não <code>idCliente</code>).</li>
-          <li>Campos novos sempre opcionais — facilita evolução backward-compatible.</li>
-          <li>Valores monetários em <code>long</code> de centavos (<code>valor_cents</code>), nunca <code>float</code>.</li>
-          <li>Timestamps em UTC, em <code>timestamp</code> ISO 8601.</li>
-          <li>Enums fechados quando o domínio é estável, strings livres quando ele evolui.</li>
-        </ul>
-      </article>
-
-      <article class="panel" id="painel-versionamento">
-        <header class="panel__head">
+        <p class="panel__lead">
+          Esqueletos prontos para modelos staging, intermediate e marts. Garantem padrão
+          de nomenclatura, testes mínimos e tagueamento automático de PII.
+        </p>
+        <div class="panel__body">
           <div>
-            <p class="panel__cat">Práticas</p>
-            <h2 class="panel__title">Versionamento e compatibilidade</h2>
+            <p>Os templates eliminam decisões repetitivas e padronizam o que precisa ser igual entre times: convenções de nome, testes obrigatórios (unique, not_null, accepted_values), tagueamento de classificação de dados e documentação YAML.</p>
+            <ul>
+              <li><strong>stg_*</strong> — colunas renomeadas para snake_case, cast de tipos, sem joins</li>
+              <li><strong>int_*</strong> — joins e transformações de negócio, sem agregação final</li>
+              <li><strong>mart_*</strong> — modelo dimensional, consumido por dashboards e APIs</li>
+              <li><strong>snapshot_*</strong> — captura de mudanças SCD2 com chave natural e hash</li>
+            </ul>
+            <div class="panel__links">
+              <a href="#" class="panel__link"><span>Repositório dbt-templates (Bitbucket)</span><span>↗</span></a>
+              <a href="#" class="panel__link"><span>Guia de naming convention</span><span>→</span></a>
+              <a href="#" class="panel__link"><span>CI: como o template é validado em PR</span><span>→</span></a>
+            </div>
           </div>
-          <button class="panel__back" data-back>↑ Voltar ao topo</button>
-        </header>
-        <p>Schema é contrato. Versionar bem evita comunicação dolorosa com consumidores quando o domínio muda.</p>
-        <ul>
-          <li><strong>Minor:</strong> adicionar campo opcional, adicionar enum value, frouxar restrição.</li>
-          <li><strong>Major (v2):</strong> remover campo obrigatório, mudar tipo de um campo, renomear campo.</li>
-          <li>Versões coexistem por padrão. Consumidores migram no próprio ritmo.</li>
-          <li>Schemas com 0 consumidores podem ser depreciados após aviso.</li>
-        </ul>
-      </article>
-
-      <article class="panel" id="painel-testes">
-        <header class="panel__head">
-          <div>
-            <p class="panel__cat">Práticas</p>
-            <h2 class="panel__title">Testes de contrato</h2>
-          </div>
-          <button class="panel__back" data-back>↑ Voltar ao topo</button>
-        </header>
-        <p>Compatibilidade não pode ser garantida no review humano. Use o CI.</p>
-        <ul>
-          <li>Cada PR roda <code>dados schemas validate</code> contra o registry atual.</li>
-          <li>Mudanças breaking são bloqueadas no PR, com explicação do que mudou.</li>
-          <li>Consumidores podem registrar "expectativas" — campos que usam ativamente.</li>
-          <li>Mudanças que afetam expectativas geram alerta nos owners dos consumidores.</li>
-        </ul>
-      </article>
-
-      <article class="panel" id="painel-oncall">
-        <header class="panel__head">
-          <div>
-            <p class="panel__cat">Suporte</p>
-            <h2 class="panel__title">Como acionar o on-call</h2>
-          </div>
-          <button class="panel__back" data-back>↑ Voltar ao topo</button>
-        </header>
-        <p>O on-call existe para <strong>incidentes em produção</strong>. Para dúvidas e troubleshoot de dev/staging, use o canal de suporte regular.</p>
-        <div class="panel__metrics">
-          <div class="metric"><p class="metric__label">SLA primeiro contato</p><p class="metric__value">15 min</p></div>
-          <div class="metric"><p class="metric__label">SLA mitigação</p><p class="metric__value">1h</p></div>
-          <div class="metric"><p class="metric__label">Cobertura</p><p class="metric__value">24/7</p></div>
         </div>
-        <p>Inclua no acionamento: tópico ou área afetada, sintoma observado, link para painel Grafana, e horário em que o problema começou.</p>
       </article>
 
-      <article class="panel" id="painel-runbook">
+      <!-- ─── QUALIDADE panels ─────────────────────────────── -->
+      <article class="panel" id="painel-qualidade-rules" data-category="qualidade">
         <header class="panel__head">
           <div>
-            <p class="panel__cat">Suporte</p>
-            <h2 class="panel__title">Runbooks de incidentes comuns</h2>
+            <p class="panel__cat">Qualidade · 07</p>
+            <h2 class="panel__title">Regras de qualidade</h2>
           </div>
-          <button class="panel__back" data-back>↑ Voltar ao topo</button>
+          <button class="panel__close" type="button" data-close aria-label="Fechar painel">✕</button>
         </header>
-        <p>Diagnóstico passo-a-passo para os incidentes mais frequentes. Cobre 80% dos casos sem precisar acionar o on-call.</p>
-        <div class="panel__links">
-          <a href="#" class="panel__link">Lag de consumo crescendo <span class="panel__link__arrow">→</span></a>
-          <a href="#" class="panel__link">Eventos rejeitados por schema <span class="panel__link__arrow">→</span></a>
-          <a href="#" class="panel__link">Throughput throttled <span class="panel__link__arrow">→</span></a>
-          <a href="#" class="panel__link">Queda regional (SP fora, RJ ativo) <span class="panel__link__arrow">→</span></a>
+        <p class="panel__lead">
+          Catálogo de 38 regras testadas e mantidas pelo time de plataforma. Aplicar é
+          uma linha de YAML, sem código de teste customizado.
+        </p>
+        <div class="panel__body">
+          <div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead><tr><th>Família</th><th class="num">Regras</th><th>Exemplos</th><th>Severidade default</th></tr></thead>
+                <tbody>
+                  <tr><td>Integridade</td><td class="num">9</td><td>not_null · unique · primary_key · foreign_key</td><td><span class="badge badge--danger">Bloqueia</span></td></tr>
+                  <tr><td>Domínio</td><td class="num">7</td><td>accepted_values · regex · range · cpf_format</td><td><span class="badge badge--warn">Alerta</span></td></tr>
+                  <tr><td>Volumetria</td><td class="num">6</td><td>row_count_anomaly · empty_table · sudden_drop</td><td><span class="badge badge--warn">Alerta</span></td></tr>
+                  <tr><td>Freshness</td><td class="num">5</td><td>max_age · update_frequency · sla_breach</td><td><span class="badge badge--danger">Bloqueia</span></td></tr>
+                  <tr><td>Drift</td><td class="num">7</td><td>schema_drift · distribution_drift · null_rate_drift</td><td><span class="badge badge--info">Info</span></td></tr>
+                  <tr><td>Negócio</td><td class="num">4</td><td>balance_check · reconcile_vs_source · custom_sql</td><td><span class="badge badge--warn">Alerta</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p>Regras de bloqueio interrompem a publicação na próxima camada e notificam o owner. Alertas vão para o canal do squad. Info entra no scorecard sem disparar comunicação.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel" id="painel-qualidade-scorecards" data-category="qualidade">
+        <header class="panel__head">
+          <div>
+            <p class="panel__cat">Qualidade · 08</p>
+            <h2 class="panel__title">Scorecards por domínio</h2>
+          </div>
+          <button class="panel__close" type="button" data-close aria-label="Fechar painel">✕</button>
+        </header>
+        <p class="panel__lead">
+          Score consolidado por tabela, time e domínio. Atualizado a cada hora. Tendência
+          mensal serve de input para o ritual trimestral de qualidade.
+        </p>
+        <div class="panel__body has-aside">
+          <div>
+            <p>O score (0-100) pondera cinco dimensões: integridade, freshness, completude, conformidade e documentação. O peso de cada dimensão é configurável por domínio — risco regulatório, por exemplo, peso maior em conformidade.</p>
+            <ul>
+              <li>Score mínimo aceitável para Gold: <strong>85</strong></li>
+              <li>Score abaixo de 70: tabela entra em plano de ação obrigatório</li>
+              <li>Score abaixo de 50: dataset suspenso até remediação</li>
+              <li>Trend mensal compartilhada com a liderança do domínio</li>
+            </ul>
+          </div>
+          <aside>
+            <div class="chart-wrap">
+              <p class="chart-wrap__title">Score médio — top 6 domínios</p>
+              <canvas id="chart-quality" aria-label="Score de qualidade por domínio" height="240"></canvas>
+            </div>
+          </aside>
+        </div>
+      </article>
+
+      <article class="panel" id="painel-qualidade-incidentes" data-category="qualidade">
+        <header class="panel__head">
+          <div>
+            <p class="panel__cat">Qualidade · 09</p>
+            <h2 class="panel__title">Gestão de incidentes</h2>
+          </div>
+          <button class="panel__close" type="button" data-close aria-label="Fechar painel">✕</button>
+        </header>
+        <p class="panel__lead">
+          Workflow padrão da detecção ao fix — integrado a Jira e Slack — para que nenhum
+          incidente fique órfão entre times de plataforma e de domínio.
+        </p>
+        <div class="panel__body">
+          <div>
+            <div class="panel__metrics">
+              <div class="metric"><p class="metric__label">Incidentes 90d</p><p class="metric__value"><span>184</span></p></div>
+              <div class="metric"><p class="metric__label">MTTR mediano</p><p class="metric__value"><span>3,2h</span></p></div>
+              <div class="metric"><p class="metric__label">Reabertura</p><p class="metric__value"><span>4%</span></p></div>
+            </div>
+            <ol>
+              <li><strong>Detecção</strong> — quebra de regra de qualidade abre incidente automaticamente</li>
+              <li><strong>Triagem</strong> — plataforma confirma origem (dados, pipeline, sistema fonte) em até 30min</li>
+              <li><strong>Owner</strong> — atribuição automática ao squad responsável pelo dataset</li>
+              <li><strong>RCA</strong> — análise de causa raiz registrada em template padrão</li>
+              <li><strong>Fix &amp; close</strong> — solução validada por novo run e PR de prevenção</li>
+            </ol>
+            <div class="panel__links">
+              <a href="#" class="panel__link"><span>Catálogo histórico de incidentes</span><span>→</span></a>
+              <a href="#" class="panel__link"><span>Template oficial de RCA</span><span>→</span></a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ─── SELF-SERVICE panels ──────────────────────────── -->
+      <article class="panel" id="painel-self-notebook" data-category="self-service">
+        <header class="panel__head">
+          <div>
+            <p class="panel__cat">Self-service · 10</p>
+            <h2 class="panel__title">Notebooks gerenciados</h2>
+          </div>
+          <button class="panel__close" type="button" data-close aria-label="Fechar painel">✕</button>
+        </header>
+        <p class="panel__lead">
+          JupyterLab pronto pra usar: integração com o lakehouse, libs auditadas, secret
+          manager e quota de compute por área de negócio.
+        </p>
+        <div class="panel__body">
+          <div>
+            <p>O ambiente roda em Kubernetes interno, isolado por namespace de área. O acesso aos dados é proxy pelo control plane — nenhum notebook precisa de credencial direta.</p>
+            <ul>
+              <li>Imagens base com Spark, dask, sklearn, xgboost, polars, pandas, plotly</li>
+              <li>Quota padrão: 4 vCPU + 16 GB. Quota expandida (32 vCPU + 128 GB) por solicitação</li>
+              <li>Acesso ao lakehouse via SQL e PySpark, com auditoria nativa</li>
+              <li>Persistência em volume pessoal (50 GB) + workspace compartilhado por squad</li>
+              <li>Compartilhamento de notebooks via Git ou link interno</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel" id="painel-self-sql" data-category="self-service">
+        <header class="panel__head">
+          <div>
+            <p class="panel__cat">Self-service · 11</p>
+            <h2 class="panel__title">SQL Workbench</h2>
+          </div>
+          <button class="panel__close" type="button" data-close aria-label="Fechar painel">✕</button>
+        </header>
+        <p class="panel__lead">
+          Editor SQL pensado para analistas: autocomplete sobre o catálogo, histórico
+          compartilhado, exportação para Power BI e queries salvas por squad.
+        </p>
+        <div class="panel__body">
+          <div>
+            <p>Conecta-se ao Trino + Snowflake. Queries são atribuídas a uma área para controle de custo, e há limite default de 10 GB scaneados por query (revisável por exceção).</p>
+            <div class="panel__metrics">
+              <div class="metric"><p class="metric__label">Usuários ativos / mês</p><p class="metric__value"><span>1.247</span></p></div>
+              <div class="metric"><p class="metric__label">Queries / dia</p><p class="metric__value"><span>18,4k</span></p></div>
+              <div class="metric"><p class="metric__label">Squads usando</p><p class="metric__value"><span>96</span></p></div>
+            </div>
+            <div class="panel__links">
+              <a href="#" class="panel__link"><span>Abrir SQL Workbench (sql.dataos)</span><span>↗</span></a>
+              <a href="#" class="panel__link"><span>Boas práticas de query (custo &amp; performance)</span><span>→</span></a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel" id="painel-self-marketplace" data-category="self-service">
+        <header class="panel__head">
+          <div>
+            <p class="panel__cat">Self-service · 12</p>
+            <h2 class="panel__title">Marketplace de Data Products</h2>
+          </div>
+          <button class="panel__close" type="button" data-close aria-label="Fechar painel">✕</button>
+        </header>
+        <p class="panel__lead">
+          Os dados não são tabelas avulsas — são produtos, com SLO, owner e contrato.
+          O marketplace centraliza descoberta, solicitação de acesso e métricas de uso.
+        </p>
+        <div class="panel__body has-aside">
+          <div>
+            <p>Um data product agrupa um ou mais datasets sob uma proposta de valor clara. Inclui contrato de SLO (frescor, disponibilidade, schema estável), owner único e canal de suporte explícito.</p>
+            <ul>
+              <li><strong>126 produtos publicados</strong> em 11 domínios</li>
+              <li>SLO de freshness médio: 99,1% nos últimos 90 dias</li>
+              <li>Tempo médio de aprovação de acesso: 4h (meta: 8h)</li>
+              <li>Migração legado → product: 68% do AuM coberto, meta 90% até Q4/2026</li>
+            </ul>
+          </div>
+          <aside>
+            <div class="chart-wrap">
+              <p class="chart-wrap__title">Composição por domínio</p>
+              <canvas id="chart-marketplace" aria-label="Data products por domínio" height="240"></canvas>
+            </div>
+          </aside>
+        </div>
+      </article>
+
+      <!-- ─── GOVERNANÇA panels ────────────────────────────── -->
+      <article class="panel" id="painel-gov-classificacao" data-category="governanca">
+        <header class="panel__head">
+          <div>
+            <p class="panel__cat">Governança · 13</p>
+            <h2 class="panel__title">Classificação de dados</h2>
+          </div>
+          <button class="panel__close" type="button" data-close aria-label="Fechar painel">✕</button>
+        </header>
+        <p class="panel__lead">
+          Quatro níveis oficiais, aplicados em coluna e dataset. Auto-detecção de PII
+          via pattern matching reduz erro humano e cobre 100% dos novos datasets.
+        </p>
+        <div class="panel__body">
+          <div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead><tr><th>Nível</th><th>Quem acessa</th><th>Exemplos</th><th class="num">% catálogo</th></tr></thead>
+                <tbody>
+                  <tr><td><span class="badge badge--success">Público</span></td><td>Qualquer colaborador</td><td>Tabela de feriados, dimensões geográficas</td><td class="num">8%</td></tr>
+                  <tr><td><span class="badge badge--info">Interno</span></td><td>Áreas de negócio + dados</td><td>Métricas agregadas, dashboards executivos</td><td class="num">54%</td></tr>
+                  <tr><td><span class="badge badge--warn">Restrito</span></td><td>Áreas específicas com necessidade</td><td>Operações de cliente, transações detalhadas</td><td class="num">31%</td></tr>
+                  <tr><td><span class="badge badge--danger">Sensível</span></td><td>Acesso nominal aprovado</td><td>Dados de saúde, biometria, score interno</td><td class="num">7%</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p>A classificação inicial é proposta pelo crawler ao detectar padrões (CPF, e-mail, telefone) e revisada pelo data owner em até 5 dias úteis. Datasets sem classificação confirmada ficam em "Restrito" como default seguro.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel" id="painel-gov-acesso" data-category="governanca">
+        <header class="panel__head">
+          <div>
+            <p class="panel__cat">Governança · 14</p>
+            <h2 class="panel__title">Controle de acesso</h2>
+          </div>
+          <button class="panel__close" type="button" data-close aria-label="Fechar painel">✕</button>
+        </header>
+        <p class="panel__lead">
+          Acesso a dado é privilégio, não default. Solicitação, aprovação e expiração
+          fazem parte do mesmo workflow — sempre auditável.
+        </p>
+        <div class="panel__body">
+          <div>
+            <div class="panel__metrics">
+              <div class="metric"><p class="metric__label">Solicitações / mês</p><p class="metric__value"><span>3.412</span></p></div>
+              <div class="metric"><p class="metric__label">Aprovação mediana</p><p class="metric__value"><span>4h</span></p></div>
+              <div class="metric"><p class="metric__label">Acessos expirados (auto)</p><p class="metric__value"><span>1.866 / mês</span></p></div>
+            </div>
+            <ul>
+              <li>Solicitação via portal (access.dataos) ou via CLI</li>
+              <li>Aprovação pelo data owner — escalonável após 24h</li>
+              <li>Expiração obrigatória: 90 dias (default) ou conforme caso de uso</li>
+              <li>Acessos sensíveis exigem segunda aprovação do data steward</li>
+              <li>Trilha de auditoria preservada por 5 anos (exigência regulatória)</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel" id="painel-gov-lgpd" data-category="governanca">
+        <header class="panel__head">
+          <div>
+            <p class="panel__cat">Governança · 15</p>
+            <h2 class="panel__title">LGPD &amp; retenção</h2>
+          </div>
+          <button class="panel__close" type="button" data-close aria-label="Fechar painel">✕</button>
+        </header>
+        <p class="panel__lead">
+          Mapa completo de tratamento, base legal por tabela e enforcement automatizado
+          de TTL. Right-to-be-forgotten executado em até 30 dias corridos.
+        </p>
+        <div class="panel__body">
+          <div>
+            <p>O mapa de tratamento é gerado automaticamente a partir das tags do catálogo e revisado pelo Encarregado de Dados a cada trimestre. Toda tabela com PII tem base legal explícita e prazo de retenção configurado em metadata.</p>
+            <ul>
+              <li><strong>Base legal:</strong> consentimento, execução de contrato, obrigação legal, legítimo interesse, proteção ao crédito</li>
+              <li><strong>Retenção:</strong> TTL configurado por dataset; jobs noturnos aplicam exclusão ou anonimização</li>
+              <li><strong>RTBF:</strong> solicitação do titular acionada via central; SLA de 30 dias com confirmação assinada</li>
+              <li><strong>Compartilhamento externo:</strong> requer DPA (Data Processing Agreement) assinado e registrado</li>
+              <li><strong>Incidentes:</strong> processo de comunicação à ANPD em 48h conforme art. 48</li>
+            </ul>
+            <div class="panel__links">
+              <a href="#" class="panel__link"><span>Política oficial LGPD (intranet)</span><span>↗</span></a>
+              <a href="#" class="panel__link"><span>Mapa de tratamento (atualização mensal)</span><span>→</span></a>
+              <a href="#" class="panel__link"><span>Solicitar revisão de classificação</span><span>→</span></a>
+            </div>
+          </div>
         </div>
       </article>
 
     </section>
 
-  </div>
+    <footer class="footer">
+      <span>Plataforma de Dados Itaú · Hub interno</span>
+      <span>v2.4.0 — atualizado 17 mai 2026</span>
+    </footer>
+
+  </main>
 
   <script>
-    // ─── Theme toggle ────────────────────────────────
+    // ─── Theme toggle ───────────────────────────────────────────────
     (function() {
       const root = document.documentElement;
       const updateIcon = () => {
@@ -721,45 +1478,227 @@
           root.setAttribute('data-theme', next);
           try { localStorage.setItem('theme', next); } catch (e) {}
           updateIcon();
+          // re-render charts to update colors
+          rerenderCharts();
         });
       });
     })();
 
-    // ─── Filtros ─────────────────────────────────────
+    // ─── Filtros + busca ────────────────────────────────────────────
     (function() {
-      const filters = document.querySelectorAll('[data-filters] .filters__btn');
+      const filters = document.querySelectorAll('[data-filters] .filter');
       const cards = document.querySelectorAll('.card');
       const empty = document.getElementById('empty-state');
+      const countEl = document.getElementById('visible-count');
+      const search = document.querySelector('[data-search]');
+      let currentFilter = 'all';
+      let currentQuery = '';
 
-      filters.forEach(btn => btn.addEventListener('click', () => {
-        const cat = btn.dataset.filter;
-        filters.forEach(b => b.classList.toggle('is-active', b === btn));
+      function apply() {
         let visible = 0;
         cards.forEach(card => {
-          const match = cat === 'all' || card.dataset.category === cat;
-          card.classList.toggle('is-hidden', !match);
-          if (match) visible++;
+          const matchCat = currentFilter === 'all' || card.dataset.category === currentFilter;
+          const text = (card.textContent || '').toLowerCase();
+          const matchQuery = !currentQuery || text.includes(currentQuery);
+          const ok = matchCat && matchQuery;
+          card.classList.toggle('is-hidden', !ok);
+          if (ok) visible++;
         });
         empty.classList.toggle('is-visible', visible === 0);
+        if (countEl) countEl.textContent = visible;
+      }
+
+      filters.forEach(btn => btn.addEventListener('click', () => {
+        currentFilter = btn.dataset.filter;
+        filters.forEach(b => {
+          const active = b === btn;
+          b.classList.toggle('is-active', active);
+          b.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        apply();
       }));
+
+      if (search) search.addEventListener('input', e => {
+        currentQuery = (e.target.value || '').toLowerCase().trim();
+        apply();
+      });
     })();
 
-    // ─── Card → painel ───────────────────────────────
-    document.querySelectorAll('.card[data-panel]').forEach(card => {
-      card.addEventListener('click', (e) => {
-        e.preventDefault();
-        const id = card.dataset.panel;
-        const el = document.getElementById(id);
-        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
-    });
+    // ─── Card → painel ──────────────────────────────────────────────
+    (function() {
+      const panels = document.querySelectorAll('.panel');
+      const empty = document.getElementById('panel-empty');
 
-    // ─── Botão "voltar ao topo" do painel ───────────
-    document.querySelectorAll('[data-back]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+      function openPanel(id) {
+        let opened = null;
+        panels.forEach(p => {
+          const on = p.id === id;
+          p.classList.toggle('is-open', on);
+          if (on) opened = p;
+        });
+        if (empty) empty.style.display = opened ? 'none' : '';
+        if (opened) {
+          setTimeout(() => opened.scrollIntoView({ behavior: 'smooth', block: 'start' }), 30);
+          // re-render charts only inside opened panel
+          renderChartsIn(opened);
+        }
+      }
+
+      document.querySelectorAll('.card[data-panel]').forEach(card => {
+        card.addEventListener('click', e => {
+          e.preventDefault();
+          openPanel(card.dataset.panel);
+        });
       });
-    });
+
+      document.querySelectorAll('[data-close]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const p = btn.closest('.panel');
+          if (p) p.classList.remove('is-open');
+          if (empty) empty.style.display = '';
+          document.querySelector('#grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+    })();
+
+    // ─── Charts (Chart.js) ──────────────────────────────────────────
+    const _chartInstances = {};
+    function css(v) {
+      return getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+    }
+
+    const chartFactories = {
+      'chart-catalog-growth': (ctx) => new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['jun/25','jul','ago','set','out','nov','dez','jan/26','fev','mar','abr','mai'],
+          datasets: [{
+            label: 'Tabelas catalogadas',
+            data: [2080, 2118, 2155, 2189, 2218, 2244, 2271, 2298, 2329, 2358, 2386, 2412],
+            borderColor: css('--color-accent'),
+            backgroundColor: css('--color-accent-dim'),
+            tension: 0.35, fill: true,
+            pointRadius: 3, pointHoverRadius: 6,
+            borderWidth: 2,
+          }]
+        },
+        options: chartOpts({ unit: '' })
+      }),
+      'chart-airflow': (ctx) => new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+          datasets: [{
+            label: 'Runs',
+            data: [14820, 15240, 15110, 15880, 14690, 9870, 9420],
+            backgroundColor: css('--color-info-dim'),
+            borderColor: css('--color-info'),
+            borderWidth: 2, borderRadius: 6,
+          }]
+        },
+        options: chartOpts({ unit: '' })
+      }),
+      'chart-quality': (ctx) => new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['PIX', 'Cartões', 'Crédito', 'Invest.', 'Antifrau.', 'Open Fin.'],
+          datasets: [{
+            label: 'Score',
+            data: [94, 91, 88, 90, 86, 78],
+            backgroundColor: css('--color-teal-dim'),
+            borderColor: css('--color-teal'),
+            borderWidth: 2, borderRadius: 6,
+          }]
+        },
+        options: Object.assign(chartOpts({ unit: '' }), {
+          indexAxis: 'y',
+          scales: {
+            x: { min: 0, max: 100, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted') } },
+            y: { grid: { display: false }, ticks: { color: css('--color-fg-muted') } }
+          }
+        })
+      }),
+      'chart-marketplace': (ctx) => new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Crédito', 'Cartões', 'PIX', 'Investim.', 'Antifrau.', 'Outros'],
+          datasets: [{
+            data: [32, 28, 22, 18, 14, 12],
+            backgroundColor: [
+              css('--color-accent'),
+              css('--color-info'),
+              css('--color-teal'),
+              css('--color-success'),
+              css('--color-plum'),
+              css('--color-fg-subtle')
+            ],
+            borderWidth: 2,
+            borderColor: css('--color-bg-elevated'),
+            hoverOffset: 6,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '62%',
+          plugins: {
+            legend: {
+              position: 'right',
+              labels: { color: css('--color-fg-muted'), font: { size: 11 }, padding: 10, boxWidth: 12 }
+            },
+            tooltip: { callbacks: { label: ctx => ctx.label + ': ' + ctx.parsed + ' produtos' } }
+          }
+        }
+      })
+    };
+
+    function chartOpts({ unit }) {
+      return {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: css('--color-bg-elevated'),
+            titleColor: css('--color-fg'),
+            bodyColor: css('--color-fg-muted'),
+            borderColor: css('--color-border'),
+            borderWidth: 1,
+          }
+        },
+        scales: {
+          x: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 11 } } },
+          y: { grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), font: { size: 11 } } }
+        }
+      };
+    }
+
+    function renderChartsIn(panel) {
+      if (typeof Chart === 'undefined') {
+        // Chart.js ainda não carregou — espera
+        window.addEventListener('load', () => renderChartsIn(panel), { once: true });
+        return;
+      }
+      panel.querySelectorAll('canvas[id]').forEach(canvas => {
+        const id = canvas.id;
+        if (_chartInstances[id]) _chartInstances[id].destroy();
+        const factory = chartFactories[id];
+        if (factory) _chartInstances[id] = factory(canvas);
+      });
+    }
+
+    function rerenderCharts() {
+      // recarrega cores ao trocar tema (somente charts ativos)
+      Object.keys(_chartInstances).forEach(id => {
+        const inst = _chartInstances[id];
+        if (!inst) return;
+        const canvas = document.getElementById(id);
+        if (!canvas || !canvas.offsetParent) return;
+        inst.destroy();
+        const factory = chartFactories[id];
+        if (factory) _chartInstances[id] = factory(canvas);
+      });
+    }
   </script>
 
 </body>

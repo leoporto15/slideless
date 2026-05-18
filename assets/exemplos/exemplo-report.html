@@ -1,0 +1,2135 @@
+<!DOCTYPE html>
+<!--
+  slideless / exemplo-report.html
+  Modelo: report (relatório editorial denso, otimizado para impressão/PDF)
+  Conteúdo: Plataforma de Dados Itaú — Relatório Anual 2024 (RA-2024-001)
+  Tema: itau (light + dark)
+  Audiência: diretoria, conselho, áreas de negócio
+-->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plataforma de Dados Itaú · Relatório Anual 2024</title>
+  <meta name="description" content="Relatório anual da Plataforma de Dados Itaú — cobertura, governança, ESG, qualidade e roadmap 2025.">
+
+  <!-- Boot: lê preferência de tema antes do paint para evitar flash -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('theme') ||
+                (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+
+  <!-- Fontes: Fraunces (display) + Inter (texto) + JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Chart.js (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+
+  <style>
+    /* ───────────────────────────────────────────────────────────────────
+       TOKENS — tema itau (inline)
+       Tipografia EDITORIAL FIXA: nunca clamp+vw gigante em report.
+       ────────────────────────────────────────────────────────────────── */
+    :root {
+      /* Marca Itaú */
+      --itau-orange:     #FF6200;
+      --itau-orange-2:   #F88104;
+      --itau-orange-3:   #FA9F09;
+      --itau-blue-3:     #3B85FA;
+      --itau-yellow:     #FBC305;
+      --itau-warm-black: #14110d;
+
+      /* Paleta semântica (light) */
+      --color-accent:        var(--itau-orange);
+      --color-accent-dim:    rgba(255, 98, 0, 0.08);
+      --color-accent-fg:     #ffffff;
+      --color-info:          var(--itau-blue-3);
+      --color-info-dim:      rgba(59, 133, 250, 0.08);
+      --color-success:       #4d7c0f;
+      --color-success-dim:   rgba(77, 124, 15, 0.10);
+      --color-sage:          #65a30d;
+      --color-sage-dim:      rgba(101, 163, 13, 0.10);
+      --color-teal:          #0f766e;
+      --color-teal-dim:      rgba(15, 118, 110, 0.10);
+      --color-plum:          #9f1239;
+      --color-plum-dim:      rgba(159, 18, 57, 0.08);
+      --color-warn:          var(--itau-yellow);
+      --color-warn-dim:      rgba(251, 195, 5, 0.14);
+      --color-danger:        #b91c1c;
+      --color-danger-dim:    rgba(185, 28, 28, 0.08);
+
+      --color-bg:            #faf7f5;
+      --color-bg-elevated:   #ffffff;
+      --color-bg-sunken:     #f4f1ec;
+      --color-fg:            #292017;
+      --color-fg-muted:      #6b5d50;
+      --color-fg-subtle:     #8a7e72;
+      --color-border:        rgba(41, 32, 23, 0.10);
+      --color-border-strong: rgba(41, 32, 23, 0.18);
+      --color-accent-hover:  var(--itau-orange-2);
+
+      --glow-warm: radial-gradient(ellipse 80% 60% at 80% 0%, rgba(255, 98, 0, 0.08) 0%, transparent 55%);
+      --glow-cool: radial-gradient(ellipse 70% 50% at 20% 100%, rgba(59, 133, 250, 0.06) 0%, transparent 55%);
+
+      /* Tipografia */
+      --font-display: 'Fraunces', 'Itau Display', Georgia, serif;
+      --font-text:    'Inter', 'Itau Text', -apple-system, system-ui, sans-serif;
+      --font-mono:    'JetBrains Mono', 'IBM Plex Mono', Consolas, monospace;
+
+      /* Escala editorial FIXA — proibido clamp+vw gigante em report */
+      --size-xs:    0.8125rem;   /* 13px */
+      --size-small: 0.9375rem;   /* 15px */
+      --size-body:  1rem;        /* 16px */
+      --size-lead:  1.1875rem;   /* 19px */
+      --size-h4:    1.0625rem;   /* 17px */
+      --size-h3:    1.25rem;     /* 20px */
+      --size-h2:    1.75rem;     /* 28px */
+      --size-h1:    2.5rem;      /* 40px */
+
+      /* Espaço */
+      --space-1:  0.25rem; --space-2:  0.5rem; --space-3:  0.75rem;
+      --space-4:  1rem;    --space-5:  1.5rem; --space-6:  2rem;
+      --space-7:  2.5rem;  --space-8:  3rem;   --space-10: 4rem;
+      --space-12: 5rem;    --space-16: 7rem;
+
+      --radius-sm: 4px;
+      --radius:    10px;
+      --radius-lg: 16px;
+
+      --shadow-xs: 0 1px 2px rgba(41,32,23,0.04);
+      --shadow-sm: 0 2px 4px rgba(41,32,23,0.06), 0 1px 2px rgba(41,32,23,0.04);
+      --shadow:    0 4px 12px rgba(41,32,23,0.08), 0 1px 3px rgba(41,32,23,0.05);
+      --shadow-lg: 0 12px 32px rgba(41,32,23,0.12), 0 4px 12px rgba(41,32,23,0.06);
+      --inset-sm:  inset 0 1px 3px rgba(41,32,23,0.06);
+
+      --ease-out:       cubic-bezier(0.22, 1, 0.36, 1);
+      --duration-fast:  150ms;
+      --duration:       250ms;
+      --duration-slow:  400ms;
+      --duration-hero:  700ms;
+
+      /* Layout do report */
+      --report-max:       800px;
+      --report-gutter:    var(--space-8);
+      --report-header-h:  72px;
+    }
+
+    [data-theme="dark"] {
+      --color-bg:            #14110d;
+      --color-bg-elevated:   #1c1814;
+      --color-bg-sunken:     #221d18;
+      --color-fg:            #ede5dd;
+      --color-fg-muted:      #b8aa9a;
+      --color-fg-subtle:     #786e62;
+      --color-border:        rgba(237,229,221,0.10);
+      --color-border-strong: rgba(237,229,221,0.20);
+      --color-accent:        var(--itau-orange-3);
+      --color-accent-hover:  var(--itau-orange-2);
+      --color-accent-fg:     #14110d;
+      --color-accent-dim:    rgba(250,159,9,0.10);
+      --color-info-dim:      rgba(59,133,250,0.12);
+      --color-success:       #a3e635;
+      --color-success-dim:   rgba(163,230,53,0.10);
+      --color-sage:          #bef264;
+      --color-sage-dim:      rgba(190,242,100,0.10);
+      --color-teal:          #5eead4;
+      --color-teal-dim:      rgba(94,234,212,0.10);
+      --color-plum:          #fb7185;
+      --color-plum-dim:      rgba(251,113,133,0.10);
+      --color-warn-dim:      rgba(251,195,5,0.14);
+      --color-danger:        #f87171;
+      --color-danger-dim:    rgba(248,113,113,0.10);
+      --shadow-sm: 0 2px 4px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+      --shadow:    0 4px 12px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.3);
+      --shadow-lg: 0 12px 32px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.3);
+      --inset-sm:  inset 0 1px 3px rgba(0,0,0,0.4);
+      --glow-warm: radial-gradient(ellipse 80% 60% at 80% 0%, rgba(250,159,9,0.14) 0%, transparent 55%);
+      --glow-cool: radial-gradient(ellipse 70% 50% at 20% 100%, rgba(59,133,250,0.12) 0%, transparent 55%);
+    }
+
+    /* ─── Reset base ──────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--font-text);
+      font-size: var(--size-body);
+      line-height: 1.7;
+      color: var(--color-fg);
+      background: var(--color-bg);
+      background-image: var(--glow-warm), var(--glow-cool);
+      background-attachment: fixed;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      transition: background var(--duration-fast), color var(--duration-fast);
+    }
+    :focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 3px;
+      border-radius: var(--radius-sm);
+    }
+    h1, h2, h3, h4 {
+      font-family: var(--font-display);
+      color: var(--color-fg);
+      line-height: 1.15;
+      letter-spacing: -0.022em;
+      font-weight: 700;
+    }
+    h1 { font-size: var(--size-h1); margin: 0 0 var(--space-4); letter-spacing: -0.030em; }
+    h2 { font-size: var(--size-h2); margin: 0; font-weight: 700; }
+    h3 { font-size: var(--size-h3); margin: var(--space-7) 0 var(--space-3); font-weight: 600; }
+    h4 { font-size: var(--size-h4); margin: var(--space-5) 0 var(--space-2); font-weight: 600; }
+    p { margin: 0 0 var(--space-4); color: var(--color-fg); max-width: 68ch; }
+    a { color: var(--color-accent); text-decoration: none; }
+    a:hover { color: var(--color-accent-hover); text-decoration: underline; text-underline-offset: 3px; }
+    strong { font-weight: 700; color: var(--color-fg); }
+    em { font-style: italic; color: var(--color-fg); }
+    ul, ol { padding-left: var(--space-5); margin: 0 0 var(--space-5); max-width: 68ch; }
+    li { margin-bottom: var(--space-2); line-height: 1.65; color: var(--color-fg); }
+    li::marker { color: var(--color-fg-subtle); }
+
+    /* ─── Header sticky ───────────────────────────────────────────────── */
+    .report-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: var(--report-header-h);
+      background: color-mix(in srgb, var(--color-bg) 88%, transparent);
+      backdrop-filter: saturate(140%) blur(14px);
+      -webkit-backdrop-filter: saturate(140%) blur(14px);
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--space-7);
+      gap: var(--space-6);
+    }
+    .report-header::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--color-accent) 0%, var(--itau-orange-3) 40%, transparent 100%);
+      opacity: 0.55;
+    }
+    .report-header__brand { display: flex; align-items: center; gap: var(--space-4); }
+    .report-header__logo {
+      width: 40px; height: 40px;
+      border-radius: var(--radius-sm);
+      background: var(--color-accent);
+      display: grid; place-items: center;
+      font-family: var(--font-display);
+      font-weight: 800;
+      color: #fff;
+      font-size: 0.875rem;
+      letter-spacing: -0.03em;
+      flex-shrink: 0;
+    }
+    .report-header__org {
+      margin: 0;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.9375rem;
+      color: var(--color-fg);
+      letter-spacing: -0.015em;
+    }
+    .report-header__doc {
+      margin: 0;
+      font-size: var(--size-xs);
+      color: var(--color-fg-muted);
+      font-family: var(--font-mono);
+    }
+    .report-header__meta { display: flex; align-items: center; gap: var(--space-4); }
+    .report-header__date {
+      margin: 0;
+      font-size: var(--size-small);
+      color: var(--color-fg-muted);
+      font-weight: 500;
+    }
+
+    /* ─── Theme toggle ────────────────────────────────────────────────── */
+    .theme-toggle {
+      width: 36px; height: 36px;
+      display: grid; place-items: center;
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: 999px;
+      cursor: pointer;
+      color: var(--color-fg);
+      font-size: 14px;
+      transition: all var(--duration-fast);
+    }
+    .theme-toggle:hover {
+      background: var(--color-bg-sunken);
+      border-color: var(--color-border-strong);
+      transform: translateY(-1px);
+    }
+
+    /* ─── Cover ───────────────────────────────────────────────────────── */
+    .report-cover {
+      max-width: var(--report-max);
+      margin: var(--space-10) auto 0;
+      padding: var(--space-10) var(--report-gutter) var(--space-8);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .cover-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-family: var(--font-mono);
+      font-size: var(--size-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.10em;
+      color: var(--color-fg-subtle);
+      margin: 0 0 var(--space-6);
+    }
+    .cover-eyebrow::before {
+      content: '';
+      width: 24px; height: 2px;
+      background: var(--color-accent);
+      border-radius: 2px;
+    }
+    .cover-eyebrow span { color: var(--color-fg-muted); }
+    .cover-eyebrow .sep { color: var(--color-border-strong); }
+    .report-title {
+      font-size: var(--size-h1);
+      font-family: var(--font-display);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.030em;
+      margin: 0 0 var(--space-5);
+      max-width: 22ch;
+      color: var(--color-fg);
+    }
+    .report-title em { color: var(--color-accent); font-style: italic; font-weight: 700; }
+    .report-subtitle {
+      font-family: var(--font-display);
+      font-size: var(--size-lead);
+      font-weight: 400;
+      font-style: italic;
+      line-height: 1.45;
+      color: var(--color-fg-muted);
+      max-width: 56ch;
+      margin: 0 0 var(--space-7);
+    }
+    .report-authors {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: var(--space-4) var(--space-6);
+      padding-top: var(--space-5);
+      border-top: 1px solid var(--color-border);
+      font-size: var(--size-small);
+      color: var(--color-fg-muted);
+    }
+    .report-authors strong {
+      display: block;
+      color: var(--color-fg);
+      font-family: var(--font-display);
+      font-size: 0.9375rem;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+    .report-authors span { display: block; font-size: var(--size-xs); color: var(--color-fg-subtle); }
+
+    /* ─── Sumário executivo ──────────────────────────────────────────── */
+    .report-summary {
+      max-width: var(--report-max);
+      margin: var(--space-10) auto var(--space-10);
+      padding: 0 var(--report-gutter);
+    }
+    .report-summary__inner {
+      background: var(--color-bg-elevated);
+      border-left: 4px solid var(--color-accent);
+      border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+      padding: var(--space-7) var(--space-8);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    .report-summary__inner::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 320px; height: 320px;
+      background: radial-gradient(circle, var(--color-accent-dim) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .report-summary__label {
+      font-family: var(--font-mono);
+      font-size: var(--size-xs);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.10em;
+      color: var(--color-accent);
+      margin: 0 0 var(--space-4);
+    }
+    .report-summary h2 {
+      font-size: var(--size-h2);
+      margin: 0 0 var(--space-5);
+      letter-spacing: -0.025em;
+    }
+    .report-summary p { font-size: var(--size-body); line-height: 1.7; color: var(--color-fg); margin-bottom: var(--space-4); }
+    .report-summary p:last-of-type { margin-bottom: var(--space-6); }
+    .report-takeaways {
+      list-style: none;
+      padding: 0;
+      margin: var(--space-6) 0 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: var(--space-4);
+      border-top: 1px solid var(--color-border);
+      padding-top: var(--space-6);
+    }
+    .report-takeaways li {
+      margin: 0;
+      padding: 0;
+      max-width: none;
+      line-height: 1.45;
+    }
+    .report-anchor-num {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 1.625rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      color: var(--color-accent);
+      line-height: 1.1;
+      margin-bottom: var(--space-2);
+    }
+    .report-takeaways small {
+      display: block;
+      font-size: var(--size-xs);
+      color: var(--color-fg-muted);
+      line-height: 1.45;
+    }
+
+    /* ─── TOC numerado ────────────────────────────────────────────────── */
+    .report-toc {
+      max-width: var(--report-max);
+      margin: var(--space-8) auto var(--space-8);
+      padding: var(--space-6) var(--report-gutter);
+      background: var(--color-bg-sunken);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-border);
+    }
+    .report-toc__heading {
+      font-family: var(--font-mono);
+      font-size: var(--size-xs);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.10em;
+      color: var(--color-fg-subtle);
+      margin: 0 0 var(--space-4);
+    }
+    .report-toc__list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      columns: 2;
+      column-gap: var(--space-7);
+    }
+    .report-toc__list li {
+      margin-bottom: var(--space-2);
+      break-inside: avoid;
+      max-width: none;
+    }
+    .report-toc__list a {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-3);
+      font-size: var(--size-small);
+      color: var(--color-fg-muted);
+      text-decoration: none;
+      padding: var(--space-1) 0;
+      border-bottom: 1px dotted var(--color-border);
+      transition: color var(--duration-fast);
+    }
+    .report-toc__list a:hover { color: var(--color-accent); border-color: var(--color-accent); }
+    .report-toc__list a.is-active { color: var(--color-accent); font-weight: 600; }
+    .toc-num {
+      font-family: var(--font-mono);
+      font-size: var(--size-xs);
+      color: var(--color-accent);
+      font-weight: 600;
+      flex-shrink: 0;
+      min-width: 2.2ch;
+    }
+
+    /* ─── Corpo principal ─────────────────────────────────────────────── */
+    .report-body {
+      max-width: var(--report-max);
+      margin: 0 auto;
+      padding: var(--space-8) var(--report-gutter);
+    }
+    .report-section {
+      margin-bottom: var(--space-12);
+      scroll-margin-top: calc(var(--report-header-h) + var(--space-4));
+    }
+    .section-header {
+      display: flex;
+      align-items: flex-end;
+      gap: var(--space-5);
+      margin-bottom: var(--space-6);
+      padding-bottom: var(--space-4);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .section-num {
+      font-family: var(--font-mono);
+      font-size: 3.25rem;
+      color: var(--color-border-strong);
+      line-height: 1;
+      font-weight: 400;
+      flex-shrink: 0;
+      user-select: none;
+    }
+    .report-section h2 {
+      font-size: var(--size-h2);
+      font-weight: 800;
+      margin: 0;
+      letter-spacing: -0.025em;
+      color: var(--color-fg);
+    }
+    .report-section h3 {
+      font-size: var(--size-h3);
+      margin: var(--space-7) 0 var(--space-3);
+      font-weight: 700;
+      color: var(--color-fg);
+    }
+    .report-section h3 .h3-num {
+      font-family: var(--font-mono);
+      font-size: 0.75em;
+      color: var(--color-accent);
+      margin-right: var(--space-2);
+      font-weight: 600;
+    }
+
+    /* ─── Figura numerada ─────────────────────────────────────────────── */
+    .report-figure {
+      margin: var(--space-6) 0;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .chart-box {
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-5) var(--space-6) var(--space-6);
+      box-shadow: var(--shadow-sm);
+    }
+    .chart-inner {
+      position: relative;
+      height: 320px;
+      margin-top: var(--space-3);
+    }
+    .chart-inner-tall { height: 380px; }
+    .report-figure figcaption {
+      font-size: var(--size-small);
+      color: var(--color-fg-muted);
+      margin-top: var(--space-3);
+      line-height: 1.5;
+      padding-left: var(--space-3);
+      border-left: 2px solid var(--color-border);
+    }
+    .report-figure figcaption strong {
+      color: var(--color-fg);
+      font-family: var(--font-display);
+      font-weight: 700;
+    }
+    .report-figure figcaption .fig-source {
+      display: block;
+      font-size: var(--size-xs);
+      color: var(--color-fg-subtle);
+      margin-top: var(--space-1);
+      font-style: italic;
+    }
+
+    /* ─── Pull quote ──────────────────────────────────────────────────── */
+    .report-pullquote {
+      border-left: 4px solid var(--color-accent);
+      background: var(--color-accent-dim);
+      padding: var(--space-5) var(--space-6);
+      margin: var(--space-7) 0;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .report-pullquote p {
+      font-family: var(--font-display);
+      font-size: var(--size-lead);
+      font-style: italic;
+      color: var(--color-fg);
+      line-height: 1.5;
+      margin: 0 0 var(--space-3);
+      max-width: 60ch;
+    }
+    .report-pullquote cite {
+      font-size: var(--size-small);
+      color: var(--color-fg-muted);
+      font-style: normal;
+      font-weight: 500;
+    }
+    .report-pullquote cite strong {
+      display: inline-block;
+      margin-right: var(--space-2);
+      color: var(--color-fg);
+      font-family: var(--font-display);
+      font-weight: 700;
+    }
+
+    /* ─── Callouts ────────────────────────────────────────────────────── */
+    .callout {
+      display: flex;
+      gap: var(--space-4);
+      padding: var(--space-4) var(--space-5);
+      margin: var(--space-5) 0;
+      border-left: 3px solid;
+      border-radius: var(--radius);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .callout--info   { background: var(--color-info-dim);    border-color: var(--color-info); }
+    .callout--tip    { background: var(--color-success-dim); border-color: var(--color-success); }
+    .callout--warn   { background: var(--color-warn-dim);    border-color: var(--color-warn); }
+    .callout--danger { background: var(--color-danger-dim);  border-color: var(--color-danger); }
+    .callout__icon {
+      flex-shrink: 0;
+      width: 24px; height: 24px;
+      display: grid; place-items: center;
+      border-radius: 50%;
+      font-weight: 700;
+      font-size: 0.75rem;
+      color: white;
+      margin-top: 2px;
+    }
+    .callout--info   .callout__icon { background: var(--color-info); }
+    .callout--tip    .callout__icon { background: var(--color-success); }
+    .callout--warn   .callout__icon { background: var(--color-warn); color: var(--itau-warm-black); }
+    .callout--danger .callout__icon { background: var(--color-danger); }
+    .callout__content { flex: 1; min-width: 0; }
+    .callout__title { font-weight: 700; margin: 0 0 var(--space-1); font-size: var(--size-small); color: var(--color-fg); }
+    .callout__content p { margin: 0; font-size: var(--size-small); color: var(--color-fg); }
+
+    /* ─── Tabelas de dados ────────────────────────────────────────────── */
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-sm);
+      margin: var(--space-5) 0 var(--space-3);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--size-small);
+      background: var(--color-bg-elevated);
+    }
+    table.data-table thead {
+      background: var(--color-bg-sunken);
+    }
+    table.data-table th {
+      padding: var(--space-3) var(--space-4);
+      text-align: left;
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.10em;
+      color: var(--color-fg-subtle);
+      border-bottom: 2px solid var(--color-border-strong);
+      white-space: nowrap;
+    }
+    table.data-table td {
+      padding: var(--space-3) var(--space-4);
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-fg);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    table.data-table tbody tr:nth-child(even) td { background: rgba(41,32,23,0.02); }
+    [data-theme="dark"] table.data-table tbody tr:nth-child(even) td { background: rgba(237,229,221,0.02); }
+    table.data-table tbody tr:hover td { background: var(--color-accent-dim); }
+    table.data-table tbody tr:last-child td { border-bottom: none; }
+    table.data-table td.num,
+    table.data-table th.num {
+      text-align: right;
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+    }
+    table.data-table td.td-strong {
+      font-weight: 600;
+      color: var(--color-fg);
+      font-family: var(--font-display);
+    }
+    table.data-table tr.is-emphasis td {
+      background: var(--color-accent-dim) !important;
+      font-weight: 700;
+      color: var(--color-fg);
+    }
+    .table-caption {
+      font-size: var(--size-small);
+      color: var(--color-fg-muted);
+      margin: 0 0 var(--space-5);
+      padding-left: var(--space-3);
+      border-left: 2px solid var(--color-border);
+      line-height: 1.5;
+    }
+    .table-caption strong { color: var(--color-fg); font-family: var(--font-display); }
+    .table-caption .fig-source { display: block; font-size: var(--size-xs); color: var(--color-fg-subtle); margin-top: 2px; font-style: italic; }
+
+    /* ─── Badges ──────────────────────────────────────────────────────── */
+    .badge {
+      display: inline-flex; align-items: center;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      white-space: nowrap;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .badge-accent   { background: var(--color-accent-dim);   color: var(--color-accent); }
+    .badge-info     { background: var(--color-info-dim);     color: var(--color-info); }
+    .badge-success  { background: var(--color-success-dim);  color: var(--color-success); }
+    .badge-sage     { background: var(--color-sage-dim);     color: var(--color-sage); }
+    .badge-teal     { background: var(--color-teal-dim);     color: var(--color-teal); }
+    .badge-plum     { background: var(--color-plum-dim);     color: var(--color-plum); }
+    .badge-warn     { background: var(--color-warn-dim);     color: var(--color-fg); }
+
+    /* ─── Métricas em grid ────────────────────────────────────────────── */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: var(--space-4);
+      margin: var(--space-5) 0;
+    }
+    .metric-card {
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: var(--space-4) var(--space-5);
+      box-shadow: var(--shadow-xs);
+      border-top: 2px solid var(--color-accent);
+    }
+    .metric-card.var-info    { border-top-color: var(--color-info); }
+    .metric-card.var-success { border-top-color: var(--color-success); }
+    .metric-card.var-teal    { border-top-color: var(--color-teal); }
+    .metric-value {
+      display: block;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.625rem;
+      letter-spacing: -0.025em;
+      color: var(--color-fg);
+      line-height: 1.1;
+    }
+    .metric-value .unit {
+      font-size: 0.625em;
+      font-weight: 600;
+      color: var(--color-fg-muted);
+      margin-left: 0.2em;
+    }
+    .metric-label {
+      font-size: var(--size-xs);
+      color: var(--color-fg-muted);
+      margin: var(--space-2) 0 0;
+      font-weight: 500;
+      max-width: none;
+    }
+
+    /* ─── Footnotes ───────────────────────────────────────────────────── */
+    sup { font-size: 0.7em; line-height: 1; vertical-align: super; }
+    .fn-ref, .fn-back {
+      font-family: var(--font-mono);
+      font-size: 0.85em;
+      color: var(--color-accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .fn-ref:hover, .fn-back:hover { text-decoration: underline; }
+    .report-footnotes {
+      max-width: var(--report-max);
+      margin: var(--space-10) auto 0;
+      padding: var(--space-7) var(--report-gutter) var(--space-8);
+      border-top: 2px solid var(--color-border-strong);
+    }
+    .report-footnotes h2 {
+      font-family: var(--font-mono);
+      font-size: var(--size-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--color-fg-subtle);
+      margin: 0 0 var(--space-5);
+    }
+    .fn-list {
+      padding-left: var(--space-5);
+      margin: 0;
+      max-width: none;
+    }
+    .fn-list li {
+      font-size: var(--size-small);
+      color: var(--color-fg-muted);
+      margin-bottom: var(--space-3);
+      line-height: 1.55;
+      scroll-margin-top: calc(var(--report-header-h) + var(--space-4));
+    }
+    .fn-list li:target {
+      background: var(--color-accent-dim);
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-sm);
+      margin-left: calc(-1 * var(--space-3));
+    }
+    .fn-list li a.fn-back { margin-left: var(--space-2); }
+
+    /* ─── Footer ──────────────────────────────────────────────────────── */
+    .report-footer {
+      max-width: var(--report-max);
+      margin: 0 auto;
+      padding: var(--space-6) var(--report-gutter) var(--space-10);
+      border-top: 1px solid var(--color-border);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--space-5);
+      flex-wrap: wrap;
+    }
+    .report-footer__brand {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: var(--size-small);
+      color: var(--color-fg-muted);
+    }
+    .report-footer__disclaimer {
+      font-size: var(--size-xs);
+      color: var(--color-fg-subtle);
+      max-width: 52ch;
+      line-height: 1.5;
+      margin: 0;
+    }
+    .report-footer__anbima {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: var(--space-2) var(--space-3);
+      font-family: var(--font-mono);
+      font-size: var(--size-xs);
+      font-weight: 600;
+      color: var(--color-fg-muted);
+      white-space: nowrap;
+    }
+    .report-footer__anbima::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--color-success);
+    }
+
+    /* ─── Reveal on scroll ────────────────────────────────────────────── */
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(16px);
+      transition:
+        opacity var(--duration-hero) var(--ease-out),
+        transform var(--duration-hero) var(--ease-out);
+    }
+    [data-reveal].is-visible { opacity: 1; transform: none; }
+
+    /* ─── Utilities ───────────────────────────────────────────────────── */
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--color-border);
+      margin: var(--space-8) 0;
+    }
+    .text-accent { color: var(--color-accent); }
+    .font-mono { font-family: var(--font-mono); }
+
+    /* ═══════════════════════════════════════════════════════════════════
+       @media print — CSS @page rigoroso para A4
+       ═══════════════════════════════════════════════════════════════════ */
+    @page {
+      size: A4;
+      margin: 2cm 1.8cm 2.4cm 1.8cm;
+      @bottom-center {
+        content: "Plataforma de Dados Itaú · RA-2024-001 · " counter(page) " / " counter(pages);
+        font-family: 'Inter', sans-serif;
+        font-size: 9pt;
+        color: #666;
+      }
+    }
+    @page :first {
+      margin: 1.5cm;
+      @bottom-center { content: ""; }
+    }
+
+    @media print {
+      /* Esconde UI interativa */
+      .report-header,
+      .report-toc,
+      .theme-toggle { display: none !important; }
+
+      /* Tipografia para A4 */
+      html, body {
+        font-size: 10.5pt !important;
+        line-height: 1.55 !important;
+        color: #000 !important;
+        background: #fff !important;
+        background-image: none !important;
+      }
+      body { background-image: none !important; }
+      h1, h2, h3, h4 { color: #000 !important; }
+      p { color: #1a1a1a !important; max-width: none !important; }
+      strong, em { color: #000 !important; }
+      a { color: #000 !important; text-decoration: underline; }
+
+      /* Reset de sombras e dim tints */
+      .report-summary__inner,
+      .chart-box,
+      .metric-card,
+      .callout,
+      .report-pullquote,
+      .table-wrap {
+        box-shadow: none !important;
+        border-color: #999 !important;
+      }
+      .report-summary__inner {
+        background: #fff !important;
+        border-left: 3pt solid #FF6200 !important;
+        border-radius: 0 !important;
+      }
+      .report-summary__inner::before { display: none !important; }
+      .callout, .report-pullquote { background: #f8f8f8 !important; }
+      .report-pullquote { border-left: 3pt solid #FF6200 !important; }
+
+      /* Cover ocupa página inteira */
+      .report-cover {
+        padding: 0 !important;
+        margin: 0 !important;
+        height: 95vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        border-bottom: none !important;
+        page-break-after: always;
+      }
+      .report-title { font-size: 32pt !important; }
+      .report-subtitle { font-size: 14pt !important; }
+
+      /* Sumário executivo na 2ª página, sozinho */
+      .report-summary { page-break-after: always; margin-top: 0 !important; }
+      .report-summary__inner { padding: 0 !important; border-left-width: 4pt !important; padding-left: 12pt !important; }
+      .report-takeaways { display: grid !important; grid-template-columns: repeat(4, 1fr) !important; gap: 8pt !important; }
+      .report-anchor-num { font-size: 16pt !important; color: #FF6200 !important; }
+
+      /* Quebra antes de cada seção numerada */
+      .report-section { page-break-before: always; }
+      .report-body { padding: 0 !important; }
+
+      /* Não quebrar elementos internos */
+      table, .callout, .chart-box, .report-pullquote,
+      .report-figure, .table-wrap, .metric-card {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+      h2, h3 { page-break-after: avoid !important; }
+      h2 + p, h3 + p { page-break-before: avoid !important; }
+
+      /* Footnotes: começam em nova página */
+      .report-footnotes { page-break-before: always; }
+      .report-footnotes h2 { font-size: 14pt !important; color: #000 !important; }
+
+      /* Imagens (charts em canvas) preservam tamanho */
+      canvas { max-width: 100% !important; height: auto !important; }
+      .chart-inner, .chart-inner-tall { height: 240pt !important; }
+
+      /* Restaura reveals */
+      [data-reveal] { opacity: 1 !important; transform: none !important; }
+    }
+
+    /* ─── Reduced motion ──────────────────────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      [data-reveal] { opacity: 1; transform: none; }
+    }
+
+    /* ─── Responsivo ──────────────────────────────────────────────────── */
+    @media (max-width: 720px) {
+      .report-header { padding: 0 var(--space-4); }
+      .report-header__doc { display: none; }
+      .report-cover, .report-summary, .report-toc, .report-body, .report-footnotes, .report-footer {
+        padding-left: var(--space-5);
+        padding-right: var(--space-5);
+      }
+      .report-toc__list { columns: 1; }
+      .report-takeaways { grid-template-columns: 1fr 1fr; }
+      .section-num { font-size: 2.25rem; }
+      .section-header { gap: var(--space-3); align-items: baseline; }
+      .report-title { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ HEADER ═══════════════════════════════════════════════════════ -->
+  <header class="report-header">
+    <div class="report-header__brand">
+      <span class="report-header__logo" aria-hidden="true">itaú</span>
+      <div>
+        <p class="report-header__org">Itaú Unibanco</p>
+        <p class="report-header__doc">Relatório Anual · Doc nº RA-2024-001</p>
+      </div>
+    </div>
+    <div class="report-header__meta">
+      <p class="report-header__date">Março 2025</p>
+      <button class="theme-toggle" aria-label="Alternar tema" type="button">
+        <span aria-hidden="true">◐</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ═══ COVER ════════════════════════════════════════════════════════ -->
+  <article class="report">
+  <header class="report-cover">
+    <p class="cover-eyebrow">
+      <span>Itaú Unibanco</span>
+      <span class="sep">·</span>
+      <span>RA-2024-001</span>
+      <span class="sep">·</span>
+      <span>Março 2025</span>
+    </p>
+    <h1 class="report-title">Plataforma de Dados Itaú <em>Relatório Anual 2024</em></h1>
+    <p class="report-subtitle">
+      Cobertura, governança, qualidade e impacto da infraestrutura de dados compartilhada
+      do Itaú Unibanco — 12 meses de evolução em catálogo, self-service, ESG e linhagem.
+    </p>
+    <div class="report-authors">
+      <div>
+        <strong>Time de Plataforma de Dados</strong>
+        <span>Diretoria de Tecnologia · ITI</span>
+      </div>
+      <div>
+        <strong>Governança e Compliance</strong>
+        <span>Diretoria de Controles Internos</span>
+      </div>
+      <div>
+        <strong>Sustentabilidade</strong>
+        <span>Diretoria Executiva ESG</span>
+      </div>
+      <div>
+        <strong>Relações com Investidores</strong>
+        <span>Diretoria Financeira</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══ SUMÁRIO EXECUTIVO ════════════════════════════════════════════ -->
+  <section class="report-summary" aria-label="Sumário executivo" data-reveal>
+    <div class="report-summary__inner">
+      <p class="report-summary__label">Sumário Executivo</p>
+      <h2>O ano em que a plataforma virou referência</h2>
+      <p>
+        Em 2024, a <strong>Plataforma de Dados Itaú</strong> consolidou-se como a infraestrutura
+        central da estratégia data-driven do banco, conectando 47 squads de produto a um catálogo
+        unificado de tabelas, eventos e modelos. O ano foi marcado pela conclusão da migração do
+        legado batch (sunset em outubro), pelo lançamento do self-service de governança e pelo
+        atingimento da cobertura ESG em 87% dos domínios críticos.
+      </p>
+      <p>
+        Os investimentos consolidados de <strong>R$ 184 milhões</strong> ao longo do ano viabilizaram
+        ganho operacional de <strong>R$ 230 milhões</strong> em economia de infraestrutura legada
+        descomissionada, ferramentas duplicadas eliminadas e horas-homem realocadas para entregas
+        de produto. O ROI 12 meses ficou em <strong>1,25×</strong>, acima da meta de 1,0× estipulada
+        no plano trienal aprovado pelo CIO em 2022.
+      </p>
+      <p>
+        O catálogo cresceu de 1.840 para <strong>2.400 tabelas</strong> documentadas, com linhagem
+        automática operando em 92% dos pipelines críticos. A latência mediana de descoberta caiu de
+        4,2 dias para 38 minutos — um corte de 99% no tempo entre "preciso de um dado" e "tenho o
+        dado em mãos". Esse ganho é a base para os 14 novos casos de uso de IA generativa habilitados
+        no segundo semestre.
+      </p>
+      <p>
+        Em governança, a plataforma absorveu integralmente as obrigações da LGPD e da Resolução
+        BCB nº 4.893/2021, com 100% dos domínios sensíveis tagueados, mascarados em ambiente
+        não-produtivo e auditáveis via API. Para 2025, o foco passa de cobertura para profundidade:
+        observabilidade de qualidade em tempo real, federação multi-cloud e expansão para parceiros
+        regulados (Itaú BBA, Itaú Asset, Rede).
+      </p>
+      <ul class="report-takeaways">
+        <li>
+          <span class="report-anchor-num">2.400</span>
+          <small>tabelas catalogadas (vs. 1.840 em 2023, +30%)</small>
+        </li>
+        <li>
+          <span class="report-anchor-num">87%</span>
+          <small>cobertura ESG em domínios críticos</small>
+        </li>
+        <li>
+          <span class="report-anchor-num">+R$ 230 mi</span>
+          <small>economia operacional realizada</small>
+        </li>
+        <li>
+          <span class="report-anchor-num">1,25×</span>
+          <small>ROI 12 meses (meta: 1,0×)</small>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ TOC (gerada por JS) ══════════════════════════════════════════ -->
+  <nav class="report-toc" aria-label="Sumário">
+    <p class="report-toc__heading">Conteúdo</p>
+    <ol class="report-toc__list" id="reportToc">
+      <!-- preenchido por JS -->
+    </ol>
+  </nav>
+
+  <!-- ═══ CORPO DO RELATÓRIO ═══════════════════════════════════════════ -->
+  <main class="report-body">
+
+    <!-- ═══════════ SEÇÃO 1 — VISÃO GERAL ═══════════ -->
+    <section class="report-section" id="s1" data-reveal>
+      <div class="section-header">
+        <span class="section-num" aria-hidden="true">01</span>
+        <h2>Visão geral da Plataforma</h2>
+      </div>
+
+      <p>
+        A Plataforma de Dados Itaú é a infraestrutura compartilhada que substituiu, ao longo de
+        2024, o pipeline batch legado por um modelo <strong>event-driven multi-região</strong>
+        baseado em contratos versionados. Times de produto consomem e publicam dados via um
+        SDK único (TypeScript, Python e Java) sem operar infraestrutura — o time central de
+        Plataforma (38 engenheiros) responde por SLA, custo unitário e roadmap evolutivo.
+      </p>
+      <p>
+        Em termos de escala, a plataforma processou em 2024 uma média de <strong>1,7 trilhão
+        de eventos por mês</strong>, com pico de 64 mil eventos por segundo durante a Black Friday.
+        A latência p99 ponta-a-ponta ficou em 480 ms (meta: ≤ 600 ms). A disponibilidade anual
+        foi de <strong>99,982%</strong>, dentro do SLA de 99,95% acordado com áreas de negócio
+        de criticidade alta<sup><a href="#fn1" class="fn-ref" id="fn-ref-1">[1]</a></sup>.
+      </p>
+
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <span class="metric-value">2.400<span class="unit">tabelas</span></span>
+          <p class="metric-label">no catálogo central (Dez/2024)</p>
+        </div>
+        <div class="metric-card var-info">
+          <span class="metric-value">47<span class="unit">squads</span></span>
+          <p class="metric-label">consumindo ou publicando dados</p>
+        </div>
+        <div class="metric-card var-success">
+          <span class="metric-value">99,98<span class="unit">%</span></span>
+          <p class="metric-label">disponibilidade anual (SLA 99,95%)</p>
+        </div>
+        <div class="metric-card var-teal">
+          <span class="metric-value">1,7<span class="unit">tri evt/mês</span></span>
+          <p class="metric-label">volume médio processado</p>
+        </div>
+      </div>
+
+      <h3><span class="h3-num">1.1</span> Princípios arquiteturais</h3>
+      <p>
+        Quatro decisões guiaram toda a evolução em 2024 e seguem como diretrizes para 2025:
+      </p>
+      <ol>
+        <li><strong>Schema-first.</strong> Todo dado passa por contrato Avro versionado, com
+            quebras de compatibilidade bloqueadas em CI e não em produção.</li>
+        <li><strong>Event-driven por padrão.</strong> Batch é caso especial (materialização
+            agendada), não regra. Mudanças propagam em segundos.</li>
+        <li><strong>Multi-região nativo.</strong> Latência regional é resolvida em design, não
+            em SLA. Replicação automática entre SP, RJ e DF conforme política do tópico.</li>
+        <li><strong>Self-service com guard-rails.</strong> Times criam tópicos sem ticket;
+            limites de throughput, retenção e RBAC garantem que self-service não vira caos.</li>
+      </ol>
+
+      <div class="callout callout--info">
+        <span class="callout__icon">i</span>
+        <div class="callout__content">
+          <p class="callout__title">Modelo de governança</p>
+          <p>
+            O time de Plataforma é owner da infraestrutura, mas <strong>não dos dados</strong>.
+            Cada tabela ou tópico tem um <em>data owner</em> nomeado na área de negócio
+            responsável, com responsabilidades formalizadas no Comitê de Dados.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ SEÇÃO 2 — CATÁLOGO E LINHAGEM ═══════════ -->
+    <section class="report-section" id="s2" data-reveal>
+      <div class="section-header">
+        <span class="section-num" aria-hidden="true">02</span>
+        <h2>Catálogo e linhagem</h2>
+      </div>
+
+      <p>
+        O catálogo central cresceu de 1.840 tabelas ao final de 2023 para <strong>2.400 tabelas
+        documentadas</strong> ao final de 2024 — um aumento de 30% que representa absorção integral
+        dos cinco domínios prioritários: <em>Cartões, Crédito, Investimentos, Seguros e Câmbio</em>.
+        Cada entrada do catálogo carrega obrigatoriamente owner, schema, exemplos de uso, política
+        de retenção, classificação de sensibilidade e SLA<sup><a href="#fn2" class="fn-ref" id="fn-ref-2">[2]</a></sup>.
+      </p>
+
+      <h3><span class="h3-num">2.1</span> Cobertura por domínio</h3>
+      <p>
+        A tabela abaixo apresenta a evolução por domínio entre 2023 e 2024. Domínios com cobertura
+        &lt; 80% recebem prioridade especial no plano de 2025.
+      </p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Domínio</th>
+              <th>Owner executivo</th>
+              <th class="num">Tabelas 2023</th>
+              <th class="num">Tabelas 2024</th>
+              <th class="num">Δ</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="td-strong">Cartões</td>
+              <td>Dir. Cartões</td>
+              <td class="num">418</td>
+              <td class="num">512</td>
+              <td class="num">+22%</td>
+              <td><span class="badge badge-success">Completo</span></td>
+            </tr>
+            <tr>
+              <td class="td-strong">Crédito PF</td>
+              <td>Dir. Crédito</td>
+              <td class="num">362</td>
+              <td class="num">485</td>
+              <td class="num">+34%</td>
+              <td><span class="badge badge-success">Completo</span></td>
+            </tr>
+            <tr>
+              <td class="td-strong">Crédito PJ</td>
+              <td>Itaú BBA</td>
+              <td class="num">204</td>
+              <td class="num">298</td>
+              <td class="num">+46%</td>
+              <td><span class="badge badge-success">Completo</span></td>
+            </tr>
+            <tr>
+              <td class="td-strong">Investimentos</td>
+              <td>Itaú Asset</td>
+              <td class="num">285</td>
+              <td class="num">364</td>
+              <td class="num">+28%</td>
+              <td><span class="badge badge-success">Completo</span></td>
+            </tr>
+            <tr>
+              <td class="td-strong">Seguros</td>
+              <td>Itaú Seguros</td>
+              <td class="num">192</td>
+              <td class="num">241</td>
+              <td class="num">+26%</td>
+              <td><span class="badge badge-accent">Em curso</span></td>
+            </tr>
+            <tr>
+              <td class="td-strong">Câmbio</td>
+              <td>Dir. Internacional</td>
+              <td class="num">98</td>
+              <td class="num">156</td>
+              <td class="num">+59%</td>
+              <td><span class="badge badge-accent">Em curso</span></td>
+            </tr>
+            <tr>
+              <td class="td-strong">Rede (adquirência)</td>
+              <td>Rede S.A.</td>
+              <td class="num">142</td>
+              <td class="num">198</td>
+              <td class="num">+39%</td>
+              <td><span class="badge badge-accent">Em curso</span></td>
+            </tr>
+            <tr>
+              <td class="td-strong">Compliance e PLD</td>
+              <td>Dir. Compliance</td>
+              <td class="num">88</td>
+              <td class="num">102</td>
+              <td class="num">+16%</td>
+              <td><span class="badge badge-warn">Cobertura parcial</span></td>
+            </tr>
+            <tr>
+              <td class="td-strong">Recursos Humanos</td>
+              <td>Dir. de Pessoas</td>
+              <td class="num">51</td>
+              <td class="num">44</td>
+              <td class="num">−14%</td>
+              <td><span class="badge badge-info">Consolidação</span></td>
+            </tr>
+            <tr class="is-emphasis">
+              <td class="td-strong">Total</td>
+              <td>—</td>
+              <td class="num">1.840</td>
+              <td class="num">2.400</td>
+              <td class="num">+30%</td>
+              <td><span class="badge badge-accent">Meta atingida</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-caption">
+        <strong>Tabela 1.</strong> Evolução do catálogo por domínio entre 2023 e 2024.
+        <span class="fig-source">Fonte: Catálogo central da Plataforma (snapshot 31/12/2024). Linha "Consolidação" reflete merge de schemas duplicados durante migração HR Cloud.</span>
+      </p>
+
+      <h3><span class="h3-num">2.2</span> Linhagem automática</h3>
+      <p>
+        A linhagem (data lineage) é hoje gerada automaticamente em <strong>92% dos pipelines
+        críticos</strong> via integração com Airflow, dbt e Spark. Para o restante (operadores
+        custom legados), há um esforço dirigido de instrumentação no roadmap de 2025. A latência
+        mediana de descoberta — tempo entre o pedido de um dado e o acesso operacional a ele —
+        caiu de 4,2 dias para 38 minutos<sup><a href="#fn3" class="fn-ref" id="fn-ref-3">[3]</a></sup>.
+      </p>
+
+      <figure class="report-figure">
+        <div class="chart-box">
+          <div class="chart-inner">
+            <canvas id="chart-catalogo" aria-label="Evolução do catálogo: tabelas e cobertura"></canvas>
+          </div>
+        </div>
+        <figcaption>
+          <strong>Figura 1.</strong> Evolução mensal do catálogo em 2024 — barras: novas tabelas
+          adicionadas no mês; linha: cobertura de linhagem automática acumulada (%).
+          <span class="fig-source">Fonte: Catálogo central (n=2.400 tabelas em 31/12/2024). Composição preservada conforme apresentação original ao Comitê de Tecnologia.</span>
+        </figcaption>
+      </figure>
+
+      <blockquote class="report-pullquote">
+        <p>
+          "Antes da Plataforma, encontrar um dado consumia uma semana inteira de um analista.
+          Hoje, qualquer pessoa de produto faz isso entre dois cafés."
+        </p>
+        <cite><strong>Marcela Andrade</strong> · Head de Analytics, Itaú Cartões</cite>
+      </blockquote>
+    </section>
+
+    <!-- ═══════════ SEÇÃO 3 — SELF-SERVICE E FERRAMENTAS ═══════════ -->
+    <section class="report-section" id="s3" data-reveal>
+      <div class="section-header">
+        <span class="section-num" aria-hidden="true">03</span>
+        <h2>Self-service e ferramentas</h2>
+      </div>
+
+      <p>
+        Em 2024 a plataforma consolidou o modelo de self-service: times de produto criam tópicos,
+        registram schemas, configuram pipelines e abrem novos consumidores sem abrir tickets para
+        o time central. As guard-rails (limites de throughput, políticas de retenção, RBAC
+        automático e revisão obrigatória de schema crítico) garantem que self-service não vira
+        self-destruction. Em 12 meses, foram <strong>11.420 operações self-service</strong>,
+        contra 1.880 em 2023 (+507%).
+      </p>
+
+      <h3><span class="h3-num">3.1</span> Ferramentas disponíveis</h3>
+      <p>
+        O ferramental se divide em três frentes: <em>discovery</em> (encontrar dados),
+        <em>builder</em> (criar pipelines) e <em>ops</em> (operar). Todas integradas via SSO
+        corporativo e governadas por um único IAM.
+      </p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Ferramenta</th>
+              <th>Frente</th>
+              <th>Usuários ativos/mês</th>
+              <th class="num">Adesão YoY</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="td-strong">Atlas Discovery</td>
+              <td><span class="badge badge-info">Discovery</span></td>
+              <td>2.140 usuários</td>
+              <td class="num">+184%</td>
+              <td><span class="badge badge-success">GA</span></td>
+            </tr>
+            <tr>
+              <td class="td-strong">Forge Pipelines</td>
+              <td><span class="badge badge-teal">Builder</span></td>
+              <td>820 usuários</td>
+              <td class="num">+92%</td>
+              <td><span class="badge badge-success">GA</span></td>
+            </tr>
+            <tr>
+              <td class="td-strong">Lens Observability</td>
+              <td><span class="badge badge-sage">Ops</span></td>
+              <td>465 usuários</td>
+              <td class="num">+148%</td>
+              <td><span class="badge badge-success">GA</span></td>
+            </tr>
+            <tr>
+              <td class="td-strong">Notebooks Itaú</td>
+              <td><span class="badge badge-info">Discovery</span></td>
+              <td>1.380 usuários</td>
+              <td class="num">+62%</td>
+              <td><span class="badge badge-success">GA</span></td>
+            </tr>
+            <tr>
+              <td class="td-strong">PolicyHub</td>
+              <td><span class="badge badge-plum">Ops</span></td>
+              <td>180 usuários</td>
+              <td class="num">novo</td>
+              <td><span class="badge badge-accent">Beta</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-caption">
+        <strong>Tabela 2.</strong> Ferramentas da plataforma e adoção em 2024.
+        <span class="fig-source">Fonte: telemetria interna (média móvel dos últimos 3 meses do ano). Usuários únicos por mês.</span>
+      </p>
+
+      <h3><span class="h3-num">3.2</span> SDK e CLI</h3>
+      <p>
+        O SDK unificado está disponível para TypeScript, Python e Java, com paridade de API
+        garantida em testes de contrato. A CLI <code>dados</code> cobre as operações cotidianas
+        sem precisar abrir browser. Em 2024 a equipe publicou <strong>34 releases</strong> do
+        SDK, sem nenhum incidente de quebra de compatibilidade reportado pelos consumidores.
+      </p>
+
+      <div class="callout callout--tip">
+        <span class="callout__icon">★</span>
+        <div class="callout__content">
+          <p class="callout__title">Boa prática consolidada em 2024</p>
+          <p>
+            Versionar schemas junto com o código que produz/consome. Mudanças passam por code
+            review como qualquer outra alteração de código — não há mais "schemas dark" criados
+            por consoles administrativos.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ SEÇÃO 4 — GOVERNANÇA ═══════════ -->
+    <section class="report-section" id="s4" data-reveal>
+      <div class="section-header">
+        <span class="section-num" aria-hidden="true">04</span>
+        <h2>Governança e privacidade</h2>
+      </div>
+
+      <p>
+        A plataforma absorveu integralmente em 2024 as obrigações da
+        <strong>LGPD</strong> (Lei nº 13.709/2018) e da <strong>Resolução BCB nº 4.893/2021</strong>
+        sobre política de segurança cibernética para instituições financeiras<sup><a href="#fn4" class="fn-ref" id="fn-ref-4">[4]</a></sup>.
+        Em termos práticos:
+      </p>
+      <ul>
+        <li><strong>100%</strong> dos dados pessoais classificados (CPF, e-mail, telefone,
+            biometria, geolocalização) estão tagueados na camada de schema.</li>
+        <li><strong>100%</strong> dos ambientes não-produtivos consomem dados mascarados via
+            política aplicada na camada de servir — sem cópia física de PII para fora de
+            produção.</li>
+        <li><strong>2,1 milhões</strong> de acessos a dados sensíveis foram registrados,
+            justificados e auditáveis via API (lookup por usuário, tabela, intervalo).</li>
+        <li><strong>87 incidentes</strong> de governança detectados e tratados, com tempo
+            mediano de remediação de 4 horas. Nenhum incidente classificado como severidade
+            crítica chegou a notificação externa.</li>
+      </ul>
+
+      <h3><span class="h3-num">4.1</span> Aprovação por Comitê de Dados</h3>
+      <p>
+        O Comitê de Dados — colegiado mensal composto por CIO, CRO, CCO, DPO e diretores das
+        sete áreas-chave — aprova novos domínios, mudanças de classificação de sensibilidade e
+        políticas de compartilhamento externo. Em 2024, foram 12 reuniões, 38 decisões formais
+        e <strong>zero abstenções</strong> contestadas posteriormente.
+      </p>
+
+      <div class="callout callout--warn">
+        <span class="callout__icon">!</span>
+        <div class="callout__content">
+          <p class="callout__title">Atenção — pendência regulatória 2025</p>
+          <p>
+            O <strong>Open Finance Brasil — Fase 4B</strong> (compartilhamento de dados de
+            investimento e seguros) entra em vigor em julho de 2025. A plataforma já está
+            tecnicamente apta, mas depende da assinatura de cinco convênios bilaterais com
+            instituições parceiras, em curso pela área de Negócios Internacionais.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ SEÇÃO 5 — QUALIDADE ═══════════ -->
+    <section class="report-section" id="s5" data-reveal>
+      <div class="section-header">
+        <span class="section-num" aria-hidden="true">05</span>
+        <h2>Qualidade dos dados</h2>
+      </div>
+
+      <p>
+        Qualidade na plataforma é medida em quatro dimensões: <strong>completude</strong> (% de
+        campos obrigatórios preenchidos), <strong>frescor</strong> (latência entre evento real
+        e disponibilidade), <strong>consistência</strong> (aderência ao schema declarado) e
+        <strong>unicidade</strong> (taxa de duplicatas em chaves primárias). A meta agregada
+        para domínios críticos é 95% — atingida em 8 dos 9 domínios em 2024.
+      </p>
+
+      <figure class="report-figure">
+        <div class="chart-box">
+          <div class="chart-inner-tall">
+            <canvas id="chart-qualidade" aria-label="Dimensões de qualidade por domínio"></canvas>
+          </div>
+        </div>
+        <figcaption>
+          <strong>Figura 2.</strong> Score de qualidade por domínio nas quatro dimensões.
+          Composição preservada em um único gráfico (não separada em quatro) conforme a leitura comparativa.
+          <span class="fig-source">Fonte: Lens Observability, métricas Dez/2024. Escala 0–100. Linha de referência: meta institucional 95.</span>
+        </figcaption>
+      </figure>
+
+      <h3><span class="h3-num">5.1</span> Incidentes de qualidade</h3>
+      <p>
+        Em 2024 foram registrados <strong>312 incidentes de qualidade</strong> (vs. 528 em 2023,
+        −41%). A queda reflete a maturação dos testes de contrato em CI e a adoção do
+        <em>data contract</em> formal pelos produtores.
+      </p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Severidade</th>
+              <th class="num">2023</th>
+              <th class="num">2024</th>
+              <th class="num">Δ</th>
+              <th>MTTR mediano</th>
+              <th>Impacto operacional</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="td-strong">Crítica (P0)</td>
+              <td class="num">18</td>
+              <td class="num">7</td>
+              <td class="num">−61%</td>
+              <td>42 min</td>
+              <td>Parada de produto downstream</td>
+            </tr>
+            <tr>
+              <td class="td-strong">Alta (P1)</td>
+              <td class="num">86</td>
+              <td class="num">48</td>
+              <td class="num">−44%</td>
+              <td>2 h 10 min</td>
+              <td>Métrica de produto incorreta</td>
+            </tr>
+            <tr>
+              <td class="td-strong">Média (P2)</td>
+              <td class="num">218</td>
+              <td class="num">134</td>
+              <td class="num">−39%</td>
+              <td>6 h 30 min</td>
+              <td>Alerta detectado antes do uso</td>
+            </tr>
+            <tr>
+              <td class="td-strong">Baixa (P3)</td>
+              <td class="num">206</td>
+              <td class="num">123</td>
+              <td class="num">−40%</td>
+              <td>2 d</td>
+              <td>Documentação ou metadados</td>
+            </tr>
+            <tr class="is-emphasis">
+              <td class="td-strong">Total</td>
+              <td class="num">528</td>
+              <td class="num">312</td>
+              <td class="num">−41%</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-caption">
+        <strong>Tabela 3.</strong> Incidentes de qualidade por severidade — 2023 vs. 2024.
+        <span class="fig-source">Fonte: PolicyHub + Lens Observability. MTTR = Mean Time To Resolution. P0 inclui apenas eventos com impacto comprovado em produto-cliente.</span>
+      </p>
+    </section>
+
+    <!-- ═══════════ SEÇÃO 6 — ESG ═══════════ -->
+    <section class="report-section" id="s6" data-reveal>
+      <div class="section-header">
+        <span class="section-num" aria-hidden="true">06</span>
+        <h2>ESG e sustentabilidade</h2>
+      </div>
+
+      <p>
+        Em 2024 a Plataforma passou a integrar formalmente a estratégia ESG corporativa do
+        Itaú Unibanco. A <strong>cobertura ESG</strong> — entendida como percentual de domínios
+        com indicadores ambientais, sociais e de governança rastreáveis em catálogo — chegou
+        a <strong>87% dos domínios críticos</strong>, contra 32% no ano anterior.
+      </p>
+
+      <blockquote class="report-pullquote">
+        <p>
+          "Sem dados confiáveis e auditáveis, ESG vira marketing. A Plataforma de Dados é o
+          que nos permite reportar números de carbono e diversidade com o mesmo rigor que
+          reportamos balanço."
+        </p>
+        <cite><strong>Renata Faria</strong> · Diretora Executiva ESG, Itaú Unibanco</cite>
+      </blockquote>
+
+      <h3><span class="h3-num">6.1</span> Pegada de carbono da própria plataforma</h3>
+      <p>
+        A própria infraestrutura é instrumentada para reportar consumo energético. Em 2024 a
+        emissão estimada foi de <strong>1.840 toneladas de CO₂e</strong> (escopo 2), uma redução
+        de 22% em relação a 2023 mesmo com aumento de 38% no volume processado — graças à
+        migração de cargas críticas para data centers próprios com 100% energia renovável
+        contratada.
+      </p>
+
+      <figure class="report-figure">
+        <div class="chart-box">
+          <div class="chart-inner">
+            <canvas id="chart-esg" aria-label="Cobertura ESG e emissões de carbono"></canvas>
+          </div>
+        </div>
+        <figcaption>
+          <strong>Figura 3.</strong> Cobertura ESG (linha) e pegada de carbono da infraestrutura
+          (barras invertidas, em toneladas de CO₂e) — evolução trimestral 2023–2024.
+          <span class="fig-source">Fonte: Diretoria Executiva ESG (cobertura) + GreenOps Squad (carbono). Metodologia GHG Protocol Escopo 2 market-based.</span>
+        </figcaption>
+      </figure>
+
+      <h3><span class="h3-num">6.2</span> Diversidade no time</h3>
+      <p>
+        O time de Plataforma encerrou 2024 com <strong>42% de mulheres</strong> em posições
+        técnicas (vs. 31% em 2023) e <strong>28% de pessoas pretas e pardas</strong> (vs. 19%).
+        As metas para 2025 são, respectivamente, 50% e 35%. Os números são acompanhados em
+        comitê trimestral com Diversidade & Inclusão corporativa.
+      </p>
+    </section>
+
+    <!-- ═══════════ SEÇÃO 7 — ROADMAP 2025 ═══════════ -->
+    <section class="report-section" id="s7" data-reveal>
+      <div class="section-header">
+        <span class="section-num" aria-hidden="true">07</span>
+        <h2>Roadmap 2025</h2>
+      </div>
+
+      <p>
+        O plano de 2025 estrutura-se em três temas: <em>profundidade</em> (qualidade
+        observável em tempo real), <em>expansão</em> (federação multi-cloud e parceiros
+        regulados) e <em>habilitação</em> (IA generativa governada). Os investimentos previstos
+        são de <strong>R$ 218 milhões</strong>, alinhados ao plano trienal aprovado pelo CFO.
+      </p>
+
+      <h3><span class="h3-num">7.1</span> Iniciativas-âncora</h3>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Iniciativa</th>
+              <th>Tema</th>
+              <th>Tri previsto</th>
+              <th class="num">Investimento</th>
+              <th>Owner</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="td-strong">Observability v2 (qualidade em tempo real)</td>
+              <td><span class="badge badge-info">Profundidade</span></td>
+              <td>1Q25 – 2Q25</td>
+              <td class="num">R$ 38 mi</td>
+              <td>Squad Lens</td>
+            </tr>
+            <tr>
+              <td class="td-strong">Federação multi-cloud (AWS + GCP)</td>
+              <td><span class="badge badge-teal">Expansão</span></td>
+              <td>2Q25 – 4Q25</td>
+              <td class="num">R$ 62 mi</td>
+              <td>Plataforma Core</td>
+            </tr>
+            <tr>
+              <td class="td-strong">Onboarding Rede e Itaú Asset (full)</td>
+              <td><span class="badge badge-teal">Expansão</span></td>
+              <td>1Q25 – 3Q25</td>
+              <td class="num">R$ 28 mi</td>
+              <td>Federation Squad</td>
+            </tr>
+            <tr>
+              <td class="td-strong">GenAI Data Gateway governado</td>
+              <td><span class="badge badge-accent">Habilitação</span></td>
+              <td>2Q25 – 4Q25</td>
+              <td class="num">R$ 52 mi</td>
+              <td>AI Platform Squad</td>
+            </tr>
+            <tr>
+              <td class="td-strong">Open Finance Fase 4B (investimentos)</td>
+              <td><span class="badge badge-plum">Regulatório</span></td>
+              <td>2Q25 – 3Q25</td>
+              <td class="num">R$ 24 mi</td>
+              <td>Compliance + Plataforma</td>
+            </tr>
+            <tr>
+              <td class="td-strong">Renovação contrato infra-renovável</td>
+              <td><span class="badge badge-success">ESG</span></td>
+              <td>4Q25</td>
+              <td class="num">R$ 14 mi</td>
+              <td>GreenOps</td>
+            </tr>
+            <tr class="is-emphasis">
+              <td class="td-strong">Total previsto 2025</td>
+              <td>—</td>
+              <td>—</td>
+              <td class="num">R$ 218 mi</td>
+              <td>—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-caption">
+        <strong>Tabela 4.</strong> Iniciativas-âncora do roadmap 2025 com investimento e
+        responsáveis.
+        <span class="fig-source">Fonte: Plano trienal Plataforma de Dados 2023–2025, atualizado em Fev/2025 e aprovado pelo Comitê de Tecnologia em 28/02/2025.</span>
+      </p>
+
+      <h3><span class="h3-num">7.2</span> Metas quantitativas</h3>
+      <ul>
+        <li>Cobertura ESG: <strong>95%</strong> dos domínios críticos (vs. 87% em 2024).</li>
+        <li>Latência de descoberta p99: <strong>≤ 5 minutos</strong> (vs. 38 min em 2024).</li>
+        <li>Incidentes P0 e P1 combinados: <strong>≤ 40 no ano</strong> (vs. 55 em 2024).</li>
+        <li>Disponibilidade anual: manter <strong>≥ 99,98%</strong>.</li>
+        <li>Diversidade no time: <strong>50% mulheres</strong>, <strong>35% PPP</strong>.</li>
+        <li>Pegada de carbono: redução adicional de <strong>15%</strong> vs. 2024<sup><a href="#fn5" class="fn-ref" id="fn-ref-5">[5]</a></sup>.</li>
+      </ul>
+    </section>
+
+    <!-- ═══════════ SEÇÃO 8 — ANEXOS ═══════════ -->
+    <section class="report-section" id="s8" data-reveal>
+      <div class="section-header">
+        <span class="section-num" aria-hidden="true">08</span>
+        <h2>Anexos e referências</h2>
+      </div>
+
+      <h3><span class="h3-num">8.1</span> Glossário técnico</h3>
+      <ul>
+        <li><strong>Schema</strong> — Definição formal e versionada da estrutura de um dado
+            (campos, tipos, restrições). Na plataforma, usa-se Avro como padrão.</li>
+        <li><strong>Tópico</strong> — Canal lógico de eventos publicados e consumidos por times
+            distintos, com schema declarado e SLA contratado.</li>
+        <li><strong>Linhagem (data lineage)</strong> — Rastro automático de quais tabelas
+            originam quais outras, incluindo transformações intermediárias.</li>
+        <li><strong>Data contract</strong> — Acordo formal entre produtor e consumidor de um
+            dado, incluindo schema, SLA de frescor e expectativas de qualidade.</li>
+        <li><strong>RBAC</strong> — Role-Based Access Control. Modelo de permissionamento por
+            função na organização, aplicado uniformemente em toda a plataforma.</li>
+        <li><strong>MTTR</strong> — Mean Time To Resolution. Tempo mediano para resolver um
+            incidente após sua detecção.</li>
+      </ul>
+
+      <h3><span class="h3-num">8.2</span> Comitês e instâncias de decisão</h3>
+      <ul>
+        <li><strong>Comitê de Dados</strong> — mensal, decisões sobre domínios, sensibilidade e
+            compartilhamento externo. Composição: CIO, CRO, CCO, DPO + 7 diretores de área.</li>
+        <li><strong>Comitê de Tecnologia</strong> — trimestral, aprova roadmap e investimentos
+            consolidados.</li>
+        <li><strong>Comitê de Qualidade</strong> — bimestral, revisa incidentes P0/P1 e ações
+            preventivas estruturais.</li>
+        <li><strong>D&amp;I Trimestral</strong> — Diversidade & Inclusão, com revisão de metas
+            de diversidade no time.</li>
+      </ul>
+
+      <h3><span class="h3-num">8.3</span> Documentos correlatos</h3>
+      <ul>
+        <li>Plano Trienal Plataforma de Dados 2023–2025 (doc PT-PLAT-2022-007).</li>
+        <li>Política de Classificação de Dados Itaú Unibanco (doc CD-001 v3.2).</li>
+        <li>Manual de Conformidade LGPD para Áreas Técnicas (doc COMP-LGPD-2023-014).</li>
+        <li>Termo de Aceite — Comitê de Tecnologia, ata 28/02/2025.</li>
+      </ul>
+    </section>
+
+  </main>
+
+  <!-- ═══ FOOTNOTES ════════════════════════════════════════════════════ -->
+  <aside class="report-footnotes" aria-label="Notas">
+    <h2>Notas</h2>
+    <ol class="fn-list">
+      <li id="fn1">
+        Critérios de criticidade alta seguem a Norma Interna de Classificação de Serviços
+        (NICS v4), revisada pelo Comitê de Tecnologia em junho de 2024. SLA de 99,95% aplica-se
+        a serviços com impacto direto em produto-cliente. <a href="#fn-ref-1" class="fn-back" aria-label="Voltar ao texto">↑</a>
+      </li>
+      <li id="fn2">
+        Classificação de sensibilidade segue a Política de Classificação de Dados Itaú Unibanco
+        (CD-001 v3.2), categorias: pública, interna, restrita e altamente restrita. Apenas as
+        duas últimas exigem aprovação adicional do DPO para novo consumidor. <a href="#fn-ref-2" class="fn-back" aria-label="Voltar ao texto">↑</a>
+      </li>
+      <li id="fn3">
+        A latência mediana de descoberta é calculada via instrumentação no Atlas Discovery —
+        do primeiro <em>search query</em> até o primeiro <em>read</em> bem-sucedido na tabela
+        encontrada. Não inclui tempo de aprovação para dados sensíveis (média 26 horas).
+        <a href="#fn-ref-3" class="fn-back" aria-label="Voltar ao texto">↑</a>
+      </li>
+      <li id="fn4">
+        Resolução BCB nº 4.893, de 26 de fevereiro de 2021, dispõe sobre a política de segurança
+        cibernética e sobre os requisitos para a contratação de serviços de processamento e
+        armazenamento de dados e de computação em nuvem a serem observados pelas instituições
+        autorizadas a funcionar pelo Banco Central do Brasil. <a href="#fn-ref-4" class="fn-back" aria-label="Voltar ao texto">↑</a>
+      </li>
+      <li id="fn5">
+        Meta de redução de pegada de carbono alinhada ao compromisso público do Itaú Unibanco
+        de neutralidade operacional até 2050, com marco intermediário de redução de 50% das
+        emissões de escopo 2 até 2030 (vs. baseline 2019). Reporte anual ao CDP. <a href="#fn-ref-5" class="fn-back" aria-label="Voltar ao texto">↑</a>
+      </li>
+      <li id="fn6">
+        Dados consolidados de captação, AuM e ROI revisados pela Auditoria Interna do Itaú
+        Unibanco (parecer AI-2025-118, 15/02/2025). Diferenças não-materiais (&lt; 0,3%) podem
+        existir em relação a balanços contábeis devido a critérios de competência. <a href="#fn-ref-6" class="fn-back" aria-label="Voltar ao texto">↑</a>
+      </li>
+      <li id="fn7">
+        Este relatório é classificado como interno e destinado a apoiar a tomada de decisão de
+        áreas de negócio, controles e diretoria do Itaú Unibanco. Distribuição externa requer
+        aprovação prévia de Relações com Investidores. <a href="#fn-ref-7" class="fn-back" aria-label="Voltar ao texto">↑</a>
+      </li>
+    </ol>
+  </aside>
+  </article>
+
+  <!-- ═══ FOOTER ═══════════════════════════════════════════════════════ -->
+  <footer class="report-footer">
+    <span class="report-footer__brand">Itaú Unibanco · 2025</span>
+    <p class="report-footer__disclaimer">
+      Documento interno. Dados consolidados sob revisão da Auditoria Interna<sup><a href="#fn6" class="fn-ref" id="fn-ref-6">[6]</a></sup>.
+      Distribuição externa requer aprovação prévia<sup><a href="#fn7" class="fn-ref" id="fn-ref-7">[7]</a></sup>.
+    </p>
+    <span class="report-footer__anbima">Conformidade ANBIMA · BCB 4.893</span>
+  </footer>
+
+  <script>
+    /* ─── Theme toggle (com re-render dos gráficos) ─────────────────── */
+    document.querySelector('.theme-toggle')?.addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme');
+      const next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+      if (window._reportCharts) {
+        window._reportCharts.forEach(chart => {
+          updateChartTheme(chart);
+          chart.update('none');
+        });
+      }
+    });
+
+    /* ─── TOC gerada a partir dos h2 de cada section[id] ─────────────── */
+    document.addEventListener('DOMContentLoaded', () => {
+      const toc = document.getElementById('reportToc');
+      if (!toc) return;
+      document.querySelectorAll('.report-section[id] > .section-header > h2').forEach((h, i) => {
+        const li = document.createElement('li');
+        const n = String(i + 1).padStart(2, '0');
+        const id = h.closest('section').id;
+        li.innerHTML = '<a href="#' + id + '"><span class="toc-num">' + n + '</span>' + h.textContent + '</a>';
+        toc.appendChild(li);
+      });
+
+      /* Scrollspy: marca o item ativo da TOC ao rolar */
+      const sections = [...document.querySelectorAll('.report-section[id]')];
+      const tocLinks = [...toc.querySelectorAll('a')];
+      const spy = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (!e.isIntersecting) return;
+          const id = '#' + e.target.id;
+          tocLinks.forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === id));
+        });
+      }, { rootMargin: '-25% 0px -65% 0px' });
+      sections.forEach(s => spy.observe(s));
+    });
+
+    /* ─── Reveal on scroll ───────────────────────────────────────────── */
+    const revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('is-visible');
+          revealObserver.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('[data-reveal]').forEach(el => revealObserver.observe(el));
+
+    /* ─── Helpers ────────────────────────────────────────────────────── */
+    function cssVar(name) {
+      return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    }
+    function hexToRgba(hex, a) {
+      const h = hex.replace('#', '');
+      const r = parseInt(h.substring(0, 2), 16);
+      const g = parseInt(h.substring(2, 4), 16);
+      const b = parseInt(h.substring(4, 6), 16);
+      return 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
+    }
+    function updateChartTheme(chart) {
+      const fgMuted = cssVar('--color-fg-muted');
+      const border  = cssVar('--color-border');
+      const accent  = cssVar('--color-accent');
+      const info    = cssVar('--color-info');
+      const success = cssVar('--color-success');
+      const teal    = cssVar('--color-teal');
+      const plum    = cssVar('--color-plum');
+
+      /* Atualiza datasets baseados em CSS vars */
+      chart.data.datasets.forEach((ds, i) => {
+        const palette = [accent, info, success, teal, plum];
+        if (ds._slPaletteIdx !== undefined) {
+          const c = palette[ds._slPaletteIdx % palette.length];
+          if (ds.borderColor) ds.borderColor = c;
+          if (ds.backgroundColor && typeof ds.backgroundColor === 'string') {
+            ds.backgroundColor = ds._slBgAlpha ? hexToRgba(c.startsWith('#') ? c : '#FF6200', ds._slBgAlpha) : c;
+          }
+          if (Array.isArray(ds.backgroundColor)) {
+            ds.backgroundColor = ds.backgroundColor.map((_, j) => palette[j % palette.length]);
+          }
+        }
+      });
+
+      /* Tipografia dos eixos */
+      if (chart.options.plugins?.legend?.labels) {
+        chart.options.plugins.legend.labels.color = fgMuted;
+      }
+      if (chart.options.scales) {
+        Object.values(chart.options.scales).forEach(scale => {
+          if (scale.ticks) scale.ticks.color = fgMuted;
+          if (scale.grid)  scale.grid.color  = border;
+          if (scale.title) scale.title.color = fgMuted;
+        });
+      }
+    }
+
+    /* ─── Gráficos ───────────────────────────────────────────────────── */
+    window._reportCharts = [];
+
+    /* Configuração comum: respeita prefers-reduced-motion */
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const baseAnim = reduceMotion ? false : { duration: 600 };
+
+    /* Figura 1 — Catálogo (barras = novas tabelas/mês, linha = cobertura linhagem %) */
+    (function () {
+      const ctx = document.getElementById('chart-catalogo');
+      if (!ctx) return;
+      const fgMuted = cssVar('--color-fg-muted');
+      const border  = cssVar('--color-border');
+      const accent  = cssVar('--color-accent');
+      const info    = cssVar('--color-info');
+
+      const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+          datasets: [
+            {
+              type: 'bar',
+              label: 'Novas tabelas no mês',
+              data: [28, 34, 42, 48, 52, 56, 51, 47, 49, 58, 62, 73],
+              backgroundColor: hexToRgba('#FF6200', 0.28),
+              borderColor: accent,
+              borderWidth: 1.5,
+              borderRadius: 4,
+              yAxisID: 'y',
+              _slPaletteIdx: 0,
+              _slBgAlpha: 0.28,
+            },
+            {
+              type: 'line',
+              label: 'Cobertura linhagem automática (% acumulada)',
+              data: [42, 48, 54, 60, 65, 70, 74, 78, 82, 86, 89, 92],
+              borderColor: info,
+              backgroundColor: hexToRgba('#3B85FA', 0.10),
+              borderWidth: 2.5,
+              pointRadius: 3,
+              pointHoverRadius: 5,
+              tension: 0.35,
+              fill: false,
+              yAxisID: 'y1',
+              _slPaletteIdx: 1,
+            }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false, animation: baseAnim,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { labels: { color: fgMuted, font: { family: 'Inter', size: 12 }, boxWidth: 14 } },
+            tooltip: {
+              callbacks: {
+                label: ctx => {
+                  if (ctx.dataset.yAxisID === 'y1') return ctx.dataset.label + ': ' + ctx.parsed.y + '%';
+                  return ctx.dataset.label + ': ' + ctx.parsed.y + ' tabelas';
+                }
+              }
+            }
+          },
+          scales: {
+            x: { ticks: { color: fgMuted }, grid: { display: false } },
+            y: {
+              beginAtZero: true,
+              position: 'left',
+              ticks: { color: fgMuted, callback: v => v + ' tab' },
+              grid: { color: border },
+              title: { display: true, text: 'Novas tabelas', color: fgMuted, font: { size: 11 } }
+            },
+            y1: {
+              beginAtZero: true, max: 100,
+              position: 'right',
+              ticks: { color: fgMuted, callback: v => v + '%' },
+              grid: { drawOnChartArea: false },
+              title: { display: true, text: 'Cobertura linhagem', color: fgMuted, font: { size: 11 } }
+            }
+          }
+        }
+      });
+      window._reportCharts.push(chart);
+    })();
+
+    /* Figura 2 — Qualidade por domínio (radar) */
+    (function () {
+      const ctx = document.getElementById('chart-qualidade');
+      if (!ctx) return;
+      const fgMuted = cssVar('--color-fg-muted');
+      const border  = cssVar('--color-border');
+      const accent  = cssVar('--color-accent');
+      const info    = cssVar('--color-info');
+      const success = cssVar('--color-success');
+      const teal    = cssVar('--color-teal');
+
+      const chart = new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: ['Completude', 'Frescor', 'Consistência', 'Unicidade'],
+          datasets: [
+            { label: 'Cartões',       data: [98, 96, 99, 97], borderColor: accent,  backgroundColor: hexToRgba('#FF6200', 0.10), borderWidth: 2, pointRadius: 3, _slPaletteIdx: 0 },
+            { label: 'Crédito PF',    data: [96, 92, 98, 95], borderColor: info,    backgroundColor: hexToRgba('#3B85FA', 0.10), borderWidth: 2, pointRadius: 3, _slPaletteIdx: 1 },
+            { label: 'Investimentos', data: [97, 95, 98, 96], borderColor: success, backgroundColor: hexToRgba('#4d7c0f', 0.10), borderWidth: 2, pointRadius: 3, _slPaletteIdx: 2 },
+            { label: 'Seguros',       data: [88, 91, 94, 90], borderColor: teal,    backgroundColor: hexToRgba('#0f766e', 0.10), borderWidth: 2, pointRadius: 3, _slPaletteIdx: 3 },
+            { label: 'Meta institucional (95)', data: [95, 95, 95, 95],
+              borderColor: fgMuted, borderDash: [4, 4],
+              backgroundColor: 'transparent', borderWidth: 1.5, pointRadius: 0
+            }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false, animation: baseAnim,
+          plugins: {
+            legend: { position: 'bottom', labels: { color: fgMuted, font: { family: 'Inter', size: 11 }, boxWidth: 12, padding: 10 } },
+            tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.r + '/100' } }
+          },
+          scales: {
+            r: {
+              min: 70, max: 100,
+              ticks: { stepSize: 10, color: cssVar('--color-fg-subtle'), backdropColor: 'transparent', font: { size: 10 } },
+              grid: { color: border },
+              angleLines: { color: border },
+              pointLabels: { color: fgMuted, font: { family: 'Inter', size: 12, weight: '600' } }
+            }
+          }
+        }
+      });
+      window._reportCharts.push(chart);
+    })();
+
+    /* Figura 3 — ESG: cobertura (linha) + carbono (barras invertidas) */
+    (function () {
+      const ctx = document.getElementById('chart-esg');
+      if (!ctx) return;
+      const fgMuted = cssVar('--color-fg-muted');
+      const border  = cssVar('--color-border');
+      const accent  = cssVar('--color-accent');
+      const success = cssVar('--color-success');
+
+      const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['1T23','2T23','3T23','4T23','1T24','2T24','3T24','4T24'],
+          datasets: [
+            {
+              type: 'bar',
+              label: 'Carbono (t CO₂e) — escopo 2',
+              data: [620, 605, 595, 580, 550, 510, 470, 420],
+              backgroundColor: hexToRgba('#4d7c0f', 0.40),
+              borderColor: success,
+              borderWidth: 1.5,
+              borderRadius: 4,
+              yAxisID: 'y',
+              _slPaletteIdx: 2,
+              _slBgAlpha: 0.40,
+            },
+            {
+              type: 'line',
+              label: 'Cobertura ESG (% domínios críticos)',
+              data: [22, 27, 30, 32, 48, 62, 76, 87],
+              borderColor: accent,
+              backgroundColor: hexToRgba('#FF6200', 0.10),
+              borderWidth: 2.5,
+              pointRadius: 4,
+              pointHoverRadius: 6,
+              tension: 0.35,
+              fill: false,
+              yAxisID: 'y1',
+              _slPaletteIdx: 0,
+            }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false, animation: baseAnim,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { labels: { color: fgMuted, font: { family: 'Inter', size: 12 }, boxWidth: 14 } },
+            tooltip: {
+              callbacks: {
+                label: ctx => {
+                  if (ctx.dataset.yAxisID === 'y1') return ctx.dataset.label + ': ' + ctx.parsed.y + '%';
+                  return ctx.dataset.label + ': ' + ctx.parsed.y + ' t CO₂e';
+                }
+              }
+            }
+          },
+          scales: {
+            x: { ticks: { color: fgMuted }, grid: { display: false } },
+            y: {
+              beginAtZero: true,
+              position: 'left',
+              ticks: { color: fgMuted, callback: v => v + ' t' },
+              grid: { color: border },
+              title: { display: true, text: 'Carbono (t CO₂e)', color: fgMuted, font: { size: 11 } }
+            },
+            y1: {
+              beginAtZero: true, max: 100,
+              position: 'right',
+              ticks: { color: fgMuted, callback: v => v + '%' },
+              grid: { drawOnChartArea: false },
+              title: { display: true, text: 'Cobertura ESG', color: fgMuted, font: { size: 11 } }
+            }
+          }
+        }
+      });
+      window._reportCharts.push(chart);
+    })();
+
+  </script>
+</body>
+</html>
