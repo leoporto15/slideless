@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Plataforma de Dados — Handbook</title>
+  <title>Plataforma de Dados Itaú — Handbook</title>
+  <meta name="description" content="Handbook da Plataforma de Dados Itaú — catálogo, governança, ferramentas, ESG e contatos.">
 
-  <!-- Boot script: define o tema ANTES do CSS pintar (evita flash) -->
+  <!-- Boot script: define o tema ANTES do CSS pintar (sem flash) -->
   <script>
-    (function() {
+    (function () {
       try {
         var t = localStorage.getItem('theme') ||
                 (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
@@ -20,90 +21,162 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Chart.js (CDN — única dependência além das fontes) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 
   <style>
+    /* ═══════════════════════════════════════════════════════════════════
+       TEMA ITAÚ v2 (visual-explainer grade) — alinhado com assets/temas/itau.css
+       ═══════════════════════════════════════════════════════════════════ */
     :root {
-      --itau-orange: #FF6200;
-      --itau-orange-2: #F88104;
-      --itau-orange-3: #FA9F09;
-      --itau-blue-3: #3B85FA;
-      --itau-yellow: #FBC305;
+      /* Cores da marca Itaú */
+      --itau-orange:      #FF6200;
+      --itau-orange-2:    #F88104;
+      --itau-orange-3:    #FA9F09;
+      --itau-blue-3:      #3B85FA;
+      --itau-yellow:      #FBC305;
+      --itau-warm-black:  #14110d;
 
-      --color-bg: #ffffff;
-      --color-bg-elevated: #faf8f5;
-      --color-bg-sunken: #f4f1ec;
-      --color-fg: #1a1a1a;
-      --color-fg-muted: #525252;
-      --color-fg-subtle: #8a8a8a;
-      --color-border: #e8e4dd;
-      --color-border-strong: #d4cec3;
-      --color-accent: var(--itau-orange);
-      --color-accent-hover: var(--itau-orange-2);
-      --color-accent-fg: #ffffff;
-      --color-info-bg: rgba(5, 32, 183, 0.06);
-      --color-info-border: var(--itau-blue-3);
-      --color-tip-bg: #f0fdf4;
-      --color-tip-border: #22c55e;
-      --color-warn-bg: rgba(251, 195, 5, 0.12);
-      --color-warn-border: var(--itau-yellow);
-      --color-danger-bg: #fef2f2;
-      --color-danger-border: #ef4444;
+      /* Paleta semântica (light) */
+      --color-accent:        var(--itau-orange);
+      --color-accent-dim:    rgba(255, 98, 0, 0.08);
+      --color-accent-fg:     #ffffff;
+      --color-accent-hover:  var(--itau-orange-2);
 
-      --font-text: 'Itau Text', 'Inter', -apple-system, system-ui, sans-serif;
-      --font-display: 'Itau Display', 'Inter', -apple-system, system-ui, sans-serif;
-      --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+      --color-info:          var(--itau-blue-3);
+      --color-info-dim:      rgba(59, 133, 250, 0.08);
 
-      --size-h1: 2.5rem;
-      --size-h2: 1.75rem;
-      --size-h3: 1.25rem;
-      --size-h4: 1.0625rem;
-      --size-lead: 1.1875rem;
-      --size-body: 1rem;
-      --size-small: 0.9375rem;
-      --size-xs: 0.8125rem;
-      --size-code: 0.875rem;
+      --color-success:       #4d7c0f;
+      --color-success-dim:   rgba(77, 124, 15, 0.08);
 
+      --color-sage:          #65a30d;
+      --color-sage-dim:      rgba(101, 163, 13, 0.08);
+
+      --color-teal:          #0f766e;
+      --color-teal-dim:      rgba(15, 118, 110, 0.08);
+
+      --color-plum:          #9f1239;
+      --color-plum-dim:      rgba(159, 18, 57, 0.08);
+
+      --color-warn:          var(--itau-yellow);
+      --color-warn-dim:      rgba(251, 195, 5, 0.12);
+      --color-warn-fg:       #8a6500;
+      --color-danger:        #b91c1c;
+      --color-danger-dim:    rgba(185, 28, 28, 0.08);
+
+      /* Background + foreground (light) */
+      --color-bg:            #faf7f5;
+      --color-bg-elevated:   #ffffff;
+      --color-bg-sunken:     #f4f1ec;
+      --color-fg:            #292017;
+      --color-fg-muted:      #6b5d50;
+      --color-fg-subtle:     #8a7e72;
+      --color-border:        rgba(41, 32, 23, 0.10);
+      --color-border-strong: rgba(41, 32, 23, 0.18);
+
+      /* Glow atmosférico */
+      --glow-warm:    radial-gradient(ellipse 80% 60% at 90% -5%, rgba(255, 98, 0, 0.10) 0%, transparent 55%);
+      --glow-cool:    radial-gradient(ellipse 70% 50% at 10% 100%, rgba(59, 133, 250, 0.07) 0%, transparent 55%);
+
+      /* Tipografia */
+      --font-text:    'Inter', -apple-system, system-ui, sans-serif;
+      --font-display: 'Fraunces', 'Inter', Georgia, serif;
+      --font-mono:    'JetBrains Mono', 'IBM Plex Mono', 'SF Mono', Consolas, monospace;
+
+      /* Escala editorial — NÃO usar clamp gigante (handbook não é deck) */
+      --size-xs:      0.8125rem;
+      --size-small:   0.9375rem;
+      --size-body:    1rem;
+      --size-lead:    1.1875rem;
+      --size-h4:      1.0625rem;
+      --size-h3:      1.25rem;
+      --size-h2:      1.75rem;
+      --size-h1:      2.5rem;
+
+      /* Espaço */
       --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem;
-      --space-4: 1rem; --space-5: 1.5rem; --space-6: 2rem;
-      --space-7: 2.5rem; --space-8: 3rem; --space-10: 4rem;
+      --space-4: 1rem;    --space-5: 1.5rem; --space-6: 2rem;
+      --space-7: 2.5rem;  --space-8: 3rem;   --space-10: 4rem;
       --space-12: 5rem;
 
+      /* Layout */
       --content-max: 720px;
-      --sidebar-w: 268px;
-      --toc-w: 220px;
-      --header-h: 56px;
-      --radius-sm: 4px; --radius: 8px; --radius-lg: 12px;
-      --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
-      --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
-      --shadow-lg: 0 4px 6px rgba(0,0,0,0.05), 0 10px 24px rgba(0,0,0,0.08);
-      --ease: cubic-bezier(0.22, 1, 0.36, 1);
-      --ease-out: cubic-bezier(0, 0, 0.2, 1);
-      --duration-fast: 150ms;
-      --duration: 250ms;
+      --sidebar-w:   268px;
+      --toc-w:       220px;
+      --header-h:    56px;
+
+      /* Radius, sombra */
+      --radius-sm: 4px;
+      --radius:    10px;
+      --radius-lg: 16px;
+
+      --shadow-xs: 0 1px 2px rgba(41, 32, 23, 0.04);
+      --shadow-sm: 0 2px 4px rgba(41, 32, 23, 0.06), 0 1px 2px rgba(41, 32, 23, 0.04);
+      --shadow:    0 4px 12px rgba(41, 32, 23, 0.08), 0 1px 3px rgba(41, 32, 23, 0.05);
+      --shadow-lg: 0 12px 32px rgba(41, 32, 23, 0.12), 0 4px 12px rgba(41, 32, 23, 0.06);
+      --inset-sm:  inset 0 1px 3px rgba(41, 32, 23, 0.06);
+
+      /* Easing + duração */
+      --ease-out:       cubic-bezier(0.22, 1, 0.36, 1);
+      --duration-fast:  150ms;
+      --duration:       250ms;
+      --duration-hero:  900ms;
+
+      /* Syntax */
+      --syntax-string:   #16a34a;
+      --syntax-keyword:  var(--itau-orange);
+      --syntax-function: var(--itau-blue-3);
+      --syntax-comment:  var(--color-fg-subtle);
     }
 
+    /* ─── Dark theme override ─────────────────────────────────────── */
     [data-theme="dark"] {
-      --color-bg: #14110d;
-      --color-bg-elevated: #1c1814;
-      --color-bg-sunken: #221d18;
-      --color-fg: #e8eaed;
-      --color-fg-muted: #a8a39a;
-      --color-fg-subtle: #6e6a62;
-      --color-border: #2f2a23;
-      --color-border-strong: #403a32;
-      --color-accent: var(--itau-orange-3);
-      --color-accent-hover: var(--itau-orange-2);
-      --color-accent-fg: #14110d;
-      --color-info-bg: rgba(59, 133, 250, 0.10);
-      --color-tip-bg: rgba(34, 197, 94, 0.10);
-      --color-warn-bg: rgba(251, 195, 5, 0.10);
-      --color-danger-bg: rgba(239, 68, 68, 0.10);
-      --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
-      --shadow: 0 1px 3px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.3);
-      --shadow-lg: 0 4px 6px rgba(0,0,0,0.4), 0 10px 24px rgba(0,0,0,0.5);
+      --color-bg:            #14110d;
+      --color-bg-elevated:   #1c1814;
+      --color-bg-sunken:     #221d18;
+      --color-fg:            #ede5dd;
+      --color-fg-muted:      #b8aa9a;
+      --color-fg-subtle:     #786e62;
+      --color-border:        rgba(237, 229, 221, 0.10);
+      --color-border-strong: rgba(237, 229, 221, 0.20);
+
+      --color-accent:        var(--itau-orange-3);
+      --color-accent-hover:  var(--itau-orange-2);
+      --color-accent-fg:     #14110d;
+      --color-accent-dim:    rgba(250, 159, 9, 0.12);
+
+      --color-info-dim:      rgba(59, 133, 250, 0.14);
+      --color-success:       #a3e635;
+      --color-success-dim:   rgba(163, 230, 53, 0.10);
+      --color-sage:          #bef264;
+      --color-sage-dim:      rgba(190, 242, 100, 0.10);
+      --color-teal:          #5eead4;
+      --color-teal-dim:      rgba(94, 234, 212, 0.10);
+      --color-plum:          #fb7185;
+      --color-plum-dim:      rgba(251, 113, 133, 0.10);
+
+      --color-warn-dim:      rgba(251, 195, 5, 0.14);
+      --color-warn-fg:       var(--itau-yellow);
+      --color-danger:        #f87171;
+      --color-danger-dim:    rgba(248, 113, 113, 0.10);
+
+      --glow-warm:    radial-gradient(ellipse 80% 60% at 90% -5%, rgba(250, 159, 9, 0.16) 0%, transparent 55%);
+      --glow-cool:    radial-gradient(ellipse 70% 50% at 10% 100%, rgba(59, 133, 250, 0.10) 0%, transparent 55%);
+
+      --syntax-string:   #4ade80;
+
+      --shadow-xs: 0 1px 2px rgba(0,0,0,0.4);
+      --shadow-sm: 0 2px 4px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+      --shadow:    0 4px 12px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.3);
+      --shadow-lg: 0 12px 32px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.3);
+      --inset-sm:  inset 0 1px 3px rgba(0,0,0,0.4);
     }
 
+    /* ═══════════════════════════════════════════════════════════════════
+       RESET + BASE
+       ═══════════════════════════════════════════════════════════════════ */
     *, *::before, *::after { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
@@ -113,15 +186,104 @@
       line-height: 1.65;
       color: var(--color-fg);
       background: var(--color-bg);
+      background-image: var(--glow-warm), var(--glow-cool);
+      background-attachment: fixed;
       -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      overflow-wrap: break-word;
       transition: background var(--duration-fast), color var(--duration-fast);
     }
 
-    /* ─── Header ──────────────────────────────────── */
+    :focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 3px;
+      border-radius: var(--radius-sm);
+    }
+
+    /* Tipografia */
+    h1, h2, h3, h4 {
+      font-family: var(--font-display);
+      color: var(--color-fg);
+      line-height: 1.15;
+      letter-spacing: -0.022em;
+      font-weight: 700;
+    }
+    h1 { font-size: var(--size-h1); margin: 0 0 var(--space-4); letter-spacing: -0.030em; }
+    h2 {
+      font-size: var(--size-h2);
+      margin: var(--space-10) 0 var(--space-4);
+      scroll-margin-top: calc(var(--header-h) + var(--space-4));
+      position: relative;
+    }
+    h3 {
+      font-size: var(--size-h3); font-weight: 600;
+      margin: var(--space-7) 0 var(--space-3);
+      scroll-margin-top: calc(var(--header-h) + var(--space-4));
+      position: relative;
+    }
+    h4 { font-size: var(--size-h4); font-weight: 600; margin: var(--space-5) 0 var(--space-2); }
+
+    h2::before, h3::before {
+      content: '#';
+      position: absolute;
+      left: -1.2em;
+      color: var(--color-accent);
+      opacity: 0;
+      transition: opacity var(--duration-fast);
+      font-weight: 400;
+    }
+    h2:hover::before, h3:hover::before { opacity: 0.6; }
+
+    p { margin: 0 0 var(--space-4); max-width: 65ch; }
+    a { color: var(--color-accent); text-decoration: none; }
+    a:hover { color: var(--color-accent-hover); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1.5px; }
+    strong { font-weight: 700; color: var(--color-fg); }
+
+    code:not(pre code) {
+      font-family: var(--font-mono); font-size: 0.875em;
+      background: var(--color-bg-sunken);
+      padding: 0.15em 0.45em;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--color-border);
+    }
+
+    ul, ol { padding-left: var(--space-5); margin: 0 0 var(--space-4); }
+    li { margin-bottom: var(--space-2); max-width: 65ch; }
+    li::marker { color: var(--color-fg-subtle); }
+
+    .lead {
+      font-size: var(--size-lead);
+      line-height: 1.5;
+      color: var(--color-fg-muted);
+      margin-bottom: var(--space-7);
+      font-weight: 400;
+      max-width: 60ch;
+    }
+
+    .pill {
+      display: inline-flex; align-items: center;
+      padding: 2px 10px;
+      font-size: var(--size-xs);
+      font-weight: 500;
+      background: var(--color-bg-sunken);
+      color: var(--color-fg-muted);
+      border-radius: 999px;
+      border: 1px solid var(--color-border);
+    }
+    .pill--accent {
+      background: var(--color-accent-dim);
+      color: var(--color-accent);
+      border-color: rgba(255, 98, 0, 0.20);
+    }
+    [data-theme="dark"] .pill--accent { border-color: rgba(250, 159, 9, 0.30); }
+
+    /* ═══════════════════════════════════════════════════════════════════
+       HEADER (topbar)
+       ═══════════════════════════════════════════════════════════════════ */
     .topbar {
       position: sticky; top: 0; z-index: 100;
       height: var(--header-h);
-      background: rgba(255,255,255,0.85);
+      background: rgba(250, 247, 245, 0.85);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--color-border);
@@ -129,20 +291,24 @@
       padding: 0 var(--space-5);
       gap: var(--space-5);
     }
-    [data-theme="dark"] .topbar { background: rgba(20,17,13,0.85); }
+    [data-theme="dark"] .topbar { background: rgba(20, 17, 13, 0.85); }
 
     .topbar__brand {
       display: flex; align-items: center; gap: var(--space-3);
       font-weight: 600; font-size: 0.9375rem;
       text-decoration: none; color: var(--color-fg);
     }
+    .topbar__brand:hover { text-decoration: none; color: var(--color-fg); }
     .topbar__logo {
       width: 28px; height: 28px; border-radius: 6px;
+      background: var(--color-accent);
+      display: grid; place-items: center;
+      color: var(--color-accent-fg);
+      font-weight: 800; font-size: 0.875rem;
+      font-family: var(--font-display);
       flex-shrink: 0;
     }
-    .topbar__divider {
-      width: 1px; height: 20px; background: var(--color-border);
-    }
+    .topbar__divider { width: 1px; height: 20px; background: var(--color-border); }
     .topbar__breadcrumb {
       display: flex; align-items: center; gap: var(--space-2);
       font-size: var(--size-small); color: var(--color-fg-muted);
@@ -151,9 +317,7 @@
     .topbar__breadcrumb a:hover { color: var(--color-fg); }
     .topbar__breadcrumb strong { color: var(--color-fg); font-weight: 500; }
     .topbar__sep { color: var(--color-fg-subtle); }
-
     .topbar__spacer { flex: 1; }
-
     .topbar__search {
       width: 220px; padding: 6px 10px;
       background: var(--color-bg-elevated);
@@ -164,37 +328,39 @@
       transition: all var(--duration-fast);
     }
     .topbar__search::placeholder { color: var(--color-fg-subtle); }
-    .topbar__search:focus {
-      outline: none;
+    .topbar__search:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
       border-color: var(--color-accent);
-      box-shadow: 0 0 0 3px rgba(255,98,0,0.12);
     }
-
     .theme-toggle {
-      width: 32px; height: 32px;
+      width: 36px; height: 36px;
       display: grid; place-items: center;
-      background: transparent;
+      background: var(--color-bg-elevated);
       border: 1px solid var(--color-border);
-      border-radius: var(--radius-sm);
-      cursor: pointer;
+      border-radius: 999px; cursor: pointer;
       color: var(--color-fg);
-      font-size: 14px;
+      font: inherit; font-size: 14px;
       transition: all var(--duration-fast);
     }
     .theme-toggle:hover {
-      background: var(--color-bg-elevated);
+      background: var(--color-bg-sunken);
       border-color: var(--color-border-strong);
+      transform: translateY(-1px);
     }
 
-    /* ─── Layout principal ────────────────────────── */
+    /* ═══════════════════════════════════════════════════════════════════
+       LAYOUT GRID
+       ═══════════════════════════════════════════════════════════════════ */
     .layout {
       display: grid;
       grid-template-columns: var(--sidebar-w) 1fr var(--toc-w);
       max-width: 1400px;
       margin: 0 auto;
     }
+    .layout > * { min-width: 0; }
 
-    /* ─── Sidebar ─────────────────────────────────── */
+    /* ─── Sidebar ─────────────────────────────────────────────────── */
     .sidebar {
       position: sticky; top: var(--header-h);
       height: calc(100vh - var(--header-h));
@@ -204,15 +370,17 @@
     }
     .sidebar__group { margin-bottom: var(--space-5); }
     .sidebar__heading {
-      font-size: var(--size-xs);
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
       font-weight: 600;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.10em;
       text-transform: uppercase;
       color: var(--color-fg-subtle);
       padding: 0 var(--space-3);
       margin: 0 0 var(--space-2);
     }
     .sidebar__list { list-style: none; padding: 0; margin: 0; }
+    .sidebar__list li { margin: 0; max-width: none; }
     .sidebar__list a {
       display: block;
       padding: var(--space-2) var(--space-3);
@@ -224,97 +392,85 @@
       margin-left: -2px;
       transition: all var(--duration-fast);
     }
-    .sidebar__list a:hover {
-      color: var(--color-fg);
-      background: var(--color-bg-elevated);
-    }
+    .sidebar__list a:hover { color: var(--color-fg); background: var(--color-bg-elevated); text-decoration: none; }
     .sidebar__list a.is-active {
       color: var(--color-accent);
-      font-weight: 500;
+      font-weight: 600;
       border-left-color: var(--color-accent);
-      background: var(--color-bg-elevated);
+      background: var(--color-accent-dim);
     }
 
-    /* ─── Content ─────────────────────────────────── */
+    /* ─── Content ─────────────────────────────────────────────────── */
     .content {
       padding: var(--space-8) var(--space-8) var(--space-12);
-      max-width: 100%;
-      min-width: 0;
     }
     .content__inner { max-width: var(--content-max); }
-
     .content__meta {
       display: flex; gap: var(--space-3); align-items: center;
-      font-size: var(--size-xs); color: var(--color-fg-subtle);
+      flex-wrap: wrap;
+      font-family: var(--font-mono);
+      font-size: var(--size-xs);
+      color: var(--color-fg-subtle);
       margin-bottom: var(--space-5);
       letter-spacing: 0.02em;
+      text-transform: uppercase;
     }
     .content__meta-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--color-fg-subtle); }
 
-    h1, h2, h3, h4 {
-      font-family: var(--font-display);
-      color: var(--color-fg);
-      line-height: 1.25;
-      letter-spacing: -0.015em;
+    /* ─── TOC ─────────────────────────────────────────────────────── */
+    .toc {
+      position: sticky;
+      top: var(--header-h);
+      align-self: start;
+      height: calc(100vh - var(--header-h));
+      overflow-y: auto;
+      padding: var(--space-8) var(--space-5);
     }
-    h1 {
-      font-size: var(--size-h1); font-weight: 700;
+    .toc__heading {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--color-fg-subtle);
       margin: 0 0 var(--space-3);
     }
-    h2 {
-      font-size: var(--size-h2); font-weight: 700;
-      margin: var(--space-10) 0 var(--space-4);
-      scroll-margin-top: calc(var(--header-h) + var(--space-4));
-      position: relative;
+    .toc__list {
+      list-style: none; padding: 0; margin: 0;
+      border-left: 1px solid var(--color-border);
     }
-    h3 {
-      font-size: var(--size-h3); font-weight: 600;
-      margin: var(--space-7) 0 var(--space-3);
-      scroll-margin-top: calc(var(--header-h) + var(--space-4));
-    }
-    h4 { font-size: var(--size-h4); font-weight: 600; margin: var(--space-5) 0 var(--space-2); }
-
-    h2::before, h3::before {
-      content: '#';
-      position: absolute;
-      left: -1.4em;
-      color: var(--color-accent);
-      opacity: 0;
-      transition: opacity var(--duration-fast);
-      font-weight: 400;
-    }
-    h2:hover::before, h3:hover::before { opacity: 0.6; }
-
-    p {
-      margin: 0 0 var(--space-4);
-      max-width: 65ch;
-      color: var(--color-fg);
-    }
-    .lead {
-      font-size: var(--size-lead);
-      line-height: 1.5;
+    .toc__list li { margin: 0; max-width: none; }
+    .toc__list a {
+      display: block;
+      padding: var(--space-1) var(--space-3);
+      font-size: var(--size-small);
       color: var(--color-fg-muted);
-      margin-bottom: var(--space-7);
-      font-weight: 400;
-      max-width: 60ch;
+      text-decoration: none;
+      border-left: 2px solid transparent;
+      margin-left: -1px;
+      transition: all var(--duration-fast);
+    }
+    .toc__list a:hover { color: var(--color-fg); text-decoration: none; }
+    .toc__list a.is-active {
+      color: var(--color-accent);
+      border-left-color: var(--color-accent);
+      font-weight: 500;
     }
 
-    a { color: var(--color-accent); text-decoration: none; }
-    a:hover { color: var(--color-accent-hover); text-decoration: underline; text-underline-offset: 3px; }
-    strong { font-weight: 600; }
-    code:not(pre code) {
-      font-family: var(--font-mono); font-size: 0.875em;
-      background: var(--color-bg-sunken);
-      padding: 0.12em 0.4em;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--color-border);
+    /* ═══════════════════════════════════════════════════════════════════
+       COMPONENTES
+       ═══════════════════════════════════════════════════════════════════ */
+
+    /* Reveal on scroll */
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity var(--duration-hero) var(--ease-out),
+                  transform var(--duration-hero) var(--ease-out);
     }
+    [data-reveal].is-visible { opacity: 1; transform: none; }
 
-    ul, ol { padding-left: var(--space-5); margin: 0 0 var(--space-4); }
-    li { margin-bottom: var(--space-2); max-width: 65ch; }
-    li::marker { color: var(--color-fg-subtle); }
-
-    /* ─── Callouts ────────────────────────────────── */
+    /* Callouts */
     .callout {
       display: flex; gap: var(--space-4);
       padding: var(--space-4) var(--space-5);
@@ -322,31 +478,31 @@
       border-left: 3px solid;
       border-radius: var(--radius);
     }
-    .callout--info { background: var(--color-info-bg); border-color: var(--color-info-border); }
-    .callout--tip { background: var(--color-tip-bg); border-color: var(--color-tip-border); }
-    .callout--warn { background: var(--color-warn-bg); border-color: var(--color-warn-border); }
-    .callout--danger { background: var(--color-danger-bg); border-color: var(--color-danger-border); }
+    .callout--info   { background: var(--color-info-dim);    border-color: var(--color-info); }
+    .callout--tip    { background: var(--color-success-dim); border-color: var(--color-success); }
+    .callout--warn   { background: var(--color-warn-dim);    border-color: var(--color-warn); }
+    .callout--danger { background: var(--color-danger-dim);  border-color: var(--color-danger); }
     .callout__icon {
-      flex-shrink: 0; width: 22px; height: 22px;
+      flex-shrink: 0; width: 24px; height: 24px;
       display: grid; place-items: center;
       border-radius: 50%; font-weight: 700;
       font-size: 0.75rem; color: white;
       margin-top: 2px;
     }
-    .callout--info .callout__icon { background: var(--color-info-border); }
-    .callout--tip .callout__icon { background: var(--color-tip-border); }
-    .callout--warn .callout__icon { background: var(--color-warn-border); color: #14110d; }
-    .callout--danger .callout__icon { background: var(--color-danger-border); }
+    .callout--info   .callout__icon { background: var(--color-info); }
+    .callout--tip    .callout__icon { background: var(--color-success); }
+    .callout--warn   .callout__icon { background: var(--color-warn); color: var(--itau-warm-black); }
+    .callout--danger .callout__icon { background: var(--color-danger); }
     .callout__content { flex: 1; min-width: 0; }
-    .callout__title { font-weight: 600; margin: 0 0 var(--space-1); font-size: var(--size-small); }
+    .callout__title { font-weight: 700; margin: 0 0 var(--space-1); font-size: var(--size-small); color: var(--color-fg); }
     .callout__content p { margin: 0; font-size: var(--size-small); }
 
-    /* ─── Code block ───────────────────────────────── */
+    /* Code block */
     .code {
       position: relative;
       background: var(--color-bg-sunken);
       border-radius: var(--radius);
-      margin: var(--space-4) 0;
+      margin: var(--space-5) 0;
       border: 1px solid var(--color-border);
       overflow: hidden;
     }
@@ -356,10 +512,7 @@
       border-bottom: 1px solid var(--color-border);
       background: var(--color-bg-elevated);
     }
-    .code__lang {
-      font-family: var(--font-mono); font-size: var(--size-xs);
-      color: var(--color-fg-subtle); letter-spacing: 0.02em;
-    }
+    .code__lang { font-family: var(--font-mono); font-size: var(--size-xs); color: var(--color-fg-subtle); letter-spacing: 0.02em; }
     .code__copy {
       padding: 4px 10px; font-size: var(--size-xs);
       background: var(--color-bg); border: 1px solid var(--color-border);
@@ -369,37 +522,37 @@
     }
     .code__copy:hover { color: var(--color-fg); border-color: var(--color-border-strong); }
     .code__copy.is-copied { color: var(--color-accent); border-color: var(--color-accent); }
-    .code pre { padding: var(--space-4); overflow-x: auto; margin: 0; }
+    .code pre {
+      padding: var(--space-4); overflow-x: auto; margin: 0;
+      max-height: 480px;
+    }
     .code code {
       font-family: var(--font-mono);
-      font-size: var(--size-code);
+      font-size: 0.875rem;
       line-height: 1.65;
       color: var(--color-fg);
     }
-    .tk-comment { color: var(--color-fg-subtle); font-style: italic; }
-    .tk-str { color: #16a34a; }
-    [data-theme="dark"] .tk-str { color: #4ade80; }
-    .tk-kw { color: var(--itau-orange); font-weight: 500; }
-    .tk-fn { color: var(--itau-blue-3); }
+    .tk-comment { color: var(--syntax-comment); font-style: italic; }
+    .tk-str     { color: var(--syntax-string); }
+    .tk-kw      { color: var(--syntax-keyword); font-weight: 500; }
+    .tk-fn      { color: var(--syntax-function); }
 
-    /* ─── Toggle / details ─────────────────────────── */
+    /* Toggle */
     .toggle {
       border: 1px solid var(--color-border);
       border-radius: var(--radius);
       margin: var(--space-3) 0;
       overflow: hidden;
-      background: var(--color-bg);
+      background: var(--color-bg-elevated);
       transition: border-color var(--duration-fast);
     }
     .toggle:hover { border-color: var(--color-border-strong); }
-    .toggle[open] { background: var(--color-bg-elevated); }
+    .toggle[open] { box-shadow: var(--shadow-sm); }
     .toggle__summary {
       padding: var(--space-3) var(--space-5);
-      cursor: pointer;
-      font-weight: 500;
-      font-size: var(--size-small);
+      cursor: pointer; font-weight: 600;
+      font-size: var(--size-small); list-style: none;
       display: flex; align-items: center; justify-content: space-between;
-      list-style: none;
       color: var(--color-fg);
     }
     .toggle__summary::-webkit-details-marker { display: none; }
@@ -419,7 +572,7 @@
     }
     .toggle__body p:last-child { margin-bottom: 0; }
 
-    /* ─── Tabs ─────────────────────────────────────── */
+    /* Tabs */
     .tabs { margin: var(--space-5) 0; }
     .tabs__list {
       display: flex; gap: var(--space-1);
@@ -430,7 +583,7 @@
     .tabs__tab {
       background: transparent; border: 0;
       padding: var(--space-3) var(--space-4);
-      font: inherit; font-size: var(--size-small);
+      font: inherit; font-size: var(--size-small); font-weight: 600;
       color: var(--color-fg-muted);
       cursor: pointer;
       border-bottom: 2px solid transparent;
@@ -442,68 +595,177 @@
     .tabs__tab.is-active {
       color: var(--color-accent);
       border-bottom-color: var(--color-accent);
-      font-weight: 500;
     }
     .tabs__panel { display: none; }
     .tabs__panel.is-active { display: block; }
 
-    /* ─── Table ────────────────────────────────────── */
-    table {
+    /* Data table */
+    .table-wrap {
       width: 100%;
-      border-collapse: collapse;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-xs);
       margin: var(--space-5) 0;
-      font-size: var(--size-small);
-    }
-    th, td {
-      text-align: left;
-      padding: var(--space-3) var(--space-4);
-      border-bottom: 1px solid var(--color-border);
-    }
-    th {
-      font-weight: 600;
-      color: var(--color-fg-muted);
-      font-size: var(--size-xs);
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
       background: var(--color-bg-elevated);
     }
-    tbody tr:hover { background: var(--color-bg-elevated); }
-
-    /* ─── TOC ──────────────────────────────────────── */
-    .toc {
-      position: sticky; top: var(--header-h);
-      height: calc(100vh - var(--header-h));
-      overflow-y: auto;
-      padding: var(--space-8) var(--space-5);
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--size-small);
     }
-    .toc__title {
-      font-size: var(--size-xs);
-      font-weight: 600;
-      letter-spacing: 0.04em;
+    .data-table thead { position: sticky; top: 0; z-index: 2; }
+    .data-table th {
+      background: var(--color-bg-sunken);
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      font-weight: 700;
       text-transform: uppercase;
-      color: var(--color-fg-subtle);
-      margin: 0 0 var(--space-3);
+      letter-spacing: 0.10em;
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 2px solid var(--color-border-strong);
+      color: var(--color-fg-muted);
+      white-space: nowrap;
     }
-    .toc__list { list-style: none; padding: 0; margin: 0; border-left: 1px solid var(--color-border); }
-    .toc__list a {
-      display: block;
-      padding: var(--space-1) var(--space-3);
+    .data-table td {
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--color-border);
+      vertical-align: top;
+      color: var(--color-fg);
+      line-height: 1.45;
+    }
+    .data-table tbody tr:nth-child(even) { background: var(--color-bg-sunken); }
+    .data-table tbody tr:hover { background: var(--color-accent-dim); }
+    .data-table tbody tr:last-child td { border-bottom: none; }
+    .data-table td.num, .data-table th.num {
+      text-align: right;
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 6px;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .badge::before {
+      content: '';
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+    .badge--accent  { background: var(--color-accent-dim);  color: var(--color-accent); }
+    .badge--info    { background: var(--color-info-dim);    color: var(--color-info); }
+    .badge--success { background: var(--color-success-dim); color: var(--color-success); }
+    .badge--teal    { background: var(--color-teal-dim);    color: var(--color-teal); }
+    .badge--warn    { background: var(--color-warn-dim);    color: var(--color-warn-fg); }
+    .badge--plum    { background: var(--color-plum-dim);    color: var(--color-plum); }
+
+    /* Métricas KPI */
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-5);
+      margin: var(--space-6) 0;
+    }
+    .metrics > * { min-width: 0; }
+    @media (max-width: 600px) { .metrics { grid-template-columns: 1fr; } }
+    .metric {
+      border-top: 2px solid var(--color-fg);
+      padding-top: var(--space-3);
+    }
+    .metric__val {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1;
+      margin: 0 0 var(--space-2);
+      letter-spacing: -0.030em;
+      color: var(--color-fg);
+    }
+    .metric__val .accent { color: var(--color-accent); }
+    .metric__label {
       font-size: var(--size-small);
       color: var(--color-fg-muted);
-      text-decoration: none;
-      border-left: 2px solid transparent;
-      margin-left: -1px;
-      transition: all var(--duration-fast);
+      margin: 0;
+      max-width: 22ch;
+      line-height: 1.4;
     }
-    .toc__list a:hover { color: var(--color-fg); }
-    .toc__list a.is-active {
-      color: var(--color-accent);
-      border-left-color: var(--color-accent);
-      font-weight: 500;
+    .metric__trend {
+      font-family: var(--font-mono);
+      font-size: var(--size-xs);
+      color: var(--color-success);
+      margin-top: var(--space-2);
     }
-    .toc__list--h3 a { padding-left: var(--space-5); font-size: 0.875rem; }
 
-    /* ─── Footer ───────────────────────────────────── */
+    /* Chart wrap */
+    .chart-wrap {
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: var(--space-5);
+      margin: var(--space-5) 0;
+      box-shadow: var(--shadow-xs);
+    }
+    .chart-wrap__title {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.10em;
+      color: var(--color-fg-muted);
+      margin: 0 0 var(--space-3);
+    }
+    .chart-wrap__caption {
+      font-size: var(--size-xs);
+      color: var(--color-fg-subtle);
+      margin: var(--space-3) 0 0;
+      font-style: italic;
+    }
+    .chart-wrap canvas { max-height: 280px; }
+
+    /* Grid 2-up */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4);
+      margin: var(--space-5) 0;
+    }
+    .grid-2 > * { min-width: 0; }
+    @media (max-width: 720px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    .info-card {
+      padding: var(--space-5);
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+    }
+    .info-card__head {
+      display: flex; align-items: center; gap: var(--space-2);
+      margin-bottom: var(--space-2);
+    }
+    .info-card__dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--color-fg-muted);
+      flex-shrink: 0;
+    }
+    .info-card--success .info-card__dot { background: var(--color-success); }
+    .info-card--danger  .info-card__dot { background: var(--color-danger); }
+    .info-card h4 { margin: 0; font-size: var(--size-small); }
+    .info-card p { margin: 0; font-size: var(--size-small); color: var(--color-fg-muted); }
+
+    /* Footer */
     .content__footer {
       margin-top: var(--space-12);
       padding-top: var(--space-6);
@@ -513,11 +775,30 @@
       gap: var(--space-4);
       font-size: var(--size-small);
       color: var(--color-fg-muted);
+      flex-wrap: wrap;
     }
     .content__footer a { color: var(--color-fg-muted); }
     .content__footer a:hover { color: var(--color-accent); }
+    .content__footer p { margin: 0; }
 
-    /* ─── Responsivo ───────────────────────────────── */
+    /* Definition list (glossário) */
+    dl.glossary { margin: var(--space-4) 0; }
+    dl.glossary dt {
+      font-family: var(--font-display);
+      font-weight: 700;
+      margin-top: var(--space-4);
+      color: var(--color-fg);
+    }
+    dl.glossary dd {
+      margin: 0 0 0;
+      color: var(--color-fg-muted);
+      font-size: var(--size-small);
+      max-width: 65ch;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════
+       RESPONSIVO + PRINT
+       ═══════════════════════════════════════════════════════════════════ */
     @media (max-width: 1100px) {
       .layout { grid-template-columns: var(--sidebar-w) 1fr; }
       .toc { display: none; }
@@ -528,492 +809,787 @@
       .content { padding: var(--space-5); }
       .topbar__search { display: none; }
       .topbar__breadcrumb { display: none; }
-      h1 { font-size: 2rem; }
-      h2 { font-size: 1.5rem; }
+    }
+
+    @media print {
+      .topbar, .sidebar, .toc, .theme-toggle { display: none; }
+      .layout { display: block; }
+      .content { padding: 0; max-width: 100%; }
+      body { background: white; }
+      h2 { page-break-after: avoid; }
+      .callout, .code, .toggle, .table-wrap, .chart-wrap { break-inside: avoid; }
     }
 
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
       }
+      [data-reveal] { opacity: 1; transform: none; }
     }
-
-    .pill {
-      display: inline-flex; align-items: center;
-      padding: 2px 10px;
-      font-size: var(--size-xs);
-      font-weight: 500;
-      background: var(--color-bg-sunken);
-      color: var(--color-fg-muted);
-      border-radius: 999px;
-      border: 1px solid var(--color-border);
-    }
-    .pill--accent { background: rgba(255, 98, 0, 0.08); color: var(--color-accent); border-color: rgba(255, 98, 0, 0.2); }
-
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin: var(--space-5) 0; }
-    @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
-
-    .info-card {
-      padding: var(--space-4);
-      background: var(--color-bg-elevated);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius);
-    }
-    .info-card h4 { margin: 0 0 var(--space-2); font-size: var(--size-small); }
-    .info-card p { margin: 0; font-size: var(--size-small); color: var(--color-fg-muted); }
   </style>
 </head>
 <body>
 
   <header class="topbar">
     <a href="#" class="topbar__brand">
-      <img src="../logos/itau.png" alt="" class="topbar__logo">
-      <span>Plataforma de Dados</span>
+      <span class="topbar__logo" aria-hidden="true">i</span>
+      <span>Itaú · Plataforma de Dados</span>
     </a>
-    <div class="topbar__divider"></div>
-    <nav class="topbar__breadcrumb">
-      <a href="#">Engenharia</a>
+    <span class="topbar__divider"></span>
+    <nav class="topbar__breadcrumb" aria-label="Localização">
+      <a href="#">Tecnologia</a>
       <span class="topbar__sep">/</span>
-      <a href="#">Plataforma</a>
+      <a href="#">Dados &amp; Analytics</a>
       <span class="topbar__sep">/</span>
-      <strong>Visão geral</strong>
+      <strong>Handbook</strong>
     </nav>
-    <div class="topbar__spacer"></div>
-    <input type="search" class="topbar__search" placeholder="Buscar no handbook...">
-    <button class="theme-toggle" data-theme-toggle aria-label="Alternar tema">
-      <span data-theme-icon>☾</span>
+    <span class="topbar__spacer"></span>
+    <input type="search" class="topbar__search" placeholder="Buscar no handbook…" aria-label="Buscar">
+    <button class="theme-toggle" type="button" aria-label="Alternar tema claro/escuro">
+      <span aria-hidden="true">◐</span>
     </button>
   </header>
 
   <div class="layout">
 
-    <aside class="sidebar">
-      <div class="sidebar__group">
-        <p class="sidebar__heading">Introdução</p>
+    <aside class="sidebar" aria-label="Navegação principal">
+      <nav class="sidebar__group">
+        <p class="sidebar__heading">Visão Geral</p>
         <ul class="sidebar__list">
-          <li><a href="#o-que-e">O que é</a></li>
+          <li><a href="#o-que-e" class="is-active">O que é</a></li>
           <li><a href="#principios">Princípios</a></li>
-          <li><a href="#quando-usar">Quando usar</a></li>
+          <li><a href="#numeros">Plataforma em números</a></li>
         </ul>
-      </div>
-      <div class="sidebar__group">
-        <p class="sidebar__heading">Usando a plataforma</p>
+      </nav>
+      <nav class="sidebar__group">
+        <p class="sidebar__heading">Dados</p>
         <ul class="sidebar__list">
-          <li><a href="#comecando">Começando</a></li>
-          <li><a href="#sdk">SDK e CLI</a></li>
-          <li><a href="#contratos">Contratos de dados</a></li>
+          <li><a href="#catalogo">Catálogo &amp; Linhagem</a></li>
+          <li><a href="#contratos">Contratos &amp; Schemas</a></li>
+          <li><a href="#qualidade">Qualidade</a></li>
         </ul>
-      </div>
-      <div class="sidebar__group">
-        <p class="sidebar__heading">Operação</p>
+      </nav>
+      <nav class="sidebar__group">
+        <p class="sidebar__heading">Governança</p>
         <ul class="sidebar__list">
+          <li><a href="#dominios">Domínios &amp; Owners</a></li>
+          <li><a href="#privacidade">LGPD &amp; Privacidade</a></li>
+        </ul>
+      </nav>
+      <nav class="sidebar__group">
+        <p class="sidebar__heading">Ferramentas</p>
+        <ul class="sidebar__list">
+          <li><a href="#sdk">SDK &amp; CLI</a></li>
           <li><a href="#observabilidade">Observabilidade</a></li>
-          <li><a href="#incidentes">Incidentes</a></li>
         </ul>
-      </div>
-      <div class="sidebar__group">
-        <p class="sidebar__heading">Referência</p>
+      </nav>
+      <nav class="sidebar__group">
+        <p class="sidebar__heading">ESG</p>
+        <ul class="sidebar__list">
+          <li><a href="#esg">Dados ESG</a></li>
+        </ul>
+      </nav>
+      <nav class="sidebar__group">
+        <p class="sidebar__heading">Suporte</p>
         <ul class="sidebar__list">
           <li><a href="#faq">FAQ</a></li>
+          <li><a href="#contato">Contato</a></li>
           <li><a href="#glossario">Glossário</a></li>
         </ul>
-      </div>
+      </nav>
     </aside>
 
     <main class="content">
       <div class="content__inner">
 
         <div class="content__meta">
-          <span>Atualizado em 15 de outubro de 2025</span>
+          <span>Atualizado · 14 de maio de 2026</span>
           <span class="content__meta-dot"></span>
-          <span>Mantido pelo time de Plataforma</span>
+          <span>Time de Plataforma de Dados</span>
           <span class="content__meta-dot"></span>
-          <span class="pill pill--accent">v2.4</span>
+          <span class="pill pill--accent">v3.1</span>
         </div>
 
-        <h1>Plataforma de Dados</h1>
+        <h1>Plataforma de Dados Itaú</h1>
         <p class="lead">
-          Handbook do time. Aqui você encontra o que a plataforma é, quando ela é a escolha certa,
-          e como começar a usar — em ordem de profundidade crescente. Para dúvidas pontuais,
-          consulte o <a href="#faq">FAQ</a>.
+          Handbook do time. Aqui está o que a plataforma é, como ela opera, como começar a usar e
+          como contribuir — em ordem de profundidade crescente. Para dúvidas pontuais, consulte
+          o <a href="#faq">FAQ</a> ou o canal de <a href="#contato">contato</a>.
         </p>
 
-        <h2 id="o-que-e">O que é</h2>
-        <p>
-          A Plataforma de Dados é a infraestrutura compartilhada que substitui o pipeline batch
-          legado por um modelo <strong>event-driven multi-região</strong>. Times consomem e produzem
-          dados via contratos versionados, sem precisar operar a infraestrutura.
-        </p>
-        <p>
-          Pense nela como o "Kubernetes dos dados": ela abstrai a camada de infraestrutura
-          e expõe primitivas estáveis (tópicos, schemas, jobs, materializações) que times de produto
-          combinam para resolver problemas de negócio.
-        </p>
+        <section id="o-que-e" data-reveal>
+          <h2>O que é</h2>
+          <p>
+            A <strong>Plataforma de Dados Itaú</strong> é a infraestrutura compartilhada que substituiu o
+            pipeline batch legado por um modelo <strong>event-driven multi-região</strong>. Times consomem e
+            produzem dados via contratos versionados, sem precisar operar a infraestrutura subjacente
+            (Kafka, Flink, Iceberg, Trino).
+          </p>
+          <p>
+            Pense nela como o "Kubernetes dos dados": ela abstrai a camada de infraestrutura e expõe
+            primitivas estáveis (<em>tópicos, schemas, jobs, materializações</em>) que squads combinam para
+            resolver problemas de negócio — de prevenção a fraude em tempo real até cálculo de capital
+            regulatório no fim do dia.
+          </p>
 
-        <aside class="callout callout--info" role="note">
-          <div class="callout__icon" aria-hidden="true">i</div>
-          <div class="callout__content">
-            <p class="callout__title">Quem mantém</p>
-            <p>O time de Plataforma de Dados (8 engenheiros) é o owner. Squads de produto são consumidores e produtores — não operam infraestrutura.</p>
+          <aside class="callout callout--info" role="note">
+            <div class="callout__icon" aria-hidden="true">i</div>
+            <div class="callout__content">
+              <p class="callout__title">Quem mantém</p>
+              <p>O núcleo da Plataforma é mantido por 14 engenheiros distribuídos em São Paulo, Recife e Lisboa. Squads de produto são <strong>consumidores e produtores</strong> — não operam infraestrutura. Onboarding técnico em 5 dias úteis.</p>
+            </div>
+          </aside>
+        </section>
+
+        <section id="principios" data-reveal>
+          <h2>Princípios</h2>
+          <p>Quatro decisões arquiteturais que orientam toda evolução da plataforma. Elas existem para serem
+            invocadas em discussões de design — quando duas alternativas estão empatadas, ganha a que
+            respeita melhor os quatro princípios.</p>
+
+          <h3>1. Schema-first</h3>
+          <p>
+            Todo dado que entra ou sai da plataforma passa por um schema versionado em Avro. Quebras de
+            compatibilidade são bloqueadas em CI — não em produção. Consumidores antigos continuam
+            funcionando enquanto novas versões coexistem.
+          </p>
+
+          <h3>2. Event-driven por padrão</h3>
+          <p>
+            Não existe "batch noturno" na plataforma. Mudanças propagam em segundos via streams. Batch é
+            caso especial — uma <em>materialização agendada</em> — não o caso geral.
+          </p>
+
+          <h3>3. Multi-região nativo</h3>
+          <p>
+            Latência regional é resolvida no design, não no SLA. Dados se replicam automaticamente entre
+            os clusters de São Paulo, Rio de Janeiro e Brasília conforme a política declarada de cada
+            tópico (<code>residency: br-sp</code>, <code>residency: br-multi</code>).
+          </p>
+
+          <h3>4. Self-service com guard-rails</h3>
+          <p>
+            Times criam tópicos, schemas e jobs sem abrir ticket. As guard-rails (limites de throughput,
+            políticas de retenção, RBAC por domínio) garantem que self-service não vire self-destruction.
+          </p>
+        </section>
+
+        <section id="numeros" data-reveal>
+          <h2>Plataforma em números</h2>
+          <p>Estado da plataforma em maio de 2026. Os valores abaixo são atualizados diariamente a partir
+            do próprio painel <code>plat-overview</code>.</p>
+
+          <div class="metrics">
+            <div class="metric">
+              <p class="metric__val"><span class="accent">2.847</span></p>
+              <p class="metric__label">tabelas catalogadas</p>
+              <p class="metric__trend">+312 em 12m</p>
+            </div>
+            <div class="metric">
+              <p class="metric__val"><span class="accent">94%</span></p>
+              <p class="metric__label">cobertura de owners declarados</p>
+              <p class="metric__trend">+11 p.p. em 12m</p>
+            </div>
+            <div class="metric">
+              <p class="metric__val"><span class="accent">9,1</span><small style="font-size:0.5em;color:var(--color-fg-muted);font-family:var(--font-text);font-weight:500;"> bi/dia</small></p>
+              <p class="metric__label">eventos processados por dia</p>
+              <p class="metric__trend">+38% em 12m</p>
+            </div>
           </div>
-        </aside>
 
-        <h2 id="principios">Princípios</h2>
-        <p>Quatro decisões arquiteturais que orientam toda evolução da plataforma:</p>
-
-        <h3>1. Schema-first</h3>
-        <p>
-          Todo dado que entra ou sai da plataforma passa por um schema versionado em Avro.
-          Quebras de compatibilidade são bloqueadas em CI — não em produção. Consumidores antigos
-          continuam funcionando enquanto novas versões coexistem.
-        </p>
-
-        <h3>2. Event-driven por padrão</h3>
-        <p>
-          Não existe "batch noturno" na plataforma. Mudanças propagam em segundos via streams.
-          Batch é caso especial — uma materialização agendada — não o caso geral.
-        </p>
-
-        <h3>3. Multi-região nativo</h3>
-        <p>
-          Latência regional é resolvida no design, não no SLA. Dados se replicam automaticamente entre SP, RJ e DF
-          conforme a política de cada tópico.
-        </p>
-
-        <h3>4. Self-service com guard-rails</h3>
-        <p>
-          Times criam tópicos, schemas e jobs sem pedir ticket. As guard-rails (limites de throughput,
-          políticas de retenção, RBAC) garantem que self-service não vira self-destruction.
-        </p>
-
-        <h2 id="quando-usar">Quando usar (e quando não)</h2>
-        <p>A plataforma resolve um conjunto específico de problemas. Para tudo fora desse conjunto, ela é a ferramenta errada.</p>
-
-        <div class="grid-2">
-          <div class="info-card">
-            <h4 style="color: var(--color-accent);">✓ Use quando</h4>
-            <p>Dado precisa fluir entre 3+ sistemas, ou ser consumido em tempo real, ou compor um produto analítico, ou exigir auditoria de schema.</p>
+          <div class="chart-wrap" data-reveal>
+            <p class="chart-wrap__title">Evolução · tabelas catalogadas</p>
+            <canvas id="chart-catalogo" aria-label="Evolução de tabelas catalogadas no catálogo, 2021 a 2026"></canvas>
+            <p class="chart-wrap__caption">Inclui tabelas em Hive, Iceberg e Snowflake. Fonte: <code>plat-catalog</code>, snapshot 14/mai/2026.</p>
           </div>
-          <div class="info-card">
-            <h4>✗ Não use quando</h4>
-            <p>Dado fica num único sistema, é puramente operacional (config, sessão de usuário), ou tem cardinalidade muito alta (event sourcing por dispositivo).</p>
+        </section>
+
+        <section id="catalogo" data-reveal>
+          <h2>Catálogo &amp; Linhagem</h2>
+          <p>
+            O catálogo é a porta de entrada para qualquer dado da plataforma. Cada ativo (tabela, tópico,
+            materialização, dashboard) tem ficha técnica com schema, owner, contrato de SLA, qualidade e
+            grafo de linhagem completo — upstream e downstream.
+          </p>
+
+          <h3>Cobertura por domínio</h3>
+          <p>Os domínios refletem as áreas de negócio. A cobertura é a fração de ativos do domínio que já
+            têm owner declarado, schema versionado e contrato de qualidade ativo.</p>
+
+          <div class="chart-wrap" data-reveal>
+            <p class="chart-wrap__title">Distribuição de ativos por domínio</p>
+            <div style="max-width: 360px; margin: 0 auto;">
+              <canvas id="chart-dominios" aria-label="Distribuição percentual de ativos por domínio de negócio"></canvas>
+            </div>
+            <p class="chart-wrap__caption">Total: 2.847 tabelas. Domínios são definidos pelo Comitê de Dados — revisão semestral.</p>
           </div>
-        </div>
 
-        <aside class="callout callout--warn">
-          <div class="callout__icon" aria-hidden="true">!</div>
-          <div class="callout__content">
-            <p class="callout__title">Antes de migrar legado</p>
-            <p>Migrações de pipelines existentes precisam de aprovação técnica do time de Plataforma. Não é processo burocrático — é alinhamento de capacity e contrato. Abra um RFC antes de começar.</p>
+          <h3>Quem é dono do quê</h3>
+          <p>Lista oficial dos domínios e seus tech-leads. Para alterações de escopo, abra um RFC no
+            repositório <code>plat-rfc</code>.</p>
+
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Domínio</th>
+                  <th>Tech-lead</th>
+                  <th class="num">Tabelas</th>
+                  <th class="num">SLA p95</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Crédito</strong><br><small style="color: var(--color-fg-subtle);">Retail + Atacado</small></td>
+                  <td>Camila Tanaka</td>
+                  <td class="num">812</td>
+                  <td class="num">1,8 s</td>
+                  <td><span class="badge badge--success">Ativo</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Pagamentos</strong><br><small style="color: var(--color-fg-subtle);">PIX, TED, cartões</small></td>
+                  <td>Rafael Mendes</td>
+                  <td class="num">624</td>
+                  <td class="num">0,9 s</td>
+                  <td><span class="badge badge--success">Ativo</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Risco &amp; Fraude</strong></td>
+                  <td>Beatriz Okada</td>
+                  <td class="num">418</td>
+                  <td class="num">2,3 s</td>
+                  <td><span class="badge badge--success">Ativo</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Investimentos</strong><br><small style="color: var(--color-fg-subtle);">Asset, corretora, private</small></td>
+                  <td>Diego Carvalho</td>
+                  <td class="num">389</td>
+                  <td class="num">3,1 s</td>
+                  <td><span class="badge badge--info">Em expansão</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Seguros</strong></td>
+                  <td>Helena Vasconcelos</td>
+                  <td class="num">256</td>
+                  <td class="num">4,5 s</td>
+                  <td><span class="badge badge--warn">Em onboarding</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Atendimento</strong><br><small style="color: var(--color-fg-subtle);">App, agências, contact center</small></td>
+                  <td>Marcos Pereira</td>
+                  <td class="num">214</td>
+                  <td class="num">1,2 s</td>
+                  <td><span class="badge badge--success">Ativo</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Compliance &amp; Regulatório</strong></td>
+                  <td>Patrícia Almeida</td>
+                  <td class="num">134</td>
+                  <td class="num">5,8 s</td>
+                  <td><span class="badge badge--teal">Restrito</span></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="2" style="font-weight: 700;">Total</td>
+                  <td class="num" style="font-weight: 700;">2.847</td>
+                  <td class="num" style="color: var(--color-fg-subtle);">—</td>
+                  <td></td>
+                </tr>
+              </tfoot>
+            </table>
           </div>
-        </aside>
+        </section>
 
-        <h2 id="comecando">Começando</h2>
-        <p>O caminho recomendado para qualquer time novo é:</p>
+        <section id="contratos" data-reveal>
+          <h2>Contratos &amp; Schemas</h2>
+          <p>
+            Schemas são <strong>contratos</strong>. Eles definem o que produtores garantem e o que consumidores
+            podem assumir. Três níveis de compatibilidade são aceitos — toda mudança é classificada e
+            bloqueada se não respeitar a direção esperada:
+          </p>
 
-        <ol>
-          <li>Instale o SDK no seu projeto.</li>
-          <li>Autentique via SSO corporativo.</li>
-          <li>Liste os tópicos disponíveis na sua área.</li>
-          <li>Consuma um deles em modo read-only para validar o setup.</li>
-          <li>Crie seu primeiro tópico (com schema) seguindo o guia abaixo.</li>
-        </ol>
+          <ul>
+            <li><strong>Backward</strong> (default) — adiciona campo opcional, remove campo opcional. Consumidores antigos seguem funcionando.</li>
+            <li><strong>Forward</strong> (via RFC) — adiciona enum, renomeia tipo lógico. Produtores antigos seguem funcionando.</li>
+            <li><strong>Breaking</strong> (proibido em v existente) — remove campo obrigatório, troca tipo primitivo. Exige novo schema (v2) coexistindo.</li>
+          </ul>
 
-        <figure class="code">
-          <div class="code__head">
-            <span class="code__lang">bash</span>
-            <button class="code__copy" data-copy>Copiar</button>
-          </div>
-<pre><code><span class="tk-comment"># instalar o SDK</span>
-npm install <span class="tk-str">@itau/dados-sdk</span>
+          <p>Exemplo de schema mínimo para um tópico de transação PIX:</p>
 
-<span class="tk-comment"># autenticar (abre o SSO no browser)</span>
-dados auth login
-
-<span class="tk-comment"># listar tópicos disponíveis</span>
-dados topics list --area=risco</code></pre>
-        </figure>
-
-        <p>Para criar um tópico novo, defina o schema em YAML e registre via CLI:</p>
-
-        <figure class="code">
-          <div class="code__head">
-            <span class="code__lang">yaml</span>
-            <button class="code__copy" data-copy>Copiar</button>
-          </div>
-<pre><code><span class="tk-comment"># schema/transacao_v1.yaml</span>
-<span class="tk-kw">name:</span> transacao
+          <figure class="code">
+            <div class="code__head">
+              <span class="code__lang">yaml</span>
+              <button class="code__copy" type="button">Copiar</button>
+            </div>
+<pre><code><span class="tk-comment"># schema/pix_transacao_v1.yaml</span>
+<span class="tk-kw">name:</span> pix_transacao
 <span class="tk-kw">version:</span> 1
 <span class="tk-kw">owner:</span> squad-pagamentos
-<span class="tk-kw">retention:</span> 90d
+<span class="tk-kw">domain:</span> pagamentos
+<span class="tk-kw">retention:</span> 180d
+<span class="tk-kw">residency:</span> br-multi
+<span class="tk-kw">pii:</span> true
 <span class="tk-kw">fields:</span>
-  - <span class="tk-kw">name:</span> id           <span class="tk-kw">type:</span> string  <span class="tk-kw">required:</span> true
-  - <span class="tk-kw">name:</span> valor_cents  <span class="tk-kw">type:</span> long    <span class="tk-kw">required:</span> true
-  - <span class="tk-kw">name:</span> moeda        <span class="tk-kw">type:</span> string  <span class="tk-kw">default:</span> <span class="tk-str">"BRL"</span>
-  - <span class="tk-kw">name:</span> timestamp    <span class="tk-kw">type:</span> timestamp</code></pre>
-        </figure>
+  - <span class="tk-kw">name:</span> end_to_end_id   <span class="tk-kw">type:</span> string     <span class="tk-kw">required:</span> true
+  - <span class="tk-kw">name:</span> valor_cents     <span class="tk-kw">type:</span> long       <span class="tk-kw">required:</span> true
+  - <span class="tk-kw">name:</span> psp_origem      <span class="tk-kw">type:</span> string     <span class="tk-kw">required:</span> true
+  - <span class="tk-kw">name:</span> psp_destino     <span class="tk-kw">type:</span> string     <span class="tk-kw">required:</span> true
+  - <span class="tk-kw">name:</span> chave_destino   <span class="tk-kw">type:</span> string     <span class="tk-kw">required:</span> false  <span class="tk-comment"># mascarado em logs</span>
+  - <span class="tk-kw">name:</span> timestamp       <span class="tk-kw">type:</span> timestamp  <span class="tk-kw">required:</span> true</code></pre>
+          </figure>
 
-        <figure class="code">
-          <div class="code__head">
-            <span class="code__lang">bash</span>
-            <button class="code__copy" data-copy>Copiar</button>
+          <aside class="callout callout--tip">
+            <div class="callout__icon" aria-hidden="true">★</div>
+            <div class="callout__content">
+              <p class="callout__title">Boa prática</p>
+              <p>Versione o schema junto com o código que produz/consome o tópico. Mudanças passam por code review como qualquer outra alteração — sem ferramentas separadas para "registro de schema".</p>
+            </div>
+          </aside>
+        </section>
+
+        <section id="qualidade" data-reveal>
+          <h2>Qualidade</h2>
+          <p>
+            Cada contrato declara expectativas de qualidade: <em>completude</em> (% de campos não-nulos),
+            <em>frescor</em> (idade máxima do dado), <em>unicidade</em> (chave primária) e <em>validade</em>
+            (faixa de valores, regex, enum). O motor de qualidade roda continuamente sobre amostras e
+            emite eventos no tópico <code>plat.quality_check.v1</code>.
+          </p>
+
+          <div class="chart-wrap" data-reveal>
+            <p class="chart-wrap__title">Frescor médio do catálogo · últimos 12 meses</p>
+            <canvas id="chart-qualidade" aria-label="Frescor médio dos dados (em horas) nos últimos 12 meses"></canvas>
+            <p class="chart-wrap__caption">Frescor = mediana da idade do dado mais recente disponível, ponderada pelo número de queries. Meta interna: ≤ 4h.</p>
           </div>
-<pre><code>dados topics create --schema=schema/transacao_v1.yaml</code></pre>
-        </figure>
 
-        <aside class="callout callout--tip">
-          <div class="callout__icon" aria-hidden="true">★</div>
-          <div class="callout__content">
-            <p class="callout__title">Boa prática</p>
-            <p>Versione o schema junto com o código que produz/consome. Mudanças passam por code review como qualquer outra mudança de código.</p>
-          </div>
-        </aside>
+          <p>A queda de junho/25 corresponde à migração do legado Hive → Iceberg, que reduziu a janela de
+            staleness de batches de 24h para minutos. A elevação temporária em janeiro/26 reflete o
+            incidente <code>INC-2026-014</code> (replay em massa após corrupção de partição).</p>
+        </section>
 
-        <h2 id="sdk">SDK e CLI</h2>
-        <p>
-          Suportamos três linguagens de primeira classe. A interface é coerente entre elas —
-          escolha a que combina com seu stack.
-        </p>
+        <section id="dominios" data-reveal>
+          <h2>Domínios &amp; Owners</h2>
+          <p>Domínios são unidades de governança. Cada ativo pertence a exatamente um domínio, e cada
+            domínio tem um tech-lead responsável. A separação por domínio é o que viabiliza self-service
+            seguro — políticas de acesso, retenção e qualidade são herdadas do domínio.</p>
 
-        <div class="tabs" data-tabs>
-          <div class="tabs__list" role="tablist">
-            <button class="tabs__tab is-active" role="tab" data-tab="ts">TypeScript</button>
-            <button class="tabs__tab" role="tab" data-tab="py">Python</button>
-            <button class="tabs__tab" role="tab" data-tab="java">Java</button>
-          </div>
-          <div class="tabs__panel is-active" data-panel="ts">
-            <figure class="code">
-              <div class="code__head">
-                <span class="code__lang">typescript</span>
-                <button class="code__copy" data-copy>Copiar</button>
-              </div>
-<pre><code><span class="tk-kw">import</span> { Cliente } <span class="tk-kw">from</span> <span class="tk-str">'@itau/dados-sdk'</span>;
+          <p>O modelo segue a especificação <strong>Data Mesh</strong> adaptada ao Itaú, com quatro princípios
+            originais (ownership descentralizado, dado como produto, plataforma self-service, governança
+            federada) e um adicional do banco: <strong>regulatório como cidadão de primeira classe</strong>.</p>
 
-<span class="tk-kw">const</span> dados = <span class="tk-kw">new</span> <span class="tk-fn">Cliente</span>({ area: <span class="tk-str">'pagamentos'</span> });
+          <aside class="callout callout--info">
+            <div class="callout__icon" aria-hidden="true">i</div>
+            <div class="callout__content">
+              <p class="callout__title">Mudança de domínio</p>
+              <p>Movimentações entre domínios exigem aprovação dos dois tech-leads e do Comitê de Dados. Use o template <code>rfc-domain-move.md</code> e abra um PR no repositório <code>plat-rfc</code>.</p>
+            </div>
+          </aside>
+        </section>
 
-<span class="tk-kw">await</span> dados.<span class="tk-fn">consumir</span>(<span class="tk-str">'transacao.v1'</span>, <span class="tk-kw">async</span> (evento) =&gt; {
+        <section id="privacidade" data-reveal>
+          <h2>LGPD &amp; Privacidade</h2>
+          <p>
+            A plataforma trata <strong>dados pessoais</strong> (PII) como uma classe de schema separada. Tópicos
+            com <code>pii: true</code> ativam automaticamente: criptografia em repouso (AES-256-GCM com
+            rotação trimestral), mascaramento em logs e tracing, auditoria de acesso por consumidor, e
+            descarte por <em>retention policy</em>.
+          </p>
+
+          <h3>Direitos do titular</h3>
+          <p>O motor de privacidade implementa todos os direitos da LGPD via APIs internas:</p>
+
+          <ul>
+            <li><strong>Acesso</strong> — busca em todos os tópicos por CPF/chave do titular, com correlação cross-domínio</li>
+            <li><strong>Retificação</strong> — emite evento de correção que se propaga via streams e materializações</li>
+            <li><strong>Eliminação</strong> — soft-delete imediato + hard-delete em 30d (preservando obrigações regulatórias)</li>
+            <li><strong>Portabilidade</strong> — export em JSON estruturado conforme schemas públicos</li>
+            <li><strong>Anonimização</strong> — substitui PII por tokens k-anônimos preservando estrutura</li>
+          </ul>
+
+          <aside class="callout callout--danger" role="alert">
+            <div class="callout__icon" aria-hidden="true">!</div>
+            <div class="callout__content">
+              <p class="callout__title">Antes de produzir PII</p>
+              <p>Todo tópico marcado <code>pii: true</code> exige aprovação do DPO antes de ir a produção. Não é processo burocrático — é validação de base legal (consentimento, execução de contrato, obrigação legal). Abra a solicitação em <code>#dpo-aprovacoes</code> com 5 dias úteis de antecedência.</p>
+            </div>
+          </aside>
+        </section>
+
+        <section id="sdk" data-reveal>
+          <h2>SDK &amp; CLI</h2>
+          <p>
+            Suportamos três linguagens de primeira classe. A interface é coerente entre elas — escolha a
+            que combina com o stack da squad. Java é o default para sistemas críticos, Python para
+            ciência de dados e analytics, TypeScript para Edge/BFFs e front-end internas.
+          </p>
+
+          <div class="tabs" data-tabs>
+            <div class="tabs__list" role="tablist">
+              <button class="tabs__tab is-active" role="tab" type="button" data-tab="ts" aria-selected="true">TypeScript</button>
+              <button class="tabs__tab" role="tab" type="button" data-tab="py" aria-selected="false">Python</button>
+              <button class="tabs__tab" role="tab" type="button" data-tab="java" aria-selected="false">Java</button>
+            </div>
+            <div class="tabs__panel is-active" data-panel="ts" role="tabpanel">
+              <figure class="code">
+                <div class="code__head">
+                  <span class="code__lang">typescript</span>
+                  <button class="code__copy" type="button">Copiar</button>
+                </div>
+<pre><code><span class="tk-kw">import</span> { Cliente } <span class="tk-kw">from</span> <span class="tk-str">'@itau/plat-dados'</span>;
+
+<span class="tk-kw">const</span> dados = <span class="tk-kw">new</span> <span class="tk-fn">Cliente</span>({ dominio: <span class="tk-str">'pagamentos'</span> });
+
+<span class="tk-kw">await</span> dados.<span class="tk-fn">consumir</span>(<span class="tk-str">'pix_transacao.v1'</span>, <span class="tk-kw">async</span> (evento) =&gt; {
   <span class="tk-kw">if</span> (evento.valor_cents &gt; <span class="tk-str">1_000_000_00</span>) {
-    <span class="tk-kw">await</span> dados.<span class="tk-fn">publicar</span>(<span class="tk-str">'transacao_alto_valor.v1'</span>, evento);
+    <span class="tk-kw">await</span> dados.<span class="tk-fn">publicar</span>(<span class="tk-str">'pix_alto_valor.v1'</span>, evento);
   }
 });</code></pre>
-            </figure>
-          </div>
-          <div class="tabs__panel" data-panel="py">
-            <figure class="code">
-              <div class="code__head">
-                <span class="code__lang">python</span>
-                <button class="code__copy" data-copy>Copiar</button>
-              </div>
-<pre><code><span class="tk-kw">from</span> itau.dados <span class="tk-kw">import</span> Cliente
+              </figure>
+            </div>
+            <div class="tabs__panel" data-panel="py" role="tabpanel" hidden>
+              <figure class="code">
+                <div class="code__head">
+                  <span class="code__lang">python</span>
+                  <button class="code__copy" type="button">Copiar</button>
+                </div>
+<pre><code><span class="tk-kw">from</span> itau.plat <span class="tk-kw">import</span> Cliente
 
-dados = <span class="tk-fn">Cliente</span>(area=<span class="tk-str">"pagamentos"</span>)
+dados = <span class="tk-fn">Cliente</span>(dominio=<span class="tk-str">"pagamentos"</span>)
 
-<span class="tk-kw">@dados.consumidor</span>(<span class="tk-str">"transacao.v1"</span>)
+<span class="tk-kw">@dados.consumidor</span>(<span class="tk-str">"pix_transacao.v1"</span>)
 <span class="tk-kw">def</span> <span class="tk-fn">processar</span>(evento):
     <span class="tk-kw">if</span> evento.valor_cents &gt; <span class="tk-str">100_000_000</span>:
-        dados.<span class="tk-fn">publicar</span>(<span class="tk-str">"transacao_alto_valor.v1"</span>, evento)</code></pre>
-            </figure>
-          </div>
-          <div class="tabs__panel" data-panel="java">
-            <figure class="code">
-              <div class="code__head">
-                <span class="code__lang">java</span>
-                <button class="code__copy" data-copy>Copiar</button>
-              </div>
-<pre><code><span class="tk-kw">var</span> dados = Cliente.<span class="tk-fn">paraArea</span>(<span class="tk-str">"pagamentos"</span>);
+        dados.<span class="tk-fn">publicar</span>(<span class="tk-str">"pix_alto_valor.v1"</span>, evento)</code></pre>
+              </figure>
+            </div>
+            <div class="tabs__panel" data-panel="java" role="tabpanel" hidden>
+              <figure class="code">
+                <div class="code__head">
+                  <span class="code__lang">java</span>
+                  <button class="code__copy" type="button">Copiar</button>
+                </div>
+<pre><code><span class="tk-kw">var</span> dados = Cliente.<span class="tk-fn">paraDominio</span>(<span class="tk-str">"pagamentos"</span>);
 
-dados.<span class="tk-fn">consumir</span>(<span class="tk-str">"transacao.v1"</span>, evento -&gt; {
+dados.<span class="tk-fn">consumir</span>(<span class="tk-str">"pix_transacao.v1"</span>, evento -&gt; {
     <span class="tk-kw">if</span> (evento.valorCents() &gt; 100_000_000L) {
-        dados.<span class="tk-fn">publicar</span>(<span class="tk-str">"transacao_alto_valor.v1"</span>, evento);
+        dados.<span class="tk-fn">publicar</span>(<span class="tk-str">"pix_alto_valor.v1"</span>, evento);
     }
 });</code></pre>
-            </figure>
+              </figure>
+            </div>
           </div>
-        </div>
 
-        <h2 id="contratos">Contratos de dados</h2>
-        <p>Schemas são contratos. Eles definem o que produtores garantem e o que consumidores podem assumir.</p>
+          <p>O CLI <code>plat</code> cobre as mesmas operações para uso em scripts e CI:</p>
 
-        <h3>Compatibilidade</h3>
-        <p>Três níveis aceitos. Toda mudança de schema é classificada e bloqueada se não for compatível na direção esperada:</p>
+          <figure class="code">
+            <div class="code__head">
+              <span class="code__lang">bash</span>
+              <button class="code__copy" type="button">Copiar</button>
+            </div>
+<pre><code><span class="tk-comment"># autenticar (abre SSO no browser)</span>
+plat auth login
 
-        <table>
-          <thead>
-            <tr><th>Tipo</th><th>O que muda</th><th>Permitido por padrão</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><strong>Backward</strong></td><td>Adiciona campo opcional, remove campo opcional</td><td>Sim</td></tr>
-            <tr><td><strong>Forward</strong></td><td>Adiciona enum, renomeia tipo</td><td>Sim, via RFC</td></tr>
-            <tr><td><strong>Breaking</strong></td><td>Remove campo obrigatório, muda tipo</td><td>Não — exige novo schema (v2)</td></tr>
-          </tbody>
-        </table>
+<span class="tk-comment"># listar tópicos do meu domínio</span>
+plat topics list --dominio=pagamentos
 
-        <h2 id="observabilidade">Observabilidade</h2>
-        <p>
-          Todo tópico expõe métricas padronizadas em Prometheus. Painéis prontos no Grafana cobrem
-          throughput, lag de consumo, taxa de erro de schema e latência p50/p95/p99.
-        </p>
-        <p>Para investigar um problema, comece pelo painel <code>dados-overview</code> filtrado pela sua área.</p>
+<span class="tk-comment"># publicar schema novo</span>
+plat schemas publish schema/pix_transacao_v1.yaml
 
-        <h2 id="incidentes">Incidentes</h2>
-        <p>
-          Em caso de incidente que afete <em>produção</em> e tenha origem na plataforma, acione
-          o time on-call via <code>#plat-dados-oncall</code>. Para suporte não-urgente, use
-          <code>#plat-dados-suporte</code>.
-        </p>
+<span class="tk-comment"># inspecionar últimos 10 eventos</span>
+plat topics tail pix_transacao.v1 --limit=10</code></pre>
+          </figure>
+        </section>
 
-        <aside class="callout callout--danger">
-          <div class="callout__icon" aria-hidden="true">!</div>
-          <div class="callout__content">
-            <p class="callout__title">Acionamento on-call</p>
-            <p>O on-call existe para incidentes em <strong>produção</strong>. Para dúvidas, troubleshoot de dev/staging ou suporte em horário comercial, use o canal de suporte.</p>
+        <section id="observabilidade" data-reveal>
+          <h2>Observabilidade</h2>
+          <p>
+            Todo tópico expõe métricas padronizadas em Prometheus. Painéis prontos no Grafana cobrem
+            throughput, lag de consumo, taxa de erro de schema, latência p50/p95/p99 e fila de retry.
+            Para investigar um problema, comece pelo painel <code>plat-overview</code> filtrado pela sua área.
+          </p>
+
+          <div class="grid-2">
+            <div class="info-card info-card--success">
+              <div class="info-card__head">
+                <span class="info-card__dot" aria-hidden="true"></span>
+                <h4>Use quando</h4>
+              </div>
+              <p>Investigando incidente, validando deploy, verificando capacity antes de aumentar throughput, ou auditando consumo cross-domínio.</p>
+            </div>
+            <div class="info-card info-card--danger">
+              <div class="info-card__head">
+                <span class="info-card__dot" aria-hidden="true"></span>
+                <h4>Não use para</h4>
+              </div>
+              <p>Análise de negócio sobre os eventos em si. Para isso, materialize em Iceberg e consulte via Trino — métricas técnicas não são analytics.</p>
+            </div>
           </div>
-        </aside>
+        </section>
 
-        <h2 id="faq">FAQ</h2>
+        <section id="esg" data-reveal>
+          <h2>Dados ESG</h2>
+          <p>
+            A Plataforma é o backbone do reporte ESG do banco. Indicadores de pegada de carbono dos
+            sistemas, consumo energético dos data-centers (Estaleiro 1 e 2 — ambos com 100% de energia
+            renovável certificada I-REC), e métricas de diversidade da força de trabalho fluem para o
+            domínio <code>esg</code> e alimentam tanto o relatório anual quanto APIs de transparência.
+          </p>
 
-        <details class="toggle">
-          <summary class="toggle__summary">Posso usar a plataforma para dados pessoais (LGPD)?</summary>
-          <div class="toggle__body">
-            <p>Sim, com tópicos marcados como <code>pii: true</code> no schema. Isso ativa criptografia em repouso, mascaramento automático em logs e auditoria de acesso. Toda área que produz/consome PII precisa de aprovação prévia do DPO.</p>
-          </div>
-        </details>
-        <details class="toggle">
-          <summary class="toggle__summary">Qual o limite de throughput por tópico?</summary>
-          <div class="toggle__body">
-            <p>Limite padrão: 10k eventos/s. Aumentos sob demanda via RFC — sem custo para o time, mas com aprovação técnica para garantir capacity multi-tenant.</p>
-          </div>
-        </details>
-        <details class="toggle">
-          <summary class="toggle__summary">Como faço replay de eventos antigos?</summary>
-          <div class="toggle__body">
-            <p>O comando <code>dados replay --topic=X --from=2025-09-01</code> reprocessa um intervalo. Replay é caro — só funciona dentro da janela de retenção do tópico (default 90 dias).</p>
-          </div>
-        </details>
-        <details class="toggle">
-          <summary class="toggle__summary">Posso ter um tópico privado, visível só para minha squad?</summary>
-          <div class="toggle__body">
-            <p>Sim. No registro do schema, defina <code>visibility: private</code> e liste as squads autorizadas em <code>readers</code>/<code>writers</code>. Visibilidade pública (default) facilita reuso entre times.</p>
-          </div>
-        </details>
-        <details class="toggle">
-          <summary class="toggle__summary">A plataforma substitui o data warehouse?</summary>
-          <div class="toggle__body">
-            <p>Não. Ela alimenta o warehouse via conector oficial, mas não substitui consultas analíticas em SQL. Pense: plataforma para fluxo entre sistemas, warehouse para análise.</p>
-          </div>
-        </details>
+          <h3>Compromissos com o pilar Dados</h3>
+          <ul>
+            <li><strong>Carbono de processamento</strong> — toda materialização nova declara o custo de CO₂e estimado por execução. Acima de 50 kg CO₂e/dia exige justificativa técnica no PR.</li>
+            <li><strong>Retenção mínima viável</strong> — tópicos sem caso de uso comprovado têm retenção reduzida automaticamente após 90 dias sem acesso.</li>
+            <li><strong>Inclusão por design</strong> — schemas que coletam dados demográficos seguem o vocabulário inclusivo definido pelo Comitê de Diversidade.</li>
+          </ul>
 
-        <h2 id="glossario">Glossário</h2>
-        <dl style="margin: 0;">
-          <dt style="font-weight: 600; margin-top: var(--space-3);">Tópico</dt>
-          <dd style="margin: 0 0 var(--space-2); color: var(--color-fg-muted);">Stream nomeado de eventos com um schema associado. Unidade básica da plataforma.</dd>
-          <dt style="font-weight: 600; margin-top: var(--space-3);">Schema</dt>
-          <dd style="margin: 0 0 var(--space-2); color: var(--color-fg-muted);">Definição estrutural de um evento, versionada. Garante contrato entre produtores e consumidores.</dd>
-          <dt style="font-weight: 600; margin-top: var(--space-3);">Materialização</dt>
-          <dd style="margin: 0 0 var(--space-2); color: var(--color-fg-muted);">Visão derivada (tabela, índice, agregação) calculada a partir de um ou mais tópicos.</dd>
-          <dt style="font-weight: 600; margin-top: var(--space-3);">Replay</dt>
-          <dd style="margin: 0 0 var(--space-2); color: var(--color-fg-muted);">Reprocessamento de eventos passados dentro da janela de retenção do tópico.</dd>
-        </dl>
+          <aside class="callout callout--tip">
+            <div class="callout__icon" aria-hidden="true">★</div>
+            <div class="callout__content">
+              <p class="callout__title">Indicador-chave</p>
+              <p>Em 2025 a Plataforma reduziu o custo energético por evento processado em <strong>27%</strong> via migração para clusters ARM (Graviton 3) e adoção de compressão zstd em tópicos arquivados.</p>
+            </div>
+          </aside>
+        </section>
+
+        <section id="faq" data-reveal>
+          <h2>FAQ</h2>
+          <p>Perguntas recorrentes da comunidade. Para algo que não está aqui, abra issue no repositório do
+            handbook ou pergunte no canal de <a href="#contato">suporte</a>.</p>
+
+          <details class="toggle">
+            <summary class="toggle__summary">Posso usar a plataforma para dados pessoais (LGPD)?</summary>
+            <div class="toggle__body">
+              <p>Sim, com tópicos marcados como <code>pii: true</code> no schema. Isso ativa criptografia em repouso, mascaramento automático em logs e auditoria de acesso. Toda área que produz ou consome PII precisa de aprovação prévia do DPO — ver seção <a href="#privacidade">LGPD &amp; Privacidade</a>.</p>
+            </div>
+          </details>
+          <details class="toggle">
+            <summary class="toggle__summary">Qual o limite de throughput por tópico?</summary>
+            <div class="toggle__body">
+              <p>Limite padrão: 10 mil eventos/segundo. Aumentos sob demanda via RFC — sem custo direto para o time, mas com aprovação técnica para garantir capacity multi-tenant. Picos esperados (campanhas, Black Friday) devem ser comunicados com 30 dias de antecedência.</p>
+            </div>
+          </details>
+          <details class="toggle">
+            <summary class="toggle__summary">Como faço replay de eventos antigos?</summary>
+            <div class="toggle__body">
+              <p>Use <code>plat replay --topic=X --from=2026-03-01 --to=2026-03-15</code>. Replay é caro e só funciona dentro da janela de retenção do tópico (default 90 dias, 180 para pagamentos, 5 anos para compliance). Replays maiores que 100 GB exigem aprovação do owner do domínio.</p>
+            </div>
+          </details>
+          <details class="toggle">
+            <summary class="toggle__summary">Posso ter um tópico privado, visível só para minha squad?</summary>
+            <div class="toggle__body">
+              <p>Sim. No schema, defina <code>visibility: private</code> e liste as squads autorizadas em <code>readers</code> e <code>writers</code>. Visibilidade pública é o default — e recomendada — porque facilita reuso entre times e reduz duplicação.</p>
+            </div>
+          </details>
+          <details class="toggle">
+            <summary class="toggle__summary">A plataforma substitui o data warehouse?</summary>
+            <div class="toggle__body">
+              <p>Não. Ela alimenta o warehouse (Snowflake) e o data lake (Iceberg + Trino) via conectores oficiais, mas não substitui consultas analíticas em SQL. Regra: plataforma para fluxo entre sistemas, warehouse/lake para análise.</p>
+            </div>
+          </details>
+          <details class="toggle">
+            <summary class="toggle__summary">Como reportar um incidente?</summary>
+            <div class="toggle__body">
+              <p>Para incidentes em <strong>produção</strong> com origem comprovada na plataforma, acione o on-call via <code>#plat-oncall</code> (PagerDuty integrado). Para dúvidas, troubleshoot de dev/staging ou suporte em horário comercial, use <code>#plat-suporte</code>.</p>
+            </div>
+          </details>
+        </section>
+
+        <section id="contato" data-reveal>
+          <h2>Contato</h2>
+          <p>
+            A equipe é distribuída entre três escritórios. Cada um cobre fusos diferentes —
+            para suporte 24/7, use o canal global no Slack.
+          </p>
+
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Canal</th>
+                  <th>Para quê</th>
+                  <th>Resposta esperada</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>#plat-suporte</code></td>
+                  <td>Dúvidas técnicas, dev/staging</td>
+                  <td>4h em horário comercial (BRT)</td>
+                </tr>
+                <tr>
+                  <td><code>#plat-oncall</code></td>
+                  <td>Incidentes em produção</td>
+                  <td>Imediato (PagerDuty)</td>
+                </tr>
+                <tr>
+                  <td><code>#plat-rfc</code></td>
+                  <td>Propostas de design, mudanças de schema</td>
+                  <td>72h para primeira resposta</td>
+                </tr>
+                <tr>
+                  <td><code>plat-dpo@itau-unibanco.com.br</code></td>
+                  <td>Aprovações de PII, casos LGPD</td>
+                  <td>5 dias úteis</td>
+                </tr>
+                <tr>
+                  <td><code>#plat-comunidade</code></td>
+                  <td>Conversas abertas, anúncios</td>
+                  <td>Assíncrono</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="glossario" data-reveal>
+          <h2>Glossário</h2>
+          <dl class="glossary">
+            <dt>Tópico</dt>
+            <dd>Stream nomeado de eventos com um schema associado. Unidade básica de comunicação da plataforma.</dd>
+            <dt>Schema</dt>
+            <dd>Definição estrutural de um evento, versionada em Avro. Garante o contrato entre produtores e consumidores.</dd>
+            <dt>Materialização</dt>
+            <dd>Visão derivada (tabela Iceberg, índice OpenSearch, agregação ClickHouse) calculada continuamente a partir de um ou mais tópicos.</dd>
+            <dt>Replay</dt>
+            <dd>Reprocessamento de eventos passados dentro da janela de retenção do tópico. Útil após corrigir um bug em consumidor.</dd>
+            <dt>Domínio</dt>
+            <dd>Unidade de governança que agrupa ativos por área de negócio. Cada ativo pertence a exatamente um domínio.</dd>
+            <dt>Owner</dt>
+            <dd>Squad responsável por manter um ativo (esquema, qualidade, suporte). Declarado no front-matter do schema.</dd>
+            <dt>RFC</dt>
+            <dd>Request For Comments — documento técnico submetido via PR para propor mudanças estruturais (novo domínio, nova capability, breaking change).</dd>
+          </dl>
+        </section>
 
         <footer class="content__footer">
-          <div>
-            <p style="margin: 0;">Encontrou um erro? <a href="#">Abra um issue</a> ou edite essa página direto.</p>
-          </div>
-          <div style="text-align: right;">
-            <p style="margin: 0;">Próximo: <a href="#">Guia de migração →</a></p>
-          </div>
+          <p>Encontrou um erro? <a href="#">Abra um issue</a> ou edite essa página direto.</p>
+          <p>Próximo: <a href="#">Runbook de incidentes →</a></p>
         </footer>
 
       </div>
     </main>
 
-    <aside class="toc">
-      <p class="toc__title">Nessa página</p>
-      <ul class="toc__list">
-        <li><a href="#o-que-e">O que é</a></li>
-        <li><a href="#principios">Princípios</a></li>
-        <li><a href="#quando-usar">Quando usar</a></li>
-        <li><a href="#comecando">Começando</a></li>
-        <li><a href="#sdk">SDK e CLI</a></li>
-        <li><a href="#contratos">Contratos de dados</a></li>
-        <li><a href="#observabilidade">Observabilidade</a></li>
-        <li><a href="#incidentes">Incidentes</a></li>
-        <li><a href="#faq">FAQ</a></li>
-        <li><a href="#glossario">Glossário</a></li>
-      </ul>
+    <aside class="toc" aria-label="Nesta página">
+      <p class="toc__heading">Nesta página</p>
+      <ul class="toc__list" id="toc-list"></ul>
     </aside>
 
   </div>
 
   <script>
-    // ─── Theme toggle ────────────────────────────────
-    (function() {
-      const root = document.documentElement;
-      const updateIcon = () => {
-        const isDark = root.getAttribute('data-theme') === 'dark';
-        document.querySelectorAll('[data-theme-icon]').forEach(i => i.textContent = isDark ? '☀' : '☾');
-      };
-      updateIcon();
-      document.querySelectorAll('[data-theme-toggle]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-          root.setAttribute('data-theme', next);
-          try { localStorage.setItem('theme', next); } catch (e) {}
-          updateIcon();
-        });
+    // ═══════════════════════════════════════════════════════════════════
+    // Theme toggle
+    // ═══════════════════════════════════════════════════════════════════
+    document.querySelector('.theme-toggle')?.addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme');
+      const next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+      // Recriar gráficos para refletir nova paleta
+      renderCharts();
+    });
+
+    // ═══════════════════════════════════════════════════════════════════
+    // TOC gerada a partir dos <h2> do conteúdo
+    // ═══════════════════════════════════════════════════════════════════
+    (function buildTOC() {
+      const tocList = document.getElementById('toc-list');
+      if (!tocList) return;
+      document.querySelectorAll('.content h2[id]').forEach(h => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = '#' + h.id;
+        a.textContent = h.textContent;
+        li.appendChild(a);
+        tocList.appendChild(li);
       });
     })();
 
-    // ─── Copy code ───────────────────────────────────
-    document.querySelectorAll('[data-copy]').forEach(btn => {
+    // ═══════════════════════════════════════════════════════════════════
+    // Scrollspy (sidebar + TOC compartilhados)
+    // ═══════════════════════════════════════════════════════════════════
+    (function scrollspy() {
+      const links = document.querySelectorAll('.sidebar__list a, .toc__list a');
+      const linkByHash = new Map([...links].map(a => [a.getAttribute('href'), a]));
+      const targets = [...new Set([...links].map(a => a.getAttribute('href')))]
+        .map(h => document.querySelector(h))
+        .filter(Boolean);
+
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          const id = '#' + entry.target.id;
+          const link = linkByHash.get(id);
+          if (!link) return;
+          links.forEach(l => l.classList.remove('is-active'));
+          link.classList.add('is-active');
+        });
+      }, { rootMargin: '-15% 0px -70% 0px' });
+
+      targets.forEach(t => observer.observe(t));
+    })();
+
+    // ═══════════════════════════════════════════════════════════════════
+    // Reveal on scroll
+    // ═══════════════════════════════════════════════════════════════════
+    (function reveals() {
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('is-visible');
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+      document.querySelectorAll('[data-reveal]').forEach(el => io.observe(el));
+    })();
+
+    // ═══════════════════════════════════════════════════════════════════
+    // Tabs
+    // ═══════════════════════════════════════════════════════════════════
+    document.querySelectorAll('[data-tabs]').forEach(group => {
+      const tabs = group.querySelectorAll('.tabs__tab');
+      const panels = group.querySelectorAll('.tabs__panel');
+      tabs.forEach(tab => tab.addEventListener('click', () => {
+        const id = tab.dataset.tab;
+        tabs.forEach(t => {
+          const on = t === tab;
+          t.classList.toggle('is-active', on);
+          t.setAttribute('aria-selected', on ? 'true' : 'false');
+        });
+        panels.forEach(p => {
+          const on = p.dataset.panel === id;
+          p.classList.toggle('is-active', on);
+          p.hidden = !on;
+        });
+      }));
+    });
+
+    // ═══════════════════════════════════════════════════════════════════
+    // Copy code
+    // ═══════════════════════════════════════════════════════════════════
+    document.querySelectorAll('.code__copy').forEach(btn => {
       btn.addEventListener('click', async () => {
         const code = btn.closest('.code').querySelector('code').innerText;
         try {
           await navigator.clipboard.writeText(code);
           btn.textContent = 'Copiado';
           btn.classList.add('is-copied');
-          setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('is-copied'); }, 1500);
+          setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('is-copied'); }, 1600);
         } catch (e) {
           btn.textContent = 'Erro';
         }
       });
     });
 
-    // ─── Tabs ────────────────────────────────────────
-    document.querySelectorAll('[data-tabs]').forEach(group => {
-      const tabs = group.querySelectorAll('.tabs__tab');
-      const panels = group.querySelectorAll('.tabs__panel');
-      tabs.forEach(tab => tab.addEventListener('click', () => {
-        const id = tab.dataset.tab;
-        tabs.forEach(t => { t.classList.toggle('is-active', t === tab); t.setAttribute('aria-selected', t === tab ? 'true' : 'false'); });
-        panels.forEach(p => p.classList.toggle('is-active', p.dataset.panel === id));
-      }));
-    });
-
-    // ─── Scrollspy (sidebar + TOC) ───────────────────
-    (function() {
-      const headings = document.querySelectorAll('main h2[id], main h3[id]');
-      const allLinks = document.querySelectorAll('.toc__list a, .sidebar__list a');
-      const linkByHash = new Map([...allLinks].map(a => [a.getAttribute('href'), a]));
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          const id = '#' + entry.target.id;
-          const link = linkByHash.get(id);
-          if (!link) return;
-          if (entry.isIntersecting) {
-            allLinks.forEach(l => l.classList.remove('is-active'));
-            link.classList.add('is-active');
-          }
-        });
-      }, { rootMargin: '-15% 0px -75% 0px' });
-
-      headings.forEach(h => observer.observe(h));
-    })();
-
-    // ─── Smooth scroll para anchor com offset do header ──
+    // ═══════════════════════════════════════════════════════════════════
+    // Smooth scroll para anchors
+    // ═══════════════════════════════════════════════════════════════════
     document.addEventListener('click', (e) => {
       const a = e.target.closest('a[href^="#"]');
       if (!a) return;
@@ -1025,6 +1601,195 @@ dados.<span class="tk-fn">consumir</span>(<span class="tk-str">"transacao.v1"</s
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });
       history.pushState(null, '', id);
     });
+
+    // ═══════════════════════════════════════════════════════════════════
+    // Charts (Chart.js)
+    // ═══════════════════════════════════════════════════════════════════
+    let chartInstances = [];
+
+    function css(varName) {
+      return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+    }
+
+    function renderCharts() {
+      // Limpa instâncias prévias (para re-render em troca de tema)
+      chartInstances.forEach(c => c.destroy());
+      chartInstances = [];
+
+      if (typeof Chart === 'undefined') return;
+
+      // ── Linha: evolução de tabelas catalogadas (2021 → 2026)
+      const elCatalogo = document.getElementById('chart-catalogo');
+      if (elCatalogo) {
+        chartInstances.push(new Chart(elCatalogo, {
+          type: 'line',
+          data: {
+            labels: ['2021', '2022', '2023', '2024', '2025', '2026'],
+            datasets: [{
+              label: 'Tabelas catalogadas',
+              data: [420, 780, 1320, 1980, 2535, 2847],
+              borderColor: css('--color-accent'),
+              backgroundColor: css('--color-accent-dim'),
+              borderWidth: 2.5,
+              tension: 0.35,
+              fill: true,
+              pointRadius: 4,
+              pointHoverRadius: 6,
+              pointBackgroundColor: css('--color-accent'),
+              pointBorderColor: css('--color-bg-elevated'),
+              pointBorderWidth: 2,
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: css('--color-fg'),
+                titleColor: css('--color-bg'),
+                bodyColor: css('--color-bg'),
+                callbacks: { label: ctx => ctx.parsed.y.toLocaleString('pt-BR') + ' tabelas' }
+              }
+            },
+            scales: {
+              x: { grid: { display: false }, ticks: { color: css('--color-fg-muted') } },
+              y: {
+                min: 0,
+                grid: { color: css('--color-border') },
+                ticks: {
+                  color: css('--color-fg-muted'),
+                  callback: v => v.toLocaleString('pt-BR')
+                }
+              }
+            }
+          }
+        }));
+      }
+
+      // ── Donut: cobertura por domínio
+      const elDominios = document.getElementById('chart-dominios');
+      if (elDominios) {
+        chartInstances.push(new Chart(elDominios, {
+          type: 'doughnut',
+          data: {
+            labels: ['Crédito', 'Pagamentos', 'Risco & Fraude', 'Investimentos', 'Seguros', 'Atendimento', 'Compliance'],
+            datasets: [{
+              data: [812, 624, 418, 389, 256, 214, 134],
+              backgroundColor: [
+                css('--color-accent'),
+                css('--color-info'),
+                css('--color-teal'),
+                css('--color-success'),
+                css('--color-warn'),
+                css('--color-sage'),
+                css('--color-plum'),
+              ],
+              borderWidth: 2,
+              borderColor: css('--color-bg-elevated'),
+              hoverOffset: 6,
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            cutout: '62%',
+            plugins: {
+              legend: {
+                position: 'right',
+                labels: {
+                  color: css('--color-fg-muted'),
+                  font: { size: 11 },
+                  padding: 10,
+                  boxWidth: 12,
+                }
+              },
+              tooltip: {
+                backgroundColor: css('--color-fg'),
+                titleColor: css('--color-bg'),
+                bodyColor: css('--color-bg'),
+                callbacks: {
+                  label: ctx => {
+                    const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                    const pct = (ctx.parsed / total * 100).toFixed(1);
+                    return ctx.label + ': ' + ctx.parsed.toLocaleString('pt-BR') + ' (' + pct + '%)';
+                  }
+                }
+              }
+            }
+          }
+        }));
+      }
+
+      // ── Linha: frescor médio (12 meses)
+      const elQualidade = document.getElementById('chart-qualidade');
+      if (elQualidade) {
+        chartInstances.push(new Chart(elQualidade, {
+          type: 'line',
+          data: {
+            labels: ['mai/25', 'jun/25', 'jul/25', 'ago/25', 'set/25', 'out/25', 'nov/25', 'dez/25', 'jan/26', 'fev/26', 'mar/26', 'abr/26'],
+            datasets: [
+              {
+                label: 'Frescor mediano (h)',
+                data: [11.2, 6.4, 5.1, 4.3, 3.8, 3.5, 3.2, 3.4, 7.8, 4.1, 3.6, 3.3],
+                borderColor: css('--color-info'),
+                backgroundColor: css('--color-info-dim'),
+                borderWidth: 2.5,
+                tension: 0.35,
+                fill: true,
+                pointRadius: 3.5,
+                pointHoverRadius: 6,
+                pointBackgroundColor: css('--color-info'),
+                pointBorderColor: css('--color-bg-elevated'),
+                pointBorderWidth: 2,
+              },
+              {
+                label: 'Meta (4h)',
+                data: [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+                borderColor: css('--color-fg-muted'),
+                borderWidth: 1.5,
+                borderDash: [5, 5],
+                pointRadius: 0,
+                fill: false,
+                tension: 0,
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'top',
+                align: 'end',
+                labels: { color: css('--color-fg-muted'), font: { size: 11 }, boxWidth: 14 }
+              },
+              tooltip: {
+                backgroundColor: css('--color-fg'),
+                titleColor: css('--color-bg'),
+                bodyColor: css('--color-bg'),
+                callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y + ' h' }
+              }
+            },
+            scales: {
+              x: { grid: { display: false }, ticks: { color: css('--color-fg-muted') } },
+              y: {
+                min: 0,
+                grid: { color: css('--color-border') },
+                ticks: { color: css('--color-fg-muted'), callback: v => v + ' h' }
+              }
+            }
+          }
+        }));
+      }
+    }
+
+    // Render inicial (após fonts/CSS pintarem)
+    if (document.readyState === 'complete') {
+      renderCharts();
+    } else {
+      window.addEventListener('load', renderCharts);
+    }
   </script>
 
 </body>

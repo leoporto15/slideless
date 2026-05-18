@@ -1,955 +1,2034 @@
 <!DOCTYPE html>
+<!--
+  Exemplo: slideless deck v3 — "Plataforma de Dados Itaú"
+  Pitch executivo para all-hands. 14 slides. Tema itau.
+
+  Demonstra:
+    - Hero título-mega + Rough Notation (data-mark="underline" em termo-chave)
+    - layout-fact / big-num com AutoFitText (data-fit-text)
+    - Auto-Animate FLIP (mesmo KPI cresce entre slides com data-auto-animate + data-id)
+    - metrics-deck--3/4 com color variants semânticas
+    - timeline-h (4 marcos)
+    - grid-cards--3 (módulos) e grid-cards--4 (governança)
+    - table-deck com hover apresentador automático (sem highlight-current em <tr>)
+    - Chart.js — barras+linha (composição preservada num único gráfico misto)
+    - Donut Chart.js
+    - layout-quote
+    - Fragmentos current-visible em lista numerada
+    - divider-deck com data-background-color laranja
+    - Closing com meta de contato
+
+  Char limits respeitados: title-mega ≤50, xl ≤70, lg ≤90, lead ≤220.
+-->
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Plataforma de Dados — Pitch</title>
+  <title>Plataforma de Dados Itaú — Pitch Executivo</title>
 
   <script>
     (function() {
       try {
-        var t = localStorage.getItem('theme') ||
-                (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        var t = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         document.documentElement.setAttribute('data-theme', t);
-      } catch (e) {
-        document.documentElement.setAttribute('data-theme', 'light');
-      }
+      } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }
     })();
   </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800;9..144,900&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Rough Notation -->
+  <script src="https://cdn.jsdelivr.net/npm/rough-notation@0.6.1/lib/rough-notation.iife.js"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 
   <style>
+    /* ════════════════════════════════════════════════════════════════
+       TEMA ITAÚ (inline — copiado de assets/temas/itau.css)
+       ════════════════════════════════════════════════════════════════ */
     :root {
-      --itau-orange: #FF6200;
-      --itau-orange-2: #F88104;
-      --itau-orange-3: #FA9F09;
-      --itau-blue-3: #3B85FA;
-      --itau-yellow: #FBC305;
+      --itau-orange:     #FF6200;
+      --itau-orange-2:   #F88104;
+      --itau-orange-3:   #FA9F09;
+      --itau-blue-3:     #3B85FA;
+      --itau-yellow:     #FBC305;
+      --itau-warm-black: #14110d;
 
-      --color-bg: #ffffff;
-      --color-bg-elevated: #faf8f5;
-      --color-bg-sunken: #f4f1ec;
-      --color-fg: #1a1a1a;
-      --color-fg-muted: #525252;
-      --color-fg-subtle: #8a8a8a;
-      --color-border: #e8e4dd;
-      --color-border-strong: #d4cec3;
-      --color-accent: var(--itau-orange);
-      --color-accent-hover: var(--itau-orange-2);
+      --color-accent:        var(--itau-orange);
+      --color-accent-dim:    rgba(255, 98, 0, 0.08);
+      --color-accent-fg:     #ffffff;
 
-      --font-text: 'Itau Text', 'Inter', -apple-system, system-ui, sans-serif;
-      --font-display: 'Itau Display', 'Inter', -apple-system, system-ui, sans-serif;
-      --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+      --color-info:          var(--itau-blue-3);
+      --color-info-dim:      rgba(59, 133, 250, 0.08);
 
-      --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
-      --duration-slide: 600ms;
-      --duration-fade: 700ms;
-      --duration: 250ms;
+      --color-success:       #4d7c0f;
+      --color-success-dim:   rgba(77, 124, 15, 0.08);
+
+      --color-sage:          #65a30d;
+      --color-sage-dim:      rgba(101, 163, 13, 0.08);
+
+      --color-teal:          #0f766e;
+      --color-teal-dim:      rgba(15, 118, 110, 0.08);
+
+      --color-plum:          #9f1239;
+      --color-plum-dim:      rgba(159, 18, 57, 0.08);
+
+      --color-warn:          var(--itau-yellow);
+      --color-warn-dim:      rgba(251, 195, 5, 0.12);
+      --color-danger:        #b91c1c;
+      --color-danger-dim:    rgba(185, 28, 28, 0.08);
+
+      --color-bg:            #faf7f5;
+      --color-bg-elevated:   #ffffff;
+      --color-bg-sunken:     #f4f1ec;
+      --color-fg:            #292017;
+      --color-fg-muted:      #6b5d50;
+      --color-fg-subtle:     #8a7e72;
+      --color-border:        rgba(41, 32, 23, 0.10);
+      --color-border-strong: rgba(41, 32, 23, 0.18);
+      --color-accent-hover:  var(--itau-orange-2);
+
+      --glow-warm:    radial-gradient(ellipse 80% 60% at 80% 0%, rgba(255, 98, 0, 0.10) 0%, transparent 55%);
+      --glow-cool:    radial-gradient(ellipse 70% 50% at 20% 100%, rgba(59, 133, 250, 0.08) 0%, transparent 55%);
+      --glow-hero:    radial-gradient(ellipse 90% 70% at 50% 0%, rgba(255, 98, 0, 0.14) 0%, transparent 50%);
+      --vignette:     radial-gradient(ellipse 120% 80% at 50% 50%, transparent 50%, rgba(41, 32, 23, 0.04) 100%);
+
+      --syntax-string:   #16a34a;
+      --syntax-keyword:  var(--itau-orange);
+      --syntax-function: var(--itau-blue-3);
+      --syntax-comment:  var(--color-fg-subtle);
+
+      --font-text:    'Itau Text', 'Inter', -apple-system, system-ui, sans-serif;
+      --font-display: 'Itau Display', 'Fraunces', 'Inter', Georgia, serif;
+      --font-mono:    'JetBrains Mono', 'IBM Plex Mono', 'SF Mono', Consolas, monospace;
+
+      --size-xs:      clamp(0.75rem, 0.7rem + 0.2vw, 0.875rem);
+      --size-small:   clamp(0.875rem, 0.85rem + 0.15vw, 1rem);
+      --size-body:    clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+      --size-lead:    clamp(1.15rem, 1.05rem + 0.5vw, 1.4rem);
+      --size-h4:      clamp(1rem, 0.95rem + 0.25vw, 1.15rem);
+      --size-h3:      clamp(1.2rem, 1.1rem + 0.5vw, 1.5rem);
+      --size-h2:      clamp(1.6rem, 1.3rem + 1.2vw, 2.25rem);
+      --size-h1:      clamp(2.25rem, 1.8rem + 2vw, 3.5rem);
+
+      --size-display: clamp(2.25rem, 1.4rem + 1.8vw + 1.5vh, 4.25rem);
+      --size-mega:    clamp(2.75rem, 1.6rem + 2.4vw + 2vh, 5.5rem);
+      --size-giga:    clamp(3.5rem, 2rem + 3vw + 3vh, 9rem);
+
+      --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem;
+      --space-4: 1rem;    --space-5: 1.5rem; --space-6: 2rem;
+      --space-7: 2.5rem;  --space-8: 3rem;   --space-10: 4rem;
+      --space-12: 5rem;   --space-16: 7rem;
+
+      --content-max: 720px;
+      --sidebar-w:   268px;
+      --toc-w:       220px;
+      --header-h:    56px;
+
+      --radius-sm: 4px;
+      --radius:    10px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+
+      --shadow-xs: 0 1px 2px rgba(41, 32, 23, 0.04);
+      --shadow-sm: 0 2px 4px rgba(41, 32, 23, 0.06), 0 1px 2px rgba(41, 32, 23, 0.04);
+      --shadow:    0 4px 12px rgba(41, 32, 23, 0.08), 0 1px 3px rgba(41, 32, 23, 0.05);
+      --shadow-lg: 0 12px 32px rgba(41, 32, 23, 0.12), 0 4px 12px rgba(41, 32, 23, 0.06);
+      --shadow-xl: 0 24px 64px rgba(41, 32, 23, 0.16), 0 8px 24px rgba(41, 32, 23, 0.08);
+
+      --inset-sm:  inset 0 1px 3px rgba(41, 32, 23, 0.06);
+      --inset:     inset 0 2px 8px rgba(41, 32, 23, 0.08);
+
+      --glow-accent-sm: 0 0 0 3px rgba(255, 98, 0, 0.14);
+      --glow-accent:    0 8px 32px rgba(255, 98, 0, 0.22);
+
+      --ease-out:       cubic-bezier(0.22, 1, 0.36, 1);
+      --ease-in-out:    cubic-bezier(0.65, 0, 0.35, 1);
+      --ease-spring:    cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-emphatic:  cubic-bezier(0.16, 1, 0.3, 1);
+
+      --duration-fast:    150ms;
+      --duration:         250ms;
+      --duration-slow:    400ms;
+      --duration-slide:   650ms;
+      --duration-fade:    750ms;
+      --duration-hero:    900ms;
     }
 
     [data-theme="dark"] {
-      --color-bg: #14110d;
-      --color-bg-elevated: #1c1814;
-      --color-bg-sunken: #221d18;
-      --color-fg: #e8eaed;
-      --color-fg-muted: #a8a39a;
-      --color-fg-subtle: #6e6a62;
-      --color-border: #2f2a23;
-      --color-border-strong: #403a32;
-      --color-accent: var(--itau-orange-3);
-      --color-accent-hover: var(--itau-orange-2);
+      --color-bg:            #14110d;
+      --color-bg-elevated:   #1c1814;
+      --color-bg-sunken:     #221d18;
+      --color-fg:            #ede5dd;
+      --color-fg-muted:      #b8aa9a;
+      --color-fg-subtle:     #786e62;
+      --color-border:        rgba(237, 229, 221, 0.10);
+      --color-border-strong: rgba(237, 229, 221, 0.20);
+
+      --color-accent:        var(--itau-orange-3);
+      --color-accent-hover:  var(--itau-orange-2);
+      --color-accent-fg:     #14110d;
+      --color-accent-dim:    rgba(250, 159, 9, 0.10);
+
+      --color-info-dim:      rgba(59, 133, 250, 0.12);
+      --color-success:       #a3e635;
+      --color-success-dim:   rgba(163, 230, 53, 0.10);
+      --color-sage:          #bef264;
+      --color-sage-dim:      rgba(190, 242, 100, 0.10);
+      --color-teal:          #5eead4;
+      --color-teal-dim:      rgba(94, 234, 212, 0.10);
+      --color-plum:          #fb7185;
+      --color-plum-dim:      rgba(251, 113, 133, 0.10);
+
+      --color-warn-dim:      rgba(251, 195, 5, 0.12);
+      --color-danger:        #f87171;
+      --color-danger-dim:    rgba(248, 113, 113, 0.10);
+
+      --glow-warm:    radial-gradient(ellipse 80% 60% at 80% 0%, rgba(250, 159, 9, 0.18) 0%, transparent 55%);
+      --glow-cool:    radial-gradient(ellipse 70% 50% at 20% 100%, rgba(59, 133, 250, 0.14) 0%, transparent 55%);
+      --glow-hero:    radial-gradient(ellipse 90% 70% at 50% 0%, rgba(250, 159, 9, 0.22) 0%, transparent 50%);
+      --vignette:     radial-gradient(ellipse 120% 80% at 50% 50%, transparent 50%, rgba(0, 0, 0, 0.30) 100%);
+
+      --syntax-string:   #4ade80;
+
+      --shadow-xs: 0 1px 2px rgba(0,0,0,0.4);
+      --shadow-sm: 0 2px 4px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+      --shadow:    0 4px 12px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.3);
+      --shadow-lg: 0 12px 32px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.3);
+      --shadow-xl: 0 24px 64px rgba(0,0,0,0.6), 0 8px 24px rgba(0,0,0,0.4);
+
+      --inset-sm:  inset 0 1px 3px rgba(0,0,0,0.4);
+      --inset:     inset 0 2px 8px rgba(0,0,0,0.5);
+
+      --glow-accent-sm: 0 0 0 3px rgba(250, 159, 9, 0.20);
+      --glow-accent:    0 8px 32px rgba(250, 159, 9, 0.30);
     }
 
     *, *::before, *::after { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+    html { scroll-behavior: smooth; }
     body {
+      margin: 0;
       font-family: var(--font-text);
+      font-size: var(--size-body);
+      line-height: 1.65;
       color: var(--color-fg);
       background: var(--color-bg);
       -webkit-font-smoothing: antialiased;
-      transition: background var(--duration), color var(--duration);
-      overscroll-behavior: none;
+      text-rendering: optimizeLegibility;
+      transition: background var(--duration-fast), color var(--duration-fast);
+    }
+    :focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 3px;
+      border-radius: var(--radius-sm);
     }
 
-    /* ─── Deck container ──────────────────────────── */
-    .deck {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
+    /* ════════════════════════════════════════════════════════════════
+       DECK ENGINE v3
+       ════════════════════════════════════════════════════════════════ */
+    html, body { height: 100%; overflow: hidden; }
+    body { overscroll-behavior: none; }
+
+    .deck { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background: var(--glow-hero);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.7;
+    }
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background: var(--glow-cool);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.5;
     }
 
+    .deck { --duration-slide: 280ms; --duration-fade: 250ms; }
     .slide {
-      position: absolute;
-      inset: 0;
-      display: flex; flex-direction: column;
-      justify-content: center;
-      padding: 8vh 10vw;
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: clamp(72px, 9vh, 100px) clamp(48px, 8vw, 120px) clamp(56px, 7vh, 80px);
       opacity: 0;
       pointer-events: none;
-      transform: translateX(40px);
+      transform: translateX(40px) scale(0.99);
       transition: opacity var(--duration-fade) var(--ease-out),
-                  transform var(--duration-slide) var(--ease-in-out);
+                  transform var(--duration-slide) var(--ease-emphatic);
+      overflow: hidden;
+      z-index: 1;
     }
-    .slide.is-prev { transform: translateX(-40px); }
-    .slide.is-active {
-      opacity: 1;
-      transform: translateX(0);
-      pointer-events: auto;
+    @media (max-height: 760px) {
+      .slide { justify-content: flex-start; }
+    }
+    .slide.is-prev { transform: translateX(-40px) scale(0.99); }
+    .slide.is-active { opacity: 1; transform: translateX(0) scale(1); pointer-events: auto; }
+
+    .slide--vignette::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: var(--vignette);
+      pointer-events: none;
     }
 
-    /* ─── Entrada staggered dos elementos ─────────── */
+    /* Stagger */
     .slide [data-anim] {
       opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out);
+      transform: translateY(28px);
+      transition: opacity 800ms var(--ease-out), transform 800ms var(--ease-out);
     }
     .slide.is-active [data-anim] {
       opacity: 1;
       transform: translateY(0);
-      transition-delay: calc(var(--anim-i, 0) * 80ms + 200ms);
+      transition-delay: calc(var(--i, 0) * 70ms + 250ms);
     }
 
-    /* Hero típico do deck: blur in opcional */
     .slide.is-active [data-anim="hero"] {
-      animation: heroIn 900ms var(--ease-out) 100ms both;
+      animation: heroIn var(--duration-hero) var(--ease-emphatic) 100ms both;
     }
     @keyframes heroIn {
-      from { opacity: 0; filter: blur(16px); transform: translateY(20px); }
-      to { opacity: 1; filter: blur(0); transform: translateY(0); }
+      from { opacity: 0; filter: blur(16px); transform: translateY(28px) scale(0.96); }
+      to   { opacity: 1; filter: blur(0);    transform: translateY(0) scale(1); }
     }
 
-    /* Fragments ─────────────────────────────────── */
-    .slide [data-fragment] {
+    /* Fragments base */
+    .slide [data-fragment]:not([data-fragment="highlight-current"]):not([data-fragment="strike"]) {
       opacity: 0;
-      transform: translateY(12px);
+      transform: translateY(14px);
       transition: opacity 500ms var(--ease-out), transform 500ms var(--ease-out);
     }
     .slide [data-fragment].is-visible {
       opacity: 1;
       transform: translateY(0);
     }
+    .slide table [data-fragment="highlight-current"] td,
+    .slide table [data-fragment="highlight-current"] th {
+      opacity: 1;
+      transform: none;
+    }
 
     @media (prefers-reduced-motion: reduce) {
       .slide, .slide [data-anim], .slide [data-fragment] {
-        transition: none !important;
-        animation: none !important;
-        opacity: 1;
-        transform: none !important;
-        filter: none !important;
+        transition: none !important; animation: none !important;
+        opacity: 1; transform: none !important; filter: none !important;
       }
     }
 
-    /* ─── Tipografia dentro dos slides ────────────── */
+    /* Tipografia deck */
     .kicker {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 0.875rem;
-      font-weight: 600;
-      letter-spacing: 0.16em;
+      display: inline-flex; align-items: center; gap: 14px;
+      font-family: var(--font-mono);
+      font-size: clamp(0.78rem, 0.7rem + 0.25vw, 0.95rem);
+      font-weight: 600; letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--color-fg-muted);
-      margin-bottom: 28px;
+      margin: 0 0 var(--space-7);
     }
-    .kicker__dot { width: 4px; height: 4px; border-radius: 50%; background: var(--color-fg-subtle); }
-    .kicker img { width: 28px; height: 28px; border-radius: 6px; }
+    .kicker__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--color-fg-subtle); }
     .kicker--accent { color: var(--color-accent); }
+    .kicker--accent .kicker__dot { background: var(--color-accent); box-shadow: 0 0 16px var(--color-accent); }
+    .kicker__num {
+      font-family: var(--font-mono);
+      color: var(--color-accent);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+    }
 
-    .title-xl {
+    /* Overflow guard */
+    .slide { contain: layout paint; }
+    .slide > *:not(.slide-bg):not(.slide-num):not([data-overdrive]) {
+      max-width: 100%;
+      min-width: 0;
+    }
+    .slide .title-mega,
+    .slide .title-xl,
+    .slide .title-lg,
+    .slide .fact-val,
+    .slide .statement-text,
+    .slide .quote-text,
+    .slide .big-num__val {
+      overflow-wrap: break-word;
+      hyphens: auto;
+    }
+
+    .title-xl, .title-mega {
       font-family: var(--font-display);
-      font-size: clamp(2.75rem, 6.5vw, 6rem);
-      line-height: 1.02;
       font-weight: 800;
+      line-height: 1.0;
       letter-spacing: -0.035em;
-      margin: 0 0 32px;
-      max-width: 18ch;
+      margin: 0 0 var(--space-6);
       color: var(--color-fg);
     }
-    .title-xl em {
+    .title-xl   { font-size: var(--size-mega); max-width: 18ch; }
+    .title-mega { font-size: var(--size-giga); max-width: 12ch; line-height: 0.92; }
+    .title-xl em, .title-mega em {
       color: var(--color-accent);
-      font-style: normal;
+      font-style: italic;
       font-weight: 800;
     }
+
     .title-lg {
       font-family: var(--font-display);
-      font-size: clamp(2rem, 4.5vw, 3.5rem);
-      line-height: 1.1;
+      font-size: var(--size-display);
+      line-height: 1.05;
       font-weight: 700;
-      letter-spacing: -0.025em;
-      margin: 0 0 24px;
-      max-width: 22ch;
+      letter-spacing: -0.028em;
+      margin: 0 0 var(--space-5);
+      max-width: 24ch;
       color: var(--color-fg);
     }
+    .title-lg em { color: var(--color-accent); font-style: italic; }
+
     .title-md {
       font-family: var(--font-display);
-      font-size: clamp(1.5rem, 2.5vw, 2.25rem);
-      line-height: 1.15;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      margin: 0 0 20px;
+      font-size: clamp(1.5rem, 1.2rem + 1.5vw, 2.5rem);
+      line-height: 1.1; font-weight: 700;
+      letter-spacing: -0.022em;
+      margin: 0 0 var(--space-5);
       color: var(--color-fg);
     }
-    .lead {
-      font-size: clamp(1.125rem, 1.6vw, 1.5rem);
+    .title-md em { color: var(--color-accent); font-style: italic; }
+
+    .lead-deck {
+      font-size: clamp(1.05rem, 0.95rem + 0.6vw, 1.5rem);
       line-height: 1.45;
       color: var(--color-fg-muted);
-      max-width: 50ch;
-      margin: 0 0 32px;
+      max-width: 55ch;
+      margin: 0 0 var(--space-7);
       font-weight: 400;
     }
 
-    .meta {
-      display: flex;
-      gap: 32px;
-      margin-top: 64px;
-      font-size: 0.875rem;
+    .footnote {
+      font-family: var(--font-mono);
+      font-size: clamp(0.7rem, 0.65rem + 0.15vw, 0.8125rem);
       color: var(--color-fg-subtle);
       letter-spacing: 0.02em;
+      margin: var(--space-7) 0 0;
+      max-width: 90ch;
+      line-height: 1.55;
     }
-    .meta strong { color: var(--color-fg); font-weight: 600; }
 
-    /* ─── Big number slide ────────────────────────── */
+    /* Layout: HERO */
+    .layout-hero {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 100%;
+      gap: var(--space-3);
+    }
+    .layout-hero .meta {
+      display: flex; gap: var(--space-7);
+      margin-top: var(--space-8);
+      font-size: 0.875rem;
+      color: var(--color-fg-subtle);
+      flex-wrap: wrap;
+    }
+    .layout-hero .meta strong {
+      display: block;
+      color: var(--color-fg);
+      font-weight: 700;
+      font-family: var(--font-display);
+      margin-bottom: 4px;
+    }
+
+    /* Layout: BIG-NUM */
     .big-num {
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
-      text-align: center;
+      text-align: center; gap: var(--space-5);
     }
     .big-num__val {
       font-family: var(--font-display);
-      font-size: clamp(5rem, 16vw, 14rem);
-      line-height: 0.9;
-      font-weight: 800;
-      letter-spacing: -0.05em;
+      font-size: var(--size-giga);
+      line-height: 0.88; font-weight: 800;
+      letter-spacing: -0.055em;
       color: var(--color-fg);
       margin: 0;
     }
     .big-num__val span { color: var(--color-accent); }
     .big-num__label {
-      font-size: clamp(1.125rem, 1.6vw, 1.5rem);
+      font-size: clamp(1.05rem, 0.95rem + 0.5vw, 1.4rem);
       color: var(--color-fg-muted);
-      margin: 24px 0 0;
-      max-width: 32ch;
+      margin: 0;
+      max-width: 36ch;
+      line-height: 1.4;
       text-align: center;
     }
 
-    /* ─── Triple metrics ──────────────────────────── */
-    .metrics {
+    /* Layout: METRICS */
+    .metrics-deck {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 5vw;
-      margin: 48px 0 0;
+      gap: 4vw;
+      margin: var(--space-7) 0 0;
     }
-    .metric {
-      border-top: 3px solid var(--color-fg);
-      padding-top: 24px;
-    }
-    .metric__val {
-      font-family: var(--font-display);
-      font-size: clamp(2.5rem, 5vw, 4.5rem);
-      line-height: 1;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      margin: 0 0 12px;
-    }
-    .metric__val span { color: var(--color-accent); }
-    .metric__label {
-      font-size: 1rem;
-      color: var(--color-fg-muted);
-      margin: 0; max-width: 22ch;
-      line-height: 1.4;
-    }
-
-    /* ─── Lista com fragments ─────────────────────── */
-    .list {
-      list-style: none;
-      padding: 0;
-      margin: 32px 0 0;
-      display: flex; flex-direction: column;
-      gap: 24px;
-      max-width: 36ch;
-    }
-    .list__item {
-      display: flex; gap: 24px;
-      font-size: clamp(1.125rem, 1.6vw, 1.5rem);
-      line-height: 1.4;
+    .metrics-deck--2 { grid-template-columns: repeat(2, 1fr); max-width: 70vw; }
+    .metrics-deck--3 { grid-template-columns: repeat(3, 1fr); }
+    .metrics-deck--4 { grid-template-columns: repeat(4, 1fr); gap: 2.5vw; }
+    .metric-d {
+      border-top: 3px solid currentColor;
+      padding-top: var(--space-4);
       color: var(--color-fg);
-      max-width: 38ch;
     }
-    .list__num {
-      flex-shrink: 0;
-      width: 32px; height: 32px;
-      display: grid; place-items: center;
-      border-radius: 50%;
-      background: var(--color-accent);
-      color: white;
-      font-family: var(--font-mono);
-      font-size: 0.875rem;
-      font-weight: 600;
-      margin-top: 6px;
-    }
-    .list__body strong { display: block; font-weight: 600; margin-bottom: 4px; }
-    .list__body span { color: var(--color-fg-muted); font-size: 1rem; line-height: 1.5; display: block; max-width: 36ch; }
+    .metric-d.var-accent  { color: var(--color-accent); }
+    .metric-d.var-info    { color: var(--color-info); }
+    .metric-d.var-success { color: var(--color-success); }
+    .metric-d.var-sage    { color: var(--color-sage); }
+    .metric-d.var-teal    { color: var(--color-teal); }
+    .metric-d.var-plum    { color: var(--color-plum); }
 
-    /* ─── Two-column ──────────────────────────────── */
-    .two-col {
+    .metric-d__val {
+      font-family: var(--font-display);
+      font-size: clamp(2.25rem, 1.5rem + 3vw, 4.5rem);
+      line-height: 0.95; font-weight: 800;
+      letter-spacing: -0.035em;
+      margin: 0 0 var(--space-3);
+      color: var(--color-fg);
+    }
+    .metric-d__val span { color: currentColor; }
+    .metric-d__label {
+      font-size: clamp(0.9rem, 0.85rem + 0.3vw, 1.1rem);
+      color: var(--color-fg-muted);
+      margin: 0; max-width: 24ch;
+      line-height: 1.4;
+    }
+    .metric-d__sub {
+      font-size: 0.8125rem; color: var(--color-fg-subtle);
+      margin: var(--space-1) 0 0;
+    }
+
+    /* Layout: SPLIT */
+    .split {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 5vw;
       align-items: center;
     }
-    .two-col__visual {
-      padding: 32px;
+    .split--top { align-items: start; }
+    .split--start { grid-template-columns: 5fr 4fr; }
+
+    /* Layout: LIST */
+    .list-deck {
+      list-style: none;
+      padding: 0;
+      margin: var(--space-6) 0 0;
+      display: flex; flex-direction: column;
+      gap: var(--space-5);
+      max-width: 50ch;
+    }
+    .list-deck__item {
+      display: flex; gap: var(--space-5);
+      font-size: clamp(1.05rem, 1rem + 0.45vw, 1.4rem);
+      line-height: 1.4;
+      color: var(--color-fg);
+    }
+    .list-deck__num {
+      flex-shrink: 0;
+      width: 36px; height: 36px;
+      display: grid; place-items: center;
+      border-radius: 50%;
+      background: var(--color-accent);
+      color: var(--color-accent-fg);
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+    .list-deck__body strong { display: block; font-weight: 700; margin-bottom: 4px; }
+    .list-deck__body span { color: var(--color-fg-muted); font-size: 0.92em; line-height: 1.5; display: block; }
+
+    /* Layout: CARDS */
+    .grid-cards {
+      display: grid;
+      gap: var(--space-5);
+      margin: var(--space-6) 0 0;
+    }
+    .grid-cards--2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-cards--3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-cards--4 { grid-template-columns: repeat(4, 1fr); gap: var(--space-4); }
+    .grid-cards--6 { grid-template-columns: repeat(6, 1fr); gap: var(--space-3); }
+
+    .card-d {
+      padding: var(--space-5);
       background: var(--color-bg-elevated);
       border: 1px solid var(--color-border);
-      border-radius: 16px;
-      aspect-ratio: 4/3;
-      display: flex; align-items: center; justify-content: center;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      transition: all var(--duration-fast) var(--ease-out);
     }
+    .card-d--accent { border-top: 3px solid var(--color-accent); }
+    .card-d--info   { border-top: 3px solid var(--color-info); }
+    .card-d--success{ border-top: 3px solid var(--color-success); }
+    .card-d--sage   { border-top: 3px solid var(--color-sage); }
+    .card-d--teal   { border-top: 3px solid var(--color-teal); }
+    .card-d--plum   { border-top: 3px solid var(--color-plum); }
 
-    /* ─── Section divider slide ───────────────────── */
-    .divider {
-      display: flex; flex-direction: column;
-      align-items: flex-start; justify-content: center;
-    }
-    .divider__num {
+    .card-d__label {
+      display: inline-flex; align-items: center; gap: 8px;
       font-family: var(--font-mono);
-      font-size: 1.25rem;
+      font-size: 0.75rem; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--color-fg-muted);
+      margin: 0 0 var(--space-2);
+    }
+    .card-d__label .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    .card-d--accent .card-d__label  { color: var(--color-accent); }
+    .card-d--info .card-d__label    { color: var(--color-info); }
+    .card-d--success .card-d__label { color: var(--color-success); }
+    .card-d--sage .card-d__label    { color: var(--color-sage); }
+    .card-d--teal .card-d__label    { color: var(--color-teal); }
+    .card-d--plum .card-d__label    { color: var(--color-plum); }
+
+    .card-d__title {
+      font-family: var(--font-display);
+      font-size: clamp(1.1rem, 1rem + 0.5vw, 1.5rem);
+      font-weight: 700; line-height: 1.15;
+      letter-spacing: -0.018em;
+      margin: 0 0 var(--space-2);
+      color: var(--color-fg);
+    }
+    .card-d__desc {
+      font-size: clamp(0.85rem, 0.8rem + 0.25vw, 1rem);
+      color: var(--color-fg-muted);
+      margin: 0;
+      line-height: 1.5;
+    }
+    .card-d__num {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 1.2rem + 1vw, 2.5rem);
+      font-weight: 800;
       color: var(--color-accent);
-      letter-spacing: 0.1em;
-      margin-bottom: 32px;
-      font-weight: 500;
+      line-height: 1; margin: 0 0 var(--space-2);
+      letter-spacing: -0.025em;
     }
 
-    /* ─── Quote slide ─────────────────────────────── */
-    .quote-slide {
-      max-width: 24ch;
+    /* Layout: DIVIDER */
+    .divider-deck {
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: flex-start;
+      min-height: 100%;
     }
-    .quote-slide__text {
+    .divider-deck__num {
+      font-family: var(--font-mono);
+      font-size: clamp(1rem, 0.85rem + 0.5vw, 1.3rem);
+      color: var(--color-accent);
+      letter-spacing: 0.12em;
+      margin: 0 0 var(--space-6);
+      font-weight: 600;
+    }
+
+    /* Layout: QUOTE */
+    .quote-deck {
+      max-width: 26ch;
+    }
+    .quote-deck__text {
       font-family: var(--font-display);
-      font-size: clamp(1.75rem, 3.5vw, 3rem);
-      line-height: 1.2;
-      letter-spacing: -0.02em;
+      font-size: clamp(1.75rem, 1.2rem + 2.5vw, 3.25rem);
+      line-height: 1.18;
+      letter-spacing: -0.022em;
       font-weight: 600;
       color: var(--color-fg);
-      margin: 0 0 32px;
-      max-width: 18ch;
+      margin: 0 0 var(--space-6);
     }
-    .quote-slide__text::before {
+    .quote-deck__text::before {
       content: '"';
       color: var(--color-accent);
-      font-size: 1.2em;
+      font-size: 1.4em;
       line-height: 0;
-      vertical-align: -0.1em;
+      vertical-align: -0.15em;
       margin-right: 0.05em;
+      font-family: var(--font-display);
     }
-    .quote-slide__cite {
-      font-size: 1rem;
+    .quote-deck__cite {
+      font-size: clamp(0.9rem, 0.85rem + 0.3vw, 1.05rem);
       color: var(--color-fg-muted);
       font-style: normal;
       display: block;
     }
-    .quote-slide__cite strong { color: var(--color-fg); font-weight: 600; display: block; }
+    .quote-deck__cite strong { color: var(--color-fg); font-weight: 700; display: block; font-family: var(--font-display); }
 
-    /* ─── Timeline horizontal slide ───────────────── */
+    /* Timeline horizontal */
     .timeline-h {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 32px;
-      margin-top: 48px;
+      grid-template-columns: repeat(var(--cols, 4), 1fr);
+      gap: var(--space-5);
+      margin-top: var(--space-7);
       position: relative;
     }
     .timeline-h::before {
       content: '';
       position: absolute;
-      left: 0; right: 0; top: 16px;
+      left: 0; right: 0; top: 18px;
       height: 2px;
-      background: var(--color-border);
+      background: linear-gradient(to right,
+        var(--color-accent) 0%,
+        var(--color-border) 8%,
+        var(--color-border) 92%,
+        var(--color-accent) 100%);
     }
-    .timeline-h__item { position: relative; padding-top: 48px; }
+    .timeline-h__item { position: relative; padding-top: 52px; }
     .timeline-h__item::before {
       content: '';
       position: absolute;
-      top: 9px; left: 0;
+      top: 11px; left: 0;
       width: 16px; height: 16px;
       border-radius: 50%;
       background: var(--color-accent);
-      box-shadow: 0 0 0 4px var(--color-bg);
+      box-shadow: 0 0 0 4px var(--color-bg), 0 0 16px var(--color-accent);
     }
     .timeline-h__date {
       font-family: var(--font-mono);
       font-size: 0.8125rem;
       color: var(--color-accent);
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      margin: 0 0 8px;
+      letter-spacing: 0.06em;
+      margin: 0 0 var(--space-1);
+      font-weight: 700;
     }
     .timeline-h__title {
       font-family: var(--font-display);
-      font-size: 1.25rem;
+      font-size: clamp(0.9rem, 0.85rem + 0.3vw, 1.05rem);
       font-weight: 700;
-      margin: 0 0 8px;
+      margin: 0 0 var(--space-1);
       color: var(--color-fg);
-    }
-    .timeline-h__desc { font-size: 0.9375rem; color: var(--color-fg-muted); margin: 0; line-height: 1.5; }
-
-    /* ─── Cards 3-up ──────────────────────────────── */
-    .cards3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      margin-top: 40px;
-    }
-    .card3 {
-      padding: 32px;
-      background: var(--color-bg-elevated);
-      border: 1px solid var(--color-border);
-      border-radius: 12px;
-      display: flex; flex-direction: column;
-    }
-    .card3__icon {
-      width: 44px; height: 44px;
-      border-radius: 10px;
-      background: var(--color-accent);
-      display: grid; place-items: center;
-      color: white;
-      font-weight: 800;
-      font-size: 1.25rem;
-      margin-bottom: 20px;
-    }
-    .card3__title {
-      font-family: var(--font-display);
-      font-size: 1.25rem; font-weight: 700;
-      margin: 0 0 12px; color: var(--color-fg);
       line-height: 1.25;
     }
-    .card3__desc { font-size: 1rem; color: var(--color-fg-muted); margin: 0; line-height: 1.5; }
-
-    /* ─── Closing slide ───────────────────────────── */
-    .closing {
-      display: flex; flex-direction: column;
-      align-items: flex-start; justify-content: center;
-    }
-    .closing__sig {
-      display: flex; align-items: center; gap: 16px;
-      margin-top: 48px;
-      padding-top: 32px;
-      border-top: 1px solid var(--color-border);
-      font-size: 0.9375rem;
-      color: var(--color-fg-muted);
-    }
-    .closing__sig img { width: 28px; height: 28px; border-radius: 6px; }
-
-    /* ─── Controles ────────────────────────────────── */
-    .deck-controls {
-      position: fixed; bottom: 24px; left: 50%;
-      transform: translateX(-50%);
-      display: flex; align-items: center; gap: 4px;
-      padding: 6px;
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid var(--color-border);
-      border-radius: 999px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-      z-index: 50;
-      transition: opacity 400ms ease;
-    }
-    [data-theme="dark"] .deck-controls { background: rgba(20, 17, 13, 0.85); }
-    body.is-idle .deck-controls { opacity: 0.3; }
-    body.is-idle .deck-controls:hover { opacity: 1; }
-    body.is-fullscreen.is-idle .deck-controls { opacity: 0; pointer-events: none; }
-
-    .ctrl {
-      width: 36px; height: 36px;
-      display: grid; place-items: center;
-      background: transparent; border: 0;
-      border-radius: 50%;
-      cursor: pointer;
-      color: var(--color-fg);
-      font-size: 16px;
-      transition: background var(--duration);
-    }
-    .ctrl:hover { background: var(--color-bg-elevated); }
-    .ctrl:disabled { opacity: 0.3; cursor: default; }
-    .ctrl:disabled:hover { background: transparent; }
-
-    .deck-counter {
-      padding: 0 14px;
-      font-family: var(--font-mono);
+    .timeline-h__desc {
       font-size: 0.8125rem;
       color: var(--color-fg-muted);
-      letter-spacing: 0.04em;
-      font-weight: 500;
-    }
-    .deck-counter strong { color: var(--color-fg); font-weight: 600; }
-
-    .deck-sep {
-      width: 1px; height: 18px;
-      background: var(--color-border);
-      margin: 0 4px;
+      margin: 0;
+      line-height: 1.5;
     }
 
-    /* ─── Progress bar ────────────────────────────── */
+    /* Tabelas em slide */
+    .data-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: clamp(0.85rem, 0.8rem + 0.25vw, 1rem);
+      margin-top: var(--space-5);
+    }
+    .data-table thead th {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-fg-subtle);
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--color-border-strong);
+    }
+    .data-table thead th.num { text-align: right; }
+    .data-table tbody td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-fg);
+    }
+    .data-table tbody td.num { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+    .data-table tbody td strong { font-family: var(--font-display); color: var(--color-fg); }
+    .data-table tbody tr:last-child td { border-bottom: none; }
+
+    /* Status badges */
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+    }
+    .badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    .badge--accent  { background: var(--color-accent-dim);  color: var(--color-accent); }
+    .badge--info    { background: var(--color-info-dim);    color: var(--color-info); }
+    .badge--success { background: var(--color-success-dim); color: var(--color-success); }
+    .badge--sage    { background: var(--color-sage-dim);    color: var(--color-sage); }
+    .badge--teal    { background: var(--color-teal-dim);    color: var(--color-teal); }
+    .badge--plum    { background: var(--color-plum-dim);    color: var(--color-plum); }
+
+    /* Hover apresentador em tabelas (feature 10 v3) */
+    .slide .data-table tbody tr {
+      transition: opacity 200ms var(--ease-out),
+                  background 200ms var(--ease-out),
+                  color 200ms var(--ease-out);
+    }
+    .slide .data-table tbody:hover tr { opacity: 0.4; }
+    .slide .data-table tbody:hover tr:hover {
+      opacity: 1;
+      background: var(--color-accent-dim) !important;
+    }
+    .slide .data-table tbody:hover tr:hover td {
+      color: var(--color-accent);
+      font-weight: 700;
+    }
+    .slide .data-table tbody:hover tr:hover td strong {
+      color: var(--color-accent);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .slide .data-table tbody tr { transition: none; }
+    }
+
+    /* HUD */
     .deck-progress {
       position: fixed;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: transparent;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--color-border);
       z-index: 60;
     }
     .deck-progress__bar {
       height: 100%;
+      background: linear-gradient(to right, var(--color-accent), var(--color-accent-hover));
+      box-shadow: 0 0 12px var(--color-accent);
+      width: 0%;
+      transition: width var(--duration) var(--ease-out);
+    }
+
+    .hud {
+      position: fixed; bottom: 16px; left: 0; right: 0;
+      display: flex; justify-content: center; align-items: center;
+      gap: 14px; z-index: 50; pointer-events: none;
+    }
+    .hud > * { pointer-events: auto; }
+    .hud__btn, .hud__fs, .theme-toggle {
+      width: 38px; height: 38px;
+      display: grid; place-items: center;
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: 999px;
+      cursor: pointer; color: var(--color-fg);
+      transition: all var(--duration-fast) var(--ease-out);
+      font: inherit;
+      box-shadow: var(--shadow-sm);
+    }
+    .hud__btn:hover, .hud__fs:hover, .theme-toggle:hover {
+      border-color: var(--color-accent);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+    .hud__counter {
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      color: var(--color-fg-muted);
+      min-width: 64px;
+      text-align: center;
+      font-weight: 600;
+    }
+    .hud__counter span { color: var(--color-fg); font-weight: 700; }
+
+    /* Brand mark */
+    .brand-mark {
+      position: fixed;
+      top: 24px; right: 28px;
+      display: flex; align-items: center; gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--color-fg-subtle);
+      z-index: 40;
+    }
+    .brand-mark__dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
       background: var(--color-accent);
-      transition: width 500ms var(--ease-out);
+      box-shadow: 0 0 12px var(--color-accent);
     }
 
-    /* ─── Click zones laterais ────────────────────── */
-    .click-zone {
-      position: absolute; top: 0; bottom: 0;
-      width: 12vw; z-index: 5;
+    /* Slide number */
+    .slide-num {
+      position: absolute;
+      bottom: 18px; right: 28px;
+      font: 600 0.6875rem/1 var(--font-mono);
+      letter-spacing: 0.12em;
+      color: var(--color-fg-muted);
+      opacity: 0.55;
+      z-index: 30;
+      white-space: nowrap;
+      pointer-events: none;
+      user-select: none;
+    }
+    .slide-num span { color: var(--color-accent); opacity: 0.9; font-weight: 700; }
+    .slide[data-background-color="#000000"] .slide-num,
+    .slide[data-background-color="#000"] .slide-num,
+    .slide[data-background-color^="var(--itau-orange"] .slide-num,
+    .slide[data-background-color*="orange"] .slide-num {
+      color: rgba(255,255,255,0.85);
+    }
+    .slide[data-background-color*="orange"] .slide-num span {
+      color: #fff;
+    }
+
+    /* Theme toggle */
+    .theme-toggle {
+      width: 38px; height: 38px;
+    }
+
+    /* Print */
+    @media print {
+      @page { size: A4 landscape; margin: 0; }
+      body::before, body::after { display: none; }
+      .hud, .deck-progress, .brand-mark { display: none; }
+      .deck { width: auto; height: auto; overflow: visible; }
+      .slide {
+        position: relative; inset: auto;
+        width: 100vw; height: 100vh;
+        page-break-after: always;
+        opacity: 1 !important; transform: none !important;
+      }
+      .slide [data-fragment], .slide [data-anim] {
+        opacity: 1 !important; transform: none !important; filter: none !important;
+      }
+    }
+
+    /* Overview Mode */
+    :root {
+      --ov-scale: 0.22;
+      --slide-w: 100vw;
+      --slide-h: 100vh;
+    }
+    html.is-overview,
+    body.is-overview {
+      overflow: auto !important;
+      height: auto !important;
+    }
+    body.is-overview .deck {
+      position: static !important;
+      overflow: visible !important;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, calc(var(--slide-w) * var(--ov-scale)));
+      gap: 20px;
+      padding: 28px;
+      padding-bottom: 80px;
+      height: auto !important;
+      min-height: 100vh;
+      width: 100% !important;
+      background: var(--color-bg-sunken);
+      justify-content: center;
+      align-content: start;
+    }
+    body.is-overview .slide {
+      position: relative !important;
+      inset: auto !important;
+      width: var(--slide-w) !important;
+      height: var(--slide-h) !important;
+      opacity: 1 !important;
+      pointer-events: auto;
       cursor: pointer;
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transform: scale(var(--ov-scale)) !important;
+      transform-origin: top left;
+      margin-right: calc(var(--slide-w) * (var(--ov-scale) - 1));
+      margin-bottom: calc(var(--slide-h) * (var(--ov-scale) - 1));
+      transition: border-color 150ms, box-shadow 150ms;
+      flex-shrink: 0;
     }
-    .click-zone--left { left: 0; }
-    .click-zone--right { right: 0; }
+    body.is-overview .slide.is-active {
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 4px var(--color-accent);
+    }
+    body.is-overview .slide:hover {
+      border-color: var(--color-accent);
+      box-shadow: var(--shadow-lg);
+    }
+    body.is-overview .hud,
+    body.is-overview .deck-progress,
+    body.is-overview .brand-mark { display: none !important; }
+    body.is-overview .slide [data-fragment],
+    body.is-overview .slide [data-anim] {
+      opacity: 1 !important;
+      transform: none !important;
+      filter: none !important;
+      animation: none !important;
+    }
 
-    /* ─── Mobile ──────────────────────────────────── */
-    @media (max-width: 768px) {
-      .slide { padding: 6vh 6vw; }
-      .metrics { grid-template-columns: 1fr; gap: 24px; }
-      .two-col { grid-template-columns: 1fr; gap: 24px; }
-      .timeline-h { grid-template-columns: 1fr 1fr; }
-      .cards3 { grid-template-columns: 1fr; }
-      .click-zone { width: 25vw; }
+    /* Fragment types */
+    [data-fragment="current-visible"] {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 400ms var(--ease-out), transform 400ms var(--ease-out);
+    }
+    [data-fragment="current-visible"].is-visible { opacity: 1; transform: none; }
+    [data-fragment="current-visible"].was-visible { opacity: 0.3; transform: none; }
+
+    [data-fragment="highlight-current"] { color: var(--color-fg-muted); transition: color 300ms; }
+    [data-fragment="highlight-current"].is-visible { color: var(--color-accent); font-weight: 700; }
+    [data-fragment="highlight-current"].was-visible { color: var(--color-fg-muted); font-weight: inherit; }
+
+    [data-fragment="grow"] {
+      opacity: 0;
+      transform: scale(0.7);
+      transition: opacity 400ms var(--ease-out), transform 400ms var(--ease-out);
+    }
+    [data-fragment="grow"].is-visible { opacity: 1; transform: scale(1); }
+
+    /* Rough Notation */
+    [data-mark] { position: relative; }
+
+    /* AutoFitText */
+    [data-fit-text] { white-space: nowrap; display: block; }
+
+    /* Layouts semânticos */
+    .layout-two-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-8);
+      align-items: start;
+      width: 100%;
+    }
+    .layout-two-cols .col-left, .layout-two-cols .col-right { min-width: 0; }
+
+    .layout-fact {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      width: 100%;
+      height: 100%;
+    }
+    .layout-fact .fact-val {
+      font-family: var(--font-display);
+      font-size: clamp(5rem, 18vw, 14rem);
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      line-height: 0.9;
+      color: var(--color-accent);
+    }
+    .layout-fact .fact-label {
+      font-size: clamp(1rem, 2vw, 1.5rem);
+      color: var(--color-fg-muted);
+      margin-top: var(--space-5);
+      max-width: 40ch;
+      text-align: center;
+    }
+
+    .layout-quote {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      max-width: 920px;
+    }
+    .layout-quote blockquote {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 3vw, 2.8rem);
+      font-style: italic;
+      font-weight: 600;
+      line-height: 1.25;
+      color: var(--color-fg);
+      margin: 0 0 var(--space-6);
+      padding-left: var(--space-6);
+      border-left: 4px solid var(--color-accent);
+    }
+    .layout-quote cite {
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      color: var(--color-fg-muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-style: normal;
+      padding-left: var(--space-6);
+    }
+
+    /* Background layer */
+    .slide-bg,
+    .slide > [data-overdrive] {
+      position: absolute !important;
+      inset: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      z-index: 0 !important;
+      pointer-events: none;
+      transition: opacity var(--duration) var(--ease-out);
+    }
+    .slide > :not(.slide-bg):not([data-overdrive]) { position: relative; z-index: 1; }
+
+    /* Slide laranja (divider) — override de cores em conteúdo */
+    .slide[data-background-color*="orange"] .kicker,
+    .slide[data-background-color*="orange"] .kicker--accent,
+    .slide[data-background-color*="orange"] .divider-deck__num {
+      color: rgba(255, 255, 255, 0.92);
+    }
+    .slide[data-background-color*="orange"] .kicker__dot {
+      background: #fff;
+      box-shadow: 0 0 16px rgba(255,255,255,0.6);
+    }
+    .slide[data-background-color*="orange"] .title-mega,
+    .slide[data-background-color*="orange"] .title-xl,
+    .slide[data-background-color*="orange"] .title-lg {
+      color: #fff;
+    }
+    .slide[data-background-color*="orange"] .title-mega em,
+    .slide[data-background-color*="orange"] .title-xl em,
+    .slide[data-background-color*="orange"] .title-lg em {
+      color: var(--itau-warm-black);
+      font-style: italic;
+    }
+    .slide[data-background-color*="orange"] .lead-deck {
+      color: rgba(255, 255, 255, 0.88);
+    }
+
+    /* Chart container */
+    .chart-wrap {
+      position: relative;
+      width: 100%;
+      max-height: 50vh;
+      min-height: 280px;
+      padding: var(--space-4);
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+    }
+    .chart-wrap canvas { max-height: 46vh !important; }
+
+    /* Shortcuts overlay */
+    .shortcuts-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.72);
+      backdrop-filter: blur(8px);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .shortcuts-overlay.is-open { display: flex; }
+    .shortcuts-panel {
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      min-width: 360px;
+      box-shadow: var(--shadow-xl);
+    }
+    .shortcuts-panel h3 {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-fg-muted);
+      margin: 0 0 1.25rem;
+    }
+    .shortcuts-panel dl {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.5rem 1.5rem;
+      margin: 0;
+    }
+    .shortcuts-panel dt {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      background: var(--color-bg-sunken);
+      border: 1px solid var(--color-border);
+      border-radius: 4px;
+      padding: 2px 8px;
+      color: var(--color-accent);
+      white-space: nowrap;
+      align-self: center;
+    }
+    .shortcuts-panel dd {
+      font-size: 0.875rem;
+      color: var(--color-fg-muted);
+      margin: 0;
+      align-self: center;
+    }
+    .shortcuts-close {
+      display: block;
+      margin-top: 1.5rem;
+      width: 100%;
+      padding: 0.5rem;
+      background: none;
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      color: var(--color-fg-muted);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      cursor: pointer;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .shortcuts-close:hover { border-color: var(--color-accent); color: var(--color-accent); }
+
+    @media (prefers-reduced-motion: reduce) {
+      [data-fragment="current-visible"],
+      [data-fragment="grow"] {
+        transition: none !important;
+        animation: none !important;
+      }
+      body.is-overview .slide { transition: none !important; }
     }
   </style>
 </head>
 <body>
 
-  <div class="deck-progress"><div class="deck-progress__bar" id="progress-bar"></div></div>
+  <div class="brand-mark" aria-hidden="true">
+    <span class="brand-mark__dot"></span>
+    <span>Itaú · Plataforma de Dados</span>
+  </div>
 
-  <main class="deck" id="deck">
+  <div class="deck">
 
-    <!-- 1. CAPA -->
-    <section class="slide" data-slide="1">
-      <div data-anim style="--anim-i: 0">
-        <div class="kicker">
-          <img src="../logos/itau.png" alt="">
-          <span>Plataforma de Dados</span>
-          <span class="kicker__dot"></span>
-          <span>Itaú · 2025</span>
+    <!-- ═══════ Slide 1 — HERO ═══════ -->
+    <section class="slide is-active" data-slide="1" data-background-color="#14110d">
+      <span class="slide-num"><span>01</span> · 14</span>
+      <div class="layout-hero">
+        <p class="kicker kicker--accent" data-anim style="--i: 0"><span class="kicker__dot"></span>ALL HANDS · 2026 Q2</p>
+        <h1 class="title-mega" data-anim="hero">Dados em <em>tempo</em> de decisão.</h1>
+        <p class="lead-deck" data-anim style="--i: 2">
+          24 meses depois do RFC. O que mudou no banco quando a latência saiu do batch noturno
+          e virou <strong data-mark="underline" data-mark-color="#FA9F09">segundos</strong>.
+        </p>
+        <div class="meta" data-anim style="--i: 3">
+          <span><strong>Plataforma de Dados</strong>Diretoria de Tecnologia</span>
+          <span><strong>Maio 2026</strong>v3.2 da plataforma</span>
+          <span><strong>Audiência</strong>Comitê executivo · 80 min</span>
         </div>
       </div>
-      <h1 class="title-xl" data-anim="hero">
-        De pipelines noturnos<br>a <em>fluxos em tempo real</em>.
-      </h1>
-      <p class="lead" data-anim style="--anim-i: 2">
-        18 meses transformando como o banco produz e consome dados.
-        O que mudou, o que aprendemos, o que vem em 2026.
-      </p>
-      <div class="meta" data-anim style="--anim-i: 3">
-        <span><strong>Plataforma de Dados</strong></span>
-        <span>·</span>
-        <span><strong>Outubro 2025</strong></span>
-        <span>·</span>
-        <span>All Hands</span>
+    </section>
+
+    <!-- ═══════ Slide 2 — BIG-NUM com AutoFit + Auto-Animate origem ═══════ -->
+    <section class="slide" data-slide="2" data-auto-animate>
+      <span class="slide-num"><span>02</span> · 14</span>
+      <div class="layout-fact">
+        <p class="kicker kicker--accent" data-anim style="--i: 0"><span class="kicker__dot"></span>UM NÚMERO PARA COMEÇAR</p>
+        <p class="fact-val" data-fit-text data-anim style="--i: 1" data-id="hero-num">2,8 bi</p>
+        <p class="fact-label" data-anim style="--i: 2">
+          eventos processados por dia em maio de 2026. Em janeiro de 2024, eram 38 milhões — em <em>todo o mês</em>.
+        </p>
       </div>
     </section>
 
-    <!-- 2. O PROBLEMA -->
-    <section class="slide" data-slide="2">
-      <p class="kicker kicker--accent" data-anim style="--anim-i: 0">Onde estávamos</p>
-      <h2 class="title-lg" data-anim style="--anim-i: 1">
-        Em janeiro de 2024, dados levavam horas.
-      </h2>
-      <p class="lead" data-anim style="--anim-i: 2">
-        Mais de 200 pipelines distintos transferindo dados entre sistemas. Cada time mantinha
-        os seus. Custo de operação espalhado, latência mediana de horas, decisões de risco e
-        produto reféns do ciclo noturno.
-      </p>
-      <div class="meta" data-anim style="--anim-i: 3">
-        <span><strong>200+</strong> pipelines isolados</span>
-        <span>·</span>
-        <span>Latência mediana: <strong>4-6h</strong></span>
-        <span>·</span>
-        <span>Sem padrão de schema</span>
-      </div>
-    </section>
-
-    <!-- 3. BIG NUMBER -->
+    <!-- ═══════ Slide 3 — VISÃO GERAL (split com texto + metrics--2) ═══════ -->
     <section class="slide" data-slide="3">
-      <div class="big-num">
-        <p class="kicker kicker--accent" data-anim style="--anim-i: 0">Hoje, em 1 dia</p>
-        <p class="big-num__val" data-anim="hero">
-          <span data-counter data-to="2300" data-suffix="M+">0</span>
-        </p>
-        <p class="big-num__label" data-anim style="--anim-i: 2">
-          eventos processados pela plataforma. 60× mais rápido que o pipeline legado.
-        </p>
+      <span class="slide-num"><span>03</span> · 14</span>
+      <p class="kicker" data-anim style="--i: 0"><span class="kicker__dot"></span>VISÃO GERAL</p>
+      <h2 class="title-lg" data-anim style="--i: 1">A plataforma é <em>um banco invisível</em>.</h2>
+      <div class="split split--top" data-anim style="--i: 2">
+        <div>
+          <p class="lead-deck">
+            Substrato técnico que move dado entre 47 squads sem ticket, sem code-review entre times,
+            sem espera. Como rede elétrica: você não vê, você apenas conta com ela.
+          </p>
+        </div>
+        <div class="metrics-deck metrics-deck--2" style="margin-top: 0;">
+          <div class="metric-d var-accent">
+            <p class="metric-d__val"><span>47</span></p>
+            <p class="metric-d__label">squads produtores</p>
+            <p class="metric-d__sub">+18 em 2025</p>
+          </div>
+          <div class="metric-d var-info">
+            <p class="metric-d__val"><span>312</span></p>
+            <p class="metric-d__label">consumidores ativos</p>
+            <p class="metric-d__sub">SDK em 4 linguagens</p>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- 4. TRÊS MÉTRICAS -->
+    <!-- ═══════ Slide 4 — MISSÃO (statement + quote) ═══════ -->
     <section class="slide" data-slide="4">
-      <p class="kicker kicker--accent" data-anim style="--anim-i: 0">O ano em três números</p>
-      <h2 class="title-md" data-anim style="--anim-i: 1">
-        Crescimento orgânico, sem campanha interna.
+      <span class="slide-num"><span>04</span> · 14</span>
+      <p class="kicker kicker--accent" data-anim style="--i: 0"><span class="kicker__dot"></span>MISSÃO</p>
+      <h2 class="title-xl" data-anim="hero">
+        Que cada decisão do banco esteja a <em>segundos</em> do dado que a justifica.
       </h2>
-      <div class="metrics">
-        <div class="metric" data-anim style="--anim-i: 2">
-          <p class="metric__val"><span data-counter data-to="47">0</span></p>
-          <p class="metric__label">Squads em produção</p>
-        </div>
-        <div class="metric" data-anim style="--anim-i: 3">
-          <p class="metric__val"><span data-counter data-to="60" data-suffix="×">0</span></p>
-          <p class="metric__label">Redução de latência vs. legado</p>
-        </div>
-        <div class="metric" data-anim style="--anim-i: 4">
-          <p class="metric__val">99,98<span>%</span></p>
-          <p class="metric__label">Disponibilidade observada</p>
-        </div>
-      </div>
+      <p class="lead-deck" data-anim style="--i: 2">
+        Não é meta de latência. É contrato com o cliente final: análise de risco em tempo de aprovação,
+        detecção de fraude em tempo de transação, recomendação em tempo de conversa.
+      </p>
     </section>
 
-    <!-- 5. SECTION DIVIDER -->
-    <section class="slide" data-slide="5">
-      <div class="divider">
-        <p class="divider__num" data-anim style="--anim-i: 0">02 — Como chegamos aqui</p>
-        <h2 class="title-xl" data-anim="hero">Não foi virada.<br>Foi caminho.</h2>
-      </div>
-    </section>
-
-    <!-- 6. TIMELINE HORIZONTAL -->
-    <section class="slide" data-slide="6">
-      <p class="kicker kicker--accent" data-anim style="--anim-i: 0">Quatro marcos</p>
-      <h2 class="title-md" data-anim style="--anim-i: 1">Do RFC à adoção como padrão.</h2>
-      <div class="timeline-h">
-        <div class="timeline-h__item" data-anim style="--anim-i: 2">
-          <p class="timeline-h__date">Jan 2024</p>
-          <h3 class="timeline-h__title">RFC aprovada</h3>
-          <p class="timeline-h__desc">Event-driven, schemas versionados, multi-região. Sem Kafka caseiro.</p>
-        </div>
-        <div class="timeline-h__item" data-anim style="--anim-i: 3">
-          <p class="timeline-h__date">Jul 2024</p>
-          <h3 class="timeline-h__title">3 pilotos vivos</h3>
-          <p class="timeline-h__desc">Risco, fraude, analytics. Latência caiu 60×. Decisões em segundos.</p>
-        </div>
-        <div class="timeline-h__item" data-anim style="--anim-i: 4">
-          <p class="timeline-h__date">Mar 2025</p>
-          <h3 class="timeline-h__title">12 squads</h3>
-          <p class="timeline-h__desc">Adesão orgânica. Migração sem campanha. Times vinham pedindo.</p>
-        </div>
-        <div class="timeline-h__item" data-anim style="--anim-i: 5">
-          <p class="timeline-h__date">Set 2025</p>
-          <h3 class="timeline-h__title">Padrão de fato</h3>
-          <p class="timeline-h__desc">47 squads. CIO adota como recomendado para fluxo entre sistemas.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 7. QUOTE -->
-    <section class="slide" data-slide="7">
-      <div class="quote-slide">
-        <p class="quote-slide__text" data-anim="hero">
-          A maior surpresa não foi a capacidade técnica. Foi a adesão sem campanha.
+    <!-- ═══════ Slide 5 — DIVIDER (laranja) ═══════ -->
+    <section class="slide" data-slide="5" data-background-color="var(--itau-orange)">
+      <span class="slide-num"><span>05</span> · 14</span>
+      <div class="divider-deck">
+        <p class="divider-deck__num" data-anim style="--i: 0">PARTE 02 / 04</p>
+        <h2 class="title-mega" data-anim="hero">Como <em>funciona</em>.</h2>
+        <p class="lead-deck" data-anim style="--i: 2">
+          Quatro módulos. Um SDK. Governança opinionada por default, customizável por exceção.
         </p>
-        <cite class="quote-slide__cite" data-anim style="--anim-i: 2">
-          <strong>Líder técnico, Plataforma de Dados</strong>
-          <span>Entrevista interna, setembro de 2025</span>
-        </cite>
       </div>
     </section>
 
-    <!-- 8. POR QUE FUNCIONOU - cards 3-up -->
+    <!-- ═══════ Slide 6 — MÓDULOS (grid-cards--4 color-coded) ═══════ -->
+    <section class="slide" data-slide="6">
+      <span class="slide-num"><span>06</span> · 14</span>
+      <p class="kicker" data-anim style="--i: 0"><span class="kicker__dot"></span>ARQUITETURA</p>
+      <h2 class="title-lg" data-anim style="--i: 1">Quatro <em>módulos</em>, uma plataforma.</h2>
+      <div class="grid-cards grid-cards--4" data-anim style="--i: 2">
+        <div class="card-d card-d--accent">
+          <p class="card-d__label"><span class="dot"></span>INGEST</p>
+          <h3 class="card-d__title">Stream Gateway</h3>
+          <p class="card-d__desc">Produtores publicam via SDK ou HTTP. Schemas versionados, ack at-least-once, multi-região por default.</p>
+        </div>
+        <div class="card-d card-d--info">
+          <p class="card-d__label"><span class="dot"></span>STORE</p>
+          <h3 class="card-d__title">Lakehouse Unified</h3>
+          <p class="card-d__desc">Iceberg em S3 com manifest distribuído. Mesma tabela serve batch, streaming e ad-hoc.</p>
+        </div>
+        <div class="card-d card-d--teal">
+          <p class="card-d__label"><span class="dot"></span>SERVE</p>
+          <h3 class="card-d__title">Query Mesh</h3>
+          <p class="card-d__desc">Trino + Materialized Views declarativas. SLO de 200 ms p99 em consultas operacionais.</p>
+        </div>
+        <div class="card-d card-d--sage">
+          <p class="card-d__label"><span class="dot"></span>GOVERN</p>
+          <h3 class="card-d__title">Catalog &amp; Lineage</h3>
+          <p class="card-d__desc">Registro automático de schema, owner, política de retenção. PII detectado por scanner integrado.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════ Slide 7 — TIMELINE (4 marcos) ═══════ -->
+    <section class="slide" data-slide="7">
+      <span class="slide-num"><span>07</span> · 14</span>
+      <p class="kicker" data-anim style="--i: 0"><span class="kicker__dot"></span>MARCOS</p>
+      <h2 class="title-lg" data-anim style="--i: 1">Do RFC à <em>adoção como padrão</em>.</h2>
+      <div class="timeline-h" data-anim style="--cols: 4; --i: 2;">
+        <div class="timeline-h__item">
+          <p class="timeline-h__date">JAN 2024</p>
+          <h3 class="timeline-h__title">RFC #042 aprovada</h3>
+          <p class="timeline-h__desc">Event-driven, schemas versionados, multi-região por default. Sem Kafka caseiro.</p>
+        </div>
+        <div class="timeline-h__item">
+          <p class="timeline-h__date">JUL 2024</p>
+          <h3 class="timeline-h__title">3 pilotos vivos</h3>
+          <p class="timeline-h__desc">Risco operacional, fraude no PIX, analytics de cartão. Latência caiu 60×.</p>
+        </div>
+        <div class="timeline-h__item">
+          <p class="timeline-h__date">MAR 2025</p>
+          <h3 class="timeline-h__title">29 squads em prod</h3>
+          <p class="timeline-h__desc">Adesão orgânica. Squads vinham pedindo migração antes de receberem proposta.</p>
+        </div>
+        <div class="timeline-h__item">
+          <p class="timeline-h__date">MAI 2026</p>
+          <h3 class="timeline-h__title">Padrão de fato</h3>
+          <p class="timeline-h__desc">47 squads. CIO adota como recomendado para todo fluxo crítico entre sistemas.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════ Slide 8 — POR QUE FUNCIONOU (list-deck com fragments) ═══════ -->
     <section class="slide" data-slide="8">
-      <p class="kicker kicker--accent" data-anim style="--anim-i: 0">Três razões</p>
-      <h2 class="title-md" data-anim style="--anim-i: 1">Por que a adoção foi orgânica.</h2>
-      <div class="cards3">
-        <div class="card3" data-anim style="--anim-i: 2">
-          <div class="card3__icon">01</div>
-          <h3 class="card3__title">Pilotos provaram antes</h3>
-          <p class="card3__desc">Times tinham referências reais para visitar. Não foi promessa — foi demo funcionando.</p>
-        </div>
-        <div class="card3" data-anim style="--anim-i: 3">
-          <div class="card3__icon">02</div>
-          <h3 class="card3__title">Self-service real</h3>
-          <p class="card3__desc">Sem ticket pra criar tópico. SDK funciona em 15 minutos. Sem fricção.</p>
-        </div>
-        <div class="card3" data-anim style="--anim-i: 4">
-          <div class="card3__icon">03</div>
-          <h3 class="card3__title">Migração no ritmo de cada time</h3>
-          <p class="card3__desc">Adotar quando faz sentido pro time, não quando uma diretriz manda.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 9. SECTION DIVIDER 2 -->
-    <section class="slide" data-slide="9">
-      <div class="divider">
-        <p class="divider__num" data-anim style="--anim-i: 0">03 — 2026</p>
-        <h2 class="title-xl" data-anim="hero">O que vem agora.</h2>
-      </div>
-    </section>
-
-    <!-- 10. PRÓXIMOS PASSOS COM FRAGMENTS -->
-    <section class="slide" data-slide="10">
-      <p class="kicker kicker--accent" data-anim style="--anim-i: 0">Roadmap 2026</p>
-      <h2 class="title-md" data-anim style="--anim-i: 1">Três frentes definidas.</h2>
-      <ol class="list" style="margin-top: 24px;">
-        <li class="list__item" data-fragment="1">
-          <span class="list__num">1</span>
-          <div class="list__body">
-            <strong>Materialização declarativa</strong>
-            <span>Descreva o resultado em DSL. A plataforma escolhe o pipeline. Beta no Q1.</span>
+      <span class="slide-num"><span>08</span> · 14</span>
+      <p class="kicker kicker--accent" data-anim style="--i: 0"><span class="kicker__dot"></span>TRÊS RAZÕES</p>
+      <h2 class="title-lg" data-anim style="--i: 1">Por que a adoção foi <em>orgânica</em>.</h2>
+      <ol class="list-deck">
+        <li class="list-deck__item" data-fragment="current-visible">
+          <span class="list-deck__num">1</span>
+          <div class="list-deck__body">
+            <strong>Pilotos provaram antes de prometer</strong>
+            <span>Times tinham referências reais para visitar. Não foi roadmap em slide — foi demo rodando em produção com tráfego real.</span>
           </div>
         </li>
-        <li class="list__item" data-fragment="2">
-          <span class="list__num">2</span>
-          <div class="list__body">
-            <strong>Replicação cross-region automática</strong>
-            <span>Default opinionada com opt-out. Sensibilidade do dado decide a política.</span>
+        <li class="list-deck__item" data-fragment="current-visible">
+          <span class="list-deck__num">2</span>
+          <div class="list-deck__body">
+            <strong>Self-service real, sem ticket</strong>
+            <span>SDK importa em 15 minutos. Criar tópico não passa por nenhum time intermediário. Governança aplica por contrato, não por gatekeeping.</span>
           </div>
         </li>
-        <li class="list__item" data-fragment="3">
-          <span class="list__num">3</span>
-          <div class="list__body">
-            <strong>Gateway HTTP em GA</strong>
-            <span>Linguagens sem SDK nativo entram. Sem perder garantia de schema versionado.</span>
+        <li class="list-deck__item" data-fragment="current-visible">
+          <span class="list-deck__num">3</span>
+          <div class="list-deck__body">
+            <strong>Migração no ritmo de cada squad</strong>
+            <span>Adoção quando faz sentido para o time, não quando diretriz manda. O legado coexiste — squads escolhem janela.</span>
           </div>
         </li>
       </ol>
     </section>
 
-    <!-- 11. BIG NUMBER FINAL -->
-    <section class="slide" data-slide="11">
-      <div class="big-num">
-        <p class="kicker kicker--accent" data-anim style="--anim-i: 0">Meta 2026</p>
-        <p class="big-num__val" data-anim="hero">
-          <span data-counter data-to="100" data-suffix="%">0</span>
-        </p>
-        <p class="big-num__label" data-anim style="--anim-i: 2">
-          dos fluxos novos entre sistemas críticos rodando na plataforma. Padrão, não exceção.
-        </p>
+    <!-- ═══════ Slide 9 — TABELA DE PILOTOS (hover apresentador) ═══════ -->
+    <section class="slide" data-slide="9">
+      <span class="slide-num"><span>09</span> · 14</span>
+      <p class="kicker" data-anim style="--i: 0"><span class="kicker__dot"></span>PILOTOS QUE VIRARAM PRODUÇÃO</p>
+      <h2 class="title-md" data-anim style="--i: 1">Cinco squads, cinco <em>resultados</em> mensuráveis.</h2>
+      <div data-anim style="--i: 2">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Squad</th>
+              <th>Caso de uso</th>
+              <th class="num">Latência antes</th>
+              <th class="num">Latência depois</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Fraude PIX</strong></td>
+              <td>Detecção em tempo de transação</td>
+              <td class="num">4,2 s</td>
+              <td class="num">82 ms</td>
+              <td><span class="badge badge--success">GA</span></td>
+            </tr>
+            <tr>
+              <td><strong>Risco Operacional</strong></td>
+              <td>Score de exposição por cliente</td>
+              <td class="num">6 h</td>
+              <td class="num">1,4 s</td>
+              <td><span class="badge badge--success">GA</span></td>
+            </tr>
+            <tr>
+              <td><strong>Analytics Cartão</strong></td>
+              <td>Painel de aprovação em tempo real</td>
+              <td class="num">24 h</td>
+              <td class="num">12 s</td>
+              <td><span class="badge badge--success">GA</span></td>
+            </tr>
+            <tr>
+              <td><strong>Recomendação App</strong></td>
+              <td>Ofertas contextuais na home</td>
+              <td class="num">batch diário</td>
+              <td class="num">340 ms</td>
+              <td><span class="badge badge--info">Beta</span></td>
+            </tr>
+            <tr>
+              <td><strong>Compliance KYC</strong></td>
+              <td>Atualização contínua de cadastro</td>
+              <td class="num">48 h</td>
+              <td class="num">2,1 s</td>
+              <td><span class="badge badge--info">Beta</span></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
+      <p class="footnote">Apresentador: passe o mouse sobre uma linha para destacar. Fonte: dashboards SRE, abr-mai 2026.</p>
     </section>
 
-    <!-- 12. CLOSING -->
-    <section class="slide" data-slide="12">
-      <div class="closing">
-        <p class="kicker kicker--accent" data-anim style="--anim-i: 0">Para terminar</p>
-        <h2 class="title-xl" data-anim="hero">
-          Obrigado.<br>Perguntas?
-        </h2>
-        <p class="lead" data-anim style="--anim-i: 2">
-          Para acompanhar, sugerir ou criticar: <strong>#plat-dados</strong> no Slack.
-          Para mudanças estruturais, abra um RFC em <strong>plat-dados/rfcs</strong>.
-        </p>
-        <div class="closing__sig" data-anim style="--anim-i: 3">
-          <img src="../logos/itau.png" alt="">
-          <span>Plataforma de Dados · Itaú · Outubro 2025</span>
+    <!-- ═══════ Slide 10 — GRÁFICO (composição preservada: bar + line) ═══════ -->
+    <section class="slide" data-slide="10">
+      <span class="slide-num"><span>10</span> · 14</span>
+      <p class="kicker" data-anim style="--i: 0"><span class="kicker__dot"></span>VOLUME &amp; ADOÇÃO</p>
+      <h2 class="title-md" data-anim style="--i: 1">Eventos crescem com a adoção <em>de squads</em>.</h2>
+      <div class="split split--top" data-anim style="--i: 2">
+        <div class="chart-wrap">
+          <canvas id="chart-mixed" aria-label="Eventos diários e squads ativos por mês"></canvas>
+        </div>
+        <div>
+          <p class="lead-deck">
+            Crescimento de volume não vem de mais eventos por squad — vem de <em>mais squads</em>.
+            Cada novo time produtor agrega aproximadamente 50 milhões de eventos/dia.
+          </p>
+          <p style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--color-fg-subtle); margin-top: var(--space-4);">
+            ▮ barras: eventos diários (bi)<br>
+            ━ linha: squads produtores (n)
+          </p>
         </div>
       </div>
     </section>
 
-    <div class="click-zone click-zone--left" data-prev-zone aria-hidden="true"></div>
-    <div class="click-zone click-zone--right" data-next-zone aria-hidden="true"></div>
+    <!-- ═══════ Slide 11 — METRICS--3 com Auto-Animate destino (KPIs gigantes) ═══════ -->
+    <section class="slide" data-slide="11" data-auto-animate>
+      <span class="slide-num"><span>11</span> · 14</span>
+      <p class="kicker kicker--accent" data-anim style="--i: 0"><span class="kicker__dot"></span>SLOs ATENDIDOS</p>
+      <h2 class="title-lg" data-anim style="--i: 1">Três <em>contratos</em> com o resto do banco.</h2>
+      <div class="metrics-deck metrics-deck--3" data-anim style="--i: 2">
+        <div class="metric-d var-accent">
+          <p class="metric-d__val" data-id="hero-num">99,98<span>%</span></p>
+          <p class="metric-d__label">disponibilidade observada</p>
+          <p class="metric-d__sub">SLA contratual: 99,9%</p>
+        </div>
+        <div class="metric-d var-teal">
+          <p class="metric-d__val">182<span>ms</span></p>
+          <p class="metric-d__label">latência p99 fim-a-fim</p>
+          <p class="metric-d__sub">SLO: ≤ 200 ms</p>
+        </div>
+        <div class="metric-d var-sage">
+          <p class="metric-d__val">0<span>incidentes</span></p>
+          <p class="metric-d__label">de severidade 1 em 2026</p>
+          <p class="metric-d__sub">Sev 2: 3 · Sev 3: 11</p>
+        </div>
+      </div>
+      <p class="footnote">Janela de medição: 1° jan a 30 abr 2026. Fonte: observabilidade interna.</p>
+    </section>
 
-  </main>
+    <!-- ═══════ Slide 12 — DONUT chart ═══════ -->
+    <section class="slide" data-slide="12">
+      <span class="slide-num"><span>12</span> · 14</span>
+      <p class="kicker" data-anim style="--i: 0"><span class="kicker__dot"></span>USO POR DOMÍNIO</p>
+      <h2 class="title-md" data-anim style="--i: 1">Onde os <em>2,8 bilhões</em> de eventos vivem.</h2>
+      <div class="split split--top" data-anim style="--i: 2">
+        <div class="chart-wrap" style="max-width: 460px;">
+          <canvas id="chart-donut" aria-label="Eventos diários por domínio de negócio"></canvas>
+        </div>
+        <div>
+          <p class="lead-deck">
+            Pagamentos puxa o volume (PIX, cartão, TED), mas <em>crédito</em> e <em>investimentos</em> crescem mais rápido em eventos por usuário.
+          </p>
+          <p style="font-size: var(--size-small); color: var(--color-fg-muted); margin-top: var(--space-4);">
+            Próximos domínios em onboarding: Seguros (Q3) e Câmbio (Q4). Estimativa: +800 milhões eventos/dia até dezembro.
+          </p>
+        </div>
+      </div>
+    </section>
 
-  <nav class="deck-controls" aria-label="Controles do deck">
-    <button class="ctrl" data-prev aria-label="Slide anterior">←</button>
-    <span class="deck-counter"><strong id="current-slide">1</strong> / <span id="total-slides">12</span></span>
-    <button class="ctrl" data-next aria-label="Próximo slide">→</button>
-    <div class="deck-sep"></div>
-    <button class="ctrl" data-theme-toggle aria-label="Alternar tema"><span data-theme-icon>☾</span></button>
-    <button class="ctrl" data-fullscreen aria-label="Tela cheia">⛶</button>
+    <!-- ═══════ Slide 13 — QUOTE ═══════ -->
+    <section class="slide" data-slide="13">
+      <span class="slide-num"><span>13</span> · 14</span>
+      <div class="layout-quote">
+        <p class="kicker" data-anim style="--i: 0"><span class="kicker__dot"></span>VOZ DO CLIENTE INTERNO</p>
+        <blockquote data-anim style="--i: 1">
+          A maior surpresa não foi a capacidade técnica. Foi a <strong data-mark="underline" data-mark-color="#FF6200">adesão sem campanha</strong> — squads chegavam pedindo migração antes da gente bater na porta.
+        </blockquote>
+        <cite data-anim style="--i: 2">— Lead Engineer, Plataforma de Dados · entrevista interna, abr 2026</cite>
+      </div>
+    </section>
+
+    <!-- ═══════ Slide 14 — CLOSING ═══════ -->
+    <section class="slide" data-slide="14" data-background-color="#14110d">
+      <span class="slide-num"><span>14</span> · 14</span>
+      <div class="layout-hero">
+        <p class="kicker kicker--accent" data-anim style="--i: 0"><span class="kicker__dot"></span>PARA TERMINAR</p>
+        <h2 class="title-xl" data-anim="hero">
+          Obrigado.<br><em>Perguntas?</em>
+        </h2>
+        <p class="lead-deck" data-anim style="--i: 2">
+          Para acompanhar, sugerir ou criticar: <strong>#plat-dados</strong> no Slack.
+          Mudanças estruturais via RFC em <strong>plat-dados/rfcs</strong>.
+        </p>
+        <div class="grid-cards grid-cards--3" data-anim style="--i: 3; margin-top: var(--space-7);">
+          <div class="card-d card-d--accent">
+            <p class="card-d__label"><span class="dot"></span>DOCS</p>
+            <h3 class="card-d__title">plat-dados.itau/docs</h3>
+            <p class="card-d__desc">SDK, schemas, exemplos por linguagem. Quickstart em 15 min.</p>
+          </div>
+          <div class="card-d card-d--info">
+            <p class="card-d__label"><span class="dot"></span>OFFICE HOUR</p>
+            <h3 class="card-d__title">Terças, 16h00</h3>
+            <p class="card-d__desc">Sala virtual aberta para dúvidas, arquitetura, code-review opcional.</p>
+          </div>
+          <div class="card-d card-d--teal">
+            <p class="card-d__label"><span class="dot"></span>STATUS</p>
+            <h3 class="card-d__title">status.plat-dados</h3>
+            <p class="card-d__desc">SLOs ao vivo, incidentes recentes, RFCs em discussão.</p>
+          </div>
+        </div>
+        <div class="meta" data-anim style="--i: 4">
+          <span><strong>Plataforma de Dados</strong>Itaú · Diretoria de Tecnologia · Maio 2026</span>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="deck-progress" aria-hidden="true"><div class="deck-progress__bar" id="progress-bar"></div></div>
+
+  <nav class="hud" aria-label="Controles do deck">
+    <button class="hud__btn hud__prev" type="button" aria-label="Slide anterior">◀</button>
+    <span class="hud__counter"><span id="cur">1</span> / <span id="tot">14</span></span>
+    <button class="hud__btn hud__next" type="button" aria-label="Próximo slide">▶</button>
+    <button class="hud__btn hud__overview" type="button" aria-label="Visão geral (O)" title="O">⊞</button>
+    <button class="hud__fs" type="button" aria-label="Alternar fullscreen">⛶</button>
+    <button class="theme-toggle" type="button" aria-label="Alternar tema"><span aria-hidden="true">◐</span></button>
   </nav>
 
+  <div class="shortcuts-overlay" id="shortcuts-overlay" role="dialog" aria-modal="true" aria-label="Atalhos de teclado">
+    <div class="shortcuts-panel">
+      <h3>Atalhos de teclado</h3>
+      <dl>
+        <dt>→ / Space / PgDn</dt><dd>Próximo slide ou fragmento</dd>
+        <dt>← / PgUp</dt><dd>Slide anterior</dd>
+        <dt>Home</dt><dd>Primeiro slide</dd>
+        <dt>End</dt><dd>Último slide</dd>
+        <dt>O</dt><dd>Overview (grade de slides)</dd>
+        <dt>F</dt><dd>Fullscreen</dd>
+        <dt>Escape</dt><dd>Fechar overview / sair de fullscreen</dd>
+        <dt>?</dt><dd>Mostrar atalhos</dd>
+      </dl>
+      <button class="shortcuts-close" id="shortcuts-close">Fechar (Esc)</button>
+    </div>
+  </div>
+
   <script>
-    // ─── Theme toggle ────────────────────────────────
-    (function() {
-      const root = document.documentElement;
-      const update = () => {
-        const isDark = root.getAttribute('data-theme') === 'dark';
-        document.querySelectorAll('[data-theme-icon]').forEach(i => i.textContent = isDark ? '☀' : '☾');
-      };
-      update();
-      document.querySelectorAll('[data-theme-toggle]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-          root.setAttribute('data-theme', next);
-          try { localStorage.setItem('theme', next); } catch (e) {}
-          update();
+    /* ─── Feature 11: Posicionamento relativo de fragmentos ────────── */
+    (function resolveRelativeFragmentIndexes() {
+      document.querySelectorAll('.slide').forEach(slide => {
+        let maxIdx = -1;
+        slide.querySelectorAll('[data-fragment-index]').forEach(el => {
+          const v = el.dataset.fragmentIndex;
+          if (!v.startsWith('+') && !v.startsWith('-')) {
+            maxIdx = Math.max(maxIdx, parseInt(v, 10));
+          }
+        });
+        slide.querySelectorAll('[data-fragment-index]').forEach(el => {
+          const v = el.dataset.fragmentIndex;
+          if (v.startsWith('+') || v.startsWith('-')) {
+            el.dataset.fragmentIndex = String(maxIdx + parseInt(v, 10));
+          }
         });
       });
     })();
 
-    // ─── Deck engine ─────────────────────────────────
-    const slides = Array.from(document.querySelectorAll('.slide'));
-    const total = slides.length;
-    document.getElementById('total-slides').textContent = total;
-
-    const state = {
-      current: 1,
-      fragment: 0,
-      animating: false,
-    };
-
-    function fragmentsOf(slideIdx) {
-      return slides[slideIdx - 1].querySelectorAll('[data-fragment]');
-    }
-
-    function applyFragments(slideIdx, visibleCount) {
-      const frags = fragmentsOf(slideIdx);
-      frags.forEach((f, i) => f.classList.toggle('is-visible', i < visibleCount));
-    }
-
-    function runCounters(slideIdx) {
-      const slide = slides[slideIdx - 1];
-      slide.querySelectorAll('[data-counter]').forEach(el => {
-        if (el.dataset.ran === '1') return;
-        el.dataset.ran = '1';
-        const to = +el.dataset.to;
-        const suffix = el.dataset.suffix || '';
-        const dur = +el.dataset.duration || 1200;
-        const start = performance.now();
-        function tick(now) {
-          const t = Math.min(1, (now - start) / dur);
-          const eased = 1 - Math.pow(1 - t, 3);
-          const val = Math.round(to * eased);
-          el.textContent = val.toLocaleString('pt-BR') + suffix;
-          if (t < 1) requestAnimationFrame(tick);
+    /* ─── Feature 14: Background layers por slide ─────────────────── */
+    (function initBackgroundLayers() {
+      document.querySelectorAll('.slide').forEach(slide => {
+        if (!slide.dataset.backgroundColor && !slide.dataset.backgroundGradient && !slide.dataset.backgroundImage) return;
+        const bg = document.createElement('div');
+        bg.className = 'slide-bg';
+        if (slide.dataset.backgroundGradient) {
+          bg.style.background = slide.dataset.backgroundGradient;
+        } else if (slide.dataset.backgroundColor) {
+          bg.style.background = slide.dataset.backgroundColor;
+        } else if (slide.dataset.backgroundImage) {
+          bg.style.backgroundImage = 'url(' + slide.dataset.backgroundImage + ')';
+          bg.style.backgroundSize = slide.dataset.backgroundSize || 'cover';
+          bg.style.backgroundPosition = slide.dataset.backgroundPosition || 'center';
+          bg.style.opacity = slide.dataset.backgroundOpacity || '1';
         }
-        requestAnimationFrame(tick);
+        slide.insertBefore(bg, slide.firstChild);
       });
+    })();
+
+    /* ─── Feature 9: AutoFitText ─────────────────────────────────── */
+    function fitText(el) {
+      try {
+        const parent = el.parentElement;
+        if (!parent) return;
+        let min = 10, max = 300, mid;
+        el.style.fontSize = max + 'px';
+        while (max - min > 1) {
+          mid = (min + max) / 2;
+          el.style.fontSize = mid + 'px';
+          if (el.scrollWidth > parent.clientWidth || el.scrollHeight > parent.clientHeight) max = mid;
+          else min = mid;
+        }
+        el.style.fontSize = min + 'px';
+      } catch (err) {}
+    }
+    document.querySelectorAll('[data-fit-text]').forEach(el => {
+      fitText(el);
+      try {
+        new ResizeObserver(() => fitText(el)).observe(el.parentElement);
+      } catch (err) {}
+    });
+
+    /* ─── Engine principal ────────────────────────────────────────── */
+    const slides = [...document.querySelectorAll('.slide')];
+    const fragmentsByIdx = slides.map(s => {
+      const frags = [...s.querySelectorAll('[data-fragment]')];
+      frags.sort((a, b) => {
+        const ai = parseInt(a.dataset.fragmentIndex ?? '999', 10);
+        const bi = parseInt(b.dataset.fragmentIndex ?? '999', 10);
+        return ai - bi;
+      });
+      return frags;
+    });
+    const fragShownByIdx = slides.map(() => 0);
+    let idx = 0;
+
+    function updateProgress() {
+      const pct = ((idx + 1) / slides.length) * 100;
+      const bar = document.getElementById('progress-bar');
+      if (bar) bar.style.width = pct + '%';
     }
 
-    function render(targetIdx, direction = 1) {
-      targetIdx = Math.max(1, Math.min(total, targetIdx));
-      slides.forEach((s, i) => {
-        const idx = i + 1;
-        s.classList.toggle('is-active', idx === targetIdx);
-        s.classList.toggle('is-prev', idx < targetIdx);
-        if (idx !== targetIdx) {
-          // reset fragments e counters quando sai do slide
-          fragmentsOf(idx).forEach(f => f.classList.remove('is-visible'));
-          s.querySelectorAll('[data-counter]').forEach(el => {
-            el.dataset.ran = '0';
-            el.textContent = '0';
+    /* ─── Feature 5: Auto-Animate FLIP ───────────────────────────── */
+    function runAutoAnimate(fromSlide, toSlide) {
+      try {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        if (!fromSlide?.dataset.autoAnimate || !toSlide?.dataset.autoAnimate) return;
+        const froms = [...fromSlide.querySelectorAll('[data-id]')];
+        const tos   = [...toSlide.querySelectorAll('[data-id]')];
+        tos.forEach(to => {
+          const from = froms.find(f => f.dataset.id === to.dataset.id);
+          if (!from) return;
+          const fRect = from.getBoundingClientRect();
+          const tRect = to.getBoundingClientRect();
+          const dx = fRect.left - tRect.left;
+          const dy = fRect.top  - tRect.top;
+          const sx = fRect.width  / (tRect.width  || 1);
+          const sy = fRect.height / (tRect.height || 1);
+          to.animate([
+            { transform: 'translate(' + dx + 'px, ' + dy + 'px) scale(' + sx + ', ' + sy + ')', opacity: getComputedStyle(from).opacity },
+            { transform: 'none', opacity: '1' }
+          ], { duration: 600, easing: 'cubic-bezier(0.22,1,0.36,1)', fill: 'both' });
+        });
+      } catch (err) {}
+    }
+
+    /* ─── Feature 7: Rough Notation ──────────────────────────────── */
+    function initMarks(slide) {
+      try {
+        if (typeof RoughNotation === 'undefined') return;
+        slide.querySelectorAll('[data-mark]').forEach(el => {
+          if (el._rn) return;
+          const type  = el.dataset.mark || 'underline';
+          const color = el.dataset.markColor ||
+            getComputedStyle(document.documentElement).getPropertyValue('--color-accent').trim() ||
+            '#FF6200';
+          const at = parseInt(el.dataset.markAt, 10);
+          const ann = RoughNotation.annotate(el, {
+            type, color, strokeWidth: 2.5, animationDuration: 600, multiline: true
           });
+          el._rn = ann;
+          el._rnAt = isNaN(at) ? null : at;
+          if (el._rnAt === null) {
+            requestAnimationFrame(() => ann.show());
+          }
+        });
+      } catch (err) {}
+    }
+    function checkMarkFragments(slideIdx, fragIdx) {
+      try {
+        if (typeof RoughNotation === 'undefined') return;
+        slides[slideIdx].querySelectorAll('[data-mark][data-mark-at]').forEach(el => {
+          if (el._rn && el._rnAt === fragIdx) el._rn.show();
+        });
+      } catch (err) {}
+    }
+
+    function goto(n) {
+      n = Math.max(0, Math.min(slides.length - 1, n));
+      const prevSlide = slides[idx];
+
+      slides.forEach((s, i) => {
+        s.classList.toggle('is-active', i === n);
+        s.classList.toggle('is-prev', i < n);
+      });
+
+      if (idx !== n) {
+        requestAnimationFrame(() => runAutoAnimate(prevSlide, slides[n]));
+      }
+
+      if (idx !== n) {
+        fragmentsByIdx[idx].forEach(f => {
+          f.classList.remove('is-visible', 'was-visible');
+        });
+        fragShownByIdx[idx] = 0;
+      }
+
+      idx = n;
+      const cur = document.getElementById('cur');
+      const tot = document.getElementById('tot');
+      if (cur) cur.textContent = n + 1;
+      if (tot) tot.textContent = slides.length;
+      history.replaceState(null, '', '#s' + (n + 1));
+      updateProgress();
+
+      requestAnimationFrame(() => initMarks(slides[idx]));
+      requestAnimationFrame(() => autoFitSlide(slides[idx]));
+    }
+
+    /* ─── autoFitSlide — overflow guard 1-pass com cache ─────────── */
+    let __vwCache = window.innerWidth + 'x' + window.innerHeight;
+    function autoFitSlide(slide) {
+      if (!slide) return;
+      if (slide.__fitFor === __vwCache) return;
+      slide.__fitFor = __vwCache;
+      const targets = slide.querySelectorAll(
+        '.title-mega, .title-xl, .title-lg, .fact-val, .statement-text, .quote-text, .big-num__val'
+      );
+      targets.forEach(t => t.style.removeProperty('font-size'));
+      if (!targets.length) return;
+      requestAnimationFrame(() => {
+        const cw = slide.clientWidth, ch = slide.clientHeight;
+        const sw = slide.scrollWidth, sh = slide.scrollHeight;
+        if (sw <= cw + 1 && sh <= ch + 1) return;
+        const scale = Math.min(cw / sw, ch / sh) * 0.97;
+        if (scale >= 1 || scale <= 0) return;
+        targets.forEach(t => {
+          const cur = parseFloat(getComputedStyle(t).fontSize);
+          const next = Math.max(18, cur * scale);
+          t.style.fontSize = next + 'px';
+        });
+      });
+    }
+    let __resizeRaf = 0;
+    window.addEventListener('resize', () => {
+      __vwCache = window.innerWidth + 'x' + window.innerHeight;
+      slides.forEach(s => { s.__fitFor = null; });
+      if (__resizeRaf) cancelAnimationFrame(__resizeRaf);
+      __resizeRaf = requestAnimationFrame(() => {
+        const active = document.querySelector('.slide.is-active');
+        if (active) autoFitSlide(active);
+      });
+    });
+
+    function nextFragment() {
+      const frags = fragmentsByIdx[idx];
+      const shown = fragShownByIdx[idx];
+      if (shown < frags.length) {
+        const frag = frags[shown];
+        const fragType = frag.dataset.fragment;
+        if (shown > 0) {
+          const prevFrag = frags[shown - 1];
+          const prevType = prevFrag.dataset.fragment;
+          if (prevType === 'current-visible' || prevType === 'highlight-current' || prevType === 'fade-in-then-out') {
+            prevFrag.classList.remove('is-visible');
+            prevFrag.classList.add('was-visible');
+          }
+        }
+        frag.classList.add('is-visible');
+        fragShownByIdx[idx]++;
+        checkMarkFragments(idx, fragShownByIdx[idx]);
+        return true;
+      }
+      return false;
+    }
+    function next() { if (!nextFragment()) goto(idx + 1); }
+    function prev() { goto(idx - 1); }
+
+    /* ─── Feature 4: Overview Mode ──────────────────────────────── */
+    function snapshotViewportForOverview() {
+      document.documentElement.style.setProperty('--slide-w', window.innerWidth + 'px');
+      document.documentElement.style.setProperty('--slide-h', window.innerHeight + 'px');
+    }
+    function toggleOverview() {
+      const willOpen = !document.body.classList.contains('is-overview');
+      if (willOpen) {
+        snapshotViewportForOverview();
+        document.documentElement.classList.add('is-overview');
+        document.body.classList.add('is-overview');
+        requestAnimationFrame(() => {
+          try { slides[idx].scrollIntoView({ behavior: 'auto', block: 'center' }); } catch {}
+        });
+      } else {
+        document.documentElement.classList.remove('is-overview');
+        document.body.classList.remove('is-overview');
+        window.scrollTo(0, 0);
+      }
+    }
+    window.addEventListener('resize', () => {
+      if (document.body.classList.contains('is-overview')) snapshotViewportForOverview();
+    });
+    document.querySelector('.deck').addEventListener('click', e => {
+      if (!document.body.classList.contains('is-overview')) return;
+      const sl = e.target.closest('.slide');
+      if (sl) {
+        goto(slides.indexOf(sl));
+        document.documentElement.classList.remove('is-overview');
+        document.body.classList.remove('is-overview');
+        window.scrollTo(0, 0);
+      }
+    });
+
+    /* ─── Shortcuts overlay ────────────────────────────────────── */
+    const shortcutsOverlay = document.getElementById('shortcuts-overlay');
+    const shortcutsClose   = document.getElementById('shortcuts-close');
+    function showShortcuts() { if (shortcutsOverlay) shortcutsOverlay.classList.add('is-open'); }
+    function hideShortcuts() { if (shortcutsOverlay) shortcutsOverlay.classList.remove('is-open'); }
+    if (shortcutsClose) shortcutsClose.addEventListener('click', hideShortcuts);
+    if (shortcutsOverlay) shortcutsOverlay.addEventListener('click', e => {
+      if (e.target === shortcutsOverlay) hideShortcuts();
+    });
+
+    /* ─── Keyboard handler ───────────────────────────────────────── */
+    addEventListener('keydown', e => {
+      if (shortcutsOverlay?.classList.contains('is-open')) {
+        if (e.key === 'Escape') { e.preventDefault(); hideShortcuts(); }
+        return;
+      }
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault(); next();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault(); prev();
+      } else if (e.key === 'Home') {
+        goto(0);
+      } else if (e.key === 'End') {
+        goto(slides.length - 1);
+      } else if (e.key === 'o' || e.key === 'O') {
+        toggleOverview();
+      } else if (e.key === 'Escape') {
+        if (document.body.classList.contains('is-overview')) {
+          document.documentElement.classList.remove('is-overview');
+          document.body.classList.remove('is-overview');
+          window.scrollTo(0, 0);
+        } else if (document.fullscreenElement) {
+          document.exitFullscreen();
+        }
+      } else if (e.key === 'f' || e.key === 'F') {
+        document.documentElement.requestFullscreen?.();
+      } else if (e.key === '?') {
+        showShortcuts();
+      }
+    });
+
+    /* ─── HUD ────────────────────────────────────────────────────── */
+    document.querySelector('.hud__prev').addEventListener('click', prev);
+    document.querySelector('.hud__next').addEventListener('click', next);
+    document.querySelector('.hud__fs').addEventListener('click', () => {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else document.documentElement.requestFullscreen?.();
+    });
+    document.querySelector('.hud__overview').addEventListener('click', toggleOverview);
+    document.querySelector('.theme-toggle').addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme');
+      const nx = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', nx);
+      try { localStorage.setItem('theme', nx); } catch {}
+      // Re-render charts if Chart.js detected theme change
+      if (window.__chartsRebuild) window.__chartsRebuild();
+    });
+
+    /* ─── Inicializar via hash ──────────────────────────────────── */
+    const fromHash = parseInt((location.hash.match(/^#s(\d+)$/) || [])[1], 10);
+    goto(fromHash ? fromHash - 1 : 0);
+
+    /* ─── Feature 1: Wake Lock ──────────────────────────────────── */
+    let wakeLock = null;
+    async function acquireWakeLock() {
+      try {
+        if ('wakeLock' in navigator) {
+          wakeLock = await navigator.wakeLock.request('screen');
+        }
+      } catch (err) {}
+    }
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') acquireWakeLock();
+    });
+    acquireWakeLock();
+
+    /* ════════════════════════════════════════════════════════════════
+       CHARTS — Chart.js (composição preservada + theme-aware)
+       ════════════════════════════════════════════════════════════════ */
+    const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+    let chartMixed = null;
+    let chartDonut = null;
+
+    function buildChartMixed() {
+      const el = document.getElementById('chart-mixed');
+      if (!el) return;
+      if (chartMixed) chartMixed.destroy();
+      chartMixed = new Chart(el, {
+        type: 'bar',
+        data: {
+          labels: ['Jan/24', 'Abr/24', 'Jul/24', 'Out/24', 'Jan/25', 'Abr/25', 'Jul/25', 'Out/25', 'Jan/26', 'Abr/26'],
+          datasets: [
+            {
+              type: 'bar',
+              label: 'Eventos diários (bi)',
+              data: [0.04, 0.12, 0.28, 0.45, 0.72, 1.10, 1.55, 1.92, 2.35, 2.80],
+              backgroundColor: css('--color-accent-dim'),
+              borderColor: css('--color-accent'),
+              borderWidth: 2,
+              borderRadius: 4,
+              yAxisID: 'y',
+            },
+            {
+              type: 'line',
+              label: 'Squads produtores',
+              data: [1, 3, 6, 9, 14, 21, 29, 36, 42, 47],
+              borderColor: css('--color-info'),
+              backgroundColor: 'transparent',
+              borderWidth: 2.5,
+              pointRadius: 3,
+              pointBackgroundColor: css('--color-info'),
+              tension: 0.35,
+              yAxisID: 'y1',
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y +
+                  (ctx.dataset.yAxisID === 'y' ? ' bi' : ' squads')
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { color: css('--color-fg-muted'), font: { size: 11 } }
+            },
+            y: {
+              position: 'left',
+              min: 0,
+              grid: { color: css('--color-border') },
+              ticks: {
+                color: css('--color-accent'),
+                callback: v => v + ' bi'
+              },
+              title: { display: false }
+            },
+            y1: {
+              position: 'right',
+              min: 0,
+              grid: { display: false },
+              ticks: {
+                color: css('--color-info'),
+                callback: v => v
+              }
+            }
+          }
         }
       });
-      state.current = targetIdx;
-      state.fragment = 0;
-      applyFragments(targetIdx, 0);
-      runCounters(targetIdx);
-      document.getElementById('current-slide').textContent = targetIdx;
-      document.getElementById('progress-bar').style.width = ((targetIdx / total) * 100) + '%';
-      window.location.hash = '#' + targetIdx;
-      // Toggle disabled state
-      document.querySelector('[data-prev]').disabled = targetIdx === 1;
-      document.querySelector('[data-next]').disabled = targetIdx === total && state.fragment >= fragmentsOf(targetIdx).length;
     }
 
-    function next() {
-      const frags = fragmentsOf(state.current);
-      if (state.fragment < frags.length) {
-        state.fragment++;
-        applyFragments(state.current, state.fragment);
-        document.querySelector('[data-next]').disabled = state.current === total && state.fragment >= frags.length;
-        return;
-      }
-      if (state.current < total) render(state.current + 1, 1);
+    function buildChartDonut() {
+      const el = document.getElementById('chart-donut');
+      if (!el) return;
+      if (chartDonut) chartDonut.destroy();
+      chartDonut = new Chart(el, {
+        type: 'doughnut',
+        data: {
+          labels: ['Pagamentos', 'Crédito', 'Investimentos', 'Cartão', 'KYC/Cadastro', 'Outros'],
+          datasets: [{
+            data: [42, 21, 14, 12, 8, 3],
+            backgroundColor: [
+              css('--color-accent'),
+              css('--color-info'),
+              css('--color-teal'),
+              css('--color-sage'),
+              css('--color-plum'),
+              css('--color-fg-subtle')
+            ],
+            borderWidth: 2,
+            borderColor: css('--color-bg-elevated'),
+            hoverOffset: 8,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '62%',
+          plugins: {
+            legend: {
+              position: 'right',
+              labels: {
+                color: css('--color-fg-muted'),
+                font: { size: 12 },
+                padding: 12,
+                boxWidth: 14
+              }
+            },
+            tooltip: {
+              callbacks: { label: ctx => ctx.label + ': ' + ctx.parsed + '%' }
+            }
+          }
+        }
+      });
     }
 
-    function prev() {
-      const frags = fragmentsOf(state.current);
-      if (state.fragment > 0) {
-        state.fragment--;
-        applyFragments(state.current, state.fragment);
-        return;
-      }
-      if (state.current > 1) render(state.current - 1, -1);
+    function buildAllCharts() {
+      buildChartMixed();
+      buildChartDonut();
     }
+    window.__chartsRebuild = buildAllCharts;
 
-    function goTo(idx) {
-      render(idx);
+    // Init when DOM + fonts ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', buildAllCharts);
+    } else {
+      buildAllCharts();
     }
-
-    // ─── Inicialização via hash ──────────────────────
-    const initial = parseInt((window.location.hash || '').replace('#', ''), 10);
-    render(Number.isFinite(initial) && initial >= 1 && initial <= total ? initial : 1);
-
-    window.addEventListener('hashchange', () => {
-      const h = parseInt((window.location.hash || '').replace('#', ''), 10);
-      if (Number.isFinite(h) && h !== state.current) render(h);
-    });
-
-    // ─── Controles ──────────────────────────────────
-    document.querySelector('[data-next]').addEventListener('click', next);
-    document.querySelector('[data-prev]').addEventListener('click', prev);
-    document.querySelector('[data-next-zone]').addEventListener('click', next);
-    document.querySelector('[data-prev-zone]').addEventListener('click', prev);
-
-    document.querySelector('[data-fullscreen]').addEventListener('click', () => {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(() => {});
-        document.body.classList.add('is-fullscreen');
-      } else {
-        document.exitFullscreen();
-        document.body.classList.remove('is-fullscreen');
-      }
-    });
-    document.addEventListener('fullscreenchange', () => {
-      document.body.classList.toggle('is-fullscreen', !!document.fullscreenElement);
-    });
-
-    // ─── Teclado ────────────────────────────────────
-    document.addEventListener('keydown', (e) => {
-      if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
-      switch (e.key) {
-        case 'ArrowRight':
-        case 'PageDown':
-        case ' ':
-          e.preventDefault(); next(); break;
-        case 'ArrowLeft':
-        case 'PageUp':
-          e.preventDefault(); prev(); break;
-        case 'Home':
-          e.preventDefault(); goTo(1); break;
-        case 'End':
-          e.preventDefault(); goTo(total); break;
-        case 'f':
-        case 'F':
-          document.querySelector('[data-fullscreen]').click(); break;
-      }
-    });
-
-    // ─── Swipe touch ────────────────────────────────
-    let touchStartX = 0;
-    document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; }, { passive: true });
-    document.addEventListener('touchend', (e) => {
-      const dx = e.changedTouches[0].clientX - touchStartX;
-      if (Math.abs(dx) < 50) return;
-      if (dx < 0) next(); else prev();
-    }, { passive: true });
-
-    // ─── Idle: esconde controles após 3s sem mouse move ──
-    let idleTimer;
-    function resetIdle() {
-      document.body.classList.remove('is-idle');
-      clearTimeout(idleTimer);
-      idleTimer = setTimeout(() => document.body.classList.add('is-idle'), 3000);
-    }
-    ['mousemove', 'keydown', 'touchstart', 'click'].forEach(ev =>
-      document.addEventListener(ev, resetIdle, { passive: true })
-    );
-    resetIdle();
   </script>
-
 </body>
 </html>

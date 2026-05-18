@@ -1,7 +1,7 @@
 {
   "name": "slideless",
-  "version": "0.2.0",
-  "description": "Documentos web interativos single-file (handbook, hub, scrollytelling, site, deck) com design system Itaú e validador determinístico — substitui PPT para comunicação interna.",
+  "version": "3.2.0",
+  "description": "Documentos web interativos single-file (handbook, hub, scrollytelling, site, deck, report) com design system Itaú, dark mode nativo, overflow guard + autoFitSlide, hover apresentador em tabelas, WCAG AA e validador determinístico — substitui PPT para comunicação interna.",
   "author": {
     "name": "Itaú — Comunicação Interna"
   },
@@ -9,12 +9,17 @@
     "html",
     "handbook",
     "deck",
+    "report",
+    "scrollytelling",
+    "hub",
+    "site",
     "pitch",
     "documentation",
     "single-file",
     "dark-mode",
     "itau",
-    "internal-comms"
+    "internal-comms",
+    "pdf-export"
   ],
   "entry": "SKILL.md",
   "commands": "commands/",
