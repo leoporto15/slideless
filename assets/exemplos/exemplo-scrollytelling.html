@@ -637,6 +637,31 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+  <!-- slideless · guard de CDN do Chart.js (css-patterns §5.0b): se o CDN for bloqueado
+       (intranet), um shim no-op evita que Chart.defaults / new Chart matem o script, e
+       cada canvas de gráfico vira uma nota de fallback. No-op total quando o CDN carrega. -->
+  <script>
+  if (typeof Chart === 'undefined') {
+    var __slStub = function () {
+      var fn = function () { return __slStub(); };
+      return new Proxy(fn, {
+        get: function () { return __slStub(); },
+        apply: function () { return __slStub(); },
+        construct: function () { return __slStub(); }
+      });
+    };
+    window.Chart = __slStub();
+    addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('canvas[id^="chart"], canvas[id^="spark"], canvas[aria-label]').forEach(function (c) {
+        if (c.hasAttribute('data-overdrive')) return;
+        var n = document.createElement('p');
+        n.style.cssText = 'color:var(--color-fg-muted);text-align:center;padding:3rem 1rem;font-size:.95rem';
+        n.textContent = 'Gráfico indisponível offline (requer Chart.js via internet).';
+        if (c.parentNode) c.parentNode.replaceChild(n, c);
+      });
+    });
+  }
+  </script>
   <script>
     /* ════════════════════════════════════════════════════════════════
        ENGINE (preservado do template): tema, progress bar, reveals
