@@ -2,7 +2,8 @@
 
 SPA single-file com hash routing entre 2-5 views. Para microsites, lançamentos internos, portfólio de squad.
 
-**Referência mental:** Linear, Vercel guides, Notion product pages.
+**Referência mental:** Linear, Stripe (product pages), Vercel guides — cada view com identidade própria, não landing-page de template.
+**Teste de falha:** se as 2-5 views têm o mesmo ritmo (título centrado + grid), o documento falhou a direção de arte.
 **Exemplo:** [../../assets/exemplos/exemplo-site.html](../../assets/exemplos/exemplo-site.html).
 **Template vazio:** [../../assets/templates/template-site.html](../../assets/templates/template-site.html).
 

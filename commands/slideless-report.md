@@ -25,14 +25,16 @@ Se o usuário pedir "relatório" e descrever algo curto/visual, talvez ele queir
 
 ## Procedimento
 
+0. **Parti (obrigatório)** — [../references/direcao-de-arte.md](../references/direcao-de-arte.md): 7 decisões + `nao-vai-ter` derivadas do assunto, capa/kit/superfície ≠ exemplo canônico, bloco no `<head>`. Defaults do registro `institucional-impresso`: kit 02, superfície flat, **motion estático** (zero keyframe de entrada — perfil estrutural), assinatura M0 compositiva. A 7ª decisão é `ambicao` ([../references/ambicao.md](../references/ambicao.md)) — **default A1-contido** para report (vai virar PDF assinado; **A3 é proibido** em registro sóbrio — falha P10). Um report A2 sóbrio fica materialmente mais rico (fio, grain estático, anotação viva no gráfico), nunca mais saltitante; `momento-wow` só se A2 deliberado, e omitido em A1.
 1. Copiar [../assets/templates/template-report.html](../assets/templates/template-report.html).
-2. Substituir placeholders: `{{TÍTULO}}`, `{{ORG}}`, `{{DOC_NUM}}`, `{{DATA}}`.
-3. Aplicar tema substituindo `/* SLIDELESS:THEME */` pelo conteúdo de [../assets/temas/itau.css](../assets/temas/itau.css) ou neutro.
+2. Substituir placeholders: `{{TÍTULO}}`, `{{ORG}}`, `{{DOC_NUM}}`, `{{DATA}}`. Slot `SLIDELESS:TYPE-KIT` com o `<link>` do kit + `:root` do kit antes do tema.
+3. Aplicar tema substituindo `/* SLIDELESS:THEME */` pelo conteúdo de [../assets/temas/itau.css](../assets/temas/itau.css) ou neutro (MARCA intacta; DIREÇÃO conforme o parti).
 4. Construir o **sumário executivo** (`.report-executive-summary`) — 3-5 parágrafos densos no topo, antes das seções, com os 2-3 takeaways centrais e os números-âncora destacados.
 5. Para cada seção: usar `<section class="report-section" id="sN">` com `<h2>` no padrão `N. Título`. A TOC é gerada automaticamente pelo JS a partir dos `id="sN"`.
 6. **Footnotes**: usar `<sup><a href="#fnN">[N]</a></sup>` no texto + `<li id="fnN">` em `.report-footnotes` ao final. Link mútuo (clique no número volta).
-7. **Tabelas**: `<table class="data-table">` semântico (não bullets); 4+ linhas ou 3+ colunas → sempre tabela. Linhas relevantes para a leitura ganham `class="is-emphasis"` (background sutil + bold).
-8. **Gráficos**: Chart.js inline com escala Y começando em 0 para magnitudes, unidades nos ticks. **Regra de fidelidade**: dados completos da fonte, composição preservada (bar+line junto = 1 chart misto), nunca omitir pontos.
+7. **Tabelas**: `<table class="data-table">` semântico (não bullets); 4+ linhas ou 3+ colunas → sempre tabela. Tratamento broadsheet: sem card/sombra, números à direita com `tabular-nums`, linha de total com fio duplo (`border-top: 3px double`). Linhas relevantes ganham `class="is-emphasis"`.
+8. **Gráficos**: bloco §5.0 de css-patterns.md ANTES do primeiro chart (Chart.defaults + formatação pt-BR); escala Y em 0 para magnitudes, unidades nos ticks, tension 0 (dado discreto), sem legenda default com ≤3 séries. **Regra de fidelidade**: dados completos da fonte, composição preservada (bar+line junto = 1 chart misto), nunca omitir pontos.
+8b. **Microtipografia** (vitrine do modelo): aspas curvas pt-BR, NBSP valor↔unidade, travessão com espaços, `text-wrap: balance/pretty`.
 9. **CSS @print** já está no template — não simplificar. Garante quebra de página correta, oculta navegação interativa, tipografia ajustada para A4.
 
 ## Anti-patterns críticos

@@ -13,7 +13,7 @@ Você foi invocado para exportar PDF.
    - demais → retrato A4
 3. Rodar:
    ```bash
-   python ../scripts/exportar_pdf.py <arquivo.html> --output /mnt/user-data/outputs/<nome>.pdf
+   python ../scripts/exportar_pdf.py <arquivo.html> --output outputs/<nome>.pdf
    ```
 4. Se o script detectar `.deck`, passa orientation=landscape automaticamente.
 5. `printBackground=true` é obrigatório (preserva cores e dark mode se ativo).

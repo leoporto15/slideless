@@ -1,29 +1,26 @@
 {
   "name": "slideless",
-  "version": "3.2.0",
-  "description": "Documentos web interativos single-file (handbook, hub, scrollytelling, site, deck, report) com design system Itaú, dark mode nativo, overflow guard + autoFitSlide, hover apresentador em tabelas, WCAG AA e validador determinístico — substitui PPT para comunicação interna.",
+  "version": "5.0.0",
+  "description": "Substitui PowerPoint por documentos web HTML single-file (deck, handbook, hub, scrollytelling, site, report). Cada documento nasce de uma direção de arte derivada do conteúdo (mecanismo parti, anti-slop), com tipografia cinética e materialidade cutting-edge, dark mode nativo, WCAG AA e validador determinístico. 31 comandos.",
   "author": {
     "name": "Itaú — Comunicação Interna"
   },
+  "license": "MIT",
   "keywords": [
+    "skill",
     "html",
-    "handbook",
+    "single-file",
+    "presentations",
     "deck",
+    "handbook",
     "report",
     "scrollytelling",
     "hub",
     "site",
-    "pitch",
-    "documentation",
-    "single-file",
+    "design-system",
+    "art-direction",
     "dark-mode",
-    "itau",
-    "internal-comms",
+    "accessibility",
     "pdf-export"
-  ],
-  "entry": "SKILL.md",
-  "commands": "commands/",
-  "references": "references/",
-  "assets": "assets/",
-  "scripts": "scripts/"
+  ]
 }

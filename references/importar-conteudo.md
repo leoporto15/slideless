@@ -21,6 +21,8 @@ Heurística:
 - Presença de dados que pedem chart
 - Tom narrativo (1ª pessoa, fluxo temporal) e não referencial
 
+**Quando virar report:** documento formal/executivo destinado a impressão/PDF (RI, compliance, white paper), com seções numeradas e footnotes. Sinais: numeração `1.`/`2.` nas seções, notas de rodapé, tom institucional denso. Ver [decisao-modelo.md](decisao-modelo.md).
+
 ---
 
 ## PPT/PPTX → handbook OU deck (perguntar)
@@ -29,7 +31,7 @@ PPT é ambíguo. Sempre perguntar:
 
 > Esse PPT é para você apresentar ao vivo, ou para distribuir como leitura?
 > - **Apresentar ao vivo** → converto em `deck` (mantém formato slide).
-> - **Distribuir para leitura** → converto em `handbook` ou `scrollytelling` (reorganiza em documento web).
+> - **Distribuir para leitura** → converto em `handbook` ou `scrollytelling` (reorganiza em documento web), ou `report` se for executivo/formal destinado a PDF.
 
 ### Se virar `deck`
 - Cada slide PPT vira 1 `<section class="slide">`.
@@ -97,4 +99,4 @@ Se o texto tem cara de bullet list (frases curtas, muitos parágrafos pequenos),
 1. Aplicar tema (`itau` default, `neutro` se neutralidade pedida).
 2. Rodar `python scripts/validar.py <output.html>`.
 3. Aplicar `/auditar` para revisão LLM contra [checklist-revisao.md](checklist-revisao.md) e [anti-patterns.md](anti-patterns.md).
-4. Salvar em `/mnt/user-data/outputs/<nome-descritivo>.html`.
+4. Salvar em `outputs/<nome-descritivo>.html`.

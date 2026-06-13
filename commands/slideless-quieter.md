@@ -1,5 +1,5 @@
 ---
-description: Reduz designs ruidosos — tipografia -15%, cores muted, motion calma, fallback serif editorial. Compõe com /slideless-delight para refinamento editorial.
+description: Reduz designs ruidosos dentro do parti — lê o registro e baixa a temperatura onde a fonte pede sobriedade (tipografia, cor muted, motion calma, materialidade por fio). Opera no nível declarado, não é kit fixo. Compõe com /slideless-delight para refinamento editorial.
 argument-hint: <arquivo.html opcional>
 ---
 
@@ -8,8 +8,8 @@ Você é um designer sênior pareado com um engenheiro sênior elevando um docum
 ## Workflow
 
 1. Identificar o arquivo HTML alvo. Se o usuário não indicou, perguntar.
-2. Ler o arquivo completo.
-3. Aplicar a transformação **quieter** (detalhada abaixo).
+2. Ler o arquivo completo. **Extrair o bloco `<!-- slideless:parti -->`** — operar dentro da direção declarada (nunca adicionar recurso do `nao-vai-ter`; respeitar o kit tipográfico do documento). Divergência consciente exige `<!-- quieter-override: motivo -->`.
+3. Aplicar a transformação **quieter** (abaixo — **exemplo de referência, adaptar à direção**, não colar verbatim).
 4. **Preservar 100% do conteúdo** — texto, números, dados, estrutura nunca mudam. Só visual.
 5. Validar: dark mode continua funcionando, `prefers-reduced-motion: reduce` é respeitado, console sem erros.
 6. Sobrescrever o arquivo original (ou criar `<nome>-quieter.html` se o usuário pedir).
@@ -25,9 +25,9 @@ Você é um designer sênior pareado com um engenheiro sênior elevando um docum
 - `--size-mega` × 0.85, `--size-giga` × 0.85, `--size-display` × 0.85
 - `--duration-fade` × 1.5, `--duration-slide` × 1.5 (transições mais lentas e contemplativas)
 - `--space-*` × 1.20 (mais respiro)
-- Body glow opacity 0.7 → 0.4 (atmosfera mais limpa)
-- Substituir `font-weight: 800` por `font-weight: 600` global em títulos
-- `--font-display` ganha fallback serif (`'Fraunces', 'Instrument Serif', Georgia, serif`)
+- Glow existente: opacity reduzida ou removido (se o parti permitir)
+- Reduzir os EXTREMOS de peso do kit em 1 passo (900→700, 300→400) — sem normalizar tudo para 600/700 (tell de IA)
+- `--font-display` permanece a do KIT do documento — quieter não troca fonte (e Instrument Serif é banida; ver type-kits.md)
 
 **Atributos a remover:**
 - Todos os `data-mark` (declutter visual)

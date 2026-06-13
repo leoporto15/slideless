@@ -14,10 +14,7 @@ Você foi invocado para trocar tema.
    - Bloco `[data-theme="dark"] { … }`.
    - Reset/base, callouts, code, toggle, theme-toggle, cards, métricas, timeline — **manter** (são compartilhados, só usam `var(--…)`).
 4. Substituir pelo conteúdo do tema-alvo, vindo de [../assets/temas/itau.css](../assets/temas/itau.css) ou [../assets/temas/neutro.css](../assets/temas/neutro.css).
-5. **Fontes:**
-   - `itau` → garantir Inter no `<link href="…">` Google Fonts (não precisa carregar Itaú Display/Text — fallback para Inter é automático).
-   - `neutro` → idem (Inter cobre).
-   - `deck` → precisa peso 800: `family=Inter:wght@400;500;600;700;800`.
+5. **Fontes:** trocar tema NÃO troca o kit tipográfico do documento — o kit é decisão de direção de arte ([../references/type-kits.md](../references/type-kits.md)), independente do tema. Manter o `<link>` do kit existente. Se o documento for legado (Inter como display, sem kit), avisar o usuário e sugerir `/polir` com escolha de kit.
 6. **Logo:** se tema = `itau`, manter logo Itaú no topbar; se `neutro`, considerar remover ou substituir.
 7. Rodar validador.
 
@@ -25,3 +22,9 @@ Você foi invocado para trocar tema.
 
 - Esquecer override de algum `--color-*` em `[data-theme="dark"]` após troca → dark mode quebrado.
 - Não trocar fontes ao mudar de `itau` para `neutro` (Itaú Display continua referenciada mesmo sem efeito).
+
+## Migração de documentos antigos (pré-v4)
+
+Os temas v4 NÃO contêm mais `[data-reveal]` nem `.card:hover { translateY }` — motion e affordance são decisões do parti. Ao trocar o tema de um documento antigo que usa `data-reveal` no HTML:
+1. Verificar se o documento tem o CSS de reveal próprio inline (documentos antigos têm — não quebram).
+2. Se o reveal sumir após a troca, colar o perfil de motion equivalente de [../references/direcao-de-arte.md](../references/direcao-de-arte.md) (perfil `editorial`) em vez de restaurar o bloco antigo.

@@ -1,5 +1,5 @@
 ---
-description: Adiciona movimento intencional — heroIn, Auto-Animate FLIP, counters, stagger reveals. Respeita prefers-reduced-motion.
+description: Adiciona movimento intencional dentro do parti — lê o perfil de motion e o nível de ambição declarados e coreografa só o momento assinatura (heroIn, FLIP, reveal de figura, número-tese). Não é kit fixo; respeita prefers-reduced-motion e o nao-vai-ter.
 argument-hint: <arquivo.html opcional>
 ---
 
@@ -8,8 +8,8 @@ Você é um designer sênior pareado com um engenheiro sênior elevando um docum
 ## Workflow
 
 1. Identificar o arquivo HTML alvo. Se o usuário não indicou, perguntar.
-2. Ler o arquivo completo.
-3. Aplicar a transformação **animate** (detalhada abaixo).
+2. Ler o arquivo completo. **Extrair o bloco `<!-- slideless:parti -->`**: o perfil de `motion` e o nível de `ambicao` declarados MANDAM (não é kit fixo — opera no que o parti pediu). `motion: estatico` → /animate é proibido de adicionar entrada (avisar o usuário e parar). `editorial` → só figuras/dados, 1 gesto. `cinematico` → até 3 gestos por papel. Se `ambicao: A2/A3`, coreografar o **momento-wow (W#)** declarado usando a receita de [../references/ambicao.md](../references/ambicao.md) (com `@supports` + estado-final-base + reduced-motion). Nunca adicionar recurso do `nao-vai-ter` (ex.: `counter-animado`, `fade-up`, `stagger-linear`).
+3. Coreografar APENAS o momento assinatura do parti + a gramática por papel — o CSS abaixo é **exemplo de referência, adaptar**, nunca colar o kit inteiro.
 4. **Preservar 100% do conteúdo** — texto, números, dados, estrutura nunca mudam. Só visual/comportamento.
 5. Validar: dark mode continua funcionando, `prefers-reduced-motion: reduce` é respeitado, console sem erros.
 6. Sobrescrever o arquivo original (ou criar `<nome>-animate.html` se o usuário pedir).
@@ -37,7 +37,9 @@ Você é um designer sênior pareado com um engenheiro sênior elevando um docum
 .slide [data-anim] { opacity: 0; transform: translateY(28px); transition: opacity 800ms var(--ease-out), transform 800ms var(--ease-out); }
 .slide.is-active [data-anim] { opacity: 1; transform: translateY(0); transition-delay: calc(var(--i, 0) * 70ms + 250ms); }
 
-/* Counter */
+/* Counter — APENAS se o parti declarar o número-tese como momento-wow M1/W2.
+   tabular-nums obrigatório. A receita (count + barra sincronizados, @property + fallback
+   em texto real) é o W2 de ../references/ambicao.md — copiar de lá, não reescrever. */
 .counter { font-variant-numeric: tabular-nums; }
 
 /* Reveal on scroll (handbook/scrollytelling) */
@@ -50,40 +52,23 @@ Você é um designer sênior pareado com um engenheiro sênior elevando um docum
 }
 ```
 
-**JS a adicionar (antes do `</body>`):**
+**Counter (número-tese) — NÃO colar JS de count-up aqui.** `counter-animado` é item do `nao-vai-ter`: só é legítimo quando o parti declara o número-tese como momento-wow **M1/W2**. Nesse caso, **copiar a receita W2 de [../references/ambicao.md](../references/ambicao.md)** — counter + barra crescem sincronizados via `@property` + `animation-timeline: view()`, com **fallback em texto real no HTML** (o valor final visível mesmo sem a feature) e branch reduced-motion. É CSS-first (sem `requestAnimationFrame` tween manual, sem varrer `\b\d{2,}\b`). Se o parti não declarar M1/W2, o número entra **estático** e este passo é pulado.
+
+**JS a adicionar (antes do `</body>`) — só o reveal de figura:**
 
 ```js
-/* Counter animation */
-function animateCount(el) {
-  const target = parseFloat(el.dataset.to);
-  const suffix = el.dataset.suffix || '';
-  const dur = 1200;
-  const t0 = performance.now();
-  function tick(t) {
-    const p = Math.min(1, (t - t0) / dur);
-    const eased = 1 - Math.pow(1 - p, 3);
-    el.textContent = (target * eased).toFixed(target % 1 ? 1 : 0) + suffix;
-    if (p < 1) requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-}
-const cio = new IntersectionObserver(es => es.forEach(e => {
-  if (e.isIntersecting) { animateCount(e.target); cio.unobserve(e.target); }
-}), { threshold: 0.5 });
-document.querySelectorAll('.counter').forEach(c => cio.observe(c));
-
-/* Reveal on scroll */
+/* Reveal on scroll — APENAS em figuras/dados marcados, nunca em texto corrido */
 const rio = new IntersectionObserver(es => es.forEach(e => {
   if (e.isIntersecting) { e.target.classList.add('is-visible'); rio.unobserve(e.target); }
 }), { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
 document.querySelectorAll('[data-reveal]').forEach(el => rio.observe(el));
 ```
 
-**Atributos automáticos:**
-- Detectar números puros (regex `\b\d{2,}\b`) dentro de elementos de KPI → envolver com `<span class="counter" data-to="N" data-suffix="...">0</span>` (sufixo capturado fora). Cuidar para não modificar números em tabelas ou texto corrido.
-- Listas (`ul`, `ol`) de 3+ itens em handbook/scrollytelling → adicionar `data-reveal` no `<li>` e `style="--i: N"` sequencial.
-- Cards (`.card`, `.metric-d`) sem `[data-anim]` → adicionar com `style="--i: N"` baseado em ordem no DOM.
-- Slides consecutivos no deck onde detectar mesmo termo/número crescendo (ex: "R$ 1,1 tri" no slide N e "R$ 1,19 tri" no slide N+1 em layout maior) → adicionar `data-auto-animate` em ambos os `<section>` e `data-id="X"` nos elementos correspondentes.
+**Atributos — POR DECISÃO, nunca auto-injeção em massa:**
+- Counter: APENAS no número-tese declarado como momento-wow **M1/W2** no parti — e via a receita W2 de [../references/ambicao.md](../references/ambicao.md) (CSS-first, `@property` + fallback em texto real). Números de apoio entram estáticos. **PROIBIDO** varrer `\b\d{2,}\b` e converter tudo em counter, e **proibido** colar count-up em `requestAnimationFrame` (recai em `counter-animado` do `nao-vai-ter`).
+- Reveal: APENAS em figuras/dados (perfil editorial), ≤40% das sections. **PROIBIDO** adicionar `data-reveal` em listas/cards por ordem do DOM — tabela, texto corrido, TOC e nav nunca animam.
+- Stagger: só dentro de grupo homogêneo (itens da MESMA lista revelada, barras do mesmo gráfico), máx 1 grupo por viewport.
+- Auto-Animate (deck cinemático): slides consecutivos com o mesmo número/termo evoluindo → `data-auto-animate` + `data-id` nos elementos correspondentes.
 
 **Não tocar:** conteúdo, layouts, gráficos.
 

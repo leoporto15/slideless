@@ -1,33 +1,72 @@
 <!DOCTYPE html>
+<!--
+  slideless · exemplo canônico do modelo SCROLLYTELLING
+  Showcase fictício-plausível: dados públicos aproximados usados como placeholder.
+  Engine preservado do template: progress bar + IntersectionObserver de steps.
+  UM gráfico sticky que EVOLUI por step via chart.update() — nunca recriado.
+-->
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Plataforma de Dados Itaú — Como o banco passou a operar dados em tempo real</title>
-  <meta name="description" content="Relato em capítulos sobre a evolução e o impacto da Plataforma de Dados do Itaú entre 2024 e 2025.">
+  <title>Dez anos de Pix — Como o dinheiro mudou de mãos no Brasil</title>
+  <meta name="description" content="Scrollytelling data-driven: a década em que o cheque morreu, a TED virou nicho e o Pix tirou o dinheiro vivo das transações pequenas.">
+
+  <!-- slideless:parti
+  conteudo: 10 anos de Pix — tese: "o Pix matou o dinheiro vivo nas transações pequenas"
+  registro: relatorio-de-bancada (data-driven; o gráfico é o protagonista, o texto é a legenda longa)
+  kit: 01-broadsheet (Newsreader display+corpo serif de jornal + Archivo nos ticks/labels)
+  capa: manchete-broadsheet (título multi-linha peso 800 alinhado à esquerda, fio fino acima, dateline)
+  superficie: flat+vinheta (papel de jornal; grain ESTÁTICO sutil; zero decoração — a tinta é o gráfico)
+  motion: editorial (reveal SÓ no gráfico e anotações; texto corrido nunca anima; progress bar do engine)
+  assinatura: M5 — cena sticky: a banda "lockdown 2020-21" e o label do ponto de inflexão acendem no gráfico exatamente quando o step os narra
+  ambicao: A2-elevado (a curva de adoção do Pix de 10 anos É a história — pede cena que se constrói no scroll)
+  momento-wow: W1 cena scroll-driven (camadas + 5 estados do gráfico já existentes) + W8 anotação viva (já tem annoPlugin) + W3 manchete cinética na capa (Newsreader opsz 6→72 no scroll)
+  nao-vai-ter: glow-radial; card-com-filete; em-italico-accent; aurora-saturada; glass; WebGL; spring-bouncy
+  -->
 
   <!-- Boot script: antes do CSS, evita flash de tema -->
   <script>
     (function() {
       try {
-        var t = localStorage.getItem('theme') ||
-                (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        var t = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         document.documentElement.setAttribute('data-theme', t);
-      } catch (e) {
-        document.documentElement.setAttribute('data-theme', 'light');
-      }
+      } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }
     })();
+    /* régua de craft: troca de tema sem o "respiro" da página inteira (.no-transitions durante o switch) */
+    function setTheme(t) {
+      var h = document.documentElement;
+      h.classList.add('no-transitions');
+      h.setAttribute('data-theme', t);
+      try { localStorage.setItem('theme', t); } catch (e) {}
+      requestAnimationFrame(function () { requestAnimationFrame(function () { h.classList.remove('no-transitions'); }); });
+    }
   </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- SLIDELESS:TYPE-KIT — Kit 01 Broadsheet (type-kits.md) -->
+  <!-- wght como RANGE 300..800 (não pesos discretos): a manchete cinética W3 interpola opsz+wght no scroll -->
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..800;1,6..72,400&family=Archivo:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- SLIDELESS:TYPE-KIT-END -->
 
   <style>
-    /* ────────────────────────────────────────────────────────────────
-       TEMA ITAÚ (inline, tokens completos light + dark)
-       ──────────────────────────────────────────────────────────────── */
+    /* ════════════════════════════════════════════════════════════════
+       KIT 01 — BROADSHEET (slots do kit ANTES do tema)
+       ════════════════════════════════════════════════════════════════ */
     :root {
+      --kit-display: 'Newsreader';   /* manchete wght 800 + opsz alto; ênfase: itálico VERDADEIRO */
+      --kit-text:    'Newsreader';   /* corpo serif 17-19px, registro de jornal */
+      --kit-ui:      'Archivo';      /* dateline, labels, ticks de gráfico */
+      --kit-mono:    'IBM Plex Mono';/* SÓ células .num */
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       SLIDELESS:THEME — tema itau v4 (camada MARCA copiada; camada
+       DIREÇÃO composta conforme o parti: flat+vinheta, luz por fio)
+       ════════════════════════════════════════════════════════════════ */
+    :root {
+      /* [MARCA] cores da marca */
       --itau-orange:     #FF6200;
       --itau-orange-2:   #F88104;
       --itau-orange-3:   #FA9F09;
@@ -35,18 +74,16 @@
       --itau-yellow:     #FBC305;
       --itau-warm-black: #14110d;
 
+      /* [MARCA] paleta semântica (light) — regime bicromático ink+accent;
+         warn-dim entra com papel único: a banda "lockdown" do gráfico-tese */
       --color-accent:        var(--itau-orange);
-      --color-accent-dim:    rgba(255, 98, 0, 0.10);
+      --color-accent-dim:    rgba(255, 98, 0, 0.08);
       --color-accent-fg:     #ffffff;
       --color-accent-hover:  var(--itau-orange-2);
+      --color-warn:          var(--itau-yellow);
+      --color-warn-dim:      rgba(251, 195, 5, 0.16);
 
-      --color-info:          var(--itau-blue-3);
-      --color-info-dim:      rgba(59, 133, 250, 0.10);
-      --color-teal:          #0f766e;
-      --color-teal-dim:      rgba(15, 118, 110, 0.10);
-      --color-success:       #4d7c0f;
-      --color-success-dim:   rgba(77, 124, 15, 0.10);
-
+      /* [MARCA] bg + fg (light) */
       --color-bg:            #faf7f5;
       --color-bg-elevated:   #ffffff;
       --color-bg-sunken:     #f4f1ec;
@@ -56,47 +93,46 @@
       --color-border:        rgba(41, 32, 23, 0.10);
       --color-border-strong: rgba(41, 32, 23, 0.18);
 
-      --glow-warm: radial-gradient(ellipse 80% 60% at 80% 0%, rgba(255, 98, 0, 0.12) 0%, transparent 55%);
-      --glow-cool: radial-gradient(ellipse 70% 50% at 20% 100%, rgba(59, 133, 250, 0.08) 0%, transparent 55%);
-      --glow-hero: radial-gradient(ellipse 90% 70% at 50% 0%, rgba(255, 98, 0, 0.14) 0%, transparent 50%);
+      /* [DIREÇÃO] superfície flat+vinheta — vinheta por sombra interna,
+         sem gradiente (parti: "a tinta é o gráfico") */
+      --vinheta: inset 0 0 16vmin rgba(41, 32, 23, 0.05);
 
-      --font-text:    'Itau Text', 'Inter', -apple-system, system-ui, sans-serif;
-      --font-display: 'Itau Display', 'Fraunces', Georgia, serif;
-      --font-mono:    'JetBrains Mono', 'IBM Plex Mono', 'SF Mono', Consolas, monospace;
+      /* [DIREÇÃO] tipografia — contrato kit ↔ tema */
+      --font-text:    'Itau Text', var(--kit-text, Georgia), 'Times New Roman', serif;
+      --font-display: 'Itau Display', var(--kit-display, Georgia), serif;
+      --font-ui:      'Itau Text', var(--kit-ui, 'Segoe UI'), Arial, sans-serif;
+      --font-mono:    var(--kit-mono, Consolas), 'SF Mono', monospace;
 
+      /* [SISTEMA] escala fluida — corpo de jornal 17→19px */
       --size-xs:    clamp(0.75rem, 0.7rem + 0.2vw, 0.875rem);
       --size-small: clamp(0.875rem, 0.85rem + 0.15vw, 1rem);
-      --size-body:  clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
-      --size-lead:  clamp(1.15rem, 1.05rem + 0.5vw, 1.375rem);
-      --size-h4:    clamp(1rem, 0.95rem + 0.25vw, 1.15rem);
-      --size-h3:    clamp(1.2rem, 1.1rem + 0.5vw, 1.5rem);
-      --size-h2:    clamp(1.7rem, 1.3rem + 1.4vw, 2.5rem);
-      --size-h1:    clamp(2.25rem, 1.6rem + 2.6vw, 4rem);
-      --size-fact:  clamp(4rem, 2.4rem + 6vw, 9rem);
+      --size-body:  clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+      --size-lead:  clamp(1.2rem, 1.1rem + 0.55vw, 1.45rem);
+      --size-h3:    clamp(1.15rem, 1.05rem + 0.4vw, 1.4rem);
+      --size-h2:    clamp(1.55rem, 1.3rem + 1vw, 2.1rem);
+      --size-h1:    clamp(2.4rem, 1.7rem + 2.6vw, 3.75rem);
 
+      /* [SISTEMA] espaço + layout */
       --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem;
       --space-4: 1rem;    --space-5: 1.5rem; --space-6: 2rem;
       --space-7: 2.5rem;  --space-8: 3rem;   --space-10: 4rem;
-      --space-12: 5rem;   --space-16: 7rem;  --space-20: 9rem;
+      --space-12: 5rem;   --space-16: 7rem;
+      --header-h: 56px;
 
-      --content-max: 720px;
-      --story-max:   1180px;
-      --header-h:    56px;
-
+      /* [DIREÇÃO] radius: 2 valores no documento inteiro */
       --radius-sm: 4px;
       --radius:    10px;
-      --radius-lg: 16px;
 
-      --shadow-xs: 0 1px 2px rgba(41, 32, 23, 0.04);
-      --shadow-sm: 0 2px 4px rgba(41, 32, 23, 0.06), 0 1px 2px rgba(41, 32, 23, 0.04);
-      --shadow:    0 4px 12px rgba(41, 32, 23, 0.08), 0 1px 3px rgba(41, 32, 23, 0.05);
-      --shadow-lg: 0 12px 32px rgba(41, 32, 23, 0.12), 0 4px 12px rgba(41, 32, 23, 0.06);
-
-      --ease-out:      cubic-bezier(0.22, 1, 0.36, 1);
-      --ease-emphatic: cubic-bezier(0.16, 1, 0.3, 1);
+      /* [DIREÇÃO] motion editorial — 2 easings, papel comentado */
+      --ease-out:  cubic-bezier(0.2, 0.6, 0.2, 1);  /* papel: entrada de figura */
+      --ease-snap: cubic-bezier(0.2, 0, 0, 1);       /* papel: micro-interação  */
       --duration-fast: 150ms;
-      --duration:      250ms;
-      --duration-hero: 900ms;
+
+      /* [DIREÇÃO · A2] régua de craft (css-patterns §13.1) — curvas nomeadas, nunca default.
+         Registro relatorio-de-bancada: sóbrio → SEM spring bouncy; só easings de entrada/saída. */
+      --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);   /* entrada/saída cara */
+      --ease-io-strong:  cubic-bezier(0.77, 0, 0.175, 1);  /* morph/movimento  */
+      --dur-ui: 220ms;
     }
 
     [data-theme="dark"] {
@@ -108,48 +144,46 @@
       --color-fg-subtle:     #786e62;
       --color-border:        rgba(237, 229, 221, 0.10);
       --color-border-strong: rgba(237, 229, 221, 0.20);
-
       --color-accent:        var(--itau-orange-3);
-      --color-accent-dim:    rgba(250, 159, 9, 0.12);
-      --color-accent-fg:     #14110d;
       --color-accent-hover:  var(--itau-orange-2);
-
-      --color-info:          #60a5fa;
-      --color-info-dim:      rgba(96, 165, 250, 0.14);
-      --color-teal:          #5eead4;
-      --color-teal-dim:      rgba(94, 234, 212, 0.10);
-      --color-success:       #a3e635;
-      --color-success-dim:   rgba(163, 230, 53, 0.10);
-
-      --glow-warm: radial-gradient(ellipse 80% 60% at 80% 0%, rgba(250, 159, 9, 0.20) 0%, transparent 55%);
-      --glow-cool: radial-gradient(ellipse 70% 50% at 20% 100%, rgba(96, 165, 250, 0.14) 0%, transparent 55%);
-      --glow-hero: radial-gradient(ellipse 90% 70% at 50% 0%, rgba(250, 159, 9, 0.24) 0%, transparent 50%);
-
-      --shadow-xs: 0 1px 2px rgba(0,0,0,0.4);
-      --shadow-sm: 0 2px 4px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
-      --shadow:    0 4px 12px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.3);
-      --shadow-lg: 0 12px 32px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.3);
+      --color-accent-fg:     #14110d;
+      --color-accent-dim:    rgba(250, 159, 9, 0.10);
+      --color-warn-dim:      rgba(251, 195, 5, 0.12);
+      --vinheta: inset 0 0 18vmin rgba(0, 0, 0, 0.45);
     }
 
-    /* ────────────────────────────────────────────────────────────────
-       Reset / base
-       ──────────────────────────────────────────────────────────────── */
+    /* ─── Reset / base ─────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
+    /* régua de craft (§13.1): o toggle de tema NÃO dispara transitions da página inteira */
+    .no-transitions *, .no-transitions *::before, .no-transitions *::after { transition: none !important; }
     body {
       margin: 0;
       font-family: var(--font-text);
       font-size: var(--size-body);
-      line-height: 1.65;
+      line-height: 1.62;
       color: var(--color-fg);
       background: var(--color-bg);
-      background-image: var(--glow-warm), var(--glow-cool);
-      background-attachment: fixed;
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
       overflow-wrap: break-word;
-      transition: background var(--duration-fast), color var(--duration-fast);
+      transition: background-color var(--duration-fast) var(--ease-snap), color var(--duration-fast) var(--ease-snap);
     }
+    /* superfície: vinheta de papel — sombra interna fixa, sem gradiente */
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      box-shadow: var(--vinheta);
+      pointer-events: none; z-index: 60;
+    }
+    /* superfície: grain ESTÁTICO sutil (materialidade A2 sóbria — tato de papel, mata banding).
+       feTurbulence data-URI, soft-light, opacity baixa; NUNCA animado (registro relatorio-de-bancada). */
+    body::after {
+      content: ''; position: fixed; inset: 0;
+      pointer-events: none; z-index: 61;
+      opacity: 0.04; mix-blend-mode: soft-light;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    [data-theme="dark"] body::after { opacity: 0.05; }
 
     :focus-visible {
       outline: 2px solid var(--color-accent);
@@ -157,76 +191,51 @@
       border-radius: var(--radius-sm);
     }
 
-    h1, h2, h3, h4 {
+    h1, h2, h3 {
       font-family: var(--font-display);
+      font-optical-sizing: auto;
       color: var(--color-fg);
-      line-height: 1.08;
-      letter-spacing: -0.022em;
-      font-weight: 700;
+      text-wrap: balance;
     }
-    h1 { font-size: var(--size-h1); margin: 0 0 var(--space-5); letter-spacing: -0.032em; }
-    h2 { font-size: var(--size-h2); margin: 0 0 var(--space-4); letter-spacing: -0.025em; }
-    h3 { font-size: var(--size-h3); margin: var(--space-7) 0 var(--space-3); font-weight: 600; }
-    h4 { font-size: var(--size-h4); margin: var(--space-5) 0 var(--space-2); font-weight: 600; }
-    p { margin: 0 0 var(--space-4); max-width: 62ch; color: var(--color-fg); }
+    p { margin: 0 0 var(--space-4); max-width: 62ch; }
+    /* corpo de jornal: algarismos old-style no texto corrido */
+    .scrolly p { font-feature-settings: 'onum' 1, 'pnum' 1; }
+    em { font-style: italic; } /* itálico verdadeiro da Newsreader */
+    strong { font-weight: 800; }
     a { color: var(--color-accent); text-decoration: none; }
     a:hover { color: var(--color-accent-hover); text-decoration: underline; text-underline-offset: 3px; }
-    strong { font-weight: 700; color: var(--color-fg); }
-    em { font-style: italic; color: var(--color-accent); font-weight: 600; }
 
-    /* ────────────────────────────────────────────────────────────────
-       Progress bar (sticky top)
-       ──────────────────────────────────────────────────────────────── */
-    .progress {
-      position: fixed; top: 0; left: 0; right: 0;
-      height: 3px; z-index: 100; background: transparent;
-    }
-    .progress__bar {
-      height: 100%;
-      background: linear-gradient(to right, var(--itau-orange), var(--itau-orange-3));
-      width: 0%;
-      transition: width 80ms linear;
+    .num, .metric__val {
+      font-variant-numeric: tabular-nums lining-nums;
+      font-feature-settings: 'tnum' 1, 'lnum' 1;
     }
 
-    /* ────────────────────────────────────────────────────────────────
-       Topbar (sticky abaixo do progress)
-       ──────────────────────────────────────────────────────────────── */
+    /* ─── ENGINE: progress bar (contrato do modelo) ────────────────── */
+    .progress { position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 100; }
+    .progress__bar { height: 100%; background: var(--color-accent); width: 0%; transition: width 100ms linear; }
+
+    /* ─── Topbar (masthead) ────────────────────────────────────────── */
     .topbar {
-      position: sticky; top: 3px; z-index: 90;
+      position: sticky; top: 2px; z-index: 90;
       height: var(--header-h);
-      background: color-mix(in srgb, var(--color-bg) 85%, transparent);
-      backdrop-filter: blur(12px) saturate(120%);
-      -webkit-backdrop-filter: blur(12px) saturate(120%);
+      background: rgba(250, 247, 245, 0.88);
+      backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--color-border);
       display: flex; align-items: center;
-      padding: 0 var(--space-6);
-      gap: var(--space-5);
+      padding: 0 var(--space-5); gap: var(--space-5);
     }
+    [data-theme="dark"] .topbar { background: rgba(20, 17, 13, 0.88); }
     .topbar__brand {
-      display: flex; align-items: center; gap: var(--space-3);
-      font-weight: 600;
-      font-size: var(--size-small);
-      color: var(--color-fg);
-      text-decoration: none;
-      letter-spacing: -0.005em;
+      font-family: var(--font-ui);
+      font-weight: 700; font-size: 0.9375rem;
+      letter-spacing: -0.01em;
+      text-decoration: none; color: var(--color-fg);
     }
-    .topbar__logo {
-      height: 18px; width: auto; display: block;
-    }
-    .topbar__logo--light { display: block; }
-    .topbar__logo--dark  { display: none; }
-    [data-theme="dark"] .topbar__logo--light { display: none; }
-    [data-theme="dark"] .topbar__logo--dark  { display: block; }
-    .topbar__sep {
-      width: 1px; height: 18px;
-      background: var(--color-border-strong);
-    }
-    .topbar__meta {
-      font-family: var(--font-mono);
-      font-size: var(--size-xs);
-      color: var(--color-fg-subtle);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
+    .topbar__brand:hover { color: var(--color-fg); text-decoration: none; }
+    .topbar__edition {
+      font-family: var(--font-ui);
+      font-size: var(--size-xs); color: var(--color-fg-subtle);
+      letter-spacing: 0.04em;
     }
     .topbar__spacer { flex: 1; }
     .theme-toggle {
@@ -235,584 +244,260 @@
       background: var(--color-bg-elevated);
       border: 1px solid var(--color-border);
       border-radius: 999px; cursor: pointer;
-      color: var(--color-fg);
-      font: inherit; font-size: 14px;
-      transition: all var(--duration-fast);
+      color: var(--color-fg); font-size: 14px;
+      transition: background-color var(--duration-fast) var(--ease-snap), border-color var(--duration-fast) var(--ease-snap);
     }
-    .theme-toggle:hover {
-      background: var(--color-bg-sunken);
-      border-color: var(--color-border-strong);
-      transform: translateY(-1px);
-    }
+    .theme-toggle:hover { background: var(--color-bg-sunken); border-color: var(--color-border-strong); }
 
-    /* ────────────────────────────────────────────────────────────────
-       Hero
-       ──────────────────────────────────────────────────────────────── */
-    .hero {
-      max-width: var(--story-max);
-      margin: 0 auto;
-      padding: clamp(var(--space-12), 12vh, var(--space-20)) var(--space-6) var(--space-12);
-      position: relative;
-    }
-    .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image: var(--glow-hero);
-      pointer-events: none;
-      z-index: -1;
-    }
-    .hero__kicker {
-      display: inline-flex; align-items: center; gap: var(--space-3);
-      font-family: var(--font-mono);
-      font-size: var(--size-xs);
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
+    /* ─── Layout geral ─────────────────────────────────────────────── */
+    .scrolly { max-width: 1180px; margin: 0 auto; padding: var(--space-10) var(--space-6) var(--space-12); }
+
+    /* ─── Capa: manchete-broadsheet ────────────────────────────────── */
+    .capa { max-width: 880px; margin: var(--space-8) 0 var(--space-12); }
+    .capa__alta {
+      font-family: var(--font-ui);
+      font-variant-caps: all-small-caps;
+      letter-spacing: 0.08em;
+      font-weight: 500;
+      font-size: 0.9375rem;
       color: var(--color-fg-muted);
-      margin-bottom: var(--space-6);
-    }
-    .hero__kicker__dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--color-accent);
-    }
-    .hero__kicker__sep {
-      width: 3px; height: 3px; border-radius: 50%;
-      background: var(--color-fg-subtle);
-    }
-    .hero__title {
-      max-width: 18ch;
-      font-size: var(--size-h1);
-      font-weight: 700;
-    }
-    .hero__lead {
-      font-size: var(--size-lead);
-      line-height: 1.5;
-      color: var(--color-fg-muted);
-      max-width: 56ch;
-      margin: var(--space-6) 0 var(--space-8);
-      font-weight: 400;
-    }
-    .hero__meta {
-      display: flex; flex-wrap: wrap;
-      gap: var(--space-6);
-      padding-top: var(--space-6);
-      border-top: 1px solid var(--color-border);
-      font-family: var(--font-mono);
-      font-size: var(--size-xs);
-      color: var(--color-fg-subtle);
-      letter-spacing: 0.04em;
-    }
-    .hero__meta__item strong {
-      display: block;
-      font-family: var(--font-display);
-      font-size: var(--size-small);
-      color: var(--color-fg);
-      letter-spacing: -0.01em;
-      margin-bottom: 2px;
-      font-weight: 600;
-    }
-    .hero__scroll {
-      display: inline-flex; align-items: center; gap: var(--space-2);
-      margin-top: var(--space-10);
-      font-family: var(--font-mono);
-      font-size: var(--size-xs);
-      color: var(--color-fg-subtle);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-    .hero__scroll__arrow {
-      display: inline-block;
-      animation: bounce 2.4s var(--ease-out) infinite;
-    }
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50%      { transform: translateY(4px); }
-    }
-
-    /* ────────────────────────────────────────────────────────────────
-       Story container + atos editoriais
-       ──────────────────────────────────────────────────────────────── */
-    .story { max-width: var(--story-max); margin: 0 auto; padding: 0 var(--space-6); }
-
-    .act {
-      max-width: var(--content-max);
-      margin: 0 auto;
-      padding: var(--space-16) 0 var(--space-12);
-      position: relative;
-    }
-    .act + .act { padding-top: var(--space-12); }
-
-    .act__kicker {
-      display: inline-flex; align-items: center; gap: var(--space-3);
-      font-family: var(--font-mono);
-      font-size: var(--size-xs);
-      font-weight: 600;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--color-accent);
-      margin-bottom: var(--space-4);
-    }
-    .act__kicker__num {
-      display: inline-grid; place-items: center;
-      min-width: 26px; height: 22px; padding: 0 6px;
-      background: var(--color-accent-dim);
-      color: var(--color-accent);
-      border-radius: var(--radius-sm);
-      font-weight: 700;
-      letter-spacing: 0.06em;
-    }
-    .act__lead {
-      font-size: var(--size-lead);
-      line-height: 1.5;
-      color: var(--color-fg-muted);
-      max-width: 58ch;
-      margin: 0 0 var(--space-7);
-      font-weight: 400;
-    }
-
-    /* Reveal on scroll — universal */
-    [data-reveal] {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity var(--duration-hero) var(--ease-out),
-                  transform var(--duration-hero) var(--ease-out);
-    }
-    [data-reveal].is-visible { opacity: 1; transform: none; }
-
-    /* ────────────────────────────────────────────────────────────────
-       Big numbers (cards de KPI)
-       ──────────────────────────────────────────────────────────────── */
-    .numbers {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: var(--space-6);
-      margin: var(--space-8) 0 var(--space-4);
-    }
-    .numbers > * { min-width: 0; }
-    .number {
-      padding-top: var(--space-4);
-      border-top: 2px solid var(--color-fg);
-    }
-    .number__value {
-      font-family: var(--font-display);
-      font-size: clamp(2.5rem, 1.6rem + 3vw, 3.75rem);
-      line-height: 0.95;
-      font-weight: 700;
-      letter-spacing: -0.03em;
       margin: 0 0 var(--space-3);
-      color: var(--color-fg);
-      font-variant-numeric: tabular-nums;
     }
-    .number__value span { color: var(--color-accent); }
-    .number__label {
-      font-size: var(--size-small);
-      color: var(--color-fg-muted);
+    .capa__fio { border: none; border-top: 1px solid var(--color-fg); margin: 0 0 var(--space-5); }
+    .capa h1 {
+      font-size: var(--size-h1);
+      font-weight: 800;
+      line-height: 1.04;
+      letter-spacing: -0.025em;
+      margin: 0 0 var(--space-4);
+      max-width: 20ch;
+      /* W3 — estado FINAL como base: opsz alto + peso 800 legíveis num Chrome travado.
+         A animação só REBAIXA quando suportada (invariante 2). */
+      font-variation-settings: 'opsz' 72, 'wght' 800;
+    }
+    /* W3 — ancestral da timeline: overflow CLIP (nunca hidden — hidden congela a timeline) */
+    .capa { overflow: clip; }
+    .capa__dateline {
+      font-family: var(--font-ui);
+      font-size: var(--size-xs);
+      color: var(--color-fg-subtle);
+      letter-spacing: 0.03em;
+      margin: 0 0 var(--space-6);
+      padding-bottom: var(--space-3);
+      border-bottom: 1px solid var(--color-border);
+      max-width: none;
+    }
+    .lead {
+      font-size: var(--size-lead);
       line-height: 1.45;
+      color: var(--color-fg-muted);
+      font-weight: 300;
+      max-width: 56ch;
       margin: 0;
-      max-width: 24ch;
     }
 
-    /* ────────────────────────────────────────────────────────────────
-       Sticky chart story (texto rolando + chart sticky)
-       ──────────────────────────────────────────────────────────────── */
-    .sticky-story {
-      max-width: var(--story-max);
-      margin: var(--space-16) auto;
-      padding: 0 var(--space-6);
-      position: relative;
+    /* ─── Abertura com capitular (dispositivo broadsheet) ──────────── */
+    .abertura { max-width: 640px; margin: 0 0 var(--space-16); }
+    .abertura > p:first-of-type::first-letter {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 3.3em;
+      line-height: 0.82;
+      float: left;
+      padding: 0.04em 0.12em 0 0;
     }
-    .sticky-story__intro {
-      max-width: var(--content-max);
-      margin: 0 auto var(--space-10);
-    }
-    .sticky-story__grid {
+
+    /* ─── Story: texto rolando + gráfico sticky (engine do modelo) ─── */
+    .story {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
-      gap: clamp(var(--space-6), 5vw, var(--space-10));
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      gap: var(--space-10);
       align-items: start;
     }
-    .sticky-story__viz {
+    .story__text { order: 1; min-width: 0; }
+    .story__chart {
+      order: 2; min-width: 0;
       position: sticky;
-      top: calc(var(--header-h) + var(--space-7));
-      height: min(72vh, 540px);
-      padding: var(--space-5);
-      background: var(--color-bg-elevated);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow);
+      top: calc(var(--header-h) + var(--space-5));
+      height: calc(100vh - var(--header-h) - var(--space-8));
       display: flex; flex-direction: column;
     }
-    .sticky-story__viz__head {
-      display: flex; align-items: baseline; justify-content: space-between;
-      gap: var(--space-3);
-      padding-bottom: var(--space-3);
-      margin-bottom: var(--space-3);
-      border-bottom: 1px solid var(--color-border);
+
+    .step {
+      min-height: 82vh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: var(--space-8) 0;
     }
-    .sticky-story__viz__title {
+    .step__num {
       font-family: var(--font-display);
+      font-feature-settings: 'onum' 1; /* numeral old-style: o label da casa aqui é serif, sem caixa, sem dot */
+      font-size: 2rem;
+      font-weight: 300;
+      color: var(--color-fg-subtle);
+      margin: 0 0 var(--space-2);
+      transition: color 160ms var(--ease-snap); /* micro-interação: numeral acende no step ativo */
+    }
+    .step.is-active .step__num { color: var(--color-accent); }
+    .step h2 {
+      font-size: var(--size-h2);
+      font-weight: 800;
+      line-height: 1.12;
+      letter-spacing: -0.015em;
+      margin: 0 0 var(--space-4);
+      max-width: 24ch;
+    }
+    .step p { color: var(--color-fg); max-width: 52ch; }
+    .step p:last-child { margin-bottom: 0; }
+
+    /* ─── Figura sticky ────────────────────────────────────────────── */
+    .figura {
+      margin: 0;
+      height: 100%;
+      display: flex; flex-direction: column;
+      border-top: 1px solid var(--color-fg);       /* luz por fio, não por sombra */
+      padding-top: var(--space-3);
+    }
+    .figura__title {
+      font-family: var(--font-ui);
       font-size: var(--size-small);
       font-weight: 700;
       letter-spacing: -0.005em;
-      color: var(--color-fg);
-      margin: 0;
+      margin: 0 0 var(--space-1);
+      max-width: none;
     }
-    .sticky-story__viz__meta {
-      font-family: var(--font-mono);
-      font-size: var(--size-xs);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--color-fg-subtle);
-    }
-    .sticky-story__viz__body {
-      position: relative;
-      flex: 1; min-height: 0;
-    }
-    .sticky-story__viz__body canvas {
-      max-width: 100%;
-      max-height: 100%;
-    }
-    .sticky-story__viz__caption {
-      margin-top: var(--space-3);
+    .figura__sub {
+      font-family: var(--font-ui);
       font-size: var(--size-xs);
       color: var(--color-fg-subtle);
-      line-height: 1.5;
-      font-style: italic;
-      transition: opacity var(--duration) var(--ease-out);
+      margin: 0 0 var(--space-3);
+      max-width: none;
+    }
+    .figura__box { position: relative; flex: 1; min-height: 0; }
+    .figura__box canvas { position: absolute; inset: 0; width: 100% !important; height: 100% !important; }
+    .figura__caption {
+      font-family: var(--font-ui);
+      font-size: var(--size-xs);
+      color: var(--color-fg-muted);
+      border-top: 1px solid var(--color-border);
+      margin: var(--space-3) 0 0;
+      padding-top: var(--space-2);
+      min-height: 2.4em;
+      max-width: none;
     }
 
-    .sticky-story__steps {
-      display: flex; flex-direction: column;
-      gap: clamp(var(--space-16), 24vh, var(--space-20));
-    }
-    .step {
-      min-height: 48vh;
-      display: flex; flex-direction: column; justify-content: center;
-      opacity: 0.55;
-      transition: opacity var(--duration) var(--ease-out);
-    }
-    .step.is-active { opacity: 1; }
-    .step__num {
-      font-family: var(--font-mono);
-      font-size: var(--size-xs);
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--color-fg-muted);
-      font-weight: 600;
-      margin: 0 0 var(--space-3);
-      display: flex; align-items: center; gap: var(--space-2);
-    }
-    .step.is-active .step__num { color: var(--color-accent); }
-    .step__num::before {
-      content: ''; display: inline-block;
-      width: 18px; height: 1px;
-      background: currentColor;
-    }
-    .step__title {
-      font-family: var(--font-display);
-      font-size: clamp(1.4rem, 1.1rem + 1vw, 1.875rem);
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-      font-weight: 700;
-      margin: 0 0 var(--space-4);
-      color: var(--color-fg);
-    }
-    .step.is-active .step__title { color: var(--color-accent); }
-    .step p {
-      color: var(--color-fg-muted);
-      margin: 0 0 var(--space-3);
-      font-size: var(--size-body);
-      line-height: 1.6;
-    }
-
-    /* ────────────────────────────────────────────────────────────────
-       Big-fact (interlúdio gigante)
-       ──────────────────────────────────────────────────────────────── */
-    .big-fact {
-      max-width: var(--story-max);
-      margin: var(--space-20) auto;
-      padding: var(--space-12) var(--space-6);
-      text-align: center;
-      position: relative;
-      isolation: isolate;
-    }
-    .big-fact::before {
-      content: '';
-      position: absolute; inset: 0;
-      background-image: var(--glow-hero);
-      pointer-events: none;
-      z-index: -1;
-      opacity: 0.6;
-    }
-    .big-fact__kicker {
-      font-family: var(--font-mono);
-      font-size: var(--size-xs);
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--color-fg-muted);
+    /* ─── Fechamento: friso de dados em largura total ──────────────── */
+    .fecho { margin: var(--space-16) 0 0; }
+    .fecho h2 {
+      font-size: var(--size-h2);
+      font-weight: 800;
+      letter-spacing: -0.015em;
       margin: 0 0 var(--space-6);
     }
-    .big-fact__value {
+    .friso {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-6);
+      margin: 0 0 var(--space-8);
+    }
+    .metric { border-top: 2px solid var(--color-fg); padding-top: var(--space-3); }
+    .metric__val {
       font-family: var(--font-display);
-      font-size: var(--size-fact);
+      font-size: clamp(2rem, 1.5rem + 1.8vw, 3rem);
       font-weight: 800;
-      line-height: 0.9;
-      letter-spacing: -0.045em;
-      color: var(--color-fg);
-      margin: 0;
-      font-variant-numeric: tabular-nums;
-    }
-    .big-fact__value span { color: var(--color-accent); }
-    .big-fact__label {
-      font-family: var(--font-display);
-      font-size: clamp(1.2rem, 0.9rem + 1.2vw, 1.75rem);
-      font-weight: 600;
-      line-height: 1.3;
-      color: var(--color-fg);
-      max-width: 24ch;
-      margin: var(--space-6) auto 0;
-    }
-    .big-fact__note {
-      font-size: var(--size-small);
-      color: var(--color-fg-muted);
-      max-width: 56ch;
-      margin: var(--space-5) auto 0;
-    }
-
-    /* ────────────────────────────────────────────────────────────────
-       Pull-quote
-       ──────────────────────────────────────────────────────────────── */
-    .pull-quote {
-      max-width: var(--content-max);
-      margin: var(--space-16) auto;
-      padding: 0 var(--space-6);
-    }
-    .pull-quote__inner {
-      padding: var(--space-7) var(--space-8);
-      border-left: 3px solid var(--color-accent);
-      background: linear-gradient(to right, var(--color-accent-dim), transparent 70%);
-      border-radius: 0 var(--radius) var(--radius) 0;
-    }
-    .pull-quote__text {
-      font-family: var(--font-display);
-      font-size: clamp(1.35rem, 1rem + 1.4vw, 1.875rem);
-      line-height: 1.3;
       letter-spacing: -0.02em;
-      font-weight: 600;
-      color: var(--color-fg);
-      margin: 0 0 var(--space-5);
-      font-style: italic;
-      quotes: '\201C' '\201D';
-    }
-    .pull-quote__text::before {
-      content: open-quote;
-      color: var(--color-accent);
-      font-weight: 800;
-      margin-right: 0.05em;
-    }
-    .pull-quote__text::after { content: close-quote; color: var(--color-accent); }
-    .pull-quote__cite {
-      display: block;
-      font-style: normal;
-      font-size: var(--size-small);
-      color: var(--color-fg-muted);
-      font-family: var(--font-text);
-    }
-    .pull-quote__cite strong {
-      display: block;
-      font-family: var(--font-display);
-      font-size: var(--size-body);
-      color: var(--color-fg);
-      font-weight: 700;
-      margin-bottom: 2px;
-      letter-spacing: -0.01em;
-    }
-
-    /* ────────────────────────────────────────────────────────────────
-       Timeline editorial
-       ──────────────────────────────────────────────────────────────── */
-    .timeline {
-      list-style: none; padding: 0;
-      margin: var(--space-7) 0;
-      position: relative;
-    }
-    .timeline::before {
-      content: ''; position: absolute;
-      left: 8px; top: 6px; bottom: 6px;
-      width: 2px;
-      background: linear-gradient(to bottom, var(--color-accent) 0%, var(--color-border) 35%, var(--color-border) 100%);
-    }
-    .timeline__item {
-      position: relative;
-      padding-left: var(--space-7);
-      margin-bottom: var(--space-6);
-    }
-    .timeline__item::before {
-      content: ''; position: absolute;
-      left: 0; top: 6px;
-      width: 18px; height: 18px;
-      border-radius: 50%;
-      background: var(--color-accent);
-      box-shadow: 0 0 0 4px var(--color-bg);
-    }
-    .timeline__date {
-      font-family: var(--font-mono);
-      font-size: var(--size-xs);
-      color: var(--color-accent);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-weight: 600;
-      margin: 0 0 var(--space-1);
-    }
-    .timeline__title {
-      font-family: var(--font-display);
-      font-size: 1.0625rem;
+      line-height: 1;
       margin: 0 0 var(--space-2);
-      font-weight: 700;
-      color: var(--color-fg);
-      letter-spacing: -0.01em;
     }
-    .timeline__item p {
+    .metric__label {
+      font-family: var(--font-ui);
       font-size: var(--size-small);
       color: var(--color-fg-muted);
       margin: 0;
-      line-height: 1.55;
+      max-width: 26ch;
+      line-height: 1.45;
     }
+    .fecho__texto { max-width: 640px; }
 
-    /* ────────────────────────────────────────────────────────────────
-       Call-to-action de encerramento
-       ──────────────────────────────────────────────────────────────── */
-    .cta {
-      max-width: var(--story-max);
-      margin: var(--space-20) auto var(--space-12);
-      padding: var(--space-12) var(--space-6);
-      background: var(--color-bg-elevated);
-      border-top: 1px solid var(--color-border);
-      border-bottom: 1px solid var(--color-border);
-      position: relative;
-    }
-    .cta__inner {
-      max-width: var(--content-max);
-      margin: 0 auto;
-    }
-    .cta__kicker {
-      font-family: var(--font-mono);
-      font-size: var(--size-xs);
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--color-accent);
-      margin: 0 0 var(--space-4);
-    }
-    .cta__title {
-      font-size: clamp(1.7rem, 1.2rem + 1.8vw, 2.5rem);
-      max-width: 22ch;
-      margin: 0 0 var(--space-5);
-    }
-    .cta__lead {
-      font-size: var(--size-lead);
-      color: var(--color-fg-muted);
-      line-height: 1.5;
-      max-width: 58ch;
-      margin: 0 0 var(--space-7);
-    }
-    .cta__actions {
-      display: flex; flex-wrap: wrap; gap: var(--space-3);
-      margin-top: var(--space-6);
-    }
-    .btn {
-      display: inline-flex; align-items: center; gap: var(--space-2);
-      padding: var(--space-3) var(--space-5);
-      border-radius: var(--radius);
-      font-size: var(--size-small);
-      font-weight: 600;
-      text-decoration: none;
-      border: 1px solid transparent;
-      transition: all var(--duration-fast) var(--ease-out);
-      font-family: var(--font-text);
-      cursor: pointer;
-    }
-    .btn--primary {
-      background: var(--color-accent);
-      color: var(--color-accent-fg);
-    }
-    .btn--primary:hover {
-      background: var(--color-accent-hover);
-      color: var(--color-accent-fg);
-      transform: translateY(-2px);
-      box-shadow: var(--shadow);
-      text-decoration: none;
-    }
-    .btn--ghost {
-      background: transparent;
-      color: var(--color-fg);
-      border-color: var(--color-border-strong);
-    }
-    .btn--ghost:hover {
-      background: var(--color-bg-sunken);
-      border-color: var(--color-fg-muted);
-      text-decoration: none;
-    }
-    .btn__arrow { transition: transform var(--duration-fast); }
-    .btn:hover .btn__arrow { transform: translateX(3px); }
-
-    /* ────────────────────────────────────────────────────────────────
-       Footer
-       ──────────────────────────────────────────────────────────────── */
-    .footer {
-      max-width: var(--story-max);
-      margin: 0 auto;
-      padding: var(--space-7) var(--space-6) var(--space-10);
-      display: flex; flex-wrap: wrap; gap: var(--space-4);
-      justify-content: space-between; align-items: center;
-      font-family: var(--font-mono);
+    /* ─── Rodapé ───────────────────────────────────────────────────── */
+    .rodape {
+      border-top: 1px solid var(--color-fg);
+      margin-top: var(--space-12);
+      padding-top: var(--space-4);
+      font-family: var(--font-ui);
       font-size: var(--size-xs);
       color: var(--color-fg-subtle);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      border-top: 1px solid var(--color-border);
     }
-    .footer__brand { display: flex; align-items: center; gap: var(--space-3); }
-    .footer__brand img { height: 14px; width: auto; opacity: 0.7; }
+    .rodape p { max-width: none; margin: 0 0 var(--space-1); }
 
-    /* ────────────────────────────────────────────────────────────────
-       Responsive
-       ──────────────────────────────────────────────────────────────── */
+    /* ─── Motion editorial · A2 (perfil do parti, bloco aditivo) ───── */
+    /* reveal SÓ no gráfico — texto corrido nunca anima.
+       BASE = estado final VISÍVEL (invariante 2): num Chrome travado o gráfico nunca some.
+       O reveal de entrada é uma camada degradável por cima. */
+    [data-reveal] { opacity: 1; }
+
+    /* W1 — scroll-driven CSS nativo: o reveal do gráfico e a progress bar
+       passam a ser dirigidos pela timeline do scroll, sem JS.
+       O IntersectionObserver de STEP (que muta o gráfico) permanece intacto —
+       é ele que dá a coreografia data-bound. */
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        /* a figura sobe e materializa conforme entra na viewport */
+        [data-reveal] {
+          animation: figura-rise linear both;
+          animation-timeline: view();
+          animation-range: entry 0% cover 30%;
+        }
+        @keyframes figura-rise {
+          from { opacity: 0; transform: translateY(22px); }
+          to   { opacity: 1; transform: none; }
+        }
+        /* progress bar dirigida pelo scroll do root — sem o handler de JS */
+        .progress__bar {
+          width: 100%;
+          transform-origin: left;
+          transform: scaleX(0);
+          transition: none;
+          animation: progress-grow linear both;
+          animation-timeline: scroll(root block);
+        }
+        @keyframes progress-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+        /* W3 — manchete cinética: opsz 6→72 + wght 220→800 conforme a capa rola.
+           Só transform/opacity/font-variation-settings (invariante 3). */
+        .capa h1 {
+          animation: manchete-flex linear both;
+          animation-timeline: view();
+          animation-range: entry 8% cover 52%;
+        }
+        /* só font-variation-settings + opacity (invariante 3): nada de letter-spacing
+           nos keyframes — evita reflow; o tracking final -0.025em vem da regra base. */
+        @keyframes manchete-flex {
+          from { font-variation-settings: 'opsz' 6,  'wght' 220; opacity: 0.55; }
+          to   { font-variation-settings: 'opsz' 72, 'wght' 800; opacity: 1; }
+        }
+      }
+    }
+
+    /* ─── Responsivo ───────────────────────────────────────────────── */
     @media (max-width: 900px) {
-      .sticky-story__grid {
-        grid-template-columns: 1fr;
-        gap: var(--space-7);
-      }
-      .sticky-story__viz {
-        position: relative; top: 0;
+      .story { display: block; }
+      .story__chart {
+        position: sticky;
+        top: calc(var(--header-h) + 2px);
+        z-index: 5;
         height: 320px;
+        background: var(--color-bg);
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: var(--space-3);
+        margin-bottom: var(--space-6);
       }
-      .sticky-story__steps { gap: var(--space-10); }
-      .step { min-height: auto; opacity: 1; }
-    }
-    @media (max-width: 600px) {
-      .topbar { padding: 0 var(--space-4); gap: var(--space-3); }
-      .topbar__meta { display: none; }
-      .hero, .story, .cta, .footer { padding-left: var(--space-4); padding-right: var(--space-4); }
-      .pull-quote__inner { padding: var(--space-5) var(--space-6); }
-      .cta__actions { flex-direction: column; align-items: stretch; }
-      .btn { justify-content: center; }
+      .step { min-height: 70vh; }
+      .capa h1 { max-width: none; }
     }
 
-    /* ────────────────────────────────────────────────────────────────
-       Print
-       ──────────────────────────────────────────────────────────────── */
-    @media print {
-      body { background: white; color: black; }
-      .progress, .topbar, .theme-toggle, .hero__scroll, .cta__actions { display: none; }
-      .sticky-story__grid { display: block; }
-      .sticky-story__viz { position: static; height: auto; box-shadow: none; }
-      .act, .pull-quote, .big-fact { break-inside: avoid; }
-    }
-
-    /* ────────────────────────────────────────────────────────────────
-       Reduced motion
-       ──────────────────────────────────────────────────────────────── */
+    /* ─── Reduced motion (MARCA — inviolável) ──────────────────────── */
+    /* Todo gesto A2 vive em @media (prefers-reduced-motion: no-preference); aqui o
+       branch reduce mostra o ESTADO FINAL de cada um (W1 figura/progress, W3 manchete). */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -820,608 +505,466 @@
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
       }
-      [data-reveal] { opacity: 1; transform: none; }
-      .hero__scroll__arrow { animation: none; }
+      [data-reveal] { opacity: 1; transform: none; transition: none; }   /* W1: figura no estado final */
+      .capa h1 { font-variation-settings: 'opsz' 72, 'wght' 800; }       /* W3: manchete no estado final */
+      /* W1: progress bar volta ao modo largura (dirigido pelo JS), sem scaleX */
+    }
+
+    /* ─── Print ────────────────────────────────────────────────────── */
+    @media print {
+      .progress, .topbar, .theme-toggle { display: none; }
+      body::before, body::after { display: none; }     /* zera vinheta + grain */
+      .story { display: block; }
+      .story__chart { position: static; height: 420px; }
+      .step { min-height: 0; break-inside: avoid; margin-bottom: var(--space-7); padding: 0; }
+      /* print zera animação: garante estado final visível de figura e manchete */
+      [data-reveal] { opacity: 1 !important; transform: none !important; animation: none !important; }
+      .capa h1 { font-variation-settings: 'opsz' 72, 'wght' 800 !important; animation: none !important; }
     }
   </style>
 </head>
 <body>
+  <div class="progress" aria-hidden="true"><div class="progress__bar" id="progress-bar"></div></div>
 
-  <!-- Progress bar -->
-  <div class="progress" aria-hidden="true">
-    <div class="progress__bar" id="progress-bar"></div>
-  </div>
-
-  <!-- Topbar -->
   <header class="topbar">
-    <a href="#" class="topbar__brand" aria-label="Plataforma de Dados Itaú">
-      <img src="../logos/wordmark-black.png" alt="Itaú" class="topbar__logo topbar__logo--light">
-      <img src="../logos/wordmark-white.png" alt="Itaú" class="topbar__logo topbar__logo--dark">
-      <span class="topbar__sep" aria-hidden="true"></span>
-      <span>Plataforma de Dados</span>
-    </a>
-    <span class="topbar__meta" aria-hidden="true">Relatório · 2025</span>
+    <a href="#" class="topbar__brand">Itaú · Análise de dados</a>
+    <span class="topbar__edition">Especial — Meios de pagamento</span>
     <span class="topbar__spacer"></span>
-    <button class="theme-toggle" type="button" aria-label="Alternar tema claro/escuro">
-      <span aria-hidden="true">◐</span>
-    </button>
+    <button class="theme-toggle" type="button" aria-label="Alternar tema claro/escuro"><span aria-hidden="true">◐</span></button>
   </header>
 
-  <!-- Hero -->
-  <section class="hero" aria-labelledby="hero-title">
-    <p class="hero__kicker">
-      <span class="hero__kicker__dot" aria-hidden="true"></span>
-      <span>Relatório anual</span>
-      <span class="hero__kicker__sep" aria-hidden="true"></span>
-      <span>Plataforma de Dados Itaú</span>
-      <span class="hero__kicker__sep" aria-hidden="true"></span>
-      <span>2025</span>
-    </p>
-    <h1 class="hero__title" id="hero-title">
-      Como o Itaú passou a operar <em>dados em tempo real</em>.
-    </h1>
-    <p class="hero__lead">
-      Em 21 meses, o jeito como o banco produz, consome e governa dados mudou.
-      Saímos de pipelines noturnos fragmentados para uma plataforma única, event-driven,
-      com catálogo aberto. Esse é o relato — em números, decisões e prazos.
-    </p>
-    <div class="hero__meta">
-      <div class="hero__meta__item">
-        <strong>7 min</strong>
-        <span>tempo de leitura</span>
+  <main class="scrolly">
+
+    <!-- ═══ Capa: manchete-broadsheet ═══ -->
+    <header class="capa">
+      <p class="capa__alta">Especial · Meios de pagamento · Edição 412</p>
+      <hr class="capa__fio">
+      <h1>Dez anos de Pix: como o dinheiro mudou de&nbsp;mãos no&nbsp;Brasil</h1>
+      <p class="capa__dateline">São Paulo, quinta-feira, 12 de junho de 2026 · Análise de dados · Leitura de 8&nbsp;minutos</p>
+      <p class="lead">Concebido no Banco Central em 2016 e ligado em novembro de 2020, o Pix fez em seis anos de operação o que o cartão não fez em quarenta: tirou o dinheiro vivo das transações pequenas. A história cabe em um único gráfico.</p>
+    </header>
+
+    <!-- ═══ Abertura (texto corrido, sem reveal) ═══ -->
+    <section class="abertura" aria-label="Abertura">
+      <p>Em 2016, quando um grupo de trabalho do Banco Central começou a desenhar um sistema de pagamentos instantâneos, o brasileiro ainda compensava cerca de 860&nbsp;milhões de folhas de cheque por ano. A TED custava tarifa e fechava às 17h. O DOC levava um dia útil para liquidar. E o varejo miúdo — a feira, o troco do conserto — rodava quase inteiro em papel-moeda, invisível para qualquer estatística.</p>
+      <p>Dez anos depois, o sistema que nasceu daquele grupo de trabalho deve encerrar 2026 com 89,6&nbsp;bilhões de transações — mais do que cheque, DOC e TED somaram, juntos, na década inteira. O número que importa, porém, não é o volume. É o tamanho de cada transação, que não para de cair.</p>
+      <p>O gráfico ao lado acompanha, ano a ano, quantas vezes o dinheiro trocou de mãos por cada trilho. Role a página: a cada passo da narrativa, o mesmo gráfico muda de foco.</p>
+    </section>
+
+    <!-- ═══ Story: steps à esquerda, UM gráfico sticky à direita ═══ -->
+    <div class="story">
+      <div class="story__text">
+
+        <section class="step" data-step="1">
+          <p class="step__num num">01</p>
+          <h2>O cheque morreu primeiro — e morreu sem o&nbsp;Pix</h2>
+          <p>A linha cheia no alto do gráfico é o cheque. De 860&nbsp;milhões de folhas compensadas em 2016, o instrumento caiu a 370&nbsp;milhões em 2020 — uma queda de 57% que aconteceu <em>antes</em> de o Pix existir. Quem o matou foi o cartão na maquininha e a transferência pelo aplicativo, não o sistema instantâneo.</p>
+          <p>Em 2026 restam cerca de 110&nbsp;milhões de folhas por ano, concentradas em caução de aluguel e em pagamentos de alto valor entre empresas que ainda exigem papel. O cheque é o lembrete de que um meio de pagamento raramente morre de uma vez: ele definha, década após década, até virar nota de rodapé.</p>
+        </section>
+
+        <section class="step" data-step="2">
+          <p class="step__num num">02</p>
+          <h2>TED e DOC envelheceram como&nbsp;nicho</h2>
+          <p>O foco agora são as duas linhas tracejadas. A TED chegou ao pico em 2020, com 910&nbsp;milhões de operações, e recua desde então — caiu a 380&nbsp;milhões em 2026, menos da metade. Sobrou para ela o que o Pix ainda não cobre com conforto: liquidações de altíssimo valor entre tesourarias, onde a tarifa é irrelevante perto do montante.</p>
+          <p>O DOC teve destino mais seco. Sem volume que justificasse manter o trilho, o sistema bancário o desligou em janeiro de 2024 — a anotação acende no gráfico. Foi a primeira vez que o país aposentou formalmente um instrumento de pagamento por falta de uso, e não por decreto.</p>
+        </section>
+
+        <section class="step" data-step="3">
+          <p class="step__num num">03</p>
+          <h2>Três meses de lockdown, uma curva de&nbsp;década</h2>
+          <p>A escala do eixo muda — precisa mudar. O Pix entra no gráfico em novembro de 2020, no meio da faixa amarela que marca o período de lockdown. O auxílio emergencial pago em conta digital e o comércio de porta fechada comprimiram em três meses uma adoção que os planejadores do Banco Central estimavam em anos.</p>
+          <p>O ponto de inflexão está marcado: em 2021, seu primeiro ano completo, o Pix registrou 9,4&nbsp;bilhões de transações — mais do que cheque, TED e DOC somados naquele mesmo ano. Dali em diante a curva laranja não disputou mais com o sistema legado; passou a disputar com o dinheiro vivo, que não aparece em estatística nenhuma.</p>
+        </section>
+
+        <section class="step" data-step="4">
+          <p class="step__num num">04</p>
+          <h2>A notícia não é o volume — é o tamanho de cada&nbsp;transação</h2>
+          <p>Repare na anotação que acende sobre a curva: o ticket médio do Pix caiu de R$&nbsp;480 em 2021 para R$&nbsp;415 em 2026. Num sistema que cresce dez vezes em volume, ticket caindo significa uma coisa só — as transações <em>pequenas</em> é que estão entrando. A padaria da esquina e a transferência de R$&nbsp;20 entre amigos: dinheiro que antes circulava em papel e não deixava rastro.</p>
+          <p>É aqui que a tese deste especial se sustenta: o Pix não matou a TED — ela já envelhecia — nem o cartão, que segue crescendo. O que o Pix matou foi o dinheiro vivo nas transações pequenas. Pela primeira vez, a base da pirâmide de pagamentos do país ficou visível.</p>
+        </section>
+
+        <section class="step" data-step="5">
+          <p class="step__num num">05</p>
+          <h2>O que vem: crédito dentro do&nbsp;trilho</h2>
+          <p>O trecho pontilhado projeta a próxima etapa. Depois do Pix Automático, que assumiu as cobranças recorrentes em 2025, o roadmap do Banco Central aponta para o Pix parcelado — crédito embutido na transação — e para o Pix garantido, que dá ao recebedor a certeza de liquidação futura. Se as projeções se confirmarem, o sistema passa de 104&nbsp;bilhões de transações em 2027 para 118&nbsp;bilhões em 2028.</p>
+          <p>O trilho que nasceu para transferir dinheiro vira, na prática, uma plataforma de crédito de varejo. A pergunta da próxima década não será mais quem move o dinheiro — será quem precifica o risco de cada movimento.</p>
+        </section>
+
       </div>
-      <div class="hero__meta__item">
-        <strong>6 capítulos</strong>
-        <span>contexto → impacto → próximos passos</span>
-      </div>
-      <div class="hero__meta__item">
-        <strong>Outubro 2025</strong>
-        <span>última atualização</span>
-      </div>
-      <div class="hero__meta__item">
-        <strong>Plataforma de Dados</strong>
-        <span>autoria · time interno</span>
+
+      <!-- UM gráfico. Ele evolui; nunca é trocado. -->
+      <div class="story__chart">
+        <figure class="figura" data-reveal>
+          <figcaption class="figura__head">
+            <p class="figura__title">Quem move o dinheiro no Brasil</p>
+            <p class="figura__sub">Transações liquidadas por instrumento, por ano — 2016 a 2026, com projeção até 2028</p>
+          </figcaption>
+          <div class="figura__box">
+            <canvas id="chart-pix" role="img" aria-label="Gráfico de linhas: transações anuais por instrumento de pagamento. Cheque cai de 860 milhões em 2016 para 110 milhões em 2026; TED atinge pico de 910 milhões em 2020 e recua; DOC é desligado em janeiro de 2024; Pix sai de 1,2 bilhão em 2020 para 89,6 bilhões em 2026, com projeção de 118 bilhões em 2028."></canvas>
+          </div>
+          <p class="figura__caption" id="chart-caption">Cheques compensados: de 860&nbsp;mi (2016) a 370&nbsp;mi (2020) — queda anterior ao Pix.</p>
+        </figure>
       </div>
     </div>
-    <p class="hero__scroll">
-      <span>Role para começar</span>
-      <span class="hero__scroll__arrow" aria-hidden="true">↓</span>
-    </p>
-  </section>
 
-  <main class="story">
-
-    <!-- ATO 1 — O ponto de partida -->
-    <article class="act" data-reveal>
-      <p class="act__kicker">
-        <span class="act__kicker__num">01</span>
-        <span>Onde estávamos</span>
-      </p>
-      <h2>Antes da plataforma, dado era um problema de logística.</h2>
-      <p class="act__lead">
-        Em janeiro de 2024, o Itaú tinha mais de 80 pipelines batch noturnos espalhados entre áreas.
-        Cada um construído sob medida, cada um com seu próprio modelo de schema, autenticação e SLA.
-      </p>
-      <p>
-        Decisões de crédito esperavam o batch da madrugada. Times de fraude reagiam a eventos do dia anterior.
-        Cada nova integração entre sistemas exigia uma reunião — porque ninguém sabia, fora do squad dono,
-        qual era o contrato real do dado.
-      </p>
-      <p>
-        Não era uma falha técnica. Era o resultado de uma década de squads autônomos resolvendo
-        problemas locais com soluções locais. O custo só ficou visível quando o banco quis tomar decisões em
-        segundos — e descobriu que <strong>os dados certos chegavam horas depois</strong>.
-      </p>
-
-      <div class="numbers" aria-label="Estado em janeiro de 2024">
-        <div class="number">
-          <p class="number__value"><span>80</span>+</p>
-          <p class="number__label">pipelines batch noturnos mantidos por squads diferentes</p>
+    <!-- ═══ Fechamento ═══ -->
+    <section class="fecho" aria-label="Fechamento">
+      <h2>O que fica da década</h2>
+      <div class="friso">
+        <div class="metric">
+          <p class="metric__val">89,6&nbsp;bi</p>
+          <p class="metric__label">transações Pix projetadas para 2026 — contra 1,2&nbsp;bi no ano de estreia</p>
         </div>
-        <div class="number">
-          <p class="number__value"><span>6</span>–8h</p>
-          <p class="number__label">latência mediana entre evento de negócio e disponibilidade do dado</p>
+        <div class="metric">
+          <p class="metric__val">R$&nbsp;415</p>
+          <p class="metric__label">ticket médio em 2026, ante R$&nbsp;480 em 2021 — a base da pirâmide entrou no sistema</p>
         </div>
-        <div class="number">
-          <p class="number__value">R$ <span>34</span> mi</p>
-          <p class="number__label">custo anual estimado de duplicação de pipelines e retrabalho</p>
+        <div class="metric">
+          <p class="metric__val">76%</p>
+          <p class="metric__label">dos adultos brasileiros usam o Pix ao menos uma vez por mês</p>
         </div>
       </div>
-    </article>
-
-    <!-- ATO 2 — Quatro marcos (timeline) -->
-    <article class="act" data-reveal>
-      <p class="act__kicker">
-        <span class="act__kicker__num">02</span>
-        <span>Como chegamos aqui</span>
-      </p>
-      <h2>Quatro marcos, 21 meses.</h2>
-      <p class="act__lead">
-        Não foi uma virada. Foi um caminho de pilotos cuidadosos, decisões de arquitetura
-        e adoção orgânica — time a time, sem campanha interna.
-      </p>
-      <ol class="timeline">
-        <li class="timeline__item">
-          <p class="timeline__date">Janeiro 2024</p>
-          <p class="timeline__title">Decisão de arquitetura</p>
-          <p>RFC aprovada após três meses de debate. Optamos por event-driven multi-região com schemas Avro versionados, abandonando a tentação de fazer "Kafka caseiro" sobre infraestrutura legada.</p>
-        </li>
-        <li class="timeline__item">
-          <p class="timeline__date">Julho 2024</p>
-          <p class="timeline__title">Três pilotos em produção</p>
-          <p>Risco de crédito, antifraude transacional e analytics de varejo. Latência mediana caiu de 6 horas para 4 minutos no primeiro mês. Decisões que esperavam o batch noturno passaram a tomar segundos.</p>
-        </li>
-        <li class="timeline__item">
-          <p class="timeline__date">Março 2025</p>
-          <p class="timeline__title">Adesão orgânica</p>
-          <p>12 squads adotaram a plataforma <em>sem campanha interna</em>. Times migraram porque viram os pilotos funcionando — não porque foram empurrados pela governança.</p>
-        </li>
-        <li class="timeline__item">
-          <p class="timeline__date">Setembro 2025</p>
-          <p class="timeline__title">Padrão de fato</p>
-          <p>47 squads em produção, 2.400 tabelas catalogadas. O CIO de Tecnologia adota a plataforma como padrão recomendado para todo fluxo de dados entre sistemas do banco.</p>
-        </li>
-      </ol>
-    </article>
-
-    <!-- ATO 3 — Sticky chart: 3 steps, 2 charts coordenados -->
-    <section class="sticky-story" data-reveal aria-label="Evolução em 3 fases">
-      <div class="sticky-story__intro">
-        <p class="act__kicker">
-          <span class="act__kicker__num">03</span>
-          <span>O gráfico que conta a história</span>
-        </p>
-        <h2>Três fases, uma curva.</h2>
-        <p class="act__lead">
-          O volume de eventos processados conta o que a documentação não consegue:
-          uma plataforma que começou pequena, virou referência interna e se tornou
-          infraestrutura crítica em menos de dois anos. Role para acompanhar.
-        </p>
-      </div>
-
-      <div class="sticky-story__grid">
-        <div class="sticky-story__viz" aria-hidden="false">
-          <div class="sticky-story__viz__head">
-            <p class="sticky-story__viz__title" id="chart-title">Eventos processados — Jan a Jun 2024</p>
-            <p class="sticky-story__viz__meta" id="chart-meta">Fase 1 · piloto</p>
-          </div>
-          <div class="sticky-story__viz__body">
-            <canvas id="story-chart" aria-label="Gráfico de eventos processados por mês"></canvas>
-          </div>
-          <p class="sticky-story__viz__caption" id="chart-caption">
-            Pilotos restritos: 3 squads, volume baixo, foco em provar o modelo antes de escalar.
-          </p>
-        </div>
-
-        <div class="sticky-story__steps">
-          <article class="step is-active" data-step="1">
-            <p class="step__num">Fase 01 · jan – jun 2024</p>
-            <h3 class="step__title">Pilotos cuidadosos.</h3>
-            <p>
-              Três squads, volumes pequenos, foco em provar o modelo. Pico de
-              <strong>80 milhões de eventos no mês</strong> — o equivalente a um dia inteiro
-              do pipeline legado.
-            </p>
-            <p>
-              Decisão deliberada: <em>preferimos calibrar a plataforma com tráfego real</em>
-              antes de escalar. Cada incidente nesse período virou aprendizado de arquitetura
-              e refinamento dos SLAs.
-            </p>
-          </article>
-
-          <article class="step" data-step="2">
-            <p class="step__num">Fase 02 · jul 2024 – mar 2025</p>
-            <h3 class="step__title">Adesão acelera.</h3>
-            <p>
-              Os pilotos viraram referência. Outros times procuraram o time de Plataforma —
-              invertendo o usual em que a plataforma precisa <em>vender-se</em> internamente.
-            </p>
-            <p>
-              Em março de 2025, processamos <strong>850 milhões de eventos no mês</strong> —
-              10× o pico de 2024. E os pilotos originais continuaram funcionando sem ajuste.
-            </p>
-          </article>
-
-          <article class="step" data-step="3">
-            <p class="step__num">Fase 03 · abr – out 2025</p>
-            <h3 class="step__title">Padrão estabelecido.</h3>
-            <p>
-              Onboarding caiu para 15 minutos. A documentação amadureceu. O time de Plataforma
-              deixou de explicar o que a plataforma <em>é</em> e passou a evoluir o que ela <em>faz</em>.
-            </p>
-            <p>
-              Outubro fechou em <strong>2,3 bilhões de eventos no mês</strong> — e a curva
-              continua subindo, não em platô. O custo por evento caiu 73% em relação ao legado.
-            </p>
-          </article>
-        </div>
+      <div class="fecho__texto">
+        <p>Nenhum dos números acima estava no plano original de 2016. O grupo de trabalho do Banco Central desenhou um substituto para a TED; entregou, sem saber, um substituto para a cédula. A diferença entre as duas coisas — entre digitalizar quem já estava no sistema e trazer para dentro quem nunca esteve — é o que separa uma modernização de uma mudança de regime.</p>
+        <p>“O dinheiro continua trocando de mãos como sempre trocou”, resume um economista do setor. “A diferença é que agora ele deixa recibo.”</p>
       </div>
     </section>
 
-    <!-- BIG FACT — 2.400 tabelas catalogadas -->
-    <section class="big-fact" data-reveal aria-label="Tabelas catalogadas">
-      <p class="big-fact__kicker">Catálogo aberto · outubro 2025</p>
-      <p class="big-fact__value"><span id="big-fact-num">0</span></p>
-      <p class="big-fact__label">tabelas catalogadas, descobríveis por qualquer time do banco em segundos.</p>
-      <p class="big-fact__note">
-        Cada tabela com schema versionado, linhagem rastreada e owner identificado.
-        O catálogo virou o ponto único de entrada — substituiu 14 wikis paralelas que
-        cada área mantinha por conta própria.
-      </p>
-    </section>
-
-    <!-- PULL QUOTE -->
-    <section class="pull-quote" data-reveal>
-      <div class="pull-quote__inner">
-        <p class="pull-quote__text">
-          A maior surpresa não foi a capacidade técnica. Foi a adesão sem campanha.
-          Os times migraram porque viram outros times ganhando tempo de verdade.
-        </p>
-        <cite class="pull-quote__cite">
-          <strong>Líder técnico, Plataforma de Dados</strong>
-          <span>entrevista interna · setembro de 2025</span>
-        </cite>
-      </div>
-    </section>
-
-    <!-- ATO 4 — Impacto operacional -->
-    <article class="act" data-reveal>
-      <p class="act__kicker">
-        <span class="act__kicker__num">04</span>
-        <span>O que mudou para o banco</span>
-      </p>
-      <h2>Impacto além da infraestrutura.</h2>
-      <p class="act__lead">
-        Os indicadores que importam não são técnicos. São de negócio:
-        decisões mais rápidas, menos retrabalho, mais experimentação possível.
-      </p>
-
-      <div class="numbers" aria-label="Indicadores de impacto em 2025">
-        <div class="number">
-          <p class="number__value"><span>60</span>×</p>
-          <p class="number__label">redução de latência mediana entre evento e disponibilidade do dado</p>
-        </div>
-        <div class="number">
-          <p class="number__value"><span>73</span>%</p>
-          <p class="number__label">queda no custo unitário por evento processado vs. pipeline legado</p>
-        </div>
-        <div class="number">
-          <p class="number__value"><span>15</span> min</p>
-          <p class="number__label">onboarding de um novo squad consumidor (era 3 semanas)</p>
-        </div>
-        <div class="number">
-          <p class="number__value"><span>99,97</span>%</p>
-          <p class="number__label">disponibilidade contratada por SLA dos tópicos críticos em produção</p>
-        </div>
-      </div>
-    </article>
-
-    <!-- ATO 5 — O que vem em 2026 -->
-    <article class="act" data-reveal>
-      <p class="act__kicker">
-        <span class="act__kicker__num">05</span>
-        <span>O que vem em 2026</span>
-      </p>
-      <h2>Três frentes definidas no roadmap.</h2>
-      <p class="act__lead">
-        As três respondem a feedback consistente de times consumidores ao longo de 2025.
-        Cada uma com um beta no primeiro semestre e GA até o fim do ano.
-      </p>
-
-      <h3>Materialização declarativa</h3>
-      <p>
-        Hoje, criar uma view materializada exige código de pipeline. Vamos abstrair via DSL
-        declarativa — o time descreve o resultado esperado, a plataforma decide o pipeline,
-        os recursos e a política de retenção. Beta no primeiro trimestre.
-      </p>
-
-      <h3>Replicação cross-region automática</h3>
-      <p>
-        Hoje, replicação entre regiões é decisão explícita por tópico. Vamos torná-la
-        <em>default opinionada</em> com opt-out, baseada em sensibilidade do dado e SLA do consumidor.
-        Reduz latência regional sem aumentar custo desnecessariamente.
-      </p>
-
-      <h3>Gateway HTTP em GA</h3>
-      <p>
-        Mais conectores oficiais e o gateway HTTP saindo de beta, abrindo a plataforma para
-        sistemas e linguagens sem SDK nativo — sem perder a garantia de schema versionado.
-        Inclui parceiros externos via API gateway dedicado.
-      </p>
-    </article>
-
+    <footer class="rodape">
+      <p>Documento de demonstração da skill slideless · modelo scrollytelling · tema Itaú.</p>
+      <p>Dados públicos aproximados (Banco Central, Febraban) usados como placeholder; projeções 2027–28 são ilustrativas. Não é material oficial.</p>
+    </footer>
   </main>
 
-  <!-- Encerramento + CTA -->
-  <section class="cta" data-reveal aria-labelledby="cta-title">
-    <div class="cta__inner">
-      <p class="cta__kicker">Para terminar</p>
-      <h2 class="cta__title" id="cta-title">
-        Não é o fim de uma migração. É o início de uma capacidade.
-      </h2>
-      <p class="cta__lead">
-        O Itaú agora opera dados em tempo real como padrão. Em 2026, o time de Plataforma
-        deixa de provar uma infraestrutura e passa a evoluir um produto interno usado pelo banco inteiro —
-        com governança, catálogo e SLA contratual.
-      </p>
-      <div class="cta__actions">
-        <a class="btn btn--primary" href="#" aria-label="Explorar o catálogo de dados">
-          <span>Explorar o catálogo</span>
-          <span class="btn__arrow" aria-hidden="true">→</span>
-        </a>
-        <a class="btn btn--ghost" href="#" aria-label="Conversar com o time da Plataforma de Dados">
-          <span>Falar com o time</span>
-        </a>
-        <a class="btn btn--ghost" href="#" aria-label="Abrir um RFC">
-          <span>Abrir um RFC</span>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <footer class="footer">
-    <div class="footer__brand">
-      <img src="../logos/wordmark-black.png" alt="Itaú" class="topbar__logo--light">
-      <img src="../logos/wordmark-white.png" alt="Itaú" class="topbar__logo--dark">
-      <span>Plataforma de Dados · 2025</span>
-    </div>
-    <span>Relatório anual · versão 1.0 · outubro 2025</span>
-  </footer>
-
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
   <script>
-    /* ──────────────────────────────────────────────────────────────
-       Theme toggle (idempotente)
-       ────────────────────────────────────────────────────────────── */
-    (function() {
-      const root = document.documentElement;
-      document.querySelectorAll('.theme-toggle').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const cur  = root.getAttribute('data-theme');
-          const next = cur === 'dark' ? 'light' : 'dark';
-          root.setAttribute('data-theme', next);
-          try { localStorage.setItem('theme', next); } catch (e) {}
-          // Re-cor do chart com nova paleta
-          if (window.__storyChart) refreshChartColors();
-        });
-      });
-    })();
+    /* ════════════════════════════════════════════════════════════════
+       ENGINE (preservado do template): tema, progress bar, reveals
+       ════════════════════════════════════════════════════════════════ */
+    const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    /* ──────────────────────────────────────────────────────────────
-       Progress bar
-       ────────────────────────────────────────────────────────────── */
-    (function() {
+    /* W1 — a progress bar é dirigida por CSS (animation-timeline: scroll(root block))
+       quando há suporte E o usuário aceita motion. Só então o handler JS é dispensado;
+       caso contrário, o engine JS (largura via scroll) é o fallback. */
+    const CSS_SCROLL_TIMELINE =
+      CSS.supports && CSS.supports('animation-timeline: scroll(root block)') && !REDUCED;
+
+    if (!CSS_SCROLL_TIMELINE) {
       const bar = document.getElementById('progress-bar');
-      function update() {
-        const h   = document.documentElement;
-        const max = h.scrollHeight - h.clientHeight;
-        const pct = max > 0 ? (h.scrollTop / max) * 100 : 0;
+      const updateProgress = () => {
+        const h = document.documentElement;
+        const pct = (h.scrollTop / Math.max(1, h.scrollHeight - h.clientHeight)) * 100;
         bar.style.width = pct + '%';
-      }
-      update();
-      window.addEventListener('scroll', update, { passive: true });
-      window.addEventListener('resize', update, { passive: true });
-    })();
+      };
+      addEventListener('scroll', updateProgress, { passive: true });
+      updateProgress();
+    }
 
-    /* ──────────────────────────────────────────────────────────────
-       Reveal on scroll (IntersectionObserver)
-       ────────────────────────────────────────────────────────────── */
-    (function() {
-      const io = new IntersectionObserver(entries => {
-        entries.forEach(e => {
-          if (e.isIntersecting) {
-            e.target.classList.add('is-visible');
-            io.unobserve(e.target);
+    /* O reveal de [data-reveal] passou a ser CSS scroll-driven (W1), com BASE = estado final
+       visível. O IO de reveal antigo virou redundante e foi removido — sem ele o conteúdo
+       NUNCA fica preso em opacity:0 (caso JS falhe). O IO de STEP (que muta o gráfico) é outro
+       e permanece logo abaixo: é ele que dá a coreografia data-bound. */
+
+    /* ════════════════════════════════════════════════════════════════
+       CHART — bloco de defaults §5.0 (antes do primeiro new Chart)
+       ════════════════════════════════════════════════════════════════ */
+    const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+    Chart.defaults.font.family = css('--font-ui') || css('--font-text');
+    Chart.defaults.font.size = 12;
+    Chart.defaults.color = css('--color-fg-muted');
+
+    const fmtBR  = (v, dec = 0) => v.toLocaleString('pt-BR', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+    const fmtVol = v => v >= 1 ? fmtBR(v, v % 1 ? 1 : 0) + ' bi' : (v === 0 ? '0' : fmtBR(Math.round(v * 1000)) + ' mi');
+
+    Chart.defaults.plugins.tooltip.backgroundColor = css('--color-bg-elevated');
+    Chart.defaults.plugins.tooltip.titleColor = css('--color-fg');
+    Chart.defaults.plugins.tooltip.bodyColor = css('--color-fg-muted');
+    Chart.defaults.plugins.tooltip.borderColor = css('--color-border-strong');
+    Chart.defaults.plugins.tooltip.borderWidth = 1;
+
+    if (REDUCED) Chart.defaults.animation = false;
+
+    /* ─── Dados completos — todos os pontos, sempre (placeholders) ─── */
+    const YEARS = ['2016','2017','2018','2019','2020','2021','2022','2023','2024','2025','2026','2027','2028'];
+    const SERIES = {
+      cheque: [0.86, 0.74, 0.62, 0.51, 0.37, 0.30, 0.24, 0.20, 0.16, 0.13, 0.11, null, null],
+      ted:    [0.62, 0.68, 0.75, 0.83, 0.91, 0.86, 0.74, 0.62, 0.51, 0.43, 0.38, null, null],
+      doc:    [0.33, 0.31, 0.28, 0.26, 0.22, 0.16, 0.10, 0.05, 0.01, null, null, null, null],
+      pix:    [null, null, null, null, 1.2,  9.4,  24.1, 41.9, 63.0, 77.5, 89.6, null, null],
+      proj:   [null, null, null, null, null, null, null, null, null, null, 89.6, 104,  118],
+    };
+
+    /* ─── Estado das anotações — os plugins leem daqui ─────────────── */
+    const anno = { band: false, inflection: false, ticket: false, docEnd: false, proj: false };
+
+    /* Plugin §5.0a — direct labels no fim das linhas (sem legenda default) */
+    const directLabel = {
+      id: 'directLabel',
+      afterDatasetsDraw(chart) {
+        const { ctx } = chart;
+        chart.data.datasets.forEach((ds, i) => {
+          const meta = chart.getDatasetMeta(i);
+          if (meta.hidden || ds.hidden || !meta.data.length) return;
+          let last = null;
+          for (let j = meta.data.length - 1; j >= 0; j--) {
+            if (ds.data[j] !== null && ds.data[j] !== undefined) { last = meta.data[j]; break; }
           }
+          if (!last) return;
+          ctx.save();
+          ctx.font = '600 12px ' + Chart.defaults.font.family;
+          ctx.fillStyle = ds.borderColor;
+          ctx.textBaseline = 'middle';
+          ctx.fillText(ds.label, last.x + 8, last.y);
+          ctx.restore();
         });
-      }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
-      document.querySelectorAll('[data-reveal]').forEach(el => io.observe(el));
-    })();
-
-    /* ──────────────────────────────────────────────────────────────
-       Big-fact counter (anima uma vez ao entrar no viewport)
-       ────────────────────────────────────────────────────────────── */
-    (function() {
-      const el = document.getElementById('big-fact-num');
-      if (!el) return;
-      const target = 2400;
-      const dur = 1600;
-      const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-      function format(n) {
-        return Math.round(n).toLocaleString('pt-BR');
-      }
-      if (reduced) { el.textContent = format(target); return; }
-
-      const obs = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (!entry.isIntersecting) return;
-          const start = performance.now();
-          function tick(now) {
-            const t = Math.min(1, (now - start) / dur);
-            const eased = 1 - Math.pow(1 - t, 3);
-            el.textContent = format(target * eased);
-            if (t < 1) requestAnimationFrame(tick);
-          }
-          requestAnimationFrame(tick);
-          obs.unobserve(entry.target);
-        });
-      }, { threshold: 0.5 });
-      obs.observe(el);
-    })();
-
-    /* ──────────────────────────────────────────────────────────────
-       Sticky chart: 3 steps, cada um troca dataset + título
-       Composição preservada: bar (volume) + line (tendência) no mesmo chart.
-       ────────────────────────────────────────────────────────────── */
-    const STEPS = {
-      1: {
-        title:   'Eventos processados — Jan a Jun 2024',
-        meta:    'Fase 1 · piloto',
-        caption: 'Pilotos restritos: 3 squads, volume baixo, foco em provar o modelo antes de escalar.',
-        labels:  ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
-        bars:    [12, 18, 28, 42, 60, 80],
-        line:    [10, 20, 32, 44, 58, 78],
-        unit:    'milhões/mês'
-      },
-      2: {
-        title:   'Eventos processados — Jul 2024 a Mar 2025',
-        meta:    'Fase 2 · adesão',
-        caption: 'Adesão orgânica: novos squads procuram a plataforma. Volume cresce 10× em 9 meses.',
-        labels:  ['Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez', 'Jan', 'Fev', 'Mar'],
-        bars:    [110, 180, 240, 320, 410, 520, 620, 730, 850],
-        line:    [110, 175, 245, 320, 415, 510, 615, 730, 845],
-        unit:    'milhões/mês'
-      },
-      3: {
-        title:   'Eventos processados — Abr a Out 2025',
-        meta:    'Fase 3 · padrão',
-        caption: 'Plataforma vira padrão. Crescimento em curva, não em platô. 99,97% de disponibilidade.',
-        labels:  ['Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out'],
-        bars:    [1000, 1280, 1500, 1720, 1950, 2180, 2300],
-        line:    [1010, 1270, 1490, 1720, 1955, 2170, 2300],
-        unit:    'milhões/mês'
       }
     };
 
-    function css(v) {
-      return getComputedStyle(document.documentElement).getPropertyValue(v).trim();
-    }
+    /* Plugin §5.0b adaptado — banda de evento + labels que acendem por step.
+       Tudo lê o estado `anno`; o gráfico nunca é destruído, só atualizado. */
+    const annoPlugin = {
+      id: 'annoPlugin',
+      beforeDatasetsDraw(chart) {
+        if (!anno.band) return;
+        const { ctx, chartArea, scales: { x } } = chart;
+        const x1 = x.getPixelForValue('2020'), x2 = x.getPixelForValue('2021');
+        if (isNaN(x1) || isNaN(x2)) return;
+        ctx.save();
+        ctx.fillStyle = css('--color-warn-dim');
+        ctx.fillRect(x1, chartArea.top, x2 - x1, chartArea.bottom - chartArea.top);
+        ctx.font = '600 11px ' + Chart.defaults.font.family;
+        ctx.fillStyle = css('--color-fg-muted');
+        ctx.fillText('lockdown · 2020–21', x1 + 6, chartArea.top + 14);
+        ctx.restore();
+      },
+      afterDatasetsDraw(chart) {
+        const { ctx, scales: { x, y } } = chart;
+        const accent = css('--color-accent');
+        const ink = css('--color-fg');
+        const muted = css('--color-fg-muted');
+        const fontSm = '600 11px ' + Chart.defaults.font.family;
+        const fontMd = '700 12px ' + Chart.defaults.font.family;
 
-    function makeChart() {
-      const ctx = document.getElementById('story-chart');
-      if (!ctx) return;
-      const s = STEPS[1];
-      window.__storyChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: s.labels,
-          datasets: [
-            {
-              type:  'bar',
-              label: 'Volume (milhões)',
-              data:  s.bars,
-              backgroundColor: css('--color-accent-dim'),
-              borderColor:     css('--color-accent'),
-              borderWidth: 2,
-              borderRadius: 4,
-              borderSkipped: false,
-              yAxisID: 'y'
-            },
-            {
-              type:  'line',
-              label: 'Tendência',
-              data:  s.line,
-              borderColor: css('--color-info'),
-              backgroundColor: 'transparent',
-              borderWidth: 2,
-              borderDash: [5, 4],
-              pointRadius: 0,
-              pointHoverRadius: 4,
-              tension: 0.35,
-              yAxisID: 'y'
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          animation: { duration: 700, easing: 'easeOutCubic' },
-          interaction: { mode: 'index', intersect: false },
-          plugins: {
-            legend: {
-              display: true,
-              position: 'bottom',
-              labels: {
-                color: css('--color-fg-muted'),
-                font: { family: 'Inter, system-ui, sans-serif', size: 11 },
-                boxWidth: 12, boxHeight: 12, padding: 14
-              }
-            },
-            tooltip: {
-              backgroundColor: css('--color-fg'),
-              titleColor: css('--color-bg'),
-              bodyColor:  css('--color-bg'),
-              padding: 10,
-              borderRadius: 6,
-              callbacks: {
-                label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString('pt-BR')} M`
-              }
-            }
-          },
-          scales: {
-            x: {
-              grid: { display: false },
-              ticks: { color: css('--color-fg-muted'), font: { family: 'JetBrains Mono', size: 11 } }
-            },
-            y: {
-              min: 0,
-              grid: { color: css('--color-border') },
-              ticks: {
-                color: css('--color-fg-muted'),
-                font: { family: 'JetBrains Mono', size: 11 },
-                callback: v => v.toLocaleString('pt-BR') + ' M'
-              }
-            }
+        if (anno.docEnd) {
+          const px = x.getPixelForValue('2024'), py = y.getPixelForValue(0.01);
+          if (!isNaN(px) && !isNaN(py)) {
+            ctx.save();
+            ctx.beginPath(); ctx.arc(px, py, 4, 0, Math.PI * 2);
+            ctx.strokeStyle = ink; ctx.lineWidth = 1.5; ctx.stroke();
+            ctx.font = fontSm; ctx.fillStyle = muted; ctx.textAlign = 'right';
+            ctx.fillText('jan/2024 · DOC desligado', px - 8, py - 10);
+            ctx.restore();
           }
         }
+
+        if (anno.inflection) {
+          const px = x.getPixelForValue('2021'), py = y.getPixelForValue(9.4);
+          if (!isNaN(px) && !isNaN(py)) {
+            ctx.save();
+            ctx.beginPath(); ctx.arc(px, py, 5, 0, Math.PI * 2);
+            ctx.strokeStyle = accent; ctx.lineWidth = 2; ctx.stroke();
+            ctx.strokeStyle = css('--color-border-strong'); ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(px, py - 8); ctx.lineTo(px, py - 44); ctx.stroke();
+            ctx.font = fontMd; ctx.fillStyle = ink; ctx.textAlign = 'left';
+            ctx.fillText('Ponto de inflexão', px - 4, py - 62);
+            ctx.font = fontSm; ctx.fillStyle = muted;
+            ctx.fillText('2021: 9,4 bi — mais que todo o legado somado', px - 4, py - 48);
+            ctx.restore();
+          }
+        }
+
+        if (anno.ticket) {
+          const px = x.getPixelForValue('2017'), py = y.getPixelForValue(78);
+          if (!isNaN(px) && !isNaN(py)) {
+            ctx.save();
+            ctx.strokeStyle = accent; ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(px, py - 14); ctx.lineTo(px, py + 22); ctx.stroke();
+            ctx.font = fontMd; ctx.fillStyle = ink; ctx.textAlign = 'left';
+            ctx.fillText('Ticket médio do Pix', px + 10, py - 6);
+            ctx.font = fontSm; ctx.fillStyle = muted;
+            ctx.fillText('R$ 480 (2021) → R$ 415 (2026)', px + 10, py + 10);
+            ctx.fillText('volume 10× maior, transação menor', px + 10, py + 26);
+            ctx.restore();
+          }
+        }
+
+        if (anno.proj) {
+          const px = x.getPixelForValue('2027'), py = y.getPixelForValue(104);
+          if (!isNaN(px) && !isNaN(py)) {
+            ctx.save();
+            ctx.font = fontSm; ctx.fillStyle = muted; ctx.textAlign = 'right';
+            ctx.fillText('projeção: parcelado + garantido', px, py - 14);
+            ctx.restore();
+          }
+        }
+      }
+    };
+
+    /* ─── Datasets — cores recalculadas em restyle() (tema + destaque) ── */
+    const DS_META = [
+      { key: 'cheque', label: 'Cheque',        dash: [] },
+      { key: 'ted',    label: 'TED',           dash: [7, 4] },
+      { key: 'doc',    label: 'DOC',           dash: [2, 4] },
+      { key: 'pix',    label: 'Pix',           dash: [] },
+      { key: 'proj',   label: 'projeção',      dash: [4, 5] },
+    ];
+
+    const chart = new Chart(document.getElementById('chart-pix'), {
+      type: 'line',
+      data: {
+        labels: YEARS.slice(0, 5),
+        datasets: DS_META.map(m => ({
+          label: m.label,
+          data: SERIES[m.key].slice(0, 5),
+          borderColor: css('--color-fg'),
+          backgroundColor: 'transparent',
+          borderWidth: 1.5,
+          borderDash: m.dash,
+          tension: 0,            /* medição anual discreta — sem suavização */
+          pointRadius: 0,
+          pointHoverRadius: 5,
+          pointHitRadius: 14,
+          spanGaps: false,
+          fill: false,
+          hidden: false,
+        })),
+      },
+      plugins: [directLabel, annoPlugin],
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: REDUCED ? false : { duration: 600, easing: 'easeOutQuart' },
+        interaction: { mode: 'index', intersect: false },
+        layout: { padding: { right: 76, top: 8 } },
+        plugins: {
+          legend: { display: false },  /* direct labels substituem a legenda */
+          tooltip: {
+            callbacks: {
+              label: ctx => ctx.parsed.y === null ? null : ctx.dataset.label + ': ' + fmtVol(ctx.parsed.y),
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: { color: ctx => css('--color-fg-muted'), maxRotation: 0, autoSkipPadding: 12 },
+          },
+          y: {
+            min: 0,                    /* SEMPRE 0 — comparação de magnitudes */
+            max: 1.0,
+            grid: { color: ctx => css('--color-border') },
+            ticks: { color: ctx => css('--color-fg-muted'), callback: v => fmtVol(v), maxTicksLimit: 6 },
+          }
+        }
+      }
+    });
+
+    /* ════════════════════════════════════════════════════════════════
+       STEPS — o mesmo gráfico MUTA: range, destaque, escala, anotações
+       ════════════════════════════════════════════════════════════════ */
+    const STEPS = {
+      1: { /* cheque em queda, antes do Pix */
+        end: 5, yMax: 1.0,
+        hi: ['cheque'], show: { cheque: true, ted: true, doc: true, pix: false, proj: false },
+        anno: {},
+        caption: 'Cheques compensados: de 860 mi (2016) a 370 mi (2020) — queda anterior ao Pix.'
+      },
+      2: { /* range estende a 2024; TED/DOC em foco; fim do DOC anotado */
+        end: 9, yMax: 1.0,
+        hi: ['ted', 'doc'], show: { cheque: true, ted: true, doc: true, pix: false, proj: false },
+        anno: { docEnd: true },
+        caption: 'TED recua desde o pico de 910 mi (2020); o DOC é desligado em jan/2024.'
+      },
+      3: { /* Pix entra; escala salta; ASSINATURA M5: banda + inflexão acendem */
+        end: 11, yMax: 95,
+        hi: ['pix'], show: { cheque: true, ted: true, doc: true, pix: true, proj: false },
+        anno: { band: true, inflection: true },
+        caption: 'Pix: de 1,2 bi (2020) a 89,6 bi (2026). Em 2021 já supera todo o legado somado.'
+      },
+      4: { /* mesmo range; anotação de ticket médio assume o foco */
+        end: 11, yMax: 95,
+        hi: ['pix'], show: { cheque: true, ted: true, doc: true, pix: true, proj: false },
+        anno: { ticket: true },
+        caption: 'Ticket médio do Pix: R$ 480 (2021) → R$ 415 (2026). As transações pequenas entraram.'
+      },
+      5: { /* range estende a 2028; projeção tracejada aparece */
+        end: 13, yMax: 125,
+        hi: ['pix', 'proj'], show: { cheque: true, ted: true, doc: true, pix: true, proj: true },
+        anno: { proj: true },
+        caption: 'Projeção 2027–28 (tracejado): 104 bi e 118 bi com Pix parcelado e garantido.'
+      },
+    };
+
+    let currentStep = 0;
+
+    function restyle(step) {
+      const s = STEPS[step];
+      const ink = css('--color-fg');
+      const accent = css('--color-accent');
+      const mutedLine = css('--color-fg-subtle');
+      DS_META.forEach((m, i) => {
+        const ds = chart.data.datasets[i];
+        const isPix = (m.key === 'pix' || m.key === 'proj');
+        const isHi = s.hi.includes(m.key);
+        ds.borderColor = isHi ? (isPix ? accent : ink) : mutedLine;
+        ds.borderWidth = isHi ? (isPix ? 3 : 2.5) : 1.25;
       });
     }
 
-    function refreshChartColors() {
-      if (!window.__storyChart) return;
-      const c = window.__storyChart;
-      c.data.datasets[0].backgroundColor = css('--color-accent-dim');
-      c.data.datasets[0].borderColor     = css('--color-accent');
-      c.data.datasets[1].borderColor     = css('--color-info');
-      c.options.scales.x.ticks.color = css('--color-fg-muted');
-      c.options.scales.y.ticks.color = css('--color-fg-muted');
-      c.options.scales.y.grid.color  = css('--color-border');
-      c.options.plugins.legend.labels.color = css('--color-fg-muted');
-      c.options.plugins.tooltip.backgroundColor = css('--color-fg');
-      c.options.plugins.tooltip.titleColor = css('--color-bg');
-      c.options.plugins.tooltip.bodyColor  = css('--color-bg');
-      c.update('none');
-    }
-
-    function updateStep(step) {
-      if (!window.__storyChart) return;
+    function applyStep(step) {
+      if (step === currentStep) return;
+      currentStep = step;
       const s = STEPS[step];
-      if (!s) return;
-      const c = window.__storyChart;
-      c.data.labels = s.labels;
-      c.data.datasets[0].data = s.bars;
-      c.data.datasets[1].data = s.line;
-      c.update();
-      document.getElementById('chart-title').textContent   = s.title;
-      document.getElementById('chart-meta').textContent    = s.meta;
+
+      /* mutação 1 — range temporal (labels + dados fatiados juntos) */
+      chart.data.labels = YEARS.slice(0, s.end);
+      DS_META.forEach((m, i) => {
+        const ds = chart.data.datasets[i];
+        ds.data = SERIES[m.key].slice(0, s.end);
+        ds.hidden = !s.show[m.key];      /* mutação 2 — séries entram/saem */
+      });
+      restyle(step);                      /* mutação 3 — destaque por cor/peso */
+      chart.options.scales.y.max = s.yMax;/* mutação 4 — escala Y salta com o Pix */
+      Object.assign(anno, { band: false, inflection: false, ticket: false, docEnd: false, proj: false }, s.anno);
+      chart.update();                     /* mutação 5 — anotações acendem (estado lido pelos plugins) */
       document.getElementById('chart-caption').textContent = s.caption;
     }
 
-    /* Boot do chart só quando há Chart.js carregado */
-    function bootChart() {
-      if (!window.Chart) { return; }
-      makeChart();
-
-      const steps = document.querySelectorAll('.step[data-step]');
-      const so = new IntersectionObserver(entries => {
-        entries.forEach(e => {
-          if (!e.isIntersecting) return;
-          const step = +e.target.dataset.step;
-          steps.forEach(s => s.classList.toggle('is-active', s === e.target));
-          updateStep(step);
-        });
-      }, { rootMargin: '-40% 0px -40% 0px', threshold: 0 });
-      steps.forEach(s => so.observe(s));
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', bootChart);
+    /* observer de steps (engine preservado: rootMargin centrado) */
+    const stepEls = document.querySelectorAll('.step[data-step]');
+    if (REDUCED) {
+      /* reduced-motion: narrativa estática — gráfico completo de uma vez */
+      applyStep(5);
+      Object.assign(anno, { band: true, inflection: true, ticket: false, docEnd: true, proj: true });
+      chart.update();
+      stepEls.forEach(el => el.classList.add('is-active'));
     } else {
-      bootChart();
+      const stepObs = new IntersectionObserver(es => {
+        es.forEach(e => {
+          if (!e.isIntersecting) return;
+          stepEls.forEach(el => el.classList.toggle('is-active', el === e.target));
+          applyStep(Number(e.target.dataset.step));
+        });
+      }, { rootMargin: '-42% 0px -42% 0px', threshold: 0 });
+      stepEls.forEach(s => stepObs.observe(s));
+      applyStep(1);
     }
+
+    /* toggle de tema — re-render do gráfico com os tokens novos.
+       setTheme() (boot script) aplica .no-transitions: a página não "respira" no switch. */
+    document.querySelector('.theme-toggle')?.addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme');
+      const next = cur === 'dark' ? 'light' : 'dark';
+      setTheme(next);
+      Chart.defaults.color = css('--color-fg-muted');
+      Chart.defaults.plugins.tooltip.backgroundColor = css('--color-bg-elevated');
+      Chart.defaults.plugins.tooltip.titleColor = css('--color-fg');
+      Chart.defaults.plugins.tooltip.bodyColor = css('--color-fg-muted');
+      Chart.defaults.plugins.tooltip.borderColor = css('--color-border-strong');
+      restyle(currentStep || 1);
+      chart.update();
+    });
   </script>
 </body>
 </html>

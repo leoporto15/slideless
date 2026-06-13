@@ -47,6 +47,7 @@ env/
 # /demos/ contem demos REAIS commitadas; sandboxes locais ficam em /sandbox/
 sandbox/
 output/
+outputs/
 *.tmp.html
 
 # ─── PDFs/screenshots gerados via /exportar-* (regeneraveis) ──────────

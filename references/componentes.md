@@ -145,14 +145,17 @@ document.querySelectorAll('.counter').forEach(c => cio.observe(c));
 
 ```html
 <a href="#secao" class="card" data-category="dados">
-  <div class="card__icon">📊</div>
+  <!-- ícone: SVG inline stroke (20-28px) ou NENHUM — nunca emoji -->
+  <div class="card__icon" aria-hidden="true">
+    <svg viewBox="0 0 20 20" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 17V7M9 17V3M15 17v-7"/></svg>
+  </div>
   <h3 class="card__title">Catálogo de Dados</h3>
   <p class="card__desc">Busca e linhagem para 2.4k tabelas.</p>
   <span class="card__cta">Abrir →</span>
 </a>
 ```
 
-Hover: leve translateY(-2px), border accent, shadow.
+Hover por papel: card **clicável** pode usar lift leve OU border-draw OU mudança de contraste — escolher 1 por documento (decisão do parti, não default). Card informativo não-clicável NÃO tem hover transform.
 
 ---
 
@@ -360,7 +363,7 @@ new Chart(document.getElementById('chart-line'), {
       data: [0.70, 0.85, 0.95, 1.10, 1.19],
       borderColor: css('--color-accent'),
       backgroundColor: css('--color-accent-dim'),
-      tension: 0.4, fill: true,
+      tension: 0, fill: true, // medição anual discreta — sem suavização
       pointRadius: 5, pointHoverRadius: 7,
     }]
   },

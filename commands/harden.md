@@ -34,6 +34,12 @@ A11y, keyboard navigation, reduced motion, contraste. **Não toca conteúdo nem 
 - [ ] Reveals: `opacity: 1; transform: none` quando reduced-motion
 - [ ] Fragments do deck: visíveis de imediato quando reduced-motion
 
+### Invariantes de ambição A2/A3 (os 3 de [../references/ambicao.md](../references/ambicao.md))
+- [ ] **`@supports` + estado-final-base**: todo gesto de ponta (scroll-driven, View Transitions, `@property`, kinetic type) está dentro de `@supports`, e o **CSS base mostra o estado final** — num Chrome travado nada some. Conferir que nenhum `.reveal`/`.kinetic-h`/`.w-i` esconde conteúdo no base.
+- [ ] **Branch reduced-motion em todo momento-wow**: scroll-driven desliga (estado final), cursor-proximity vira peso médio, counter mostra valor final, View Transitions `::view-transition-group(*){ animation:none }`.
+- [ ] **WebGL/minigl (A3)**: pausa quando fora de vista; fallback aurora se sem WebGL; respeita reduced-motion.
+- [ ] **`@media print`**: zera grain/glow/animação; gráfico re-renderiza em light antes de imprimir.
+
 ### Contraste
 - [ ] Texto sobre `--color-bg`: relação ≥ 4.5:1 (AA) — `--color-fg` cobre
 - [ ] Texto sobre `--color-accent`: relação ≥ 4.5:1 — usar `--color-accent-fg`

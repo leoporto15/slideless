@@ -121,45 +121,49 @@ O validador determinístico (`scripts/validar.py`) checa um subconjunto destas r
 
 ---
 
-## C-bis. Anti-patterns de design fraco (vibração visual-explainer)
+## C-bis. Anti-patterns de design fraco — princípios, não receitas
 
-A barra estética da skill é `github.com/nicobailon/visual-explainer` — não Notion editorial leve. Esses anti-patterns aparecem quando o design fica "fraco":
+> **Histórico:** a v2 desta seção prescrevia receitas literais (um único easing, glow radial obrigatório, blur fixo no hero). Resultado: todo documento "forte" saiu com o MESMO fingerprint — slop da casa. A v4 converte cada item em princípio + cardápio. **Design forte = decisões derivadas do conteúdo**, declaradas no bloco `<!-- slideless:parti -->` (ver [direcao-de-arte.md](direcao-de-arte.md)). Receita única repetida é design fraco, por melhor que a receita seja.
 
 ### C6. Tipografia hero sem `clamp()` fluido
-**Errado:** `font-size: 2.5rem` fixo em hero.
-**Certo:** `font-size: clamp(2.75rem, 2rem + 4vw, 5rem)` — escala viewport-responsiva. O slideless v2 tem `--size-display`, `--size-mega`, `--size-giga` prontos.
+**Errado:** `font-size: 2.5rem` fixo em hero de deck.
+**Certo:** escala viewport-responsiva via `clamp()` — `--size-display`, `--size-mega`, `--size-giga` prontos.
 
-### C7. Easing simplório (`ease-out`, `ease`)
-**Errado:** `transition: opacity 200ms ease-out;`
-**Certo:** `transition: opacity 800ms cubic-bezier(0.22, 1, 0.36, 1)` — easing cinemático. Tokens: `--ease-out`, `--ease-emphatic`, `--ease-spring`.
+### C7. Easing sem papel
+**Errado (forma 1):** `transition: all 200ms ease;` — curva default sem decisão.
+**Errado (forma 2):** o mesmo `cubic-bezier` para TODOS os movimentos do documento — era a receita da v2 e é fingerprint.
+**Certo:** 2–3 curvas nomeadas em `:root`, cada uma com papel comentado (`/* papel: entrada */`, `/* papel: micro-interação */`). Entrada nunca usa a mesma curva que hover. `transition` sempre property-scoped — **`transition: all` é proibido**.
 
-### C8. Sem glow radial atmosférico
-**Errado:** fundo flat `var(--color-bg)` em deck/hero.
-**Certo:** fundo + `--glow-hero` ou `--glow-warm` via `body::before` ou pseudo-element. Cria profundidade. Cores deliberadamente posicionadas (top-center, bottom-left).
+### C8. Fundo sem decisão
+**Errado (forma 1):** fundo flat por omissão — ninguém decidiu nada.
+**Errado (forma 2):** glow radial em todo documento por obrigação — era a regra da v2; decoração atmosférica universal é a definição de pasteurização e contradiz A4.
+**Certo:** tratamento de fundo escolhido por documento do cardápio (flat / flat+vinheta / grain / dot grid / pauta / banda de cor / glow localizado) e registrado no parti. **Flat é opção legítima** — é a escolha certa para report e qualquer documento de impressão. Glow: no máximo 1, atrás de UM elemento específico, nunca wallpaper incondicional em `body::before`.
 
-### C9. Hero sem `filter: blur()` unblur
-**Errado:** hero entra só com `opacity: 0 → 1`.
-**Certo:** `from { filter: blur(16px); }` → `to { filter: blur(0); }`. Padrão `heroIn` no template-deck.
+### C9. Entrada de hero igual em todo documento
+**Errado:** o mesmo `heroIn` com blur(16px) em todo deck (receita v2 = fingerprint).
+**Certo:** a entrada do hero pertence ao perfil de motion do parti: estático (nenhuma), editorial (fade simples), cinemático (blur-unblur, wipe ou settle — escolher 1). Documento estático SEM animação de hero é válido e frequentemente mais elegante.
 
-### C10. Monocromia em accent
-**Errado:** todos os destaques usam `var(--color-accent)`.
-**Certo:** usar paleta semântica 6-cor (accent, info, success, sage, teal, plum) para criar dimensões visuais distintas. Tokens prontos em `assets/temas/itau.css` v2.
+### C10. Cor sem regime declarado
+**Errado (forma 1):** todos os destaques em `var(--color-accent)` sem intenção.
+**Errado (forma 2):** distribuir accent/info/teal/sage/plum em sequência pela ordem do documento ("color-cycling") — uniformidade disfarçada de variedade, e violação do C14.
+**Certo:** declarar 1 regime no parti: (a) bicromático ink+accent — legítimo e frequentemente superior; (b) duotone com relação declarada; (c) polícromo semântico SOMENTE com mapeamento explícito (`<!-- cores: teal=crédito, info=macro, plum=risco -->`) e cada cor usada ≥2× no mesmo papel.
 
-### C11. Falta letter-spacing negativo em display
-**Errado:** `<h1 class="title-mega">` sem letter-spacing.
-**Certo:** `letter-spacing: -0.035em` ou `-0.055em` em tipografia gigante — compensa o "ar" excessivo entre letras grandes. Tokens já aplicados.
+### C11. Letter-spacing de valor único
+**Errado:** um único valor de tracking para todos os headings (a v2 prescrevia −0.035em fixo — vira fingerprint).
+**Certo:** tracking por corpo: negativo em display grande (−0.02 a −0.04em em ≥56px), zero no body, positivo em caps/labels (+0.06 a +0.14em). O documento tem ≥3 valores distintos com sinais diferentes.
 
-### C12. Stagger via delay hardcoded (não via `--i`)
-**Errado:** cada elemento com `transition-delay: 200ms`, `300ms`, `400ms` repetidos.
-**Certo:** `style="--i: 0"`, `style="--i: 1"`, etc., e CSS: `transition-delay: calc(var(--i, 0) * 70ms + 250ms);`. Mais elegante e manutenível.
+### C12. Stagger hardcoded e universal
+**Errado (forma 1):** `transition-delay: 200ms/300ms/400ms` repetidos elemento a elemento.
+**Errado (forma 2):** stagger linear `calc(var(--i) * 70ms)` aplicado por ordem do DOM a TODO grupo de elementos — o default da v2, hoje um tell.
+**Certo:** stagger só dentro de um grupo homogêneo (barras do mesmo gráfico, itens da mesma lista revelada), no máximo 1 grupo por viewport, via `--i` quando usado.
 
 ### C13. Sem depth tiers
 **Errado:** todas as seções com mesma sombra/padding.
-**Certo:** `.tier-hero` (raised, shadow-lg, padding amplo), `.tier-default` (flat, shadow-sm), `.tier-recessed` (inset). Tokens prontos.
+**Certo:** `.tier-hero` / `.tier-default` / `.tier-recessed` — quando o regime de luz do documento usa elevação. Em registro impresso/flat, profundidade vem de fio e contraste, não de sombra.
 
 ### C14. Cores semânticas como decoração
-**Errado:** seções alternando background sage/teal/plum só pra "variar".
-**Certo:** cada cor carrega significado (accent=brand, info=dado, success=resultado positivo, sage=neutro vivo, teal=técnico/analítico, plum=crítico/atenção). Usar consistentemente.
+**Errado:** seções alternando background sage/teal/plum só pra "variar"; cards numerados recebendo cada um uma cor da paleta em sequência.
+**Certo:** cada cor carrega significado (accent=brand, info=dado, success=resultado positivo, teal=técnico/analítico, plum=crítico/atenção). Usar consistentemente — cor é informação, não enfeite.
 
 ## D. Anti-patterns por modelo
 
@@ -184,13 +188,20 @@ A barra estética da skill é `github.com/nicobailon/visual-explainer` — não 
 - O que NÃO muda: dark mode, prefers-reduced-motion, keyboard nav, foco visível.
 - Não usar transition que demore > 800ms (cansa apresentador).
 
+### report
+- Editorial denso para impressão/PDF: tipografia editorial (h1 ~2.5rem), NUNCA gigante.
+- **Perfil de motion estático por padrão** (registro `institucional-impresso`/`relatorio-de-bancada`): zero `@keyframes` de entrada; profundidade por fio, não por sombra difusa. Materialidade: grain estático no máximo, nunca aurora/glass/WebGL. `ambicao: A3` é proibido (falha P10).
+- `@media print` rigoroso: oculta chrome interativo, força tema light, quebra de página correta, charts re-renderizam em light antes de imprimir.
+- Tabelas broadsheet (sem card), `tabular-nums`, fio duplo no total. Footnotes com link mútuo.
+
 ---
 
 ## E. Checklist mental rápido antes de entregar
 
-1. Parece um Notion/handbook do GitLab? ✓
+1. Parece feito sob medida para ESTE conteúdo? ✓ (cobrindo o logo e o texto, é distinguível do exemplo canônico do modelo?)
 2. Parece um slide do PowerPoint? ✗
-3. Funciona em dark mode sem flash? ✓
-4. Tem keyboard navigation onde precisa? ✓
-5. Conteúdo é do usuário (não inventado)? ✓
-6. Validador determinístico passa? ✓
+3. Parece gerado por IA? ✗ (glow+kicker-dot+fade-up+hover-lift+grid de cards = a coocorrência denuncia, não o elemento isolado)
+4. Funciona em dark mode sem flash? ✓
+5. Tem keyboard navigation onde precisa? ✓
+6. Conteúdo é do usuário (não inventado)? ✓
+7. Validador determinístico passa? ✓

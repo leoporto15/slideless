@@ -1,47 +1,67 @@
 /*
- * slideless — tema neutro (azul accent + Inter)
+ * slideless — tema neutro v4 (duas camadas)
  *
- * Sem tokens --itau-*. Para documentos que vão para fora do Itaú,
- * materiais sem brand, ou contextos onde a cor laranja não cabe.
+ * Refeito do zero na v4. O neutro v2 era o AI-slop canônico: Inter como
+ * display E texto, accent blue-600 do Tailwind, neutros slate, violet no
+ * syntax. O v4 tem paleta própria desenhada — azul-tinta editorial sobre
+ * papel neutro — e NENHUMA fonte própria: a voz tipográfica vem 100% do
+ * kit do documento (references/type-kits.md).
  *
- * Como usar: idêntico ao itau.css — copiar inteiro para o <style> do HTML.
+ *  [BASE — fixa]      paleta de tinta, a11y, dark mode. Copiar sempre.
+ *  [DIREÇÃO]          fontes (slots --kit-*), radius, sombras, easings,
+ *                     componentes — defaults neutros que o parti
+ *                     (references/direcao-de-arte.md) compõe ou renuncia.
+ *  [SISTEMA]          escala, espaço, layout.
+ *
+ * Motion NÃO mora no tema: vem do perfil declarado no bloco
+ * <!-- slideless:parti -->, colado como bloco aditivo.
+ * Sem tokens --itau-*. Para documentos fora do Itaú, sem brand, ou
+ * white-label.
  */
 
 :root {
-  /* Light theme — neutros frios + accent azul */
-  --color-bg:            #ffffff;
-  --color-bg-elevated:   #f8fafc;
-  --color-bg-sunken:     #f1f5f9;
-  --color-on-warn-icon:  #0f172a;   /* fixo nos dois temas — fundo do ícone é amarelo */
-  --color-fg:            #0f172a;
-  --color-fg-muted:      #475569;
-  --color-fg-subtle:     #94a3b8;
-  --color-border:        #e2e8f0;
-  --color-border-strong: #cbd5e1;
-  --color-accent:        #2563eb;
-  --color-accent-hover:  #1d4ed8;
+  /* ─── [BASE] Papel e tinta (light) ─────────────────────────────────
+     Neutros desenhados — nem slate do Tailwind, nem branco puro.        */
+  --color-bg:            #fbfbf9;   /* papel neutro */
+  --color-bg-elevated:   #ffffff;
+  --color-bg-sunken:     #f3f3ef;
+  --color-fg:            #1d2126;   /* tinta fria, não slate-900 */
+  --color-fg-muted:      #555c64;
+  --color-fg-subtle:     #878d94;
+  --color-border:        rgba(29, 33, 38, 0.12);
+  --color-border-strong: rgba(29, 33, 38, 0.22);
+  --color-on-warn-icon:  #1d2126;   /* fixo nos dois temas — fundo do ícone é amarelo */
+
+  /* ─── [BASE] Accent — azul-tinta próprio (≠ blue-600 #2563eb) ────── */
+  --color-accent:        #1c4d8d;
+  --color-accent-hover:  #153c70;
   --color-accent-fg:     #ffffff;
 
-  /* Callouts */
-  --color-info-bg:     #eff6ff;
-  --color-info-border: #3b82f6;
-  --color-tip-bg:      #f0fdf4;
-  --color-tip-border:  #22c55e;
-  --color-warn-bg:     #fffbeb;
-  --color-warn-border: #f59e0b;
-  --color-danger-bg:     #fef2f2;
-  --color-danger-border: #ef4444;
+  /* ─── [BASE] Callouts — matizes desenhados, saturação de tinta ───── */
+  --color-info-bg:     rgba(45, 109, 168, 0.07);
+  --color-info-border: #2d6da8;
+  --color-tip-bg:      rgba(62, 122, 71, 0.07);
+  --color-tip-border:  #3e7a47;
+  --color-warn-bg:     rgba(176, 125, 24, 0.09);
+  --color-warn-border: #b07d18;
+  --color-danger-bg:     rgba(173, 58, 58, 0.07);
+  --color-danger-border: #ad3a3a;
 
-  /* Syntax highlight */
-  --syntax-string:   #16a34a;
+  /* ─── [BASE] Syntax highlight ──────────────────────────────────────── */
+  --syntax-string:   #2e7d4f;
   --syntax-keyword:  var(--color-accent);
-  --syntax-function: #8b5cf6;
+  --syntax-function: #0e7490;
+  --syntax-comment:  var(--color-fg-subtle);
 
-  /* Tipografia */
-  --font-text:    'Inter', -apple-system, system-ui, sans-serif;
-  --font-display: 'Inter', -apple-system, system-ui, sans-serif;
-  --font-mono:    'JetBrains Mono', 'SF Mono', Consolas, monospace;
+  /* ─── [DIREÇÃO] Tipografia — slots do kit (type-kits.md) ─────────────
+     O tema neutro NÃO tem fonte própria. Inter em qualquer papel é
+     proibido aqui. Sem kit declarado, degrada para stack de sistema
+     digna (Georgia/Segoe), nunca para um default de IA.                 */
+  --font-display: var(--kit-display, Georgia, 'Times New Roman'), serif;
+  --font-text:    var(--kit-text, 'Segoe UI', Tahoma), -apple-system, sans-serif;
+  --font-mono:    var(--kit-mono, Consolas, 'Courier New'), monospace;
 
+  /* ─── [SISTEMA] Escala ─────────────────────────────────────────────── */
   --size-h1:    2.5rem;
   --size-h2:    1.75rem;
   --size-h3:    1.25rem;
@@ -52,26 +72,32 @@
   --size-xs:    0.8125rem;
   --size-code:  0.875rem;
 
+  /* ─── [SISTEMA] Espaço ─────────────────────────────────────────────── */
   --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem;
   --space-4: 1rem;    --space-5: 1.5rem; --space-6: 2rem;
   --space-7: 2.5rem;  --space-8: 3rem;   --space-10: 4rem;
   --space-12: 5rem;
 
+  /* ─── [SISTEMA] Layout ─────────────────────────────────────────────── */
   --content-max: 720px;
   --sidebar-w:   268px;
   --toc-w:       220px;
   --header-h:    56px;
 
+  /* ─── [DIREÇÃO] Radius, sombra — defaults neutros ─────────────────────
+     Máx 2 valores de radius por documento; regime de luz é decisão do
+     parti (registro impresso usa fio, não sombra).                       */
   --radius-sm: 4px;
   --radius:    8px;
   --radius-lg: 12px;
 
-  --shadow-sm: 0 1px 2px rgba(15,23,42,0.04);
-  --shadow:    0 1px 3px rgba(15,23,42,0.06), 0 4px 12px rgba(15,23,42,0.04);
-  --shadow-lg: 0 4px 6px rgba(15,23,42,0.05), 0 10px 24px rgba(15,23,42,0.08);
+  --shadow-sm: 0 1px 2px rgba(29, 33, 38, 0.05);
+  --shadow:    0 1px 3px rgba(29, 33, 38, 0.06), 0 4px 12px rgba(29, 33, 38, 0.05);
+  --shadow-lg: 0 4px 6px rgba(29, 33, 38, 0.05), 0 10px 24px rgba(29, 33, 38, 0.09);
 
-  --ease:        cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-out:    cubic-bezier(0, 0, 0.2, 1);
+  /* ─── [DIREÇÃO] Easing — vocabulário com papel, nunca curva única ──── */
+  --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);   /* papel: entrada      */
+  --ease-snap:   cubic-bezier(0.2, 0, 0, 1);       /* papel: micro        */
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
   --duration-fast:  150ms;
   --duration:       250ms;
@@ -79,32 +105,38 @@
   --duration-fade:  700ms;
 }
 
+/* ─── [BASE] Dark — tinta invertida, não slate ───────────────────────── */
 [data-theme="dark"] {
-  --color-bg:            #0f172a;   /* slate-900 */
-  --color-bg-elevated:   #1e293b;   /* slate-800 */
-  --color-bg-sunken:     #0a0f1c;
-  --color-fg:            #e2e8f0;
-  --color-fg-muted:      #94a3b8;
-  --color-fg-subtle:     #64748b;
-  --color-border:        #334155;
-  --color-border-strong: #475569;
-  --color-accent:        #60a5fa;
-  --color-accent-hover:  #93c5fd;
-  --color-accent-fg:     #0f172a;
+  --color-bg:            #15181c;
+  --color-bg-elevated:   #1d2127;
+  --color-bg-sunken:     #101317;
+  --color-fg:            #e6e7e4;
+  --color-fg-muted:      #a3a8ad;
+  --color-fg-subtle:     #70767d;
+  --color-border:        rgba(230, 231, 228, 0.12);
+  --color-border-strong: rgba(230, 231, 228, 0.22);
+  --color-accent:        #7da7d9;
+  --color-accent-hover:  #a3c2e8;
+  --color-accent-fg:     #15181c;
 
-  --color-info-bg:   rgba(59, 130, 246, 0.10);
-  --color-tip-bg:    rgba(34, 197, 94, 0.10);
-  --color-warn-bg:   rgba(245, 158, 11, 0.10);
-  --color-danger-bg: rgba(239, 68, 68, 0.10);
+  --color-info-bg:   rgba(125, 167, 217, 0.10);
+  --color-tip-bg:    rgba(118, 168, 126, 0.10);
+  --color-warn-bg:   rgba(204, 161, 73, 0.10);
+  --color-danger-bg: rgba(209, 116, 116, 0.10);
+  --color-info-border:   #7da7d9;
+  --color-tip-border:    #76a87e;
+  --color-warn-border:   #cca149;
+  --color-danger-border: #d17474;
 
-  --syntax-string:   #4ade80;
+  --syntax-string:   #7fbf8f;
+  --syntax-function: #6fc3d4;
 
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
   --shadow:    0 1px 3px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.3);
   --shadow-lg: 0 4px 6px rgba(0,0,0,0.4), 0 10px 24px rgba(0,0,0,0.5);
 }
 
-/* ─── Reset / base — idêntico ao itau.css ──────────────────────────── */
+/* ─── [BASE] Reset / base ────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body {
@@ -115,6 +147,7 @@ body {
   color: var(--color-fg);
   background: var(--color-bg);
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
   transition: background var(--duration-fast), color var(--duration-fast);
 }
 
@@ -128,9 +161,9 @@ h1, h2, h3, h4 {
   font-family: var(--font-display);
   color: var(--color-fg);
   line-height: 1.25;
-  letter-spacing: -0.015em;
+  text-wrap: balance;
 }
-h1 { font-size: var(--size-h1); font-weight: 700; margin: 0 0 var(--space-3); }
+h1 { font-size: var(--size-h1); font-weight: 700; margin: 0 0 var(--space-3); letter-spacing: -0.02em; }
 h2 {
   font-size: var(--size-h2); font-weight: 700;
   margin: var(--space-10) 0 var(--space-4);
@@ -144,7 +177,7 @@ h3 {
 }
 h4 { font-size: var(--size-h4); font-weight: 600; margin: var(--space-5) 0 var(--space-2); }
 
-p { margin: 0 0 var(--space-4); max-width: 65ch; color: var(--color-fg); }
+p { margin: 0 0 var(--space-4); max-width: 65ch; color: var(--color-fg); text-wrap: pretty; }
 .lead {
   font-size: var(--size-lead);
   line-height: 1.5;
@@ -167,10 +200,11 @@ ul, ol { padding-left: var(--space-5); margin: 0 0 var(--space-4); }
 li { margin-bottom: var(--space-2); max-width: 65ch; }
 li::marker { color: var(--color-fg-subtle); }
 
-/* Callouts, code block, toggle, theme-toggle, reveal, tabs, cards,
-   métricas, timeline, prefers-reduced-motion — IDÊNTICOS ao itau.css
-   exceto pelas cores que vêm via tokens (var(--color-*)).
-   Para evitar drift, copie esse bloco do itau.css quando atualizar. */
+/* ─── [BASE] Microtipografia de dados ────────────────────────────────── */
+.num, td.num, .metric__val { font-variant-numeric: tabular-nums lining-nums; }
+td.num { text-align: right; }
+
+/* ─── [DIREÇÃO] Componentes — defaults neutros, o parti compõe ───────── */
 
 .callout { display: flex; gap: var(--space-4); padding: var(--space-4) var(--space-5); margin: var(--space-5) 0; border-left: 3px solid; border-radius: var(--radius); }
 .callout--info   { background: var(--color-info-bg);   border-color: var(--color-info-border); }
@@ -189,40 +223,40 @@ li::marker { color: var(--color-fg-subtle); }
 .code { position: relative; background: var(--color-bg-sunken); border-radius: var(--radius); margin: var(--space-4) 0; border: 1px solid var(--color-border); overflow: hidden; }
 .code__head { display: flex; align-items: center; justify-content: space-between; padding: var(--space-2) var(--space-3) var(--space-2) var(--space-4); border-bottom: 1px solid var(--color-border); background: var(--color-bg-elevated); }
 .code__lang  { font-family: var(--font-mono); font-size: var(--size-xs); color: var(--color-fg-subtle); }
-.code__copy { padding: 4px 10px; font-size: var(--size-xs); background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-sm); cursor: pointer; color: var(--color-fg-muted); font: inherit; transition: all var(--duration-fast); }
+.code__copy { padding: 4px 10px; font-size: var(--size-xs); background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-sm); cursor: pointer; color: var(--color-fg-muted); font: inherit; transition: color var(--duration-fast) var(--ease-snap), border-color var(--duration-fast) var(--ease-snap); }
 .code__copy:hover { color: var(--color-fg); border-color: var(--color-border-strong); }
 .code__copy.is-copied { color: var(--color-accent); border-color: var(--color-accent); }
 .code pre { padding: var(--space-4); overflow-x: auto; margin: 0; }
 .code code { font-family: var(--font-mono); font-size: var(--size-code); line-height: 1.65; color: var(--color-fg); }
-.tk-comment { color: var(--color-fg-subtle); font-style: italic; }
+.tk-comment { color: var(--syntax-comment); font-style: italic; }
 .tk-str { color: var(--syntax-string); }
 .tk-kw  { color: var(--syntax-keyword); font-weight: 500; }
 .tk-fn  { color: var(--syntax-function); }
 
-.toggle { border: 1px solid var(--color-border); border-radius: var(--radius); margin: var(--space-3) 0; overflow: hidden; background: var(--color-bg); transition: border-color var(--duration-fast); }
+.toggle { border: 1px solid var(--color-border); border-radius: var(--radius); margin: var(--space-3) 0; overflow: hidden; background: var(--color-bg); transition: border-color var(--duration-fast) var(--ease-snap); }
 .toggle:hover { border-color: var(--color-border-strong); }
 .toggle[open] { background: var(--color-bg-elevated); }
 .toggle__summary { padding: var(--space-3) var(--space-5); cursor: pointer; font-weight: 500; font-size: var(--size-small); list-style: none; }
 .toggle__summary::-webkit-details-marker { display: none; }
-.toggle__summary::before { content: '▸'; display: inline-block; margin-right: var(--space-3); color: var(--color-fg-subtle); transition: transform var(--duration-fast); }
+.toggle__summary::before { content: '›'; display: inline-block; margin-right: var(--space-3); color: var(--color-fg-subtle); transition: transform var(--duration-fast) var(--ease-snap); }
 .toggle[open] .toggle__summary::before { transform: rotate(90deg); }
 .toggle__body { padding: 0 var(--space-5) var(--space-4); }
 
-.theme-toggle { width: 32px; height: 32px; display: grid; place-items: center; background: transparent; border: 1px solid var(--color-border); border-radius: var(--radius-sm); cursor: pointer; color: var(--color-fg); font-size: 14px; transition: all var(--duration-fast); }
+.theme-toggle { width: 32px; height: 32px; display: grid; place-items: center; background: transparent; border: 1px solid var(--color-border); border-radius: var(--radius-sm); cursor: pointer; color: var(--color-fg); font-size: 14px; transition: background-color var(--duration-fast) var(--ease-snap), border-color var(--duration-fast) var(--ease-snap); }
 .theme-toggle:hover { background: var(--color-bg-elevated); border-color: var(--color-border-strong); }
 
-[data-reveal] { opacity: 0; transform: translateY(24px); transition: opacity 600ms var(--ease-out), transform 600ms var(--ease-out); }
-[data-reveal].is-visible { opacity: 1; transform: none; }
+/* Motion NÃO mora no tema — perfil do parti, colado como bloco aditivo. */
 
 .tabs { display: flex; gap: var(--space-1); border-bottom: 1px solid var(--color-border); margin-bottom: var(--space-5); }
-.tab { padding: var(--space-3) var(--space-4); background: transparent; border: 0; font: inherit; font-size: var(--size-small); font-weight: 500; color: var(--color-fg-muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all var(--duration-fast); }
+.tab { padding: var(--space-3) var(--space-4); background: transparent; border: 0; font: inherit; font-size: var(--size-small); font-weight: 500; color: var(--color-fg-muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color var(--duration-fast) var(--ease-snap), border-color var(--duration-fast) var(--ease-snap); }
 .tab:hover { color: var(--color-fg); }
 .tab.is-active { color: var(--color-accent); border-bottom-color: var(--color-accent); }
 .tab-panel { display: none; }
 .tab-panel.is-active { display: block; }
 
-.card { display: block; padding: var(--space-5); background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-lg); text-decoration: none; color: inherit; transition: all var(--duration-fast); }
-.card:hover { transform: translateY(-2px); border-color: var(--color-accent); box-shadow: var(--shadow); }
+.card { display: block; padding: var(--space-5); background: var(--color-bg-elevated); border: 1px solid var(--color-border); border-radius: var(--radius-lg); text-decoration: none; color: inherit; transition: border-color var(--duration-fast) var(--ease-snap); }
+/* hover-lift NÃO existe aqui (tell de IA) — affordance é decisão do parti, por papel */
+.card:hover { border-color: var(--color-border-strong); }
 .card__icon { font-size: 28px; margin-bottom: var(--space-3); }
 .card__title { font-family: var(--font-display); font-size: var(--size-h3); margin: 0 0 var(--space-2); }
 .card__desc { font-size: var(--size-small); color: var(--color-fg-muted); margin: 0 0 var(--space-3); max-width: 38ch; }
@@ -234,6 +268,8 @@ li::marker { color: var(--color-fg-subtle); }
 .metric__val span { color: var(--color-accent); }
 .metric__label { font-size: var(--size-small); color: var(--color-fg-muted); margin: 0; max-width: 22ch; line-height: 1.4; }
 
+/* Timeline — DEFAULT TRIBUTADO (tell catalogado "timeline-dot"): usar
+   exige justificativa no parti; alternativas em componentes.md.          */
 .timeline { list-style: none; padding: 0; margin: var(--space-5) 0; position: relative; }
 .timeline::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 2px; background: var(--color-border); }
 .timeline__item { position: relative; padding-left: var(--space-7); margin-bottom: var(--space-6); }
@@ -242,6 +278,7 @@ li::marker { color: var(--color-fg-subtle); }
 .timeline__title { font-family: var(--font-display); font-size: 1.0625rem; margin: 0 0 var(--space-1); }
 .timeline__desc { font-size: var(--size-small); color: var(--color-fg-muted); margin: 0; line-height: 1.5; }
 
+/* ─── [BASE] Reduced motion ──────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -249,5 +286,28 @@ li::marker { color: var(--color-fg-subtle); }
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+  /* para reveals colados pelo perfil de motion do parti — o tema não define
+     mais [data-reveal]{opacity:0}; esta linha é defensiva: garante que QUALQUER
+     reveal colado fique visível e sem transform sob reduced-motion. */
   [data-reveal] { opacity: 1; transform: none; }
+}
+
+/* ─── [BASE] Paleta em OKLCH (fallback: hex acima) ───────────────────── */
+@supports (color: oklch(60% 0.1 50)) {
+  :root {
+    --color-accent:        oklch(42% 0.09 255);
+    --color-accent-hover:  oklch(35% 0.09 255);
+    --color-info-border:   oklch(52% 0.10 250);
+    --color-tip-border:    oklch(50% 0.09 150);
+    --color-warn-border:   oklch(58% 0.11 80);
+    --color-danger-border: oklch(48% 0.13 25);
+  }
+  [data-theme="dark"] {
+    --color-accent:        oklch(72% 0.08 255);
+    --color-accent-hover:  oklch(80% 0.07 255);
+    --color-info-border:   oklch(72% 0.08 255);
+    --color-tip-border:    oklch(70% 0.09 150);
+    --color-warn-border:   oklch(72% 0.10 85);
+    --color-danger-border: oklch(68% 0.12 25);
+  }
 }

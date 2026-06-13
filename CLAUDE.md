@@ -12,6 +12,9 @@ Spec principal da skill: [SKILL.md](SKILL.md). Lê on-demand quando uma tarefa c
 
 Não carregar inline. Abrir só quando o trabalho exigir:
 
+- **Direção de arte (o Parti — LER ANTES DE GERAR):** [references/direcao-de-arte.md](references/direcao-de-arte.md)
+- Kits tipográficos + fontes banidas: [references/type-kits.md](references/type-kits.md)
+- Ambição (teto cutting-edge A1/A2/A3 + momentos-wow): [references/ambicao.md](references/ambicao.md)
 - Design system, tokens, dark mode, boot script: [references/design-system.md](references/design-system.md)
 - Componentes reutilizáveis: [references/componentes.md](references/componentes.md)
 - Padrões CSS (gráficos, tabelas, depth tiers, Mermaid): [references/css-patterns.md](references/css-patterns.md)
@@ -35,9 +38,9 @@ slideless/
   assets/
     templates/                ← templates base por modelo (handbook, hub, scrollytelling, site, deck, report)
     temas/                    ← itau.css (laranja #FF6200), neutro.css (azul)
-  commands/                   ← 30 slash commands (1 arquivo cada)
+  commands/                   ← 31 slash commands (1 arquivo cada)
   references/                 ← documentação técnica detalhada (consultar on-demand)
-  demos/                      ← exemplos pareados (3 demos × 6 modelos cada)
+  demos/                      ← exemplos pareados (3 famílias × 7 documentos: os 6 modelos + deck-overdrive)
 ```
 
 ## Comandos principais

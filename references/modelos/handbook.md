@@ -2,7 +2,8 @@
 
 Manual com sidebar fixa + conteúdo central + TOC sticky. Para documentação longa, manuais, onboarding, runbooks, políticas internas.
 
-**Referência mental:** GitLab Handbook, Stripe Docs, Notion Pages.
+**Referência mental:** Stripe Press, Increment Magazine, docs da Linear, GitLab Handbook (estrutura, não estética).
+**Teste de falha:** se parece uma página de Notion com sidebar, o documento falhou a direção de arte.
 **Exemplo:** [../../assets/exemplos/exemplo-handbook.html](../../assets/exemplos/exemplo-handbook.html).
 **Template vazio:** [../../assets/templates/template-handbook.html](../../assets/templates/template-handbook.html).
 
@@ -147,7 +148,8 @@ Não usar reveal em elementos internos (parágrafos, listas). Reveal é da seç�
   <title>… — Handbook</title>
   <script>/* boot script de tema */</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- link do kit tipográfico do documento (references/type-kits.md) — nunca Inter como display -->
+  <link href="https://fonts.googleapis.com/css2?family=<KIT>&display=swap" rel="stylesheet">
   <style>/* tokens + componentes */</style>
 </head>
 <body>

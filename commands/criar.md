@@ -45,10 +45,18 @@ Você é um wizard que ajuda alguém **sem afinidade técnica** a criar um docum
 - Tenho ideias na cabeça, preciso te explicar
 - Não tenho nada ainda — me ajuda a estruturar
 
-### Q5 — Visual (header "Visual")
-"Que estética?"
+### Q5 — Voz (header "Voz")
+"Como esse documento deve soar?" *(se a pessoa não souber, sugerir pelo assunto — tabela de registros em [../references/direcao-de-arte.md](../references/direcao-de-arte.md) §1 — e pedir confirmação de 1 clique)*
+- **Jornal de negócios** — denso, sério, números protagonistas → registro `relatorio-de-bancada`
+- **Relatório formal** — clássico, bom de imprimir → registro `institucional-impresso`
+- **Manual técnico** — preciso, de engenharia → registro `tecnico-preciso`
+- **Revista interna** — quente, humano, expressivo → registro `revista-interna`
+- **Impacto de auditório** — pôster, tipografia gigante → registro `poster-de-auditorio`
+
+### Q5b — Marca (header "Marca")
+"Cores do banco ou neutro?"
 - Tema Itaú (laranja, padrão do banco)
-- Tema neutro (azul, para contextos não-Itaú)
+- Tema neutro (azul-tinta, para contextos não-Itaú)
 
 ## Decisão do modelo (oculto do usuário até anunciar)
 
@@ -98,6 +106,8 @@ Baseado em Q4:
 **"Não tenho nada"** → "Vamos começar do começo. Qual é o assunto? Me conta como se estivesse explicando para um colega novo no banco — em 2-3 parágrafos."
 
 ### Passo 3 — Estruturar antes de gerar
+
+A resposta de Q5 roteia o **parti** ([../references/direcao-de-arte.md](../references/direcao-de-arte.md)): registro → kit/capa/superfície/motion + **ambição** (a 7ª decisão — [../references/ambicao.md](../references/ambicao.md)). Default de ambição **pelo modelo escolhido**: deck/hub/site/scrollytelling/handbook = **A2-elevado**; report = **A1-contido**. Se A2/A3, declarar 1 `momento-wow` (W#) ligado ao dado-tese; A3 só com conteúdo à altura e nunca em registro sóbrio. Ao mostrar o mapa para aprovação, incluir o parti **traduzido para leigo** (1 linha, sem jargão): *"Visual: vai abrir com o número 22,3% bem grande, tipografia de jornal, sem efeitos de brilho — e o número conta sozinho até 22,3% ao entrar na tela."* Se a pessoa quiser "igual ao documento anterior", usar `serie: herdar` — continuidade é decisão declarada, não acidente.
 
 **SEMPRE** chamar `/estruturar` (ou aplicar a lógica do `/estruturar` inline) antes de gerar HTML, especialmente quando:
 - Conteúdo veio de PDF/PPT (denso)

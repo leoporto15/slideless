@@ -66,6 +66,6 @@ Usuário descreveu objetivo ("quero um handbook sobre onboarding de pessoa dados
 - Citações ("disse o diretor X")
 - Métricas de negócio (NPS, churn, MAU)
 - Nomes de produtos ou plataformas internas que você não viu na conversa
-- Logos ou marcas além do Itaú (`assets/logos/itau.png`)
+- Logos ou marcas além do Itaú (`assets/logos/wordmark-black.png`)
 
 Se algum desses for necessário e o usuário não forneceu, **pergunte ou marque como `[A CONFIRMAR]`** em destaque no HTML.
