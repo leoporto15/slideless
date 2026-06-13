@@ -16,6 +16,32 @@ Priorize por categoria: **🚫 bloqueante > ⚠️ alto > 🟡 médio > 💡 sug
 - [ ] Conteúdo é do usuário (nenhum lorem ipsum, nenhum dado interno do Itaú inventado)?
 - [ ] Validador determinístico passa (`python scripts/validar.py`)?
 - [ ] Anti-patterns do tipo "PPT-em-HTML" ausentes? (ver [anti-patterns.md](anti-patterns.md) A1-A8 para modelos não-deck)
+- [ ] Bloco `<!-- slideless:parti -->` presente e completo no `<head>`, com as **7 decisões** (registro, kit, capa, superfície+luz, motion, ambição, assinatura) + `nao-vai-ter`? ([direcao-de-arte.md](direcao-de-arte.md))
+
+---
+
+## 🎨 Direção de arte (categoria P — fingerprint risk)
+
+- [ ] 🔴 **Swap test**: cobrindo o logo e o laranja, este documento é distinguível do exemplo canônico do modelo e do último documento da pasta? (comparar blocos parti — capa, kit e superfície não coincidem com o canônico)
+- [ ] 🔴 Cada decisão do parti cita um elemento concreto da fonte (substantivo/número/tensão)? Justificativa genérica ("moderno", "elegante") = reprovado
+- [ ] 🔴 `nao-vai-ter` cumprido — os 3 padrões declarados ausentes do HTML (o validador checa por regex)
+- [ ] 🔴 Parti↔HTML coerentes: a capa declarada É a capa; o perfil de motion declarado determina os keyframes que existem (estático = zero keyframe de entrada)
+- [ ] ⚠️ Momento assinatura existe NO LOCAL declarado e anima/protagoniza o **dado-tese** (não um número de apoio)
+- [ ] ⚠️ Quotas (isenção: docs <5 seções/slides): kicker mono em ≤1 papel · `<em>` accent em ≤25% dos títulos · ≤2 grids de cards · reveal em ≤40% das sections · ≥1 seção fora do padrão título+grid a cada 4
+- [ ] ⚠️ Headlines-tese: h2 contém verbo ou número da fonte (não "Visão Geral"/"Conclusão")
+- [ ] ⚠️ Chart.js: `Chart.defaults.font.family` dos tokens + formatação pt-BR nos ticks + gráfico-tese com ≥1 anotação + tension 0 em dado discreto
+- [ ] ⚠️ Microtipografia: tabular-nums em tabelas/KPIs · aspas curvas · NBSP valor↔unidade · text-wrap balance/pretty
+- [ ] 🟡 Último terço do documento mantém a densidade de decisão do primeiro (anti-drift)
+- [ ] 🟡 Cor com papel: regime cromático declarado respeitado; paleta nunca distribuída em sequência decorativa
+
+### 🚀 Ambição (A2/A3 — [ambicao.md](ambicao.md))
+
+- [ ] 🔴 `ambicao` declarada e coerente com o registro (A3 proibido em regulatório/RI)
+- [ ] 🔴 Se A2/A3: ≥1 momento-wow (W1-W9) presente E ligado ao **dado-tese** (não decorativo)
+- [ ] 🔴 Cada gesto de ponta: `@supports` + estado-final-base (conteúdo aparece num Chrome sem a feature) + branch reduced-motion
+- [ ] ⚠️ Régua de craft: curvas nomeadas (não `ease` default), teto 300ms em UI, `.no-transitions` no toggle de tema
+- [ ] ⚠️ Materialidade respeita o registro (report = grain estático + specular; nada de glass/WebGL/aurora saturada)
+- [ ] 🟡 Teste do "parar o scroll": algum momento faria um diretor de arte parar? (A2 sem destaque = ambição não realizada)
 
 ---
 

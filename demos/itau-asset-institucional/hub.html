@@ -5,6 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Itaú Asset Management — Hub Institucional</title>
 
+<!-- slideless:parti
+conteudo: Itaú Asset institucional (hub) — tese: "a maior gestora privada da América Latina, R$ 1,19 tri sob gestão, organizada como índice de mandatos e mesas"
+registro: institucional-impresso (gestora fiduciária; o conteúdo é catálogo de mandatos/produtos para um leitor institucional, clássico e sóbrio)
+kit: 02-relatorio-anual (Literata + Public Sans + Spline Sans Mono — registro de relatório anual; difere do canônico hub que usa Inter)
+capa: capa-indice (o header É o sumário editorial dos 12 painéis — mandatos com fólio/âncora; destaques de AuM em corpo maior)
+superficie: flat; luz flat (profundidade por fio de coluna e contraste; vai para PDF de RI — sem glow, sem sombra difusa)
+motion: editorial (reveal só nos painéis ao abrir — opacity; tabela/texto/índice nunca animam entrada)
+assinatura: M0 — o índice-mestre dos mandatos é o protagonista compositivo: os 4 maiores AuM viram entradas-folha em corpo grande com fio duplo contábil; os demais, linhas de índice (sem motion, perfil editorial respeita)
+nao-vai-ter: glow-radial; kicker-dot; hover-lift; glass-saturado; aurora; cursor-proximity
+serie: familia itau-asset
+
+ambicao: A2-elevado (central institucional — abrir um mandato deve ter continuidade, abrir um catálogo é abrir um registro fiduciário que se mantém; sobriedade por fio). Justificativa: o índice-mestre dos mandatos por AuM É a obra (assinatura M0) → a continuidade fólio↔painel + a curva de cobertura ESG 2013→2023 (10%→100%, a única série temporal completa da fonte) sustentam o nível sem nunca virar saltitante (registro impresso é o teto de exuberância).
+momento-wow: W5 View Transitions (a ENTRADA-FÓLIO do índice morfa no header do painel — mesmo view-transition-name 'folio', único por snapshot, limpo antes/depois; morph reverso volta à linha de origem) + W8 anotação viva no gráfico-tese do painel ESG (banda no salto 2015→2016 de 25%→89% + linha de meta 100% + crosshair de leitura no hover) + W7 materialidade por fio (grão feTurbulence estático soft-light freq 0.85 — papel institucional + borda de luz specular em fio DUPLO vertical no painel aberto, eco do 3px double contábil; NÃO glass — registro sóbrio).
+ambicao-invariantes: (W5) guard if(!startViewTransition||reduce){updateDOM;return} + nome único por snapshot (clearMorphNames antes/depois) + origem espacial (o painel cresce da entrada-fólio que o abriu); (W8) banda+linha-meta desenhadas no 1º render (fallback-safe), hover só ACENDE o crosshair; (W7) @media print esconde grão + estado-final-base sólido; régua de craft (.no-transitions no toggle, curvas nomeadas, teto 320ms).
+anti-isomorfismo: morph 'folio' (≠ 'vt-painel' do 1T26, ≠ 'dispatch' do trump2); grão 0.85 (≠ 0.8 / 0.82); fio de luz DUPLO vertical contábil (≠ fio horizontal único dos irmãos); gráfico-tese = cobertura ESG (≠ criação de valor / fluxo de comércio).
+-->
+
 <script>
   (function(){
     try {
@@ -12,179 +29,359 @@
       document.documentElement.setAttribute('data-theme', t);
     } catch(e){ document.documentElement.setAttribute('data-theme','light'); }
   })();
+  /* régua de craft (§13.1): troca de tema NÃO faz a página inteira "respirar" */
+  function setTheme(t){
+    var h = document.documentElement;
+    h.classList.add('no-transitions');
+    h.setAttribute('data-theme', t);
+    try { localStorage.setItem('theme', t); } catch(e){}
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){ h.classList.remove('no-transitions'); }); });
+  }
 </script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- SLIDELESS:TYPE-KIT — Kit 02 Relatório Anual -->
+<link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,800;1,7..72,400&family=Public+Sans:wght@400;500;700&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!-- [AMBIÇÃO A2 · W8] Chart.js só para a anotação viva do gráfico-tese ESG -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js" defer></script>
 
 <style>
+/* ─── Kit 02 — Relatório Anual (slots do kit, ANTES do tema) ──────── */
+:root {
+  --kit-display: 'Literata';
+  --kit-text:    'Public Sans';
+  --kit-ui:      'Public Sans';
+  --kit-mono:    'Spline Sans Mono';
+}
+
+/* ─── Tema itau v4 — camada MARCA (copiada) + DIREÇÃO composta p/ parti ─ */
 :root {
   --itau-orange:#FF6200; --itau-orange-2:#F88104; --itau-orange-3:#FA9F09;
   --itau-blue-3:#3B85FA; --itau-yellow:#FBC305; --itau-warm-black:#14110d;
+
   --color-accent:var(--itau-orange); --color-accent-dim:rgba(255,98,0,0.08); --color-accent-fg:#ffffff;
   --color-accent-hover:var(--itau-orange-2);
   --color-info:var(--itau-blue-3); --color-info-dim:rgba(59,133,250,0.08);
-  --color-success:#4d7c0f; --color-success-dim:rgba(77,124,15,0.08);
-  --color-sage:#65a30d; --color-sage-dim:rgba(101,163,13,0.08);
+  --color-success:#3f6f1f; --color-success-dim:rgba(63,111,31,0.08);
+  --color-sage:var(--color-success); --color-sage-dim:var(--color-success-dim);
   --color-teal:#0f766e; --color-teal-dim:rgba(15,118,110,0.08);
   --color-plum:#9f1239; --color-plum-dim:rgba(159,18,57,0.08);
   --color-warn:var(--itau-yellow); --color-warn-dim:rgba(251,195,5,0.12);
+  --color-danger:#b91c1c; --color-danger-dim:rgba(185,28,28,0.08);
+
   --color-bg:#faf7f5; --color-bg-elevated:#ffffff; --color-bg-sunken:#f4f1ec;
   --color-fg:#292017; --color-fg-muted:#6b5d50; --color-fg-subtle:#8a7e72;
   --color-border:rgba(41,32,23,0.10); --color-border-strong:rgba(41,32,23,0.18);
-  --font-display:'Fraunces',Georgia,serif;
-  --font-text:'Inter',system-ui,sans-serif;
-  --font-mono:'JetBrains Mono',monospace;
+
+  /* Tipografia: Itau Text/Display dentro da rede; Kit 02 é o fallback desenhado */
+  --font-text:'Itau Text', var(--kit-text,'Public Sans'), -apple-system, system-ui, sans-serif;
+  --font-display:'Itau Display', var(--kit-display, Georgia), serif;
+  --font-mono:var(--kit-mono,'Spline Sans Mono'), 'SF Mono', Consolas, monospace;
+
   --size-xs:clamp(0.75rem,0.7rem + 0.2vw,0.875rem);
   --size-small:clamp(0.875rem,0.85rem + 0.15vw,1rem);
-  --size-body:clamp(1rem,0.95rem + 0.2vw,1.125rem);
-  --size-lead:clamp(1.15rem,1.05rem + 0.5vw,1.4rem);
+  --size-body:clamp(1rem,0.95rem + 0.2vw,1.0625rem);
+  --size-lead:clamp(1.1rem,1.02rem + 0.4vw,1.3rem);
   --size-h3:clamp(1.2rem,1.1rem + 0.5vw,1.5rem);
-  --size-h2:clamp(1.6rem,1.3rem + 1.2vw,2.25rem);
-  --size-h1:clamp(2.25rem,1.8rem + 2vw,3.5rem);
+  --size-h2:clamp(1.55rem,1.3rem + 1.1vw,2.15rem);
+  --size-h1:clamp(2.1rem,1.7rem + 1.9vw,3.25rem);
+
   --space-1:.25rem; --space-2:.5rem; --space-3:.75rem; --space-4:1rem; --space-5:1.5rem;
   --space-6:2rem; --space-7:2.5rem; --space-8:3rem; --space-10:4rem; --space-12:5rem;
-  --header-h:56px;
-  --radius-sm:4px; --radius:10px; --radius-lg:16px;
-  --shadow-sm:0 2px 4px rgba(41,32,23,0.06), 0 1px 2px rgba(41,32,23,0.04);
-  --shadow-lg:0 12px 32px rgba(41,32,23,0.12), 0 4px 12px rgba(41,32,23,0.06);
-  --ease-out:cubic-bezier(0.22,1,0.36,1);
+  --header-h:54px;
+  /* máx 2 valores de radius por documento (regra v4): só estes dois */
+  --radius-sm:3px; --radius:8px;
+
+  /* easings editoriais — 2 curvas, papel comentado */
+  --ease-out:cubic-bezier(0.2,0.6,0.2,1);   /* entrada de painel (figura/dado) */
+  --ease-snap:cubic-bezier(0.2,0,0,1);       /* micro-interação (toggle, filtro) */
   --duration-fast:150ms; --duration:250ms;
+
+  /* ─── [AMBIÇÃO A2] régua de craft (css-patterns §13.1) ───────────────
+     curvas nomeadas (nunca a default) + teto 320ms p/ UI. Sóbrio: nada de
+     spring/overshoot — o morph fiduciário é contido, entrada lenta/saída rápida. */
+  --ease-out-strong:cubic-bezier(0.23,1,0.32,1);   /* entrada/saída */
+  --ease-io-strong:cubic-bezier(0.77,0,0.175,1);   /* morph índice↔painel */
+  --dur-ui:220ms; --dur-modal:320ms;               /* teto 300-320ms p/ UI */
+
+  /* [W7] grão feTurbulence — papel institucional (freq 0.85, ≠ irmãos 0.8/0.82) */
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 [data-theme="dark"]{
   --color-bg:#14110d; --color-bg-elevated:#1c1814; --color-bg-sunken:#221d18;
   --color-fg:#ede5dd; --color-fg-muted:#b8aa9a; --color-fg-subtle:#786e62;
   --color-border:rgba(237,229,221,0.10); --color-border-strong:rgba(237,229,221,0.20);
-  --color-accent:var(--itau-orange-3); --color-accent-dim:rgba(250,159,9,0.10);
+  --color-accent:var(--itau-orange-3); --color-accent-dim:rgba(250,159,9,0.10); --color-accent-fg:#14110d;
   --color-info-dim:rgba(59,133,250,0.12);
-  --color-success:#a3e635; --color-success-dim:rgba(163,230,53,0.10);
-  --color-sage:#bef264; --color-sage-dim:rgba(190,242,100,0.10);
-  --color-teal:#5eead4; --color-teal-dim:rgba(94,234,212,0.10);
-  --color-plum:#fb7185; --color-plum-dim:rgba(251,113,133,0.10);
-  --shadow-sm:0 2px 4px rgba(0,0,0,0.4);
-  --shadow-lg:0 12px 32px rgba(0,0,0,0.5);
+  --color-success:#8fcc5a; --color-success-dim:rgba(143,204,90,0.10);
+  --color-sage:var(--color-success); --color-sage-dim:var(--color-success-dim);
+  --color-teal:#6fd0c0; --color-teal-dim:rgba(111,208,192,0.10);
+  --color-plum:#e8889c; --color-plum-dim:rgba(232,136,156,0.10);
+  --color-warn-dim:rgba(251,195,5,0.12);
+}
+@supports (color: oklch(60% 0.1 50)){
+  :root{
+    --color-success:oklch(52% 0.11 140); --color-success-dim:oklch(52% 0.11 140 / 0.08);
+    --color-teal:oklch(52% 0.08 200); --color-teal-dim:oklch(52% 0.08 200 / 0.08);
+    --color-plum:oklch(46% 0.12 355); --color-plum-dim:oklch(46% 0.12 355 / 0.08);
+  }
+  [data-theme="dark"]{
+    --color-success:oklch(76% 0.13 140); --color-success-dim:oklch(76% 0.13 140 / 0.10);
+    --color-teal:oklch(78% 0.09 195); --color-teal-dim:oklch(78% 0.09 195 / 0.10);
+    --color-plum:oklch(74% 0.11 0); --color-plum-dim:oklch(74% 0.11 0 / 0.10);
+  }
 }
 
 *,*::before,*::after{box-sizing:border-box;}
 html{scroll-behavior:smooth;}
+/* superficie: FLAT por decisão — vai para PDF de RI. Sem glow, sem background-image. */
 body{
   margin:0; font-family:var(--font-text); font-size:var(--size-body);
-  line-height:1.65; color:var(--color-fg); background:var(--color-bg);
-  background-image:
-    radial-gradient(ellipse 80% 60% at 80% 0%, rgba(255,98,0,0.08) 0%, transparent 55%),
-    radial-gradient(ellipse 70% 50% at 20% 100%, rgba(59,133,250,0.06) 0%, transparent 55%);
-  background-attachment:fixed;
-  -webkit-font-smoothing:antialiased;
+  line-height:1.62; color:var(--color-fg); background:var(--color-bg);
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  font-variant-numeric:oldstyle-nums proportional-nums;
   overflow-wrap:break-word;
+  transition:background var(--duration-fast), color var(--duration-fast);
 }
-:focus-visible{ outline:2px solid var(--color-accent); outline-offset:3px; }
-h1,h2,h3,h4{ font-family:var(--font-display); color:var(--color-fg); line-height:1.15; letter-spacing:-0.022em; font-weight:700; margin:0; }
-h1{ font-size:var(--size-h1); margin:0 0 var(--space-4); letter-spacing:-0.03em; }
-h2{ font-size:var(--size-h2); margin:0 0 var(--space-4); }
+:focus-visible{ outline:2px solid var(--color-accent); outline-offset:3px; border-radius:var(--radius-sm); }
+
+/* ─── [AMBIÇÃO A2 · W7] materialidade por fio — grão ESTÁTICO soft-light ──
+   Tato de papel institucional recém-impresso. Sóbrio: estático (NÃO animado),
+   opacity baixa, some no print (vai para PDF de RI). É o premium barato de §13.2. */
+body::after{
+  content:''; position:fixed; inset:0; z-index:9999; pointer-events:none;
+  opacity:.05; mix-blend-mode:soft-light; background-image:var(--grain);
+}
+[data-theme="dark"] body::after{ opacity:.07; }
+@media print{ body::after{ display:none; } }
+
+/* régua de craft: o toggle de tema NÃO faz a página inteira "respirar" (§13.1) */
+.no-transitions, .no-transitions *, .no-transitions *::before, .no-transitions *::after{
+  transition:none !important;
+}
+h1,h2,h3,h4{ font-family:var(--font-display); color:var(--color-fg); line-height:1.16; letter-spacing:-0.018em; font-weight:600; margin:0; text-wrap:balance; }
+h1{ font-size:var(--size-h1); margin:0 0 var(--space-4); letter-spacing:-0.022em; font-weight:800; }
+h2{ font-size:var(--size-h2); margin:0 0 var(--space-4); font-weight:600; }
 h3{ font-size:var(--size-h3); font-weight:600; margin:var(--space-6) 0 var(--space-3); }
-h4{ font-size:1.05rem; font-weight:600; margin:0 0 var(--space-2); }
-p{ margin:0 0 var(--space-3); max-width:68ch; }
+h4{ font-size:1.0625rem; font-weight:600; margin:0 0 var(--space-2); }
+p{ margin:0 0 var(--space-3); max-width:66ch; }
 .lead{ font-size:var(--size-lead); line-height:1.5; color:var(--color-fg-muted); margin-bottom:var(--space-6); max-width:62ch; }
 a{ color:var(--color-accent); text-decoration:none; }
-a:hover{ text-decoration:underline; text-underline-offset:3px; }
+a:hover{ color:var(--color-accent-hover); text-decoration:underline; text-underline-offset:3px; text-decoration-thickness:1.5px; }
+/* ênfase por PESO, nunca cor accent como única ênfase (Kit 02) */
 strong{ font-weight:700; color:var(--color-fg); }
 ul,ol{ padding-left:var(--space-5); margin:0 0 var(--space-4); }
 li{ margin-bottom:var(--space-2); }
+li::marker{ color:var(--color-fg-subtle); }
 
-.topbar{ position:sticky; top:0; z-index:100; height:var(--header-h); background:rgba(255,255,255,0.85); backdrop-filter:blur(12px); border-bottom:1px solid var(--color-border); display:flex; align-items:center; padding:0 var(--space-5); gap:var(--space-5); }
-[data-theme="dark"] .topbar{ background:rgba(20,17,13,0.85); }
+/* números tabulares em todo dado/KPI/tabela */
+.tnum, .data-table td.num, .data-table th.num, .lead-figure, .idx__aum,
+.metric-line, .mini-timeline__date, .data-table tfoot td{
+  font-variant-numeric:tabular-nums lining-nums;
+}
+
+/* ─── Topbar ───────────────────────────────────────────────────────── */
+.topbar{ position:sticky; top:0; z-index:100; height:var(--header-h); background:var(--color-bg); border-bottom:1px solid var(--color-border-strong); display:flex; align-items:center; padding:0 var(--space-5); gap:var(--space-5); }
 .topbar__brand{ display:flex; align-items:center; gap:var(--space-3); font-weight:600; font-size:0.9375rem; text-decoration:none; color:var(--color-fg); }
-.topbar__logo{ width:28px; height:28px; border-radius:6px; flex-shrink:0; background:var(--color-accent); display:grid; place-items:center; color:white; font-weight:800; font-size:0.7rem; letter-spacing:0.05em; }
+.topbar__logo{ width:26px; height:26px; border-radius:var(--radius-sm); flex-shrink:0; background:var(--color-accent); display:grid; place-items:center; color:var(--color-accent-fg); font-weight:800; font-size:0.68rem; letter-spacing:0.04em; }
 .topbar__spacer{ flex:1; }
-.theme-toggle{ width:36px; height:36px; display:grid; place-items:center; background:var(--color-bg-elevated); border:1px solid var(--color-border); border-radius:999px; cursor:pointer; color:var(--color-fg); font:inherit; transition:all var(--duration-fast); }
-.theme-toggle:hover{ transform:translateY(-1px); }
+.theme-toggle{ width:36px; height:36px; display:grid; place-items:center; background:var(--color-bg-elevated); border:1px solid var(--color-border); border-radius:999px; cursor:pointer; color:var(--color-fg); font:inherit; transition:background-color var(--duration-fast) var(--ease-snap), border-color var(--duration-fast) var(--ease-snap); }
+.theme-toggle:hover{ background:var(--color-bg-sunken); border-color:var(--color-border-strong); }
 
-.page{ max-width:1200px; margin:0 auto; padding:var(--space-10) var(--space-6) var(--space-12); }
-.hero{ margin-bottom:var(--space-8); }
-.kicker{ display:inline-flex; align-items:center; gap:10px; font-family:var(--font-mono); font-size:0.75rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--color-accent); font-weight:600; margin:0 0 var(--space-4); }
-.kicker__dot{ width:8px; height:8px; border-radius:50%; background:var(--color-accent); box-shadow:0 0 12px var(--color-accent); }
+.page{ max-width:1180px; margin:0 auto; padding:var(--space-10) var(--space-6) var(--space-12); }
 
-.hero-metrics{ display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-5); margin:var(--space-7) 0 var(--space-8); padding:var(--space-6); background:var(--color-bg-elevated); border:1px solid var(--color-border); border-radius:var(--radius-lg); box-shadow:var(--shadow-sm); }
-.hero-metric{ border-top:3px solid currentColor; padding-top:var(--space-3); color:var(--color-accent); min-width:0; }
-.hero-metric--info{ color:var(--color-info); } .hero-metric--sage{ color:var(--color-sage); }
-.hero-metric__val{ font-family:var(--font-display); font-size:clamp(1.6rem,1.2rem + 1.5vw,2.3rem); font-weight:800; line-height:1; margin:0 0 var(--space-2); letter-spacing:-0.035em; color:var(--color-fg); }
-.hero-metric__val em{ color:currentColor; font-style:normal; }
-.hero-metric__label{ font-size:var(--size-small); color:var(--color-fg-muted); margin:0; line-height:1.4; }
-@media (max-width:680px){ .hero-metrics{ grid-template-columns:1fr; } }
+/* ─── CAPA = capa-indice ──────────────────────────────────────────────
+   O header É o sumário editorial dos painéis. Dateline + manchete +
+   friso de dados, depois o índice-mestre (assinatura M0).               */
+.masthead{ margin-bottom:var(--space-8); }
+.dateline{
+  font-family:var(--font-ui, var(--font-text)); font-size:var(--size-xs);
+  font-variant-caps:all-small-caps; letter-spacing:0.12em; font-weight:600;
+  color:var(--color-fg-muted); margin:0 0 var(--space-3);
+  padding-bottom:var(--space-3); border-bottom:1px solid var(--color-border);
+}
+.dateline b{ color:var(--color-fg); font-weight:700; }
+.masthead h1{ max-width:18ch; }
+.masthead .lead{ max-width:60ch; }
 
-.filters{ display:flex; flex-wrap:wrap; gap:var(--space-2); margin:var(--space-6) 0 var(--space-7); }
-.filter{ padding:var(--space-2) var(--space-4); background:transparent; border:1px solid var(--color-border); border-radius:999px; font:inherit; font-size:var(--size-small); color:var(--color-fg-muted); cursor:pointer; transition:all var(--duration-fast); }
-.filter:hover{ color:var(--color-fg); border-color:var(--color-border-strong); }
-.filter.is-active{ background:var(--color-accent); color:var(--color-accent-fg); border-color:var(--color-accent); }
+/* friso de dados em largura total (dispositivo que quebra a coluna) —
+   fio duplo contábil acima e abaixo, sem card, sem sombra */
+.figure-strip{
+  display:grid; grid-template-columns:repeat(3,1fr); gap:0;
+  margin:var(--space-7) 0 var(--space-8);
+  border-top:3px double var(--color-border-strong);
+  border-bottom:3px double var(--color-border-strong);
+}
+.figure-cell{ padding:var(--space-5) var(--space-5) var(--space-5) 0; min-width:0; }
+.figure-cell + .figure-cell{ padding-left:var(--space-5); border-left:1px solid var(--color-border); }
+.lead-figure{ font-family:var(--font-display); font-size:clamp(1.8rem,1.3rem + 1.7vw,2.6rem); font-weight:800; line-height:1; margin:0 0 var(--space-2); letter-spacing:-0.03em; color:var(--color-fg); }
+.lead-figure small{ font-size:0.55em; font-weight:600; color:var(--color-fg-muted); letter-spacing:0; }
+.figure-cell__label{ font-size:var(--size-small); color:var(--color-fg-muted); margin:0; line-height:1.45; }
+@media (max-width:680px){ .figure-strip{ grid-template-columns:1fr; } .figure-cell + .figure-cell{ border-left:none; border-top:1px solid var(--color-border); padding-left:0; } }
 
-.grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:var(--space-5); }
-.card{ display:block; padding:var(--space-5); background:var(--color-bg-elevated); border:1px solid var(--color-border); border-radius:var(--radius-lg); text-decoration:none; color:inherit; transition:all var(--duration-fast) var(--ease-out); box-shadow:var(--shadow-sm); cursor:pointer; position:relative; min-width:0; overflow:hidden; }
-.card:hover{ transform:translateY(-3px); border-color:var(--color-accent); box-shadow:var(--shadow-lg); }
-.card::before{ content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--color-accent); }
-.card--info::before{ background:var(--color-info); }
-.card--teal::before{ background:var(--color-teal); }
-.card--plum::before{ background:var(--color-plum); }
-.card--sage::before{ background:var(--color-sage); }
-.card--success::before{ background:var(--color-success); }
-.card--warn::before{ background:var(--color-warn); }
+/* ─── Índice-mestre (assinatura M0) ───────────────────────────────────
+   Hierarquia anti-isomorfismo: os 4 maiores mandatos por AuM são
+   entradas-folha grandes; os demais viram linhas de índice editorial.   */
+.index-head{
+  display:flex; align-items:baseline; justify-content:space-between; gap:var(--space-4);
+  margin:var(--space-8) 0 var(--space-2); padding-bottom:var(--space-2);
+  border-bottom:2px solid var(--color-fg);
+}
+.index-head h2{ margin:0; font-size:var(--size-h3); font-weight:600; }
+.index-head__meta{ font-family:var(--font-ui, var(--font-text)); font-size:var(--size-xs); font-variant-caps:all-small-caps; letter-spacing:0.1em; color:var(--color-fg-subtle); }
 
-.card__label{ display:inline-flex; align-items:center; gap:8px; font-family:var(--font-mono); font-size:0.7rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--color-accent); margin:0 0 var(--space-3); }
-.card--info .card__label{ color:var(--color-info); }
-.card--teal .card__label{ color:var(--color-teal); }
-.card--plum .card__label{ color:var(--color-plum); }
-.card--sage .card__label{ color:var(--color-sage); }
-.card--success .card__label{ color:var(--color-success); }
-.card--warn .card__label{ color:var(--color-warn); }
-.card__label .dot{ width:6px; height:6px; border-radius:50%; background:currentColor; }
-.card__title{ font-family:var(--font-display); font-size:1.2rem; font-weight:700; margin:0 0 var(--space-2); line-height:1.2; color:var(--color-fg); letter-spacing:-0.01em; }
-.card__desc{ font-size:var(--size-small); color:var(--color-fg-muted); margin:0 0 var(--space-4); line-height:1.5; }
-.card__cta{ font-size:var(--size-small); font-weight:600; color:var(--color-accent); display:inline-flex; align-items:center; gap:6px; }
-.card--info .card__cta{ color:var(--color-info); }
-.card--teal .card__cta{ color:var(--color-teal); }
-.card--plum .card__cta{ color:var(--color-plum); }
-.card--sage .card__cta{ color:var(--color-sage); }
-.card--success .card__cta{ color:var(--color-success); }
-.card--warn .card__cta{ color:var(--color-warn); }
+/* Entradas-folha (mandatos de maior peso) — fólio + título grande + AuM com fio duplo */
+.idx-lead{ list-style:none; padding:0; margin:0 0 var(--space-7); }
+.idx-lead > li{ margin:0; }
+.idx-lead > li + li{ border-top:1px solid var(--color-border); }
+.idx-lead__row{
+  display:grid; grid-template-columns:2.6rem 1fr auto; gap:var(--space-4);
+  align-items:baseline; width:100%; text-align:left;
+  padding:var(--space-4) 0; background:transparent; border:0; border-radius:0;
+  font:inherit; color:inherit; cursor:pointer;
+  transition:color var(--duration-fast) var(--ease-snap);
+}
+/* affordance clicável = mudança de CONTRASTE (não lift) + fio inferior que acende */
+.idx-lead__row{ box-shadow:inset 0 0 0 0 var(--color-accent); }
+.idx-lead__row:hover{ color:var(--color-accent); }
+.idx-lead__row:hover .idx-lead__title{ color:var(--color-accent); }
+.idx-lead__folio{ font-family:var(--font-mono); font-size:0.85rem; font-weight:500; color:var(--color-fg-subtle); padding-top:0.35em; }
+.idx-lead__body{ min-width:0; }
+.idx-lead__cat{ font-family:var(--font-ui, var(--font-text)); font-size:var(--size-xs); font-variant-caps:all-small-caps; letter-spacing:0.1em; color:var(--color-fg-muted); display:block; margin-bottom:2px; }
+.idx-lead__title{ font-family:var(--font-display); font-size:clamp(1.3rem,1.05rem + 1vw,1.85rem); font-weight:700; line-height:1.12; letter-spacing:-0.02em; color:var(--color-fg); margin:0 0 4px; transition:color var(--duration-fast) var(--ease-snap); }
+.idx-lead__desc{ font-size:var(--size-small); color:var(--color-fg-muted); margin:0; max-width:54ch; line-height:1.45; }
+.idx-lead__aum{ text-align:right; min-width:7.5rem; }
+.idx-lead__aum b{ font-family:var(--font-display); font-size:clamp(1.15rem,0.95rem + 0.7vw,1.5rem); font-weight:800; letter-spacing:-0.02em; color:var(--color-fg); display:block; line-height:1; }
+.idx-lead__aum span{ font-family:var(--font-ui, var(--font-text)); font-size:var(--size-xs); font-variant-caps:all-small-caps; letter-spacing:0.08em; color:var(--color-fg-subtle); }
+@media (max-width:640px){
+  .idx-lead__row{ grid-template-columns:2rem 1fr; row-gap:var(--space-2); }
+  .idx-lead__aum{ grid-column:2; text-align:left; }
+  .idx-lead__aum b{ display:inline; } .idx-lead__aum span{ margin-left:.4em; }
+}
 
-.panel{ display:none; margin-top:var(--space-8); padding:var(--space-7); background:var(--color-bg-elevated); border:1px solid var(--color-border); border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); scroll-margin-top:calc(var(--header-h) + var(--space-5)); }
-.panel.is-open{ display:block; animation:slideIn 350ms var(--ease-out); }
-@keyframes slideIn{ from{ opacity:0; transform:translateY(20px); } to{ opacity:1; transform:none; } }
-.panel__head{ display:flex; align-items:center; justify-content:space-between; gap:var(--space-4); margin-bottom:var(--space-5); padding-bottom:var(--space-4); border-bottom:1px solid var(--color-border); }
-.panel__close{ padding:var(--space-2) var(--space-4); background:transparent; border:1px solid var(--color-border); border-radius:var(--radius); cursor:pointer; font:inherit; font-size:var(--size-small); color:var(--color-fg-muted); transition:all var(--duration-fast); }
+/* Linhas de índice (mandatos/seções de menor peso) — só fólio + título + categoria */
+.idx-list{ list-style:none; padding:0; margin:0; }
+.idx-list > li + li{ border-top:1px solid var(--color-border); }
+.idx-list__row{
+  display:grid; grid-template-columns:2.6rem 1fr auto; gap:var(--space-4);
+  align-items:baseline; width:100%; text-align:left;
+  padding:var(--space-3) 0; background:transparent; border:0; border-radius:0;
+  font:inherit; color:inherit; cursor:pointer;
+  transition:color var(--duration-fast) var(--ease-snap);
+}
+.idx-list__row:hover{ color:var(--color-accent); }
+.idx-list__row:hover .idx-list__title{ color:var(--color-accent); }
+.idx-list__folio{ font-family:var(--font-mono); font-size:0.85rem; font-weight:500; color:var(--color-fg-subtle); }
+.idx-list__title{ font-family:var(--font-display); font-size:1.0625rem; font-weight:600; color:var(--color-fg); letter-spacing:-0.01em; transition:color var(--duration-fast) var(--ease-snap); }
+.idx-list__cat{ font-family:var(--font-ui, var(--font-text)); font-size:var(--size-xs); font-variant-caps:all-small-caps; letter-spacing:0.1em; color:var(--color-fg-muted); white-space:nowrap; }
+@media (max-width:520px){ .idx-list__row{ grid-template-columns:2rem 1fr; } .idx-list__cat{ display:none; } }
+
+/* dim de item filtrado (não-pertencente à categoria) */
+.is-dimmed{ display:none !important; }
+
+/* ─── Filtros ──────────────────────────────────────────────────────── */
+.filters{ display:flex; flex-wrap:wrap; gap:var(--space-2); margin:0 0 var(--space-2); }
+.filter{ padding:var(--space-1) var(--space-3); background:transparent; border:0; border-bottom:2px solid transparent; font:inherit; font-size:var(--size-small); font-weight:600; color:var(--color-fg-muted); cursor:pointer; transition:color var(--duration-fast) var(--ease-snap), border-color var(--duration-fast) var(--ease-snap); }
+.filter:hover{ color:var(--color-fg); }
+.filter.is-active{ color:var(--color-accent); border-bottom-color:var(--color-accent); }
+
+/* ─── Painéis in-page (engine intocado) ───────────────────────────────
+   superficie flat: fio, não sombra. Reveal editorial = opacity-only.    */
+.panel{ display:none; position:relative; margin-top:var(--space-8); padding:var(--space-7) var(--space-5) 0; border-top:3px double var(--color-border-strong); scroll-margin-top:calc(var(--header-h) + var(--space-5)); }
+.panel.is-open{ display:block; }
+.panel.is-open .panel__inner{ animation:revealPanel 350ms var(--ease-out); }
+@keyframes revealPanel{ from{ opacity:0; } to{ opacity:1; } }
+
+/* ─── [AMBIÇÃO A2 · W7] borda de luz — fio specular DUPLO vertical ──────────
+   Anti-isomorfismo: os irmãos (1T26/trump2) acendem um fio HORIZONTAL no topo.
+   Aqui o fio de luz é VERTICAL e DUPLO — eco direto do 3px double contábil do
+   parti (M0). Dois filetes specular nas laterais enquadram o painel como uma
+   coluna de razão recém-impressa. Sóbrio: 1px, sem glow difuso, sem glass. */
+.panel.is-open::before, .panel.is-open::after{
+  content:''; position:absolute; top:-3px; bottom:0; width:1px; pointer-events:none; z-index:1;
+  background:linear-gradient(180deg,
+    color-mix(in srgb, var(--color-accent) 50%, transparent),
+    color-mix(in srgb, var(--color-fg) 22%, transparent) 22%,
+    transparent 60%);
+}
+.panel.is-open::before{ left:0; }
+.panel.is-open::after{ right:0; }
+@supports not (background: color-mix(in srgb, red, blue)){
+  .panel.is-open::before, .panel.is-open::after{ background:var(--color-border-strong); }
+}
+
+/* [W5] View Transitions — continuidade entrada-fólio ↔ header do painel.
+   O JS marca o par ativo com view-transition-name 'folio' (único por snapshot).
+   Morph contido (sóbrio): cross-fade do root, o par 'folio' usa a curva de morph. */
+@supports (view-transition-name: a){
+  ::view-transition-group(folio),
+  ::view-transition-old(folio),
+  ::view-transition-new(folio){
+    animation-duration:var(--dur-modal);
+    animation-timing-function:var(--ease-io-strong);
+  }
+  ::view-transition-old(root),
+  ::view-transition-new(root){ animation-duration:200ms; }
+}
+@media (prefers-reduced-motion: reduce){
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*){ animation:none !important; }
+}
+
+/* ─── [W8] shell do gráfico-tese (cobertura ESG) — fio, não card ────────── */
+.chart-figure{ margin:var(--space-5) 0; border-top:2px solid var(--color-fg); padding-top:var(--space-3); }
+.chart-figure__cap{ font-family:var(--font-ui, var(--font-text)); font-size:var(--size-xs); font-variant-caps:all-small-caps; letter-spacing:0.1em; color:var(--color-fg-muted); margin:0 0 var(--space-3); }
+.chart-box{ position:relative; height:300px; }
+@media (max-width:560px){ .chart-box{ height:240px; } }
+.panel__head{ display:flex; align-items:flex-start; justify-content:space-between; gap:var(--space-4); margin-bottom:var(--space-5); }
+.panel__eyebrow{ font-family:var(--font-ui, var(--font-text)); font-size:var(--size-xs); font-variant-caps:all-small-caps; letter-spacing:0.12em; font-weight:600; color:var(--color-fg-muted); margin:0 0 var(--space-1); }
+.panel__folio{ font-family:var(--font-mono); font-size:var(--size-xs); color:var(--color-fg-subtle); }
+.panel__close{ flex-shrink:0; padding:var(--space-2) var(--space-4); background:transparent; border:1px solid var(--color-border); border-radius:var(--radius-sm); cursor:pointer; font:inherit; font-size:var(--size-small); color:var(--color-fg-muted); transition:color var(--duration-fast) var(--ease-snap), border-color var(--duration-fast) var(--ease-snap); }
 .panel__close:hover{ border-color:var(--color-accent); color:var(--color-accent); }
 .panel__inner{ max-width:760px; }
 
-.sub-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:var(--space-4); margin:var(--space-4) 0 var(--space-5); }
-.sub-card{ padding:var(--space-4); background:var(--color-bg-sunken); border-radius:var(--radius); border-left:3px solid var(--color-accent); min-width:0; }
+/* sub-grid: fio lateral 2px (não filete pesado) + peso, sem card flutuante */
+.sub-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:0 var(--space-5); margin:var(--space-4) 0 var(--space-5); border-top:1px solid var(--color-border); }
+.sub-card{ padding:var(--space-3) var(--space-4); border-bottom:1px solid var(--color-border); border-left:2px solid var(--color-border-strong); min-width:0; }
 .sub-card--info{ border-left-color:var(--color-info); }
 .sub-card--teal{ border-left-color:var(--color-teal); }
-.sub-card__title{ font-family:var(--font-display); font-size:1rem; font-weight:700; margin:0 0 var(--space-1); color:var(--color-fg); }
-.sub-card__desc{ font-size:0.85rem; color:var(--color-fg-muted); margin:0; }
+.sub-card__title{ font-family:var(--font-display); font-size:1rem; font-weight:700; margin:0 0 2px; color:var(--color-fg); }
+.sub-card__desc{ font-size:0.85rem; color:var(--color-fg-muted); margin:0; line-height:1.4; }
 
-.metric-line{ font-family:var(--font-mono); font-size:0.85rem; display:inline-block; margin-right:var(--space-3); margin-bottom:var(--space-2); padding:4px 10px; background:var(--color-accent-dim); border-radius:var(--radius); color:var(--color-accent); font-weight:600; }
+/* metric-line: tipográfico, fio inferior — sem badge-pill (radius 999px proibido) */
+.metric-line{ font-family:var(--font-mono); font-size:0.85rem; display:inline-block; margin-right:var(--space-4); margin-bottom:var(--space-2); padding:0 0 2px; border-bottom:2px solid var(--color-accent); color:var(--color-fg); font-weight:500; }
 
-.table-wrap{ overflow-x:auto; border:1px solid var(--color-border); border-radius:var(--radius); margin:var(--space-4) 0; }
+/* tabelas broadsheet */
+.table-wrap{ overflow-x:auto; border-top:2px solid var(--color-fg); border-bottom:2px solid var(--color-fg); margin:var(--space-4) 0; }
 .data-table{ width:100%; border-collapse:collapse; font-size:var(--size-small); }
-.data-table th{ background:var(--color-bg-sunken); font-family:var(--font-mono); font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; padding:10px 14px; text-align:left; border-bottom:2px solid var(--color-border-strong); color:var(--color-fg-muted); }
-.data-table td{ padding:10px 14px; border-bottom:1px solid var(--color-border); color:var(--color-fg); vertical-align:top; }
-.data-table tbody tr:nth-child(even){ background:var(--color-bg-sunken); }
-.data-table tbody tr:hover{ background:var(--color-accent-dim); }
+.data-table th{ background:transparent; font-family:var(--font-ui, var(--font-text)); font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.07em; padding:10px 16px 10px 0; text-align:left; border-bottom:1px solid var(--color-border-strong); color:var(--color-fg-muted); }
+.data-table td{ padding:11px 16px 11px 0; border-bottom:1px solid var(--color-border); color:var(--color-fg); vertical-align:top; line-height:1.45; }
+.data-table th:last-child, .data-table td:last-child{ padding-right:0; }
+.data-table tbody tr:last-child td{ border-bottom:none; }
+.data-table td.num, .data-table th.num{ text-align:right; font-family:var(--font-mono); }
 
-.mini-timeline{ list-style:none; padding:0; margin:var(--space-4) 0; }
-.mini-timeline li{ padding:var(--space-3) 0; border-bottom:1px solid var(--color-border); display:grid; grid-template-columns:80px 1fr; gap:var(--space-4); align-items:start; }
+/* mini-timeline: cronológica com fio, sem dot */
+.mini-timeline{ list-style:none; padding:0; margin:var(--space-4) 0; border-top:2px solid var(--color-fg); }
+.mini-timeline li{ padding:var(--space-3) 0; border-bottom:1px solid var(--color-border); display:grid; grid-template-columns:72px 1fr; gap:var(--space-4); align-items:baseline; }
 .mini-timeline li:last-child{ border-bottom:none; }
-.mini-timeline__date{ font-family:var(--font-mono); font-weight:700; color:var(--color-accent); font-size:0.9rem; }
+.mini-timeline__date{ font-family:var(--font-mono); font-weight:500; color:var(--color-fg); font-size:0.9rem; }
+
+/* pull quote v4: tipografia, sem caixa */
+.pull-quote{ margin:var(--space-6) 0; font-family:var(--font-display); font-size:clamp(1.4rem,1.1rem + 1.3vw,1.9rem); font-style:italic; font-weight:400; line-height:1.3; max-width:30ch; color:var(--color-fg); }
+.pull-quote::before{ content:'\201C'; margin-left:-0.42em; }
+
+.foot-note{ font-size:var(--size-xs); color:var(--color-fg-subtle); }
 
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{ transition-duration:0.01ms !important; animation-duration:0.01ms !important; }
-  .panel.is-open{ animation:none; }
+  .panel.is-open .panel__inner{ animation:none; }
 }
 @media print{
-  .filters, .theme-toggle, .panel__close, .card__cta{ display:none; }
+  .filters, .theme-toggle, .panel__close{ display:none; }
   .panel{ display:block !important; page-break-before:always; }
-  .grid{ display:block; }
-  .card{ break-inside:avoid; margin-bottom:var(--space-5); }
+  .idx-lead__row, .idx-list__row{ cursor:auto; }
 }
 </style>
 </head>
@@ -201,23 +398,23 @@ li{ margin-bottom:var(--space-2); }
 
 <main class="page">
 
-  <section class="hero">
-    <p class="kicker"><span class="kicker__dot"></span>Itaú Asset Management · 2024</p>
-    <h1>A maior gestora privada da América Latina</h1>
-    <p class="lead">Portal institucional com áreas de gestão, modelo Multimesas, jornada de 60+ anos e reconhecimentos. Clique em qualquer card para explorar.</p>
+  <section class="masthead">
+    <p class="dateline">Itaú Asset Management &nbsp;·&nbsp; Gestão de Recursos &nbsp;·&nbsp; <b>Edição 2024</b></p>
+    <h1>A maior gestora privada da América&nbsp;Latina</h1>
+    <p class="lead">Catálogo institucional dos mandatos, mesas e marcos da Casa. O índice a seguir abre cada painel in-page — dos maiores mandatos por ativos sob gestão às áreas de inteligência, governança e atendimento.</p>
 
-    <div class="hero-metrics">
-      <div class="hero-metric">
-        <p class="hero-metric__val">R$ <em>1,19</em> tri</p>
-        <p class="hero-metric__label">AuM total — R$ 1,171 tri Local + R$ 60 bi Offshore</p>
+    <div class="figure-strip">
+      <div class="figure-cell">
+        <p class="lead-figure">R$&nbsp;1,19&nbsp;<small>tri</small></p>
+        <p class="figure-cell__label">AuM total — R$&nbsp;1,171&nbsp;tri Local + R$&nbsp;60&nbsp;bi Offshore</p>
       </div>
-      <div class="hero-metric hero-metric--info">
-        <p class="hero-metric__val"><em>2,6</em> mi</p>
-        <p class="hero-metric__label">clientes atendidos pela plataforma</p>
+      <div class="figure-cell">
+        <p class="lead-figure">2,6&nbsp;<small>mi</small></p>
+        <p class="figure-cell__label">clientes atendidos pela plataforma</p>
       </div>
-      <div class="hero-metric hero-metric--sage">
-        <p class="hero-metric__val"><em>14,5</em>%</p>
-        <p class="hero-metric__label">market share no Brasil + 60 anos de experiência</p>
+      <div class="figure-cell">
+        <p class="lead-figure">14,5<small>%</small></p>
+        <p class="figure-cell__label">market share no Brasil &nbsp;·&nbsp; 60&nbsp;anos de experiência</p>
       </div>
     </div>
   </section>
@@ -230,104 +427,151 @@ li{ margin-bottom:var(--space-2); }
     <button class="filter" type="button" data-filter="institucional">Institucional</button>
   </nav>
 
-  <div class="grid">
-
-    <a class="card" data-category="gestao" data-target="panel-beta">
-      <p class="card__label"><span class="dot"></span>Áreas de Gestão</p>
-      <h3 class="card__title">Estratégias Beta</h3>
-      <p class="card__desc">R$ 174,49 bi em gestão indexada e R$ 18,77 bi em ETFs. Nove famílias de fundos e quatro ETFs.</p>
-      <span class="card__cta">Explorar →</span>
-    </a>
-
-    <a class="card card--info" data-category="gestao" data-target="panel-rf">
-      <p class="card__label"><span class="dot"></span>Áreas de Gestão</p>
-      <h3 class="card__title">Renda Fixa Ativa</h3>
-      <p class="card__desc">R$ 647 bi em títulos públicos (12,2% da dívida brasileira) e R$ 355 bi em títulos privados.</p>
-      <span class="card__cta">Explorar →</span>
-    </a>
-
-    <a class="card card--teal" data-category="gestao" data-target="panel-credito">
-      <p class="card__label"><span class="dot"></span>Áreas de Gestão</p>
-      <h3 class="card__title">Crédito</h3>
-      <p class="card__desc">Amplo acesso a mercado — Infra, Agro, Imobiliário e Operações Estruturadas.</p>
-      <span class="card__cta">Explorar →</span>
-    </a>
-
-    <a class="card card--plum" data-category="gestao" data-target="panel-equities">
-      <p class="card__label"><span class="dot"></span>Áreas de Gestão</p>
-      <h3 class="card__title">LatAm Equities</h3>
-      <p class="card__desc">Renda variável Brasil e LatAm — head Scott Piper, 60+ anos de história em RV.</p>
-      <span class="card__cta">Explorar →</span>
-    </a>
-
-    <a class="card card--sage" data-category="multimesas" data-target="panel-multimesas">
-      <p class="card__label"><span class="dot"></span>Multimesas</p>
-      <h3 class="card__title">Modelo Multimesas</h3>
-      <p class="card__desc">Holding de assets independentes — 8 mesas, R$ 113,5 bi em Retorno Absoluto.</p>
-      <span class="card__cta">Explorar →</span>
-    </a>
-
-    <a class="card card--info" data-category="multimesas" data-target="panel-ra">
-      <p class="card__label"><span class="dot"></span>Multimesas</p>
-      <h3 class="card__title">Retorno Absoluto</h3>
-      <p class="card__desc">Categoria líder no Brasil desde 2020 — Macro, Equities, Crédito Estruturado e RF Unconstrained.</p>
-      <span class="card__cta">Explorar →</span>
-    </a>
-
-    <a class="card card--plum" data-category="esg" data-target="panel-esg">
-      <p class="card__label"><span class="dot"></span>ESG</p>
-      <h3 class="card__title">Investimento Responsável</h3>
-      <p class="card__desc">100% dos ativos cobertos por ESG. 8 produtos dedicados. ALAS20 Winner 2024.</p>
-      <span class="card__cta">Explorar →</span>
-    </a>
-
-    <a class="card card--teal" data-category="institucional" data-target="panel-pesquisa">
-      <p class="card__label"><span class="dot"></span>Inteligência</p>
-      <h3 class="card__title">Pesquisa &amp; Data Science</h3>
-      <p class="card__desc">10 economistas (1º em juros BC) e 5 cientistas de dados aplicando ML.</p>
-      <span class="card__cta">Explorar →</span>
-    </a>
-
-    <a class="card" data-category="institucional" data-target="panel-jornada">
-      <p class="card__label"><span class="dot"></span>Jornada</p>
-      <h3 class="card__title">1957 → 2022</h3>
-      <p class="card__desc">11 marcos, de 1º fundo RV BR até +R$ 100 bi em Multimesas.</p>
-      <span class="card__cta">Explorar →</span>
-    </a>
-
-    <a class="card card--success" data-category="institucional" data-target="panel-premios">
-      <p class="card__label"><span class="dot"></span>Reconhecimentos</p>
-      <h3 class="card__title">Prêmios e Selos</h3>
-      <p class="card__desc">S&amp;P AMP-1', Guia FGV 15×, ALAS20 2024, InfoMoney 1º/3º, PRI Signatory.</p>
-      <span class="card__cta">Explorar →</span>
-    </a>
-
-    <a class="card card--warn" data-category="institucional" data-target="panel-diretoria">
-      <p class="card__label"><span class="dot"></span>Governança</p>
-      <h3 class="card__title">Diretoria</h3>
-      <p class="card__desc">CAS — Diretor de Investimentos Globais — e 11 lideranças nominadas.</p>
-      <span class="card__cta">Explorar →</span>
-    </a>
-
-    <a class="card card--info" data-category="institucional" data-target="panel-contato">
-      <p class="card__label"><span class="dot"></span>Contato</p>
-      <h3 class="card__title">Atendimento &amp; SAC</h3>
-      <p class="card__desc">Telefone, SAC 24h, Ouvidoria e canal para deficientes auditivos.</p>
-      <span class="card__cta">Explorar →</span>
-    </a>
-
+  <!-- ÍNDICE-MESTRE — assinatura M0: hierarquia por AuM real ──────────── -->
+  <div class="index-head">
+    <h2>Mandatos por ativos sob gestão</h2>
+    <span class="index-head__meta">Índice — 12 painéis</span>
   </div>
+
+  <!-- Entradas-folha: os 4 maiores mandatos por AuM (peso visual maior) -->
+  <ul class="idx-lead">
+
+    <li data-category="gestao">
+      <button class="idx-lead__row" type="button" data-target="panel-rf">
+        <span class="idx-lead__folio">02</span>
+        <span class="idx-lead__body">
+          <span class="idx-lead__cat">Áreas de Gestão</span>
+          <span class="idx-lead__title">Renda Fixa Ativa</span>
+          <span class="idx-lead__desc">R$&nbsp;647&nbsp;bi em títulos públicos (12,2% da dívida brasileira) e R$&nbsp;355&nbsp;bi em títulos privados.</span>
+        </span>
+        <span class="idx-lead__aum"><b>R$&nbsp;1,00&nbsp;tri</b><span>público + privado</span></span>
+      </button>
+    </li>
+
+    <li data-category="gestao">
+      <button class="idx-lead__row" type="button" data-target="panel-beta">
+        <span class="idx-lead__folio">01</span>
+        <span class="idx-lead__body">
+          <span class="idx-lead__cat">Áreas de Gestão</span>
+          <span class="idx-lead__title">Estratégias Beta</span>
+          <span class="idx-lead__desc">Gestão indexada e ETFs listados — nove famílias de fundos e quatro ETFs.</span>
+        </span>
+        <span class="idx-lead__aum"><b>R$&nbsp;174,49&nbsp;bi</b><span>gestão indexada</span></span>
+      </button>
+    </li>
+
+    <li data-category="multimesas">
+      <button class="idx-lead__row" type="button" data-target="panel-ra">
+        <span class="idx-lead__folio">06</span>
+        <span class="idx-lead__body">
+          <span class="idx-lead__cat">Multimesas</span>
+          <span class="idx-lead__title">Retorno Absoluto</span>
+          <span class="idx-lead__desc">Categoria líder no Brasil desde 2020 — Macro, Equities, Crédito Estruturado e RF Unconstrained.</span>
+        </span>
+        <span class="idx-lead__aum"><b>R$&nbsp;113,5&nbsp;bi</b><span>maior categoria</span></span>
+      </button>
+    </li>
+
+    <li data-category="multimesas">
+      <button class="idx-lead__row" type="button" data-target="panel-multimesas">
+        <span class="idx-lead__folio">05</span>
+        <span class="idx-lead__body">
+          <span class="idx-lead__cat">Multimesas</span>
+          <span class="idx-lead__title">Modelo Multimesas</span>
+          <span class="idx-lead__desc">Holding de assets independentes — 8 mesas autônomas com infraestrutura compartilhada.</span>
+        </span>
+        <span class="idx-lead__aum"><b>+R$&nbsp;100&nbsp;bi</b><span>consolidado, 2022</span></span>
+      </button>
+    </li>
+
+  </ul>
+
+  <!-- Linhas de índice: demais mandatos/seções (peso editorial menor) -->
+  <div class="index-head">
+    <h2>Demais áreas e registros</h2>
+    <span class="index-head__meta">Gestão · Inteligência · Governança</span>
+  </div>
+
+  <ul class="idx-list">
+
+    <li data-category="gestao">
+      <button class="idx-list__row" type="button" data-target="panel-credito">
+        <span class="idx-list__folio">03</span>
+        <span class="idx-list__title">Crédito</span>
+        <span class="idx-list__cat">Áreas de Gestão</span>
+      </button>
+    </li>
+
+    <li data-category="gestao">
+      <button class="idx-list__row" type="button" data-target="panel-equities">
+        <span class="idx-list__folio">04</span>
+        <span class="idx-list__title">LatAm Equities</span>
+        <span class="idx-list__cat">Áreas de Gestão</span>
+      </button>
+    </li>
+
+    <li data-category="esg">
+      <button class="idx-list__row" type="button" data-target="panel-esg">
+        <span class="idx-list__folio">07</span>
+        <span class="idx-list__title">Investimento Responsável</span>
+        <span class="idx-list__cat">ESG</span>
+      </button>
+    </li>
+
+    <li data-category="institucional">
+      <button class="idx-list__row" type="button" data-target="panel-pesquisa">
+        <span class="idx-list__folio">08</span>
+        <span class="idx-list__title">Pesquisa &amp; Data Science</span>
+        <span class="idx-list__cat">Inteligência</span>
+      </button>
+    </li>
+
+    <li data-category="institucional">
+      <button class="idx-list__row" type="button" data-target="panel-jornada">
+        <span class="idx-list__folio">09</span>
+        <span class="idx-list__title">Jornada · 1957 → 2022</span>
+        <span class="idx-list__cat">Trajetória</span>
+      </button>
+    </li>
+
+    <li data-category="institucional">
+      <button class="idx-list__row" type="button" data-target="panel-premios">
+        <span class="idx-list__folio">10</span>
+        <span class="idx-list__title">Prêmios e Selos</span>
+        <span class="idx-list__cat">Reconhecimentos</span>
+      </button>
+    </li>
+
+    <li data-category="institucional">
+      <button class="idx-list__row" type="button" data-target="panel-diretoria">
+        <span class="idx-list__folio">11</span>
+        <span class="idx-list__title">Diretoria</span>
+        <span class="idx-list__cat">Governança</span>
+      </button>
+    </li>
+
+    <li data-category="institucional">
+      <button class="idx-list__row" type="button" data-target="panel-contato">
+        <span class="idx-list__folio">12</span>
+        <span class="idx-list__title">Atendimento &amp; SAC</span>
+        <span class="idx-list__cat">Contato</span>
+      </button>
+    </li>
+
+  </ul>
+
+  <!-- ─── PAINÉIS (conteúdo 100% preservado) ───────────────────────── -->
 
   <section class="panel" id="panel-beta">
     <div class="panel__head">
-      <div><p class="card__label"><span class="dot"></span>Áreas de Gestão</p><h2>Estratégias Beta</h2></div>
+      <div><p class="panel__eyebrow">Áreas de Gestão &nbsp;·&nbsp; <span class="panel__folio">Painel 01</span></p><h2>Estratégias Beta</h2></div>
       <button class="panel__close" type="button">✕ Fechar</button>
     </div>
     <div class="panel__inner">
-      <p class="lead">Eficiência e escala. A plataforma Beta opera R$ 174,49 bi em gestão indexada total, dos quais R$ 18,77 bi em ETFs listados.</p>
+      <p class="lead">Eficiência e escala. A plataforma Beta opera R$&nbsp;174,49&nbsp;bi em gestão indexada total, dos quais R$&nbsp;18,77&nbsp;bi em ETFs listados.</p>
       <div>
-        <span class="metric-line">R$ 18,77 bi · ETFs</span>
-        <span class="metric-line">+R$ 174,49 bi · gestão indexada</span>
+        <span class="metric-line">R$&nbsp;18,77&nbsp;bi · ETFs</span>
+        <span class="metric-line">+R$&nbsp;174,49&nbsp;bi · gestão indexada</span>
       </div>
       <h3>9 Fundos por categoria</h3>
       <div class="sub-grid">
@@ -354,15 +598,15 @@ li{ margin-bottom:var(--space-2); }
 
   <section class="panel" id="panel-rf">
     <div class="panel__head">
-      <div><p class="card__label"><span class="dot"></span>Áreas de Gestão</p><h2>Renda Fixa Ativa</h2></div>
+      <div><p class="panel__eyebrow">Áreas de Gestão &nbsp;·&nbsp; <span class="panel__folio">Painel 02</span></p><h2>Renda Fixa Ativa</h2></div>
       <button class="panel__close" type="button">✕ Fechar</button>
     </div>
     <div class="panel__inner">
       <p class="lead">Gestão ativa de títulos públicos e privados, com equipe de pesquisa econômica dedicada e processos de risco rigorosos.</p>
       <div>
-        <span class="metric-line">R$ 647 bi · Títulos Públicos</span>
+        <span class="metric-line">R$&nbsp;647&nbsp;bi · Títulos Públicos</span>
         <span class="metric-line">12,2% · dívida pública nacional</span>
-        <span class="metric-line">R$ 355 bi · Títulos Privados</span>
+        <span class="metric-line">R$&nbsp;355&nbsp;bi · Títulos Privados</span>
       </div>
       <h3>Liderança</h3>
       <ul>
@@ -379,7 +623,7 @@ li{ margin-bottom:var(--space-2); }
 
   <section class="panel" id="panel-credito">
     <div class="panel__head">
-      <div><p class="card__label"><span class="dot"></span>Áreas de Gestão</p><h2>Crédito</h2></div>
+      <div><p class="panel__eyebrow">Áreas de Gestão &nbsp;·&nbsp; <span class="panel__folio">Painel 03</span></p><h2>Crédito</h2></div>
       <button class="panel__close" type="button">✕ Fechar</button>
     </div>
     <div class="panel__inner">
@@ -391,13 +635,13 @@ li{ margin-bottom:var(--space-2); }
         <div class="sub-card sub-card--teal"><p class="sub-card__title">Imobiliário</p><p class="sub-card__desc">CRI e fundos imobiliários.</p></div>
         <div class="sub-card sub-card--teal"><p class="sub-card__title">Operações Estruturadas</p><p class="sub-card__desc">FIDC e instrumentos sob medida.</p></div>
       </div>
-      <p>Head da área: <strong>Fayga Delbem</strong>. AuM consolidado Crédito Estruturado + RF Unconstrained: <strong>R$ 89,8 bi</strong>.</p>
+      <p>Head da área: <strong>Fayga Delbem</strong>. AuM consolidado Crédito Estruturado + RF Unconstrained: <strong>R$&nbsp;89,8&nbsp;bi</strong>.</p>
     </div>
   </section>
 
   <section class="panel" id="panel-equities">
     <div class="panel__head">
-      <div><p class="card__label"><span class="dot"></span>Áreas de Gestão</p><h2>LatAm Equities</h2></div>
+      <div><p class="panel__eyebrow">Áreas de Gestão &nbsp;·&nbsp; <span class="panel__folio">Painel 04</span></p><h2>LatAm Equities</h2></div>
       <button class="panel__close" type="button">✕ Fechar</button>
     </div>
     <div class="panel__inner">
@@ -409,24 +653,24 @@ li{ margin-bottom:var(--space-2); }
         <li><strong>2013</strong> — ETF IPSA, 1º ETF do Chile.</li>
       </ul>
       <h3>AuM (Equities Multimesas)</h3>
-      <div><span class="metric-line">R$ 5,2 bi · Equities</span></div>
+      <div><span class="metric-line">R$&nbsp;5,2&nbsp;bi · Equities</span></div>
       <p>Head da área: <strong>Scott Piper</strong>.</p>
     </div>
   </section>
 
   <section class="panel" id="panel-multimesas">
     <div class="panel__head">
-      <div><p class="card__label"><span class="dot"></span>Multimesas</p><h2>Modelo Multimesas</h2></div>
+      <div><p class="panel__eyebrow">Multimesas &nbsp;·&nbsp; <span class="panel__folio">Painel 05</span></p><h2>Modelo Multimesas</h2></div>
       <button class="panel__close" type="button">✕ Fechar</button>
     </div>
     <div class="panel__inner">
-      <p class="lead">"Holding de assets independentes": cada mesa tem autonomia de decisão, com infraestrutura compartilhada. Em 2022 ultrapassou R$ 100 bi consolidados.</p>
+      <p class="lead">“Holding de assets independentes”: cada mesa tem autonomia de decisão, com infraestrutura compartilhada. Em 2022 ultrapassou R$&nbsp;100&nbsp;bi consolidados.</p>
       <h3>AuM por categoria</h3>
       <div class="sub-grid">
-        <div class="sub-card"><p class="sub-card__title">R$ 113,5 bi</p><p class="sub-card__desc">Retorno Absoluto</p></div>
-        <div class="sub-card sub-card--teal"><p class="sub-card__title">R$ 89,8 bi</p><p class="sub-card__desc">Crédito Estruturado + RF Unconstrained</p></div>
-        <div class="sub-card sub-card--info"><p class="sub-card__title">R$ 18,5 bi</p><p class="sub-card__desc">Macro</p></div>
-        <div class="sub-card"><p class="sub-card__title">R$ 5,2 bi</p><p class="sub-card__desc">Equities</p></div>
+        <div class="sub-card"><p class="sub-card__title">R$&nbsp;113,5&nbsp;bi</p><p class="sub-card__desc">Retorno Absoluto</p></div>
+        <div class="sub-card sub-card--teal"><p class="sub-card__title">R$&nbsp;89,8&nbsp;bi</p><p class="sub-card__desc">Crédito Estruturado + RF Unconstrained</p></div>
+        <div class="sub-card sub-card--info"><p class="sub-card__title">R$&nbsp;18,5&nbsp;bi</p><p class="sub-card__desc">Macro</p></div>
+        <div class="sub-card"><p class="sub-card__title">R$&nbsp;5,2&nbsp;bi</p><p class="sub-card__desc">Equities</p></div>
       </div>
       <h3>Oito mesas</h3>
       <div class="table-wrap">
@@ -444,17 +688,17 @@ li{ margin-bottom:var(--space-2); }
           </tbody>
         </table>
       </div>
-      <p style="font-size: var(--size-small); color: var(--color-fg-subtle);">Indicadores adicionais: <strong>GD</strong> (Global Dinâmico Multimercado) e <strong>E</strong> (fundo dedicado). Head: <strong>Arlindo Penteado</strong>.</p>
+      <p class="foot-note">Indicadores adicionais: <strong>GD</strong> (Global Dinâmico Multimercado) e <strong>E</strong> (fundo dedicado). Head: <strong>Arlindo Penteado</strong>.</p>
     </div>
   </section>
 
   <section class="panel" id="panel-ra">
     <div class="panel__head">
-      <div><p class="card__label"><span class="dot"></span>Multimesas</p><h2>Retorno Absoluto</h2></div>
+      <div><p class="panel__eyebrow">Multimesas &nbsp;·&nbsp; <span class="panel__folio">Painel 06</span></p><h2>Retorno Absoluto</h2></div>
       <button class="panel__close" type="button">✕ Fechar</button>
     </div>
     <div class="panel__inner">
-      <p class="lead">A maior categoria do modelo Multimesas — R$ 113,5 bi em AuM. Iniciada em 2005, líder de mercado desde 2020.</p>
+      <p class="lead">A maior categoria do modelo Multimesas — R$&nbsp;113,5&nbsp;bi em AuM. Iniciada em 2005, líder de mercado desde 2020.</p>
       <h3>Marcos</h3>
       <ul>
         <li><strong>1997</strong> — Itaú K2, primeiro multimercado da Casa.</li>
@@ -463,22 +707,20 @@ li{ margin-bottom:var(--space-2); }
       </ul>
       <h3>Estratégias representadas</h3>
       <div class="sub-grid">
-        <div class="sub-card"><p class="sub-card__title">Macro</p><p class="sub-card__desc">R$ 18,5 bi</p></div>
-        <div class="sub-card sub-card--info"><p class="sub-card__title">Equities</p><p class="sub-card__desc">R$ 5,2 bi</p></div>
-        <div class="sub-card sub-card--teal"><p class="sub-card__title">Crédito Estruturado + RF Unconstrained</p><p class="sub-card__desc">R$ 89,8 bi</p></div>
+        <div class="sub-card"><p class="sub-card__title">Macro</p><p class="sub-card__desc">R$&nbsp;18,5&nbsp;bi</p></div>
+        <div class="sub-card sub-card--info"><p class="sub-card__title">Equities</p><p class="sub-card__desc">R$&nbsp;5,2&nbsp;bi</p></div>
+        <div class="sub-card sub-card--teal"><p class="sub-card__title">Crédito Estruturado + RF Unconstrained</p><p class="sub-card__desc">R$&nbsp;89,8&nbsp;bi</p></div>
       </div>
     </div>
   </section>
 
   <section class="panel" id="panel-esg">
     <div class="panel__head">
-      <div><p class="card__label"><span class="dot"></span>ESG</p><h2>Investimento Responsável</h2></div>
+      <div><p class="panel__eyebrow">ESG &nbsp;·&nbsp; <span class="panel__folio">Painel 07</span></p><h2>Investimento Responsável</h2></div>
       <button class="panel__close" type="button">✕ Fechar</button>
     </div>
     <div class="panel__inner">
-      <blockquote style="border-left: 3px solid var(--color-accent); padding: var(--space-3) var(--space-5); margin: var(--space-5) 0; font-family: var(--font-display); font-style: italic; font-size: 1.15rem;">
-        "Incluir critérios socioambientais na decisão de investimento ou aplicar em ativos selecionados por critérios socioambientais — nós fazemos os dois."
-      </blockquote>
+      <p class="pull-quote">Incluir critérios socioambientais na decisão de investimento ou aplicar em ativos selecionados por critérios socioambientais — nós fazemos os dois.”</p>
       <div><span class="metric-line">100% dos ativos cobertos*</span></div>
       <h3>Práticas</h3>
       <ul>
@@ -503,14 +745,39 @@ li{ margin-bottom:var(--space-2); }
         <li><strong>ALAS20 Winner Brazil 2024</strong> — Agenda Líderes Sustentáveis.</li>
       </ul>
       <h3>Histórico — cobertura ESG (%)</h3>
-      <p>2013: 10% · 2014: 15% · 2015: 25% · 2016: 89% · 2017: 90% · 2018: 90% · 2019: 95% · 2020: 100% · 2021: 100% · 2022: 100% · 2023: 100%.</p>
-      <p style="font-size: var(--size-xs); color: var(--color-fg-subtle);">* 100% dos ativos, excluindo Fund of Funds.</p>
+      <!-- [AMBIÇÃO A2 · W8] gráfico-tese com anotação viva: a curva 2013→2023
+           (10%→100%) é a única série temporal completa da fonte. Banda no salto
+           2015→2016 + linha de meta 100% desenhadas no 1º render; crosshair acende
+           no hover. A tabela abaixo permanece (fidelidade: todas as linhas). -->
+      <figure class="chart-figure">
+        <figcaption class="chart-figure__cap">Cobertura ESG dos ativos · 2013 → 2023 · banda = salto 2015→2016</figcaption>
+        <div class="chart-box"><canvas id="c-esg" aria-label="Evolução da cobertura ESG dos ativos, de 10% em 2013 a 100% em 2020, mantida até 2023. Salto de 25% para 89% entre 2015 e 2016."></canvas></div>
+      </figure>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Ano</th><th class="num">Cobertura ESG</th></tr></thead>
+          <tbody>
+            <tr><td>2013</td><td class="num">10%</td></tr>
+            <tr><td>2014</td><td class="num">15%</td></tr>
+            <tr><td>2015</td><td class="num">25%</td></tr>
+            <tr><td>2016</td><td class="num">89%</td></tr>
+            <tr><td>2017</td><td class="num">90%</td></tr>
+            <tr><td>2018</td><td class="num">90%</td></tr>
+            <tr><td>2019</td><td class="num">95%</td></tr>
+            <tr><td>2020</td><td class="num">100%</td></tr>
+            <tr><td>2021</td><td class="num">100%</td></tr>
+            <tr><td>2022</td><td class="num">100%</td></tr>
+            <tr><td>2023</td><td class="num">100%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="foot-note">* 100% dos ativos, excluindo Fund of Funds.</p>
     </div>
   </section>
 
   <section class="panel" id="panel-pesquisa">
     <div class="panel__head">
-      <div><p class="card__label"><span class="dot"></span>Inteligência</p><h2>Pesquisa &amp; Data Science</h2></div>
+      <div><p class="panel__eyebrow">Inteligência &nbsp;·&nbsp; <span class="panel__folio">Painel 08</span></p><h2>Pesquisa &amp; Data Science</h2></div>
       <button class="panel__close" type="button">✕ Fechar</button>
     </div>
     <div class="panel__inner">
@@ -541,7 +808,7 @@ li{ margin-bottom:var(--space-2); }
 
   <section class="panel" id="panel-jornada">
     <div class="panel__head">
-      <div><p class="card__label"><span class="dot"></span>Jornada</p><h2>1957 → 2022</h2></div>
+      <div><p class="panel__eyebrow">Trajetória &nbsp;·&nbsp; <span class="panel__folio">Painel 09</span></p><h2>1957 → 2022</h2></div>
       <button class="panel__close" type="button">✕ Fechar</button>
     </div>
     <div class="panel__inner">
@@ -553,24 +820,24 @@ li{ margin-bottom:var(--space-2); }
         <li><span class="mini-timeline__date">2005</span><span>Início da mesa de Retorno Absoluto</span></li>
         <li><span class="mini-timeline__date">2011</span><span>Itaú Asset Nova York</span></li>
         <li><span class="mini-timeline__date">2013</span><span>ETF IPSA — 1º ETF do Chile</span></li>
-        <li><span class="mini-timeline__date">2016</span><span>Mais de R$ 500 bi sob gestão</span></li>
+        <li><span class="mini-timeline__date">2016</span><span>Mais de R$&nbsp;500&nbsp;bi sob gestão</span></li>
         <li><span class="mini-timeline__date">2019</span><span>Modelo Multimesas + 40 talentos + IMAB11</span></li>
         <li><span class="mini-timeline__date">2020</span><span>Líderes em Retorno Absoluto</span></li>
         <li><span class="mini-timeline__date">2021</span><span>6 ETFs Temáticos Internacionais</span></li>
-        <li><span class="mini-timeline__date">2022</span><span>+R$ 100 bi em Multimesas</span></li>
+        <li><span class="mini-timeline__date">2022</span><span>+R$&nbsp;100&nbsp;bi em Multimesas</span></li>
       </ul>
     </div>
   </section>
 
   <section class="panel" id="panel-premios">
     <div class="panel__head">
-      <div><p class="card__label"><span class="dot"></span>Reconhecimentos</p><h2>Prêmios e Selos</h2></div>
+      <div><p class="panel__eyebrow">Reconhecimentos &nbsp;·&nbsp; <span class="panel__folio">Painel 10</span></p><h2>Prêmios e Selos</h2></div>
       <button class="panel__close" type="button">✕ Fechar</button>
     </div>
     <div class="panel__inner">
       <p class="lead">Selos, rankings e certificações que marcam a trajetória da Casa.</p>
       <div class="sub-grid">
-        <div class="sub-card sub-card--info"><p class="sub-card__title">S&amp;P Global AMP-1'</p><p class="sub-card__desc">Avaliação máxima de processos (nov/2020).</p></div>
+        <div class="sub-card sub-card--info"><p class="sub-card__title">S&amp;P Global AMP-1’</p><p class="sub-card__desc">Avaliação máxima de processos (nov/2020).</p></div>
         <div class="sub-card"><p class="sub-card__title">Guia FGV — 15× Melhor Gestora</p><p class="sub-card__desc">Reconhecida 15 vezes.</p></div>
         <div class="sub-card"><p class="sub-card__title">ALAS20 Winner Brazil 2024</p><p class="sub-card__desc">Líderes Sustentáveis 2024.</p></div>
         <div class="sub-card sub-card--teal"><p class="sub-card__title">InfoMoney 2019</p><p class="sub-card__desc">1º e 3º lugares.</p></div>
@@ -582,7 +849,7 @@ li{ margin-bottom:var(--space-2); }
 
   <section class="panel" id="panel-diretoria">
     <div class="panel__head">
-      <div><p class="card__label"><span class="dot"></span>Governança</p><h2>Diretoria</h2></div>
+      <div><p class="panel__eyebrow">Governança &nbsp;·&nbsp; <span class="panel__folio">Painel 11</span></p><h2>Diretoria</h2></div>
       <button class="panel__close" type="button">✕ Fechar</button>
     </div>
     <div class="panel__inner">
@@ -620,7 +887,7 @@ li{ margin-bottom:var(--space-2); }
 
   <section class="panel" id="panel-contato">
     <div class="panel__head">
-      <div><p class="card__label"><span class="dot"></span>Contato</p><h2>Atendimento &amp; SAC</h2></div>
+      <div><p class="panel__eyebrow">Contato &nbsp;·&nbsp; <span class="panel__folio">Painel 12</span></p><h2>Atendimento &amp; SAC</h2></div>
       <button class="panel__close" type="button">✕ Fechar</button>
     </div>
     <div class="panel__inner">
@@ -634,39 +901,226 @@ li{ margin-bottom:var(--space-2); }
       <h3>Correspondência</h3>
       <p>Caixa Postal <strong>67.600</strong> — CEP <strong>03162-971</strong></p>
       <p>Site oficial: <a href="https://www.itauasset.com.br" target="_blank" rel="noopener">www.itauasset.com.br</a></p>
-      <p style="margin-top: var(--space-5); font-size: var(--size-small); color: var(--color-fg-muted);"><strong>Autorregulação ANBIMA</strong> — administração e gestão de recursos.</p>
+      <p class="foot-note" style="margin-top:var(--space-5);"><strong>Autorregulação ANBIMA</strong> — administração e gestão de recursos.</p>
     </div>
   </section>
 
 </main>
 
 <script>
-document.querySelector('.theme-toggle')?.addEventListener('click', () => {
-  const cur = document.documentElement.getAttribute('data-theme');
-  const next = cur === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
-  try { localStorage.setItem('theme', next); } catch {}
-});
+(function(){
+  const REDUCE = matchMedia('(prefers-reduced-motion: reduce)');
+  const scrollMode = REDUCE.matches ? 'auto' : 'smooth';
 
-document.querySelectorAll('.filter').forEach(f => f.addEventListener('click', e => {
-  const cat = e.currentTarget.dataset.filter;
-  document.querySelectorAll('.filter').forEach(x => x.classList.toggle('is-active', x === e.currentTarget));
-  document.querySelectorAll('.card').forEach(c => {
-    c.style.display = (cat === 'all' || c.dataset.category === cat) ? '' : 'none';
+  /* ═════ Toggle de tema — régua de craft (.no-transitions) + re-render de gráfico ═════ */
+  document.querySelector('.theme-toggle')?.addEventListener('click', () => {
+    const cur = document.documentElement.getAttribute('data-theme');
+    setTheme(cur === 'dark' ? 'light' : 'dark');     // setTheme vem do boot script (sem "respiro")
+    applyChartDefaults();
+    renderChartsForOpenPanel();                       // css() é lido na criação (§5.0) → re-render
   });
-}));
 
-document.querySelectorAll('.card[data-target]').forEach(card => card.addEventListener('click', e => {
-  e.preventDefault();
-  const tgt = document.getElementById(card.dataset.target);
-  if (!tgt) return;
-  document.querySelectorAll('.panel').forEach(p => p.classList.toggle('is-open', p === tgt));
-  setTimeout(() => tgt.scrollIntoView({ behavior:'smooth', block:'start' }), 80);
-}));
-document.querySelectorAll('.panel__close').forEach(b => b.addEventListener('click', e => {
-  e.currentTarget.closest('.panel').classList.remove('is-open');
-  window.scrollTo({ top:0, behavior:'smooth' });
-}));
+  /* ═════ Filtros — PRESERVADO 100% (dim de entradas-folha E linhas de índice) ═════ */
+  document.querySelectorAll('.filter').forEach(f => f.addEventListener('click', e => {
+    const cat = e.currentTarget.dataset.filter;
+    document.querySelectorAll('.filter').forEach(x => x.classList.toggle('is-active', x === e.currentTarget));
+    document.querySelectorAll('.idx-lead > li, .idx-list > li').forEach(item => {
+      item.classList.toggle('is-dimmed', !(cat === 'all' || item.dataset.category === cat));
+    });
+  }));
+
+  /* ═════ [W5] View Transitions — continuidade entrada-fólio ↔ painel (§13.4) ═════
+     Guard obrigatório (P9): sem API ou reduced-motion → troca instantânea. */
+  function navigate(updateDOM){
+    if (!document.startViewTransition || REDUCE.matches) { updateDOM(); return; }
+    document.startViewTransition(updateDOM);
+  }
+  /* nome único por snapshot: limpa todos antes de marcar o par fólio↔header ativo */
+  function clearMorphNames(){
+    document.querySelectorAll('[style*="view-transition-name"]').forEach(el => { el.style.viewTransitionName = ''; });
+  }
+  // título da entrada de índice que dispara o painel (folha OU linha)
+  const rowTitle = row => row?.querySelector('.idx-lead__title, .idx-list__title');
+
+  /* ═════ Abrir painel — o título da entrada-fólio MORFA no header do painel ═════ */
+  function openPanel(id, originRow){
+    const tgt = document.getElementById(id);
+    if (!tgt) return;
+    const srcTitle = rowTitle(originRow);
+    const panelHead = tgt.querySelector('.panel__head h2');
+    clearMorphNames();
+    // INVARIANTE nome-único: 'folio' marca o título da ENTRADA no snapshot VELHO e
+    // migra para o header do PAINEL no NOVO (dentro do updateDOM). Nunca coexistem.
+    if (srcTitle) srcTitle.style.viewTransitionName = 'folio';
+    navigate(() => {
+      if (srcTitle) srcTitle.style.viewTransitionName = '';
+      if (panelHead) panelHead.style.viewTransitionName = 'folio';
+      document.querySelectorAll('.panel').forEach(p => p.classList.toggle('is-open', p === tgt));
+    });
+    requestAnimationFrame(() => tgt.scrollIntoView({ behavior: scrollMode, block: 'start' }));
+    // render lazy do gráfico-tese do painel aberto + limpa nomes após o morph assentar
+    requestAnimationFrame(() => requestAnimationFrame(() => { renderChartsForOpenPanel(); clearMorphNames(); }));
+  }
+
+  document.querySelectorAll('[data-target]').forEach(row => row.addEventListener('click', e => {
+    e.preventDefault();
+    openPanel(row.dataset.target, row);
+    try { history.replaceState(null, '', '#' + row.dataset.target); } catch(_){}
+  }));
+
+  /* ═════ Fechar — morph reverso: header do painel volta à linha de origem ═════ */
+  document.querySelectorAll('.panel__close').forEach(b => b.addEventListener('click', e => {
+    const panel = e.currentTarget.closest('.panel');
+    const panelHead = panel.querySelector('.panel__head h2');
+    const originRow = panel.id ? document.querySelector('[data-target="' + panel.id + '"]') : null;
+    const originTitle = rowTitle(originRow);
+    clearMorphNames();
+    if (panelHead) panelHead.style.viewTransitionName = 'folio';
+    navigate(() => {
+      if (panelHead) panelHead.style.viewTransitionName = '';
+      if (originTitle) originTitle.style.viewTransitionName = 'folio';
+      panel.classList.remove('is-open');
+    });
+    try { history.replaceState(null, '', location.pathname); } catch(_){}
+    window.scrollTo({ top:0, behavior: scrollMode });
+    requestAnimationFrame(() => requestAnimationFrame(() => clearMorphNames()));
+  }));
+
+  /* ═════ [W8] CHART — gráfico-tese (cobertura ESG) com ANOTAÇÃO VIVA (§5.0b/§13.6) ═════ */
+  const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+  const fmtBR = (v, dec = 0) => Number(v).toLocaleString('pt-BR', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+
+  function applyChartDefaults(){
+    if (typeof Chart === 'undefined') return;
+    Chart.defaults.font.family = css('--font-ui') || css('--font-text');
+    Chart.defaults.font.size = 12;
+    Chart.defaults.color = css('--color-fg-muted');
+    Chart.defaults.plugins.tooltip.backgroundColor = css('--color-bg-elevated');
+    Chart.defaults.plugins.tooltip.titleColor = css('--color-fg');
+    Chart.defaults.plugins.tooltip.bodyColor = css('--color-fg-muted');
+    Chart.defaults.plugins.tooltip.borderColor = css('--color-border-strong');
+    Chart.defaults.plugins.tooltip.borderWidth = 1;
+  }
+
+  const chartInstances = {};
+  function destroy(id){ if (chartInstances[id]) { try { chartInstances[id].destroy(); } catch(_){} delete chartInstances[id]; } }
+
+  // banda sombreada do salto que o texto narra (2015→2016, 25%→89%) — 1º render (fallback-safe)
+  const eventBand = (fromLabel, toLabel, text) => ({
+    id: 'eventBand',
+    beforeDatasetsDraw(chart){
+      const { ctx, chartArea, scales: { x } } = chart;
+      if (!x) return;
+      const x1 = x.getPixelForValue(fromLabel), x2 = x.getPixelForValue(toLabel);
+      if (!Number.isFinite(x1) || !Number.isFinite(x2)) return;
+      ctx.save();
+      ctx.fillStyle = css('--color-warn-dim') || 'rgba(0,0,0,0.06)';
+      ctx.fillRect(x1, chartArea.top, x2 - x1, chartArea.bottom - chartArea.top);
+      ctx.font = '600 11px ' + (css('--font-mono') || 'monospace');
+      ctx.fillStyle = css('--color-fg-muted');
+      ctx.fillText(text, x1 + 5, chartArea.top + 13);
+      ctx.restore();
+    }
+  });
+  // linha de meta horizontal (100% — alvo regulatório/institucional) — 1º render
+  const refLine = (val, text) => ({
+    id: 'refLine',
+    afterDatasetsDraw(chart){
+      const { ctx, chartArea, scales: { y } } = chart;
+      if (!y) return;
+      const yp = y.getPixelForValue(val);
+      if (!Number.isFinite(yp)) return;
+      ctx.save();
+      ctx.strokeStyle = css('--color-fg-muted'); ctx.lineWidth = 1; ctx.setLineDash([5, 4]); ctx.globalAlpha = 0.8;
+      ctx.beginPath(); ctx.moveTo(chartArea.left, yp); ctx.lineTo(chartArea.right, yp); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.font = '600 10px ' + (css('--font-mono') || 'monospace');
+      ctx.fillStyle = css('--color-fg-muted');
+      ctx.fillText(text, chartArea.right - ctx.measureText(text).width - 2, yp - 5);
+      ctx.restore();
+    }
+  });
+  // crosshair de leitura: linha vertical no índice sob o cursor (acende SÓ no hover)
+  const crosshair = {
+    id: 'crosshair',
+    afterDraw(chart){
+      const a = chart._active;
+      if (!a || !a.length) return;
+      const { ctx, chartArea } = chart;
+      const x = a[0].element.x;
+      ctx.save();
+      ctx.strokeStyle = css('--color-fg-subtle'); ctx.lineWidth = 1; ctx.globalAlpha = 0.6; ctx.setLineDash([2, 2]);
+      ctx.beginPath(); ctx.moveTo(x, chartArea.top); ctx.lineTo(x, chartArea.bottom); ctx.stroke();
+      ctx.restore();
+    }
+  };
+
+  const chartBuilders = {
+    // cobertura ESG 2013→2023 (todos os pontos da tabela; medição anual discreta → tension 0)
+    'c-esg': () => ({
+      type: 'line',
+      data: {
+        labels: ['2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023'],
+        datasets: [{
+          label: 'Cobertura ESG (%)',
+          data: [10,15,25,89,90,90,95,100,100,100,100],
+          borderColor: css('--color-accent'), backgroundColor: css('--color-accent-dim'),
+          borderWidth: 2.5, tension: 0, fill: true, pointRadius: 3, pointHoverRadius: 5,
+          pointBackgroundColor: css('--color-accent')
+        }]
+      },
+      plugins: [eventBand('2015', '2016', '2015→2016 · 25%→89%'), refLine(100, 'Meta 100%'), crosshair],
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        animation: REDUCE.matches ? false : { duration: 500, easing: 'easeOutCubic' },
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },   // série única → rótulo direto via tooltip (§5.0)
+          tooltip: { callbacks: { label: ctx => 'Cobertura ESG: ' + fmtBR(ctx.parsed.y) + '%' } }
+        },
+        scales: {
+          x: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 11 } } },
+          y: { min: 0, max: 100, grid: { color: css('--color-border') },
+               ticks: { color: css('--color-fg-muted'), stepSize: 25, callback: v => fmtBR(v) + '%' } }
+        }
+      }
+    })
+  };
+
+  function renderChartsForOpenPanel(){
+    if (typeof Chart === 'undefined') return;
+    document.querySelectorAll('.panel.is-open canvas[id]').forEach(canvas => {
+      const id = canvas.id;
+      destroy(id);
+      const builder = chartBuilders[id];
+      if (!builder) return;
+      chartInstances[id] = new Chart(canvas, builder());
+    });
+  }
+
+  // Chart.js carrega com defer → garante defaults assim que disponível
+  if (typeof Chart !== 'undefined') applyChartDefaults();
+  else addEventListener('load', () => { applyChartDefaults(); renderChartsForOpenPanel(); });
+
+  // Deep-link: abrir painel se o hash apontar para um panel-* (sem morph — sem origem)
+  addEventListener('DOMContentLoaded', () => {
+    const id = (location.hash || '').slice(1);
+    if (id && document.getElementById(id)?.classList.contains('panel')) openPanel(id, null);
+  });
+
+  // PDF de RI: no print todos os painéis abrem (@media print) mas sem .is-open →
+  // renderiza TODO canvas-tese para não sair em branco no papel (imagem estática).
+  addEventListener('beforeprint', () => {
+    if (typeof Chart === 'undefined') return;
+    applyChartDefaults();
+    document.querySelectorAll('.panel canvas[id]').forEach(canvas => {
+      const id = canvas.id, builder = chartBuilders[id];
+      if (!builder) return;
+      destroy(id);
+      chartInstances[id] = new Chart(canvas, builder());
+    });
+  });
+})();
 </script>
 
 </body>

@@ -1,9 +1,11 @@
 ---
-description: Tecnicamente extraordinário — interativo, pergunta quais efeitos aplicar (WebGL hero, Chart.js plugins, variable font, cinematic transitions, 3D tilt, scroll-driven). Liberdade de arquivo até 5 MB. Múltiplas opções compõem.
+description: O nível A3 do parti — opera no teto de ambição declarado, lê o documento e pergunta quais momentos-wow A3 aplicar (WebGL/minigl, variable font animada plena, cinematic blur, 3D tilt, View Transitions, cursor-proximity, conic glow). Bloqueado em registro sóbrio. Liberdade de arquivo até 5 MB. Múltiplas opções compõem.
 argument-hint: <arquivo.html opcional>
 ---
 
 Você é um designer sênior pareado com um engenheiro sênior elevando um documento slideless existente. Aplica a transformação **overdrive** preservando 100% do conteúdo.
+
+> **v5 — overdrive É o nome do nível A3** ([../references/ambicao.md](../references/ambicao.md)). A repartição: as opções **F (scroll-driven), G (springs `linear()`) e a parte de anotação/direct-label de B** desceram para o **nível A2** (core, com fallback trivial — já estão no arsenal de css-patterns.md e devem ser usadas em qualquer documento A2, sem precisar de /overdrive). O que permanece exclusivo do /overdrive (A3): **A (WebGL/minigl), C (variable font animada plena), D (cinematic blur), E (3D tilt), H (View Transitions full-morph), W4 (cursor-proximity), conic glow**. Regra de coerência: **A3 é proibido em registro `institucional-impresso`/`relatorio-de-bancada`** (o documento sóbrio sobe via A2, nunca A3). A engine v3 (FLIP, Rough Notation) é vocabulário **A2** para todos os modelos, não exclusividade do overdrive.
 
 ## Workflow
 
@@ -11,19 +13,21 @@ Você é um designer sênior pareado com um engenheiro sênior elevando um docum
 
 2. **Confirmar versionamento.** Por padrão, criar `<nome>-overdrive.html` para preservar o original. Só sobrescrever se o usuário pedir explicitamente.
 
-3. **Perguntar quais efeitos aplicar** via `AskUserQuestion` com `multiSelect: true`. Apresente as 6 opções abaixo (A–F) como `options` da pergunta. O usuário pode escolher **uma ou várias** — combinações são esperadas. Phrasing sugerido:
+3. **Perguntar quais efeitos aplicar** via `AskUserQuestion` com `multiSelect: true`. Apresente as 8 opções abaixo (A–H) como `options` da pergunta. O usuário pode escolher **uma ou várias** — combinações são esperadas. Phrasing sugerido:
 
-   > **Quais efeitos overdrive aplicar?** (pode selecionar múltiplos)
+   > **Quais momentos-wow A3 aplicar?** (pode selecionar múltiplos)
 
    Opções a oferecer (cada uma vira um `option` com `label` curto + `description`):
-   - **A — WebGL hero generativo** · shader fragment customizado no hero (FBM, voronoi, fluid) sobre near-black. ~3KB WebGL1 nativo ou ~150KB com Three.js. 40-60fps em mid-range. Pausa quando slide não ativo.
-   - **B — Chart.js plugins** · path reveal animado, glow accent (`shadowBlur`) em séries-âncora, pulse-on-active quando slide vira ativo. Aplica-se automaticamente a datasets com cor accent.
-   - **C — Variable font animation** · detecta Fraunces/Instrument Serif → `font-variation-settings` animado no hero (`wght: 400→800` durante o heroIn). Sutil mas impressionante.
-   - **D — Cinematic transitions** · slides marcados com `data-cinematic="zoom-blur"` ou `"depth-push"` ganham transição combinada (filter blur + transform scale) na navegação. Só deck.
-   - **E — 3D tilt em cards** · `transform-style: preserve-3d` + mouse position → rotações 3-5° max. Tilt smooth, sombras dinâmicas.
-   - **F — Scroll-driven (scrollytelling)** · `animation-timeline: scroll()` quando suportado (Chrome 115+), fallback IntersectionObserver para Safari/Firefox. Para modelo scrollytelling.
+   - **A — WebGL hero generativo** · shader fragment customizado no hero (FBM, voronoi, fluid) sobre near-black. minigl (~5KB standalone inline) ou ~150KB com Three.js. 40-60fps em mid-range. Pausa quando slide não ativo. Fallback: aurora CSS com as mesmas cores. **A3 exclusivo** (W9).
+   - **B — Chart.js plugins** · path reveal animado, glow accent (`shadowBlur`) em séries-âncora, pulse-on-active quando slide vira ativo. Aplica-se a datasets com cor accent. *Obs.: a parte de anotação/direct-label viva já é A2-core (W8) — aqui é só o glow/pulse exuberante.*
+   - **C — Variable font animation** · `font-variation-settings` animado no hero (`wght`/`wdth` se constroem no heroIn) sobre a variable font do kit. **A3 exclusivo** (W3 pleno).
+   - **D — Cinematic transitions** · slides marcados com `data-cinematic="zoom-blur"` ou `"depth-push"` ganham transição combinada (filter blur + transform scale) na navegação. Só deck. **A3 exclusivo**.
+   - **E — 3D tilt em cards** · `transform-style: preserve-3d` + mouse position → rotações 3-5° max. Tilt smooth, sombras dinâmicas. **A3 exclusivo**.
+   - **F — Scroll-driven (scrollytelling)** · `animation-timeline: scroll()/view()` quando suportado, fallback IntersectionObserver. Para scrollytelling/handbook. **(também disponível em A2-core — W1; aqui é só atalho)**.
+   - **G — Springs via `linear()`** · curva de mola pura como timing-function, overshoot e settle naturais sem framework. Máx 2 momentos. **(também disponível em A2-core; aqui é só atalho)**.
+   - **H — View Transitions** · `document.startViewTransition` na troca de view/rota com morph de elemento compartilhado (`view-transition-name`). Feature-detect obrigatório. Para site/hub. **A3 exclusivo** (W5 full-morph).
 
-   **Recomendação ao usuário no momento da pergunta:** "1–2 opções costuma render restraint apropriado. 3+ pode competir entre si — selecionar com cuidado".
+   **Recomendação ao usuário no momento da pergunta:** "1–2 opções costuma render restraint apropriado. 3+ pode competir entre si — selecionar com cuidado". **F e G já pertencem ao A2-core** (qualquer documento A2 deveria usá-las sem precisar do /overdrive); ficam aqui só como atalho.
 
 4. **Ler o arquivo completo** e aplicar **só** os efeitos selecionados (cada um detalhado abaixo). Restraint é parte do gosto — não inventar efeitos extras nem aplicar opções não selecionadas.
 
@@ -102,7 +106,7 @@ Registrar 2 plugins via `Chart.register(accentGlowPlugin, revealOnActivePlugin)`
 
 ### Opção C — Variable font animation
 
-Adicionar CSS:
+Anima os eixos da **variable font do kit** que hoje ficam estáticos — colher `wght`/`wdth`/`opsz` que o kit já paga (W3 de [../references/ambicao.md](../references/ambicao.md)). Adicionar CSS:
 ```css
 @supports (font-variation-settings: 'wght' 400) {
   .slide.is-active [data-anim="hero"] {
@@ -119,7 +123,7 @@ Adicionar CSS:
   .slide.is-active [data-anim="hero"] { font-variation-settings: 'wght' 800, 'opsz' 144; animation: none; }
 }
 ```
-Verificar primeiro se o `--font-display` é Fraunces ou Instrument Serif (variable fonts). Se não, **pular esta opção** e avisar no relatório final.
+Verificar primeiro qual o display do kit declarado no parti e usar **só eixos reais dessa fonte** (Archivo `wght`/`wdth`, Newsreader `opsz`, Bricolage Grotesque `wght`/`wdth`; Fraunces `SOFT`/`WONK` **apenas no Kit 06** — ver [../references/type-kits.md](../references/type-kits.md) §Eixos cinéticos). **Fontes BANIDAS — nunca alvejar:** Inter como display, Instrument Serif, e Fraunces fora do Kit 06. Se o kit não tem fonte variável com eixo útil, **pular esta opção** e avisar no relatório final. O estado-final-base (peso final legível) deve existir fora do `@supports`.
 
 ### Opção D — Cinematic transitions
 
@@ -170,9 +174,26 @@ document.querySelectorAll('.card, .ve-card, .closing-card, .num-list__item').for
 ```
 Idempotência: marcar `card.__overdriveTilt = true` antes de adicionar listener.
 
-### Opção F — Scroll-driven (scrollytelling)
+### Opção F — Scroll-driven (scrollytelling) · **também A2-core (W1)**
 
-Verificar `CSS.supports('animation-timeline', 'scroll()')`. Se sim, aplicar `animation-timeline: scroll()` em elementos com `data-scroll-anim`. Fallback IntersectionObserver para Safari/Firefox. **Só relevante para modelos scrollytelling/handbook** — se aplicado em deck, avisar e pular.
+Verificar `CSS.supports('animation-timeline', 'view()')`. Se sim, aplicar `animation-timeline: view()` em elementos com `data-scroll-anim`. Fallback IntersectionObserver para Safari/Firefox. **Só relevante para scrollytelling/handbook** — se aplicado em deck, avisar e pular. **Não é exclusivo do overdrive:** é W1 de [../references/ambicao.md](../references/ambicao.md), arsenal A2-core — qualquer documento A2 deveria usá-la sem /overdrive. Aqui fica como atalho.
+
+### Opção G — Springs via `linear()` (motion físico) · **também A2-core**
+
+Curva de mola encodada como timing-function pura — overshoot e settle naturais sem framework:
+```css
+:root { --ease-spring-real: linear(0, 0.009, 0.035 2.1%, 0.141 4.4%, 0.723 12.9%, 0.938 16.7%, 1.017, 1.077 20.4%, 1.121, 1.149 24.3%, 1.159, 1.163 27%, 1.154, 1.129 32.8%, 1.051 39.6%, 1.017 43.1%, 0.991, 0.977 51%, 0.975 57.1%, 0.997 69.8%, 1); }
+@supports not (animation-timing-function: linear(0, 1)) {
+  :root { --ease-spring-real: cubic-bezier(.34, 1.56, .64, 1); }
+}
+```
+Aplicar em fragments/toggles do deck cinemático — máx 2 momentos por documento. **Não é exclusivo do overdrive:** é vocabulário A2-core (tokenizar `--spring`); aqui fica como atalho.
+
+### Opção H — View Transitions full-morph (site/hub) · **A3 exclusivo**
+
+`document.startViewTransition` na troca de rota/painel, com feature-detect obrigatório (`if (document.startViewTransition) { ... } else { render() }`). Morphing de elemento compartilhado via `view-transition-name` (W5 de ambicao.md). **A versão simples de troca de view (fade/FLIP) é A2-core; o full-morph com elemento compartilhado é A3 e mora aqui** — no Chrome gerenciado do banco o fallback é o caminho primário.
+
+> **Coerência com a v5 (F e G são A2, não exclusivos):** F (scroll-driven, W1) e G (springs `linear()`) **desceram para o A2-core** — estão no arsenal de [../references/ambicao.md](../references/ambicao.md)/css-patterns.md e devem ser usadas em qualquer documento A2 sem /overdrive; aparecem aqui apenas como atalho. O que permanece **exclusivo do A3 (overdrive)** é A (WebGL/minigl, W9), C (variable font animada plena, W3), D (cinematic blur), E (3D tilt), H (View Transitions full-morph, W5), W4 (cursor-proximity) e conic glow. Respeitar sempre o parti: **A3 é proibido em registro sóbrio** (`institucional-impresso`/`relatorio-de-bancada` sobem via A2; falha P10) e nunca em `motion: estatico`.
 
 ---
 

@@ -1,72 +1,81 @@
 <!DOCTYPE html>
 <!--
-  slideless — exemplo-site.html
-  Modelo: site (SPA single-file com hash routing)
-  Tema:   itau v2
-  Tópico: Plataforma de Dados Itaú — microsite institucional/onboarding
-
-  5 views: #home, #catalogo, #ferramentas, #governanca, #contato
-  Hash routing canônico (<a href="#x"> + hashchange).
-  history.replaceState ao trocar de view (sem novo entry no histórico
-  ao clicar em link da topnav; "voltar" do browser ainda funciona pelo
-  primeiro hash carregado).
+  Exemplo canônico: slideless SITE (SPA single-file, hash routing)
+  Conteúdo fictício-plausível — placeholders explícitos da skill (exceção C2).
 -->
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Plataforma de Dados Itaú</title>
-  <meta name="description" content="Portal institucional da Plataforma de Dados Itaú — catálogo, ferramentas, governança e contato.">
+  <title>Programa Jovem Tech — Itaú</title>
+  <meta name="description" content="Programa Jovem Tech: 120 vagas, 3 trilhas, formação paga em 9 meses. Exemplo canônico do modelo site da skill slideless.">
 
-  <!-- BOOT SCRIPT — antes do CSS, sem flash de tema -->
+  <!-- slideless:parti
+  conteudo: Programa Jovem Tech — tese: "120 vagas, 3 trilhas, formação paga em 9 meses"
+  registro: itau-signal-classico (programa institucional de pessoas — continuidade com a voz histórica da casa, justificada: comunicação oficial de programa)
+  kit: 06-itau-signal-classico (Fraunces COM font-variation-settings SOFT/WONK no display — obrigação do kit; Archivo no corpo)
+  capa: split-assimetrico (2fr/1fr — proposta à esquerda, bloco de dados de vagas/datas à direita)
+  superficie: glow-localizado (UM glow atrás do número 120 na home — nunca em body) + luz key-light
+  motion: editorial (reveal só em figuras/dados; navegação entre views com continuidade)
+  assinatura: M1 — o número 120 (vagas) se constrói por counter na home, única animação de número do site
+  ambicao: A2-elevado (programa institucional de pessoas — a fonte pede continuidade ao trocar de view, e o "120 = vagas = posições contratadas" é a tese que se constrói diante de quem lê)
+  momento-wow: W5 View Transitions entre views (same-document cross-fade puro, sem framework, sem reload — NÃO é morph/opção H do overdrive) + W2 counter 120 sincronizado a um medidor-fio que se preenche (evolui M1) + W3 manchete de view cinética (Fraunces SOFT 0→75 + wght na entrada — colhe o eixo que o Kit 06 já paga, agora vivo)
+  nao-vai-ter: grid-3-cards; fade-up; badge-pill
+  -->
+
   <script>
     (function() {
       try {
-        var t = localStorage.getItem('theme') ||
-                (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        var t = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         document.documentElement.setAttribute('data-theme', t);
-      } catch (e) {
-        document.documentElement.setAttribute('data-theme', 'light');
-      }
+      } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }
     })();
   </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+  <!-- SLIDELESS:TYPE-KIT — Kit 06 Itaú Signal Clássico -->
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1&family=Archivo:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- SLIDELESS:TYPE-KIT-END -->
 
   <style>
-    /* ─────────────────────────────────────────────────────────────────
-       Tema itau v2 — tokens (inline, condensado para single-file)
-       ───────────────────────────────────────────────────────────────── */
+    /* ═══ KIT 06 — Itaú Signal Clássico (ANTES do tema) ═══════════════ */
     :root {
-      --itau-orange: #FF6200;
-      --itau-orange-2: #F88104;
-      --itau-orange-3: #FA9F09;
-      --itau-blue-3: #3B85FA;
-      --itau-yellow: #FBC305;
+      --kit-display: 'Fraunces';
+      --kit-text:    'Archivo';
+      --kit-ui:      'Archivo';
+      --kit-mono:    'IBM Plex Mono';
+    }
+
+    /* ═══ TEMA ITAU v4 — camada [MARCA] copiada; camada [DIREÇÃO]
+       composta conforme o parti (key-light, 2 radius, sem glow-tokens) ═ */
+    :root {
+      /* [MARCA] Cores da marca */
+      --itau-orange:     #FF6200;
+      --itau-orange-2:   #F88104;
+      --itau-orange-3:   #FA9F09;
+      --itau-blue-3:     #3B85FA;
+      --itau-yellow:     #FBC305;
       --itau-warm-black: #14110d;
 
-      --color-accent:     var(--itau-orange);
-      --color-accent-dim: rgba(255, 98, 0, 0.08);
-      --color-accent-fg:  #ffffff;
-      --color-info:       var(--itau-blue-3);
-      --color-info-dim:   rgba(59, 133, 250, 0.08);
-      --color-success:    #4d7c0f;
-      --color-success-dim:rgba(77, 124, 15, 0.10);
-      --color-sage:       #65a30d;
-      --color-sage-dim:   rgba(101, 163, 13, 0.10);
-      --color-teal:       #0f766e;
-      --color-teal-dim:   rgba(15, 118, 110, 0.10);
-      --color-plum:       #9f1239;
-      --color-plum-dim:   rgba(159, 18, 57, 0.10);
-      --color-warn:       var(--itau-yellow);
-      --color-warn-dim:   rgba(251, 195, 5, 0.12);
-      --color-danger:     #b91c1c;
-      --color-danger-dim: rgba(185, 28, 28, 0.08);
+      /* [MARCA] Paleta semântica (light) */
+      --color-accent:      var(--itau-orange);
+      --color-accent-dim:  rgba(255, 98, 0, 0.08);
+      --color-accent-fg:   #ffffff;
+      --color-info:        var(--itau-blue-3);
+      --color-info-dim:    rgba(59, 133, 250, 0.08);
+      --color-success:     #3f6f1f;
+      --color-success-dim: rgba(63, 111, 31, 0.08);
+      --color-teal:        #0f766e;
+      --color-teal-dim:    rgba(15, 118, 110, 0.08);
+      --color-plum:        #9f1239;
+      --color-plum-dim:    rgba(159, 18, 57, 0.08);
+      --color-warn:        var(--itau-yellow);
+      --color-warn-dim:    rgba(251, 195, 5, 0.12);
+      --color-danger:      #b91c1c;
+      --color-danger-dim:  rgba(185, 28, 28, 0.08);
 
+      /* [MARCA] Background + foreground (light) */
       --color-bg:            #faf7f5;
       --color-bg-elevated:   #ffffff;
       --color-bg-sunken:     #f4f1ec;
@@ -77,14 +86,12 @@
       --color-border-strong: rgba(41, 32, 23, 0.18);
       --color-accent-hover:  var(--itau-orange-2);
 
-      --glow-warm: radial-gradient(ellipse 80% 60% at 80% 0%, rgba(255, 98, 0, 0.10) 0%, transparent 55%);
-      --glow-cool: radial-gradient(ellipse 70% 50% at 20% 100%, rgba(59, 133, 250, 0.08) 0%, transparent 55%);
-      --glow-hero: radial-gradient(ellipse 90% 70% at 50% 0%, rgba(255, 98, 0, 0.14) 0%, transparent 50%);
+      /* [DIREÇÃO] Tipografia — slots do kit */
+      --font-text:    'Itau Text', var(--kit-text, 'Segoe UI'), -apple-system, system-ui, sans-serif;
+      --font-display: 'Itau Display', var(--kit-display, Georgia), serif;
+      --font-mono:    var(--kit-mono, 'IBM Plex Mono'), 'SF Mono', Consolas, monospace;
 
-      --font-text:    'Itau Text', 'Inter', -apple-system, system-ui, sans-serif;
-      --font-display: 'Itau Display', 'Fraunces', 'Inter', Georgia, serif;
-      --font-mono:    'JetBrains Mono', 'IBM Plex Mono', 'SF Mono', Consolas, monospace;
-
+      /* [SISTEMA] Escala fluida */
       --size-xs:    clamp(0.75rem, 0.7rem + 0.2vw, 0.875rem);
       --size-small: clamp(0.875rem, 0.85rem + 0.15vw, 1rem);
       --size-body:  clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
@@ -94,32 +101,23 @@
       --size-h2:    clamp(1.6rem, 1.3rem + 1.2vw, 2.25rem);
       --size-h1:    clamp(2.25rem, 1.8rem + 2vw, 3.5rem);
 
+      /* [SISTEMA] Espaço + layout */
       --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem;
       --space-4: 1rem;    --space-5: 1.5rem; --space-6: 2rem;
       --space-7: 2.5rem;  --space-8: 3rem;   --space-10: 4rem;
-      --space-12: 5rem;   --space-16: 7rem;
+      --space-12: 5rem;
+      --header-h: 56px;
 
-      --content-max: 760px;
-      --site-max: 1140px;
-      --header-h: 64px;
-
+      /* [DIREÇÃO] 2 valores de radius no documento inteiro: 4px e 50% */
       --radius-sm: 4px;
-      --radius:    10px;
-      --radius-lg: 16px;
-      --radius-xl: 24px;
 
-      --shadow-xs: 0 1px 2px rgba(41, 32, 23, 0.04);
-      --shadow-sm: 0 2px 4px rgba(41, 32, 23, 0.06), 0 1px 2px rgba(41, 32, 23, 0.04);
-      --shadow:    0 4px 12px rgba(41, 32, 23, 0.08), 0 1px 3px rgba(41, 32, 23, 0.05);
-      --shadow-lg: 0 12px 32px rgba(41, 32, 23, 0.12), 0 4px 12px rgba(41, 32, 23, 0.06);
-      --inset-sm:  inset 0 1px 3px rgba(41, 32, 23, 0.06);
+      /* [DIREÇÃO] Luz key-light — sombra de 3 camadas, SÓ no elemento
+         elevado da home (painel de dados). Demais views: fio, não sombra. */
+      --shadow-key: 0 1px 2px rgba(41, 32, 23, 0.05),
+                    0 6px 16px rgba(41, 32, 23, 0.07),
+                    0 20px 44px rgba(41, 32, 23, 0.09);
 
-      --ease-out:      cubic-bezier(0.22, 1, 0.36, 1);
-      --ease-emphatic: cubic-bezier(0.16, 1, 0.3, 1);
       --duration-fast: 150ms;
-      --duration:      250ms;
-      --duration-slow: 400ms;
-      --duration-hero: 900ms;
     }
 
     [data-theme="dark"] {
@@ -132,32 +130,51 @@
       --color-border:        rgba(237, 229, 221, 0.10);
       --color-border-strong: rgba(237, 229, 221, 0.20);
 
-      --color-accent:       var(--itau-orange-3);
-      --color-accent-hover: var(--itau-orange-2);
-      --color-accent-fg:    #14110d;
-      --color-accent-dim:   rgba(250, 159, 9, 0.12);
+      --color-accent:        var(--itau-orange-3);
+      --color-accent-hover:  var(--itau-orange-2);
+      --color-accent-fg:     #14110d;
+      --color-accent-dim:    rgba(250, 159, 9, 0.10);
+      --color-info-dim:      rgba(59, 133, 250, 0.12);
+      --color-success:       #8fcc5a;
+      --color-success-dim:   rgba(143, 204, 90, 0.10);
+      --color-teal:          #6fd0c0;
+      --color-teal-dim:      rgba(111, 208, 192, 0.10);
+      --color-plum:          #e8889c;
+      --color-plum-dim:      rgba(232, 136, 156, 0.10);
+      --color-warn-dim:      rgba(251, 195, 5, 0.12);
+      --color-danger:        #f87171;
+      --color-danger-dim:    rgba(248, 113, 113, 0.10);
 
-      --color-info-dim:    rgba(59, 133, 250, 0.14);
-      --color-success:     #a3e635;
-      --color-success-dim: rgba(163, 230, 53, 0.12);
-      --color-sage:        #bef264;
-      --color-teal:        #5eead4;
-      --color-plum:        #fb7185;
-
-      --glow-warm: radial-gradient(ellipse 80% 60% at 80% 0%, rgba(250, 159, 9, 0.18) 0%, transparent 55%);
-      --glow-cool: radial-gradient(ellipse 70% 50% at 20% 100%, rgba(59, 133, 250, 0.14) 0%, transparent 55%);
-      --glow-hero: radial-gradient(ellipse 90% 70% at 50% 0%, rgba(250, 159, 9, 0.22) 0%, transparent 50%);
-
-      --shadow-xs: 0 1px 2px rgba(0,0,0,0.4);
-      --shadow-sm: 0 2px 4px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
-      --shadow:    0 4px 12px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.3);
-      --shadow-lg: 0 12px 32px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.3);
-      --inset-sm:  inset 0 1px 3px rgba(0,0,0,0.4);
+      --shadow-key: 0 1px 2px rgba(0, 0, 0, 0.4),
+                    0 6px 16px rgba(0, 0, 0, 0.35),
+                    0 20px 44px rgba(0, 0, 0, 0.45);
     }
 
-    /* ─────────────────────────────────────────────────────────────────
-       Reset + base
-       ───────────────────────────────────────────────────────────────── */
+    /* [MARCA] Paleta secundária em OKLCH (fallback hex acima) */
+    @supports (color: oklch(60% 0.1 50)) {
+      :root {
+        --color-success:     oklch(52% 0.11 140);
+        --color-success-dim: oklch(52% 0.11 140 / 0.08);
+        --color-teal:        oklch(52% 0.08 200);
+        --color-teal-dim:    oklch(52% 0.08 200 / 0.08);
+        --color-plum:        oklch(46% 0.12 355);
+        --color-plum-dim:    oklch(46% 0.12 355 / 0.08);
+        --color-danger:      oklch(50% 0.16 27);
+        --color-danger-dim:  oklch(50% 0.16 27 / 0.08);
+      }
+      [data-theme="dark"] {
+        --color-success:     oklch(76% 0.13 140);
+        --color-success-dim: oklch(76% 0.13 140 / 0.10);
+        --color-teal:        oklch(78% 0.09 195);
+        --color-teal-dim:    oklch(78% 0.09 195 / 0.10);
+        --color-plum:        oklch(74% 0.11 0);
+        --color-plum-dim:    oklch(74% 0.11 0 / 0.10);
+        --color-danger:      oklch(70% 0.15 25);
+        --color-danger-dim:  oklch(70% 0.15 25 / 0.10);
+      }
+    }
+
+    /* ─── Reset / base ─────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
@@ -167,755 +184,99 @@
       line-height: 1.65;
       color: var(--color-fg);
       background: var(--color-bg);
-      background-image: var(--glow-warm), var(--glow-cool);
-      background-attachment: fixed;
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
-      overflow-wrap: break-word;
       transition: background-color var(--duration-fast), color var(--duration-fast);
     }
-
     :focus-visible {
       outline: 2px solid var(--color-accent);
       outline-offset: 3px;
       border-radius: var(--radius-sm);
     }
 
-    /* Headings */
-    h1, h2, h3, h4 {
+    /* ─── Headings — tracking por corpo (C11) ──────────────────────── */
+    h1, h2, h3 {
       font-family: var(--font-display);
       color: var(--color-fg);
-      line-height: 1.12;
-      letter-spacing: -0.022em;
-      font-weight: 700;
-      font-feature-settings: 'ss01', 'ss02';
+      line-height: 1.08;
+      text-wrap: balance;
     }
-    h1 { font-size: var(--size-h1); margin: 0 0 var(--space-5); letter-spacing: -0.030em; }
-    h2 { font-size: var(--size-h2); margin: var(--space-10) 0 var(--space-4); }
-    h3 { font-size: var(--size-h3); font-weight: 600; margin: var(--space-7) 0 var(--space-3); }
-    h4 { font-size: var(--size-h4); font-weight: 600; margin: var(--space-5) 0 var(--space-2); }
+    /* OBRIGAÇÃO DO KIT 06: eixos SOFT/WONK no papel display.
+       Todo h1 de view carrega a variação — é a voz Fraunces da casa. */
+    h1 {
+      font-size: var(--size-h1);
+      font-weight: 560;
+      letter-spacing: -0.035em;
+      font-variation-settings: 'opsz' 144, 'SOFT' 75, 'WONK' 1;
+      margin: 0 0 var(--space-4);
+    }
+    h2 {
+      font-size: var(--size-h2);
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      margin: var(--space-10) 0 var(--space-4);
+    }
+    h3 { font-size: var(--size-h3); font-weight: 600; letter-spacing: -0.015em; margin: var(--space-7) 0 var(--space-3); }
 
-    p { margin: 0 0 var(--space-4); max-width: 65ch; color: var(--color-fg); }
+    /* ═══ W3 — manchete de view CINÉTICA (Fraunces SOFT/WONK, agora vivo) ═
+       O Kit 06 já exige SOFT/WONK no display; aqui o eixo SOFT deixa de
+       ser estático e se constrói na ENTRADA da view (0 → 75, o terminal
+       arredonda). BASE = estado final legível (SOFT 75) — invariante P9:
+       num Chrome travado a manchete já está no peso/SOFT finais. */
+    @property --h1-soft { syntax: '<number>'; inherits: false; initial-value: 75; }
+    @property --h1-wght { syntax: '<number>'; inherits: false; initial-value: 560; }
+    .view h1 {
+      /* a manchete lê os eixos das custom props; base já é o final.
+         Fallbacks no var() = se @property não existir, declaração continua
+         válida no estado final (SOFT 75 / wght 560) — nada some. */
+      font-variation-settings: 'opsz' 144, 'SOFT' var(--h1-soft, 75), 'WONK' 1;
+      font-weight: var(--h1-wght, 560);
+    }
+    /* só anima onde o browser é novo o bastante p/ interpolar varfont com
+       suavidade (mesmo gate do scroll-driven) E o usuário aceita movimento.
+       Anima APENAS os eixos (SOFT 0→75, wght 420→560): o terminal arredonda
+       e a manchete "assenta na voz" da casa. Sem opacity/transform aqui — a
+       entrada da view já é o cross-fade do W5; isto não conflita nem dá snap. */
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        .view.is-active.kinetic-in h1 {
+          animation: h1-typeflex 620ms var(--ease-out-strong) both;
+        }
+        @keyframes h1-typeflex {
+          from { --h1-soft: 0;  --h1-wght: 420; }
+          to   { --h1-soft: 75; --h1-wght: 560; }
+        }
+      }
+    }
+
+    p { margin: 0 0 var(--space-4); max-width: 65ch; text-wrap: pretty; }
     .lead {
       font-size: var(--size-lead);
       line-height: 1.5;
       color: var(--color-fg-muted);
-      margin-bottom: var(--space-6);
-      font-weight: 400;
-      max-width: 62ch;
+      margin-bottom: var(--space-7);
+      max-width: 56ch;
     }
     a { color: var(--color-accent); text-decoration: none; }
     a:hover { color: var(--color-accent-hover); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1.5px; }
     strong { font-weight: 700; color: var(--color-fg); }
-    code:not(pre code) {
-      font-family: var(--font-mono); font-size: 0.875em;
-      background: var(--color-bg-sunken);
-      padding: 0.15em 0.45em;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--color-border);
-    }
     ul, ol { padding-left: var(--space-5); margin: 0 0 var(--space-4); }
-    li { margin-bottom: var(--space-2); max-width: 65ch; }
+    li { margin-bottom: var(--space-2); max-width: 65ch; text-wrap: pretty; }
     li::marker { color: var(--color-fg-subtle); }
-    hr.divider {
-      border: 0; border-top: 1px solid var(--color-border);
-      margin: var(--space-10) 0;
-    }
 
-    .kicker {
-      display: inline-flex; align-items: center; gap: 10px;
-      font-family: var(--font-mono);
-      font-size: 0.6875rem;
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--color-fg-muted);
-      margin: 0 0 var(--space-4);
+    /* ═══ MOTION — perfil EDITORIAL + ambição A2-elevado ═════════════ */
+    /* Régua de craft (curvas nomeadas, nunca as default). A ambição
+       sobe a materialidade e a continuidade; NÃO troca o registro. */
+    :root {
+      --ease-out:  cubic-bezier(0.2, 0.6, 0.2, 1);   /* papel: entrada de figura + fade de view */
+      --ease-snap: cubic-bezier(0.2, 0, 0, 1);        /* papel: micro-interação (nav, toggle, FAQ) */
+      --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1); /* papel: entrada cinética da manchete + view transition */
     }
-    .kicker::before {
-      content: '';
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--color-accent);
-      flex-shrink: 0;
-    }
+    [data-reveal] { opacity: 0; transition: opacity 350ms var(--ease-out); }
+    [data-reveal].is-visible { opacity: 1; }
+    /* data-reveal SÓ em figuras/dados — aqui: o painel de dados da home. */
 
-    /* ─────────────────────────────────────────────────────────────────
-       Topbar (sticky)
-       ───────────────────────────────────────────────────────────────── */
-    .topbar {
-      position: sticky; top: 0; z-index: 100;
-      height: var(--header-h);
-      background: color-mix(in srgb, var(--color-bg) 80%, transparent);
-      backdrop-filter: saturate(180%) blur(14px);
-      -webkit-backdrop-filter: saturate(180%) blur(14px);
-      border-bottom: 1px solid var(--color-border);
-    }
-    .topbar__inner {
-      max-width: var(--site-max);
-      margin: 0 auto;
-      height: 100%;
-      padding: 0 var(--space-6);
-      display: flex; align-items: center; gap: var(--space-6);
-    }
-    .topbar__brand {
-      display: flex; align-items: center; gap: 10px;
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 0.9375rem;
-      letter-spacing: -0.01em;
-      text-decoration: none;
-      color: var(--color-fg);
-      white-space: nowrap;
-    }
-    .topbar__brand:hover { text-decoration: none; }
-    .topbar__brand-mark {
-      width: 26px; height: 26px;
-      border-radius: 6px;
-      background: var(--color-accent);
-      display: grid; place-items: center;
-      color: var(--color-accent-fg);
-      font-family: var(--font-mono);
-      font-weight: 700; font-size: 0.75rem;
-      letter-spacing: 0;
-      flex-shrink: 0;
-    }
-    .topnav {
-      display: flex; gap: 2px;
-      margin-left: var(--space-4);
-      flex: 1;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-    }
-    .topnav::-webkit-scrollbar { display: none; }
-    .topnav__link {
-      padding: 7px 12px;
-      font-size: var(--size-small);
-      color: var(--color-fg-muted);
-      text-decoration: none;
-      border-radius: 6px;
-      white-space: nowrap;
-      transition: color var(--duration-fast), background var(--duration-fast);
-    }
-    .topnav__link:hover {
-      color: var(--color-fg);
-      background: var(--color-bg-sunken);
-      text-decoration: none;
-    }
-    .topnav__link.is-active {
-      color: var(--color-fg);
-      background: var(--color-accent-dim);
-      font-weight: 600;
-    }
-    .topbar__actions {
-      display: flex; align-items: center; gap: var(--space-3);
-      flex-shrink: 0;
-    }
-    .topbar__cta {
-      padding: 8px 14px;
-      font-size: var(--size-small);
-      font-weight: 600;
-      background: var(--color-fg);
-      color: var(--color-bg);
-      border-radius: 8px;
-      text-decoration: none;
-      transition: transform var(--duration-fast), background var(--duration-fast);
-      white-space: nowrap;
-    }
-    .topbar__cta:hover {
-      background: var(--color-accent);
-      color: var(--color-accent-fg);
-      transform: translateY(-1px);
-      text-decoration: none;
-    }
-    .theme-toggle {
-      width: 36px; height: 36px;
-      display: grid; place-items: center;
-      background: var(--color-bg-elevated);
-      border: 1px solid var(--color-border);
-      border-radius: 999px;
-      cursor: pointer;
-      color: var(--color-fg);
-      font-size: 14px;
-      transition: all var(--duration-fast);
-    }
-    .theme-toggle:hover {
-      background: var(--color-bg-sunken);
-      border-color: var(--color-border-strong);
-      transform: translateY(-1px);
-    }
-
-    /* ─────────────────────────────────────────────────────────────────
-       Views (SPA)
-       ───────────────────────────────────────────────────────────────── */
-    main { min-height: calc(100vh - var(--header-h) - 200px); }
-
-    .view {
-      max-width: var(--site-max);
-      margin: 0 auto;
-      padding: var(--space-10) var(--space-6) var(--space-12);
-      opacity: 0;
-      transition: opacity 220ms var(--ease-out);
-    }
-    .view.is-active { opacity: 1; }
-
-    .view__hero {
-      max-width: var(--content-max);
-      margin: 0 0 var(--space-10);
-    }
-    .view__hero h1 { max-width: 22ch; }
-    .view__meta {
-      display: flex; flex-wrap: wrap; gap: var(--space-6);
-      margin-top: var(--space-6);
-      font-size: var(--size-small);
-      color: var(--color-fg-muted);
-    }
-    .view__meta strong { color: var(--color-fg); font-weight: 700; }
-
-    /* ─────────────────────────────────────────────────────────────────
-       Components
-       ───────────────────────────────────────────────────────────────── */
-
-    /* Métricas */
-    .metrics {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: var(--space-5);
-      margin: var(--space-6) 0 var(--space-8);
-    }
-    .metric {
-      border-top: 2px solid var(--color-fg);
-      padding-top: var(--space-3);
-    }
-    .metric__val {
-      font-family: var(--font-display);
-      font-size: clamp(2rem, 1.5rem + 1.5vw, 2.75rem);
-      font-weight: 800;
-      line-height: 1;
-      margin: 0 0 var(--space-2);
-      letter-spacing: -0.035em;
-    }
-    .metric__val span { color: var(--color-accent); }
-    .metric__label {
-      font-size: var(--size-small);
-      color: var(--color-fg-muted);
-      margin: 0;
-      max-width: 24ch;
-      line-height: 1.45;
-    }
-    .metric__trend {
-      font-family: var(--font-mono);
-      font-size: var(--size-xs);
-      color: var(--color-success);
-      margin-top: 6px;
-      font-weight: 600;
-    }
-    .metric__trend--neutral { color: var(--color-fg-subtle); }
-    .metric__trend--down { color: var(--color-plum); }
-
-    /* Cards */
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: var(--space-5);
-      margin: var(--space-6) 0 var(--space-8);
-    }
-    .cards > * { min-width: 0; }
-    .card {
-      display: flex;
-      flex-direction: column;
-      padding: var(--space-5) var(--space-5) var(--space-4);
-      background: var(--color-bg-elevated);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-lg);
-      text-decoration: none;
-      color: inherit;
-      box-shadow: var(--shadow-xs);
-      transition: transform var(--duration) var(--ease-out),
-                  box-shadow var(--duration) var(--ease-out),
-                  border-color var(--duration) var(--ease-out);
-      cursor: pointer;
-    }
-    .card:hover {
-      transform: translateY(-3px);
-      border-color: var(--color-accent);
-      box-shadow: var(--shadow-lg);
-      text-decoration: none;
-    }
-    .card__label {
-      font-family: var(--font-mono);
-      font-size: 0.6875rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: var(--color-fg-muted);
-      margin: 0 0 var(--space-3);
-      display: flex; align-items: center; gap: 8px;
-    }
-    .card__label::before {
-      content: '';
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: currentColor;
-      flex-shrink: 0;
-    }
-    .card--accent .card__label { color: var(--color-accent); }
-    .card--info   .card__label { color: var(--color-info); }
-    .card--teal   .card__label { color: var(--color-teal); }
-    .card--sage   .card__label { color: var(--color-sage); }
-    .card--plum   .card__label { color: var(--color-plum); }
-    .card__title {
-      font-family: var(--font-display);
-      font-size: 1.125rem;
-      font-weight: 700;
-      margin: 0 0 var(--space-2);
-      letter-spacing: -0.015em;
-      line-height: 1.25;
-    }
-    .card__desc {
-      font-size: var(--size-small);
-      color: var(--color-fg-muted);
-      margin: 0;
-      flex: 1;
-      line-height: 1.55;
-    }
-    .card__cta {
-      margin-top: var(--space-4);
-      font-family: var(--font-mono);
-      font-size: var(--size-xs);
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--color-accent);
-      transition: transform var(--duration) var(--ease-out);
-    }
-    .card:hover .card__cta { transform: translateX(4px); }
-
-    /* Callouts */
-    .callout {
-      display: flex; gap: var(--space-4);
-      padding: var(--space-4) var(--space-5);
-      margin: var(--space-5) 0;
-      border-left: 3px solid;
-      border-radius: var(--radius);
-      max-width: var(--content-max);
-    }
-    .callout--info   { background: var(--color-info-dim);    border-color: var(--color-info); }
-    .callout--tip    { background: var(--color-success-dim); border-color: var(--color-success); }
-    .callout--warn   { background: var(--color-warn-dim);    border-color: var(--color-warn); }
-    .callout__icon {
-      flex-shrink: 0;
-      width: 24px; height: 24px;
-      display: grid; place-items: center;
-      border-radius: 50%;
-      font-weight: 700; font-size: 0.75rem;
-      color: white; margin-top: 2px;
-    }
-    .callout--info   .callout__icon { background: var(--color-info); }
-    .callout--tip    .callout__icon { background: var(--color-success); }
-    .callout--warn   .callout__icon { background: var(--color-warn); color: var(--itau-warm-black); }
-    .callout__content { flex: 1; min-width: 0; }
-    .callout__title { font-weight: 700; margin: 0 0 var(--space-1); font-size: var(--size-small); }
-    .callout__content p { margin: 0; font-size: var(--size-small); }
-
-    /* Tabela de dados */
-    .table-wrap {
-      width: 100%;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-sm);
-      background: var(--color-bg-elevated);
-      margin: var(--space-5) 0 var(--space-8);
-    }
-    .data-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: var(--size-small);
-    }
-    .data-table thead { position: sticky; top: 0; z-index: 2; }
-    .data-table th {
-      background: var(--color-bg-sunken);
-      font-family: var(--font-mono);
-      font-size: 0.6875rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      padding: 12px 16px;
-      text-align: left;
-      border-bottom: 2px solid var(--color-border-strong);
-      color: var(--color-fg-muted);
-      white-space: nowrap;
-    }
-    .data-table td {
-      padding: 13px 16px;
-      border-bottom: 1px solid var(--color-border);
-      vertical-align: top;
-      color: var(--color-fg);
-      line-height: 1.45;
-    }
-    .data-table tbody tr:nth-child(even) { background: var(--color-bg-sunken); }
-    .data-table tbody tr:hover { background: var(--color-accent-dim); }
-    .data-table tbody tr:last-child td { border-bottom: none; }
-    .data-table td.num, .data-table th.num {
-      text-align: right;
-      font-family: var(--font-mono);
-      font-variant-numeric: tabular-nums;
-    }
-    .data-table small {
-      display: block;
-      color: var(--color-fg-subtle);
-      font-size: 0.75rem;
-      margin-top: 2px;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-family: var(--font-mono);
-      font-size: 0.6875rem;
-      font-weight: 700;
-      padding: 3px 9px;
-      border-radius: 6px;
-      white-space: nowrap;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-    .badge::before {
-      content: '';
-      width: 5px; height: 5px;
-      border-radius: 50%;
-      background: currentColor;
-      flex-shrink: 0;
-    }
-    .badge--success { background: var(--color-success-dim); color: var(--color-success); }
-    .badge--info    { background: var(--color-info-dim);    color: var(--color-info); }
-    .badge--warn    { background: var(--color-warn-dim);    color: #8a6800; }
-    [data-theme="dark"] .badge--warn { color: var(--color-warn); }
-    .badge--sage    { background: var(--color-sage-dim);    color: var(--color-sage); }
-    .badge--teal    { background: var(--color-teal-dim);    color: var(--color-teal); }
-    .badge--plum    { background: var(--color-plum-dim);    color: var(--color-plum); }
-
-    /* Resource list (item linha) */
-    .res-list {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-2);
-      margin: var(--space-5) 0 var(--space-7);
-    }
-    .res-item {
-      display: flex; align-items: center; gap: var(--space-4);
-      padding: var(--space-4) var(--space-5);
-      background: var(--color-bg-elevated);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius);
-      text-decoration: none;
-      color: inherit;
-      transition: border-color var(--duration-fast), transform var(--duration-fast);
-    }
-    .res-item:hover {
-      border-color: var(--color-accent);
-      transform: translateX(2px);
-      text-decoration: none;
-    }
-    .res-tag {
-      font-family: var(--font-mono);
-      font-size: 0.6875rem;
-      font-weight: 600;
-      padding: 4px 9px;
-      background: var(--color-bg-sunken);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-sm);
-      color: var(--color-fg-muted);
-      letter-spacing: 0.04em;
-      flex-shrink: 0;
-      min-width: 78px;
-      text-align: center;
-    }
-    .res-item__body { flex: 1; min-width: 0; }
-    .res-item__title {
-      font-weight: 600;
-      margin: 0 0 4px;
-      font-size: var(--size-small);
-      color: var(--color-fg);
-    }
-    .res-item__desc {
-      font-size: var(--size-small);
-      color: var(--color-fg-muted);
-      margin: 0;
-      line-height: 1.45;
-    }
-    .res-item__arrow {
-      color: var(--color-fg-subtle);
-      font-family: var(--font-mono);
-      flex-shrink: 0;
-      transition: color var(--duration-fast), transform var(--duration-fast);
-    }
-    .res-item:hover .res-item__arrow {
-      color: var(--color-accent);
-      transform: translateX(3px);
-    }
-
-    /* Timeline */
-    .timeline {
-      list-style: none;
-      padding: 0;
-      margin: var(--space-5) 0;
-      position: relative;
-    }
-    .timeline::before {
-      content: '';
-      position: absolute;
-      left: 8px; top: 8px; bottom: 8px;
-      width: 2px;
-      background: linear-gradient(to bottom, var(--color-accent) 0%, var(--color-border) 35%, var(--color-border) 100%);
-    }
-    .timeline__item {
-      position: relative;
-      padding-left: var(--space-7);
-      margin-bottom: var(--space-6);
-      max-width: var(--content-max);
-    }
-    .timeline__item::before {
-      content: '';
-      position: absolute; left: 0; top: 6px;
-      width: 18px; height: 18px;
-      border-radius: 50%;
-      background: var(--color-accent);
-      box-shadow: 0 0 0 4px var(--color-bg);
-    }
-    .timeline__date {
-      font-family: var(--font-mono);
-      font-size: var(--size-xs);
-      color: var(--color-accent);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin: 0 0 4px;
-      font-weight: 600;
-    }
-    .timeline__title {
-      font-family: var(--font-display);
-      font-size: 1.125rem;
-      margin: 0 0 var(--space-2);
-      font-weight: 700;
-    }
-    .timeline__desc {
-      font-size: var(--size-small);
-      color: var(--color-fg-muted);
-      margin: 0;
-      line-height: 1.55;
-    }
-
-    /* Chart wrapper */
-    .chart-wrap {
-      background: var(--color-bg-elevated);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-lg);
-      padding: var(--space-5) var(--space-6) var(--space-4);
-      margin: var(--space-5) 0 var(--space-7);
-      box-shadow: var(--shadow-sm);
-    }
-    .chart-wrap__head {
-      display: flex; align-items: baseline; justify-content: space-between;
-      gap: var(--space-4); margin-bottom: var(--space-4);
-      flex-wrap: wrap;
-    }
-    .chart-wrap__title {
-      font-family: var(--font-display);
-      font-size: 1.0625rem;
-      font-weight: 700;
-      margin: 0;
-      letter-spacing: -0.01em;
-    }
-    .chart-wrap__sub {
-      font-family: var(--font-mono);
-      font-size: var(--size-xs);
-      color: var(--color-fg-subtle);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-    .chart-canvas { position: relative; height: 280px; }
-
-    /* Two columns layout */
-    .two-col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--space-6);
-      margin: var(--space-5) 0;
-    }
-    .two-col > * { min-width: 0; }
-    @media (max-width: 768px) {
-      .two-col { grid-template-columns: 1fr; }
-    }
-
-    /* Contact form */
-    .form {
-      display: grid;
-      gap: var(--space-4);
-      max-width: 560px;
-      margin: var(--space-6) 0 var(--space-8);
-    }
-    .form__row { display: grid; gap: 6px; }
-    .form__label {
-      font-family: var(--font-mono);
-      font-size: var(--size-xs);
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--color-fg-muted);
-    }
-    .form__input,
-    .form__textarea,
-    .form__select {
-      width: 100%;
-      padding: 10px 12px;
-      font: inherit;
-      font-size: var(--size-small);
-      background: var(--color-bg-elevated);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius);
-      color: var(--color-fg);
-      transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
-    }
-    .form__textarea { min-height: 110px; resize: vertical; font-family: var(--font-text); }
-    .form__input:focus,
-    .form__textarea:focus,
-    .form__select:focus {
-      outline: none;
-      border-color: var(--color-accent);
-      box-shadow: 0 0 0 3px var(--color-accent-dim);
-    }
-    .form__hint {
-      font-size: var(--size-xs);
-      color: var(--color-fg-subtle);
-      margin: 0;
-    }
-    .form__submit {
-      justify-self: start;
-      padding: 10px 20px;
-      font: inherit;
-      font-size: var(--size-small);
-      font-weight: 600;
-      background: var(--color-accent);
-      color: var(--color-accent-fg);
-      border: 0;
-      border-radius: var(--radius);
-      cursor: pointer;
-      transition: background var(--duration-fast), transform var(--duration-fast);
-    }
-    .form__submit:hover {
-      background: var(--color-accent-hover);
-      transform: translateY(-1px);
-    }
-    .form__status {
-      font-size: var(--size-small);
-      color: var(--color-success);
-      margin: var(--space-2) 0 0;
-    }
-    .form__status[hidden] { display: none; }
-
-    /* Reveal */
-    [data-reveal] {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity var(--duration-hero) var(--ease-out),
-                  transform var(--duration-hero) var(--ease-out);
-      transition-delay: calc(var(--i, 0) * 60ms);
-    }
-    [data-reveal].is-visible { opacity: 1; transform: none; }
-
-    /* Footer */
-    .footer {
-      margin-top: var(--space-12);
-      padding: var(--space-8) 0;
-      border-top: 1px solid var(--color-border);
-      background: var(--color-bg-sunken);
-    }
-    .footer__inner {
-      max-width: var(--site-max);
-      margin: 0 auto;
-      padding: 0 var(--space-6);
-      display: grid;
-      grid-template-columns: 1.4fr 1fr 1fr 1fr;
-      gap: var(--space-6);
-    }
-    @media (max-width: 768px) {
-      .footer__inner { grid-template-columns: 1fr 1fr; }
-    }
-    .footer__col p, .footer__col ul { margin: 0; }
-    .footer__col h4 {
-      font-family: var(--font-mono);
-      font-size: 0.6875rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--color-fg-subtle);
-      margin: 0 0 var(--space-3);
-    }
-    .footer__col ul {
-      list-style: none; padding: 0;
-      display: flex; flex-direction: column; gap: 6px;
-    }
-    .footer__col li { margin: 0; }
-    .footer__col a {
-      color: var(--color-fg-muted);
-      font-size: var(--size-small);
-    }
-    .footer__col a:hover { color: var(--color-accent); }
-    .footer__brand {
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 1.125rem;
-      letter-spacing: -0.015em;
-      color: var(--color-fg);
-      margin: 0 0 var(--space-2);
-    }
-    .footer__tag {
-      font-size: var(--size-small);
-      color: var(--color-fg-muted);
-      max-width: 36ch;
-      margin: 0 0 var(--space-3);
-      line-height: 1.5;
-    }
-    .footer__meta {
-      font-family: var(--font-mono);
-      font-size: var(--size-xs);
-      color: var(--color-fg-subtle);
-      margin: var(--space-6) 0 0;
-      padding-top: var(--space-4);
-      border-top: 1px solid var(--color-border);
-      max-width: var(--site-max);
-      margin-left: auto; margin-right: auto;
-      padding-left: var(--space-6); padding-right: var(--space-6);
-    }
-
-    /* ─────────────────────────────────────────────────────────────────
-       Responsive
-       ───────────────────────────────────────────────────────────────── */
-    @media (max-width: 720px) {
-      .topbar__inner { padding: 0 var(--space-4); gap: var(--space-3); }
-      .topbar__brand span { display: none; }
-      .topnav { margin-left: 0; }
-      .topnav__link { padding: 6px 10px; font-size: var(--size-xs); }
-      .topbar__cta { padding: 7px 11px; font-size: var(--size-xs); }
-      .view { padding: var(--space-7) var(--space-4) var(--space-10); }
-      .view__hero { margin-bottom: var(--space-7); }
-      .res-tag { min-width: 64px; font-size: 0.625rem; }
-    }
-
-    /* Print — todas as views aparecem em ordem */
-    @media print {
-      .topbar, .footer, .theme-toggle { display: none; }
-      .view { display: block !important; opacity: 1 !important; padding: 1rem 0; }
-      .view[hidden] { display: block !important; }
-      .view + .view { page-break-before: always; }
-      body { background: white; color: black; }
-    }
-
-    /* Reduced motion */
+    /* ─── [MARCA] Reduced motion ───────────────────────────────────── */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -923,1110 +284,730 @@
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
       }
-      [data-reveal] { opacity: 1; transform: none; transition-delay: 0s; }
-      html { scroll-behavior: auto; }
+      [data-reveal] { opacity: 1; transition: none; }
+    }
+
+    /* O "respiro" da página inteira no toggle de tema é cortado por uma
+       classe temporária no <html> (régua de craft) — só o toggle, nada mais. */
+    .no-transitions, .no-transitions *, .no-transitions *::before, .no-transitions *::after {
+      transition: none !important;
+    }
+
+    /* ═══ MODELO SITE — engine + composição por view ═════════════════ */
+    .skip-link {
+      position: absolute; left: -9999px; top: 0; z-index: 200;
+      background: var(--color-accent); color: var(--color-accent-fg);
+      padding: var(--space-2) var(--space-4); font-weight: 600;
+    }
+    .skip-link:focus { left: var(--space-4); top: var(--space-2); }
+
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      height: var(--header-h);
+      background: var(--color-bg);
+      border-bottom: 1px solid var(--color-border);
+      display: flex; align-items: center;
+      padding: 0 var(--space-5); gap: var(--space-5);
+    }
+    .topbar__brand {
+      font-family: var(--font-display);
+      font-weight: 600; font-size: 1.0625rem;
+      letter-spacing: -0.015em;
+      font-variation-settings: 'opsz' 32, 'SOFT' 75, 'WONK' 1;
+      color: var(--color-fg); text-decoration: none;
+      white-space: nowrap;
+    }
+    .topbar__brand:hover { color: var(--color-fg); text-decoration: none; }
+    .topbar__brand span { color: var(--color-fg-subtle); font-weight: 400; }
+    .topnav { display: flex; gap: var(--space-1); overflow-x: auto; }
+    .topnav__link {
+      padding: var(--space-2) var(--space-3);
+      font-size: var(--size-small); font-weight: 500;
+      color: var(--color-fg-muted); text-decoration: none;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+      transition: color var(--duration-fast) var(--ease-snap), border-color var(--duration-fast) var(--ease-snap);
+    }
+    .topnav__link:hover { color: var(--color-fg); text-decoration: none; }
+    .topnav__link.is-active { color: var(--color-fg); border-bottom-color: var(--color-accent); }
+    .topbar__spacer { flex: 1; }
+    .theme-toggle {
+      width: 36px; height: 36px; flex-shrink: 0;
+      display: grid; place-items: center;
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: 50%;
+      cursor: pointer; color: var(--color-fg); font-size: 14px;
+      transition: background-color var(--duration-fast) var(--ease-snap), border-color var(--duration-fast) var(--ease-snap);
+    }
+    .theme-toggle:hover { background: var(--color-bg-sunken); border-color: var(--color-border-strong); }
+
+    /* Views — fade simples; cada view define a própria largura/ritmo.
+       overflow:clip = disciplina de ancestral cinético (W3/medidor) — se uma
+       timeline for adicionada, NUNCA usar hidden (congela a animation-timeline). */
+    .view {
+      display: none; opacity: 0;
+      overflow: clip;
+      transition: opacity 200ms var(--ease-out);
+      margin: 0 auto;
+      padding: var(--space-10) var(--space-6) var(--space-12);
+    }
+    .view.is-active { display: block; opacity: 1; }
+    .view--home      { max-width: 1080px; }
+    .view--trilhas   { max-width: 940px; }
+    .view--mentores  { max-width: 880px; }
+    .view--inscricao { max-width: 760px; }
+
+    /* Label — opção 4 do cardápio: fio lateral 2px + peso 600, sem caixa alta */
+    .eyebrow {
+      display: inline-block;
+      border-left: 2px solid var(--color-accent);
+      padding-left: var(--space-3);
+      font-size: var(--size-small); font-weight: 600;
+      color: var(--color-fg-muted);
+      margin: 0 0 var(--space-5);
+    }
+
+    /* ─── VIEW HOME — split assimétrico 2fr/1fr (capa do parti) ────── */
+    .home-hero {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: var(--space-10);
+      align-items: start;
+    }
+    .home-hero__claim p:last-of-type { margin-bottom: 0; }
+
+    /* Painel de dados — único elemento elevado do site (key-light) */
+    .home-panel {
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-key);
+      padding: var(--space-6) var(--space-6) var(--space-5);
+    }
+    /* Glow localizado: UM radial-gradient, atrás do número 120,
+       em pseudo-elemento do container da figura — nunca em body. */
+    .vagas-figure { position: relative; text-align: center; padding: var(--space-4) 0 var(--space-5); }
+    .vagas-figure::before {
+      content: '';
+      position: absolute; inset: -16% -12%;
+      background: radial-gradient(ellipse 72% 64% at 50% 42%, color-mix(in srgb, var(--color-accent) 16%, transparent) 0%, transparent 68%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .vagas-figure__num {
+      position: relative; z-index: 1;
+      display: block;
+      font-family: var(--font-display);
+      font-size: clamp(4.25rem, 3rem + 4.5vw, 6.5rem);
+      font-weight: 340;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 0;
+      font-variant-numeric: tabular-nums lining-nums;
+      color: var(--color-fg);
+    }
+    /* W2 — o medidor que cresce SINCRONIZADO ao counter 120.
+       É um fio (materialidade da casa), não um anel saliente: a tese
+       "participantes = posições contratadas" se preenche junto do número.
+       @property p/ interpolar; BASE = cheio (100%) + texto "120" no HTML
+       (invariante P9: Chrome travado mostra medidor completo e número real). */
+    @property --vagas-fill { syntax: '<percentage>'; inherits: false; initial-value: 100%; }
+    .vagas-meter {
+      position: relative; z-index: 1;
+      width: min(11rem, 62%);
+      height: 3px;
+      margin: var(--space-4) auto 0;
+      border-radius: 50%;
+      background: var(--color-border-strong);
+      overflow: clip;
+    }
+    .vagas-meter::after {
+      content: '';
+      position: absolute; inset: 0;
+      transform-origin: left;
+      width: var(--vagas-fill, 100%);
+      background: linear-gradient(90deg, var(--color-accent), color-mix(in srgb, var(--color-accent) 72%, var(--itau-yellow)));
+    }
+    .vagas-figure__label {
+      position: relative; z-index: 1;
+      display: block;
+      margin-top: var(--space-2);
+      font-size: var(--size-small);
+      color: var(--color-fg-muted);
+    }
+    .panel-data { margin: 0; }
+    .panel-data > div {
+      display: flex; justify-content: space-between; align-items: baseline;
+      gap: var(--space-4);
+      padding: var(--space-3) 0;
+      border-top: 1px solid var(--color-border);
+    }
+    .panel-data dt { font-size: var(--size-small); color: var(--color-fg-muted); }
+    .panel-data dd {
+      margin: 0; font-size: var(--size-small); font-weight: 600;
+      font-variant-numeric: tabular-nums lining-nums;
+      text-align: right;
+    }
+
+    /* Tese — capitular de 3 linhas (dispositivo que quebra a coluna) */
+    .home-tese { max-width: 65ch; margin-top: var(--space-12); }
+    .home-tese h2 { margin-top: 0; }
+    .home-tese .capitular::first-letter {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-variation-settings: 'opsz' 144, 'SOFT' 75, 'WONK' 1;
+      font-size: 3.4em;
+      float: left;
+      line-height: 0.82;
+      padding: 0.08em 0.12em 0 0;
+      color: var(--color-accent);
+    }
+
+    /* ─── VIEW TRILHAS — lista editorial com fios e numerais ───────── */
+    .trilhas-list { border-bottom: 2px solid var(--color-fg); margin-top: var(--space-8); }
+    .trilha {
+      display: grid;
+      grid-template-columns: 7rem 1fr 9rem;
+      gap: var(--space-6);
+      padding: var(--space-7) 0;
+      border-top: 1px solid var(--color-border);
+    }
+    .trilha:first-child { border-top: 2px solid var(--color-fg); }
+    .trilha__num {
+      font-family: var(--font-display);
+      font-size: clamp(2.75rem, 2.2rem + 2vw, 4rem);
+      font-weight: 320;
+      line-height: 0.9;
+      letter-spacing: -0.03em;
+      font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+      font-variant-numeric: lining-nums;
+      color: var(--color-accent);
+    }
+    .trilha__title { margin: 0 0 var(--space-2); font-size: var(--size-h3); }
+    .trilha__claim { color: var(--color-fg-muted); margin-bottom: var(--space-3); }
+    .trilha__modules { font-size: var(--size-small); color: var(--color-fg-subtle); margin: 0; max-width: none; }
+    .trilha__modules b { font-weight: 600; color: var(--color-fg-muted); }
+    .trilha__hours { text-align: right; }
+    .trilha__hours-num {
+      display: block;
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 1.5rem + 1.2vw, 2.5rem);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+      font-variant-numeric: tabular-nums lining-nums;
+    }
+    .trilha__hours-label { display: block; font-size: var(--size-xs); color: var(--color-fg-subtle); margin-top: var(--space-1); }
+    .trilhas-nota { margin-top: var(--space-6); font-size: var(--size-small); color: var(--color-fg-muted); }
+
+    /* ─── VIEW MENTORES — definition list editorial ────────────────── */
+    .mentores { margin: var(--space-8) 0 0; border-bottom: 1px solid var(--color-border); }
+    .mentor {
+      display: grid;
+      grid-template-columns: minmax(14rem, 1fr) 2fr;
+      gap: var(--space-2) var(--space-8);
+      padding: var(--space-6) 0;
+      border-top: 1px solid var(--color-border);
+    }
+    .mentor dt { display: flex; flex-direction: column; gap: var(--space-1); }
+    .mentor__name {
+      font-family: var(--font-display);
+      font-size: 1.375rem; font-weight: 600;
+      letter-spacing: -0.015em;
+      font-variation-settings: 'opsz' 60, 'SOFT' 75, 'WONK' 1;
+      line-height: 1.15;
+    }
+    .mentor__role { font-size: var(--size-small); color: var(--color-fg-muted); }
+    .mentor dd { margin: 0; }
+    .mentor dd p { margin: 0 0 var(--space-2); font-size: var(--size-small); color: var(--color-fg); }
+    .mentor__trilha {
+      border-left: 2px solid var(--color-accent);
+      padding-left: var(--space-3);
+      font-size: var(--size-xs); font-weight: 600;
+      color: var(--color-fg-muted);
+    }
+
+    /* ─── VIEW INSCRIÇÃO — coluna editorial + tabela broadsheet ────── */
+    .criterios { list-style: none; counter-reset: crit; padding: 0; margin: var(--space-6) 0 0; border-bottom: 1px solid var(--color-border); }
+    .criterios li {
+      counter-increment: crit;
+      display: grid;
+      grid-template-columns: 3.5rem 1fr;
+      gap: var(--space-4);
+      align-items: baseline;
+      padding: var(--space-4) 0;
+      border-top: 1px solid var(--color-border);
+      margin: 0;
+    }
+    .criterios li::before {
+      content: counter(crit, decimal-leading-zero);
+      font-family: var(--font-display);
+      font-size: 1.75rem; font-weight: 320;
+      font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+      font-variant-numeric: lining-nums;
+      color: var(--color-fg-subtle);
+      line-height: 1;
+    }
+
+    .cronograma {
+      width: 100%;
+      border-collapse: collapse;
+      margin: var(--space-5) 0 0;
+      border-top: 2px solid var(--color-fg);
+    }
+    .cronograma caption {
+      text-align: left;
+      font-size: var(--size-xs);
+      color: var(--color-fg-subtle);
+      padding: var(--space-2) 0;
+      caption-side: bottom;
+    }
+    .cronograma th {
+      font-family: var(--font-text);
+      font-size: var(--size-xs); font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.07em;
+      color: var(--color-fg-muted);
+      text-align: left;
+      padding: var(--space-3) var(--space-2);
+      border-bottom: 1px solid var(--color-border-strong);
+    }
+    .cronograma td {
+      padding: var(--space-3) var(--space-2);
+      font-size: var(--size-small);
+      font-variant-numeric: tabular-nums lining-nums;
+      border-top: 1px solid var(--color-border);
+      vertical-align: top;
+    }
+    .cronograma tbody tr:first-child td { border-top: 0; }
+    .cronograma td:last-child, .cronograma th:last-child { text-align: right; }
+    /* Fio duplo contábil no marco-destino do cronograma */
+    .cronograma .cronograma__final td {
+      border-top: 3px double var(--color-fg);
+      font-weight: 600;
+    }
+
+    .faq { margin-top: var(--space-5); border-bottom: 1px solid var(--color-border); }
+    .faq details { border-top: 1px solid var(--color-border); }
+    .faq summary {
+      display: flex; justify-content: space-between; align-items: baseline;
+      gap: var(--space-4);
+      padding: var(--space-4) 0;
+      cursor: pointer;
+      font-family: var(--font-display);
+      font-size: 1.0625rem; font-weight: 600;
+      letter-spacing: -0.01em;
+      list-style: none;
+    }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq summary::after {
+      content: '+';
+      flex-shrink: 0;
+      font-family: var(--font-text);
+      font-weight: 400; font-size: 1.25rem; line-height: 1;
+      color: var(--color-accent);
+      transition: transform var(--duration-fast) var(--ease-snap);
+    }
+    .faq details[open] summary::after { content: '−'; }
+    .faq details > p { margin: 0 0 var(--space-4); font-size: var(--size-small); color: var(--color-fg-muted); }
+
+    /* ─── Footer comum ─────────────────────────────────────────────── */
+    .footer {
+      border-top: 1px solid var(--color-border);
+      margin-top: var(--space-8);
+      padding: var(--space-6) var(--space-6) var(--space-8);
+    }
+    .footer__inner { max-width: 1080px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); justify-content: space-between; }
+    .footer p { margin: 0; font-size: var(--size-xs); color: var(--color-fg-subtle); max-width: none; }
+
+    /* ─── Responsivo ───────────────────────────────────────────────── */
+    @media (max-width: 880px) {
+      .home-hero { grid-template-columns: 1fr; gap: var(--space-8); }
+      .trilha { grid-template-columns: 4.5rem 1fr; }
+      .trilha__hours { grid-column: 2; text-align: left; margin-top: var(--space-2); }
+      .trilha__hours-num { display: inline; }
+      .trilha__hours-label { display: inline; margin-left: var(--space-2); }
+      .mentor { grid-template-columns: 1fr; }
+    }
+
+    /* ═══ W5 — View Transitions entre views (same-document) ══════════════
+       O hash routing troca a view DENTRO de document.startViewTransition
+       (guard no JS). Aqui só o estilo do cross-fade: a saída esmaece, a
+       entrada chega com um leve deslocamento — compositado (opacity +
+       transform), curva nomeada. Sem framework, sem reload. NÃO é morph
+       de elemento (opção H do overdrive): é o cross-fade simples do root. */
+    @media (prefers-reduced-motion: no-preference) {
+      /* cross-fade puro (só opacity) — a entrada NÃO sobe: o "fade-up"
+         genérico está banido no parti; a continuidade aqui é o esmaecer. */
+      ::view-transition-old(root) {
+        animation: vt-out 180ms var(--ease-out-strong) both;
+      }
+      ::view-transition-new(root) {
+        animation: vt-in 260ms var(--ease-out-strong) both;
+      }
+      @keyframes vt-out { to { opacity: 0; } }
+      @keyframes vt-in  { from { opacity: 0; } to { opacity: 1; } }
+    }
+    /* Invariante: reduced-motion mata a transição (troca instantânea).
+       Browser sem a API: o guard if() no JS faz a troca direta. */
+    @media (prefers-reduced-motion: reduce) {
+      ::view-transition-group(*),
+      ::view-transition-old(root),
+      ::view-transition-new(root) { animation: none !important; }
+    }
+
+    /* ─── Print ────────────────────────────────────────────────────── */
+    @media print {
+      .topbar, .theme-toggle, .skip-link { display: none; }
+      .view, .view[hidden] { display: block !important; opacity: 1 !important; }
+      .view + .view { page-break-before: always; }
+      .home-panel { box-shadow: none; }
     }
   </style>
 </head>
 <body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
 
-  <header class="topbar" role="banner">
-    <div class="topbar__inner">
-      <a href="#home" class="topbar__brand" aria-label="Plataforma de Dados Itaú — ir para a home">
-        <span class="topbar__brand-mark" aria-hidden="true">i</span>
-        <span>Plataforma de Dados</span>
-      </a>
-      <nav class="topnav" aria-label="Navegação principal">
-        <a href="#home"       class="topnav__link">Visão geral</a>
-        <a href="#catalogo"   class="topnav__link">Catálogo</a>
-        <a href="#ferramentas" class="topnav__link">Ferramentas</a>
-        <a href="#governanca" class="topnav__link">Governança</a>
-        <a href="#contato"    class="topnav__link">Contato</a>
-      </nav>
-      <div class="topbar__actions">
-        <a href="#contato" class="topbar__cta">Falar com o time</a>
-        <button class="theme-toggle" type="button" aria-label="Alternar tema claro/escuro">
-          <span aria-hidden="true">◐</span>
-        </button>
-      </div>
-    </div>
+  <header class="topbar">
+    <a href="#/" class="topbar__brand">Jovem Tech <span>· Itaú</span></a>
+    <nav class="topnav" aria-label="Navegação principal">
+      <a href="#/" class="topnav__link" data-view="home">Programa</a>
+      <a href="#/trilhas" class="topnav__link" data-view="trilhas">Trilhas</a>
+      <a href="#/mentores" class="topnav__link" data-view="mentores">Mentores</a>
+      <a href="#/inscricao" class="topnav__link" data-view="inscricao">Inscrição</a>
+    </nav>
+    <span class="topbar__spacer"></span>
+    <button class="theme-toggle" type="button" aria-label="Alternar tema claro/escuro"><span aria-hidden="true">◐</span></button>
   </header>
 
-  <main id="main">
+  <main id="conteudo">
 
-    <!-- ═══════════════════════════════════════════════════════════════
-         VIEW: HOME — visão geral, métricas, próximos passos
-         ═════════════════════════════════════════════════════════════── -->
-    <article class="view is-active" id="home" aria-labelledby="home-title">
-      <section class="view__hero">
-        <p class="kicker">Plataforma interna · 2024 — 2026</p>
-        <h1 id="home-title">Dados em tempo real,<br>como capacidade do banco.</h1>
-        <p class="lead">
-          Substituímos pipelines noturnos por fluxos contínuos — versionados,
-          observáveis e disponíveis para qualquer squad produzir e consumir.
-          Schema-first, multi-região, self-service com guard-rails.
-        </p>
-        <div class="view__meta">
-          <span><strong>47</strong> squads em produção</span>
-          <span><strong>2,3 bi</strong> eventos/dia</span>
-          <span><strong>99,98%</strong> disponibilidade</span>
-          <span>Padrão recomendado pelo CIO</span>
+    <!-- ════ VIEW #/ — home: split assimétrico 2fr/1fr ════ -->
+    <article class="view view--home is-active" data-view="home" aria-label="Programa">
+      <section class="home-hero">
+        <div class="home-hero__claim">
+          <p class="eyebrow">Programa Jovem Tech · turma 2026</p>
+          <h1>Formar a próxima geração, em vez de disputar a atual.</h1>
+          <p class="lead">O Jovem Tech abre 120&nbsp;vagas com bolsa integral para formar pessoas desenvolvedoras em 9&nbsp;meses — sem exigir experiência prévia nem diploma de graduação.</p>
+          <p>A formação é em período integral, com bolsa que sustenta a dedicação, mentores que escrevem código em produção no banco e um destino contratado desde o primeiro dia: quem é aprovado na banca final entra para uma squad do Itaú como pessoa desenvolvedora júnior.</p>
         </div>
-      </section>
 
-      <section data-reveal>
-        <h2>Quatro frentes da plataforma</h2>
-        <p class="lead">
-          O que está disponível hoje, organizado por intenção. Cada card abre uma
-          view dedicada com a documentação canônica e o ponto de entrada operacional.
-        </p>
-        <div class="cards">
-          <a href="#catalogo" class="card card--accent">
-            <p class="card__label">Catálogo</p>
-            <h3 class="card__title">Tópicos, schemas e domínios</h3>
-            <p class="card__desc">2.418 tópicos versionados, organizados por 9 domínios de negócio. Busca, linhagem, RBAC visível por contrato.</p>
-            <span class="card__cta">Abrir catálogo →</span>
-          </a>
-          <a href="#ferramentas" class="card card--info">
-            <p class="card__label">Ferramentas</p>
-            <h3 class="card__title">SDK, CLI e conectores</h3>
-            <p class="card__desc">SDKs em TypeScript, Python e Java. CLI <code>dados</code> para criação e replay. 7 conectores oficiais.</p>
-            <span class="card__cta">Ver ferramentas →</span>
-          </a>
-          <a href="#governanca" class="card card--teal">
-            <p class="card__label">Governança</p>
-            <h3 class="card__title">Política, SLOs e auditoria</h3>
-            <p class="card__desc">Política de schemas, SLOs por domínio, trilha de auditoria de quem leu/escreveu/alterou cada tópico.</p>
-            <span class="card__cta">Entender governança →</span>
-          </a>
-          <a href="#contato" class="card card--plum">
-            <p class="card__label">Suporte</p>
-            <h3 class="card__title">Falar com a Plataforma</h3>
-            <p class="card__desc">Slack, on-call 24/7, RFC repository e horário de office hours quinzenal para squads.</p>
-            <span class="card__cta">Canais e SLA →</span>
-          </a>
-        </div>
-      </section>
-
-      <section data-reveal>
-        <h2>Em números — outubro de 2025</h2>
-        <p>Crescimento consistente desde os primeiros pilotos, há 18 meses.</p>
-        <div class="metrics">
-          <div class="metric">
-            <p class="metric__val"><span>47</span></p>
-            <p class="metric__label">Squads em produção</p>
-            <p class="metric__trend">+12 nos últimos 6 meses</p>
+        <aside class="home-panel" data-reveal aria-label="Dados do programa">
+          <div class="vagas-figure">
+            <span class="vagas-figure__num" id="num-vagas">120</span>
+            <div class="vagas-meter" id="vagas-meter" aria-hidden="true"></div>
+            <span class="vagas-figure__label">vagas na turma de 2026 — todas com posição contratada</span>
           </div>
-          <div class="metric">
-            <p class="metric__val"><span>2,3</span> bi</p>
-            <p class="metric__label">Eventos processados / dia</p>
-            <p class="metric__trend">+38% YoY</p>
-          </div>
-          <div class="metric">
-            <p class="metric__val"><span>8</span> ms</p>
-            <p class="metric__label">Latência mediana p50</p>
-            <p class="metric__trend">−72% vs batch legado</p>
-          </div>
-          <div class="metric">
-            <p class="metric__val"><span>99,98</span>%</p>
-            <p class="metric__label">Disponibilidade trimestre</p>
-            <p class="metric__trend metric__trend--neutral">SLO 99,95%</p>
-          </div>
-        </div>
-      </section>
-
-      <section data-reveal>
-        <h2>Novidades recentes</h2>
-        <p class="lead">Mudanças relevantes publicadas pela Plataforma nos últimos 45 dias.</p>
-        <ol class="timeline">
-          <li class="timeline__item">
-            <p class="timeline__date">14 out 2025</p>
-            <h3 class="timeline__title">SDK 2.4.1 disponível</h3>
-            <p class="timeline__desc">Correção em retry exponencial quando consumidor está atrás do schema. Atualização recomendada para todos.</p>
-          </li>
-          <li class="timeline__item">
-            <p class="timeline__date">07 out 2025</p>
-            <h3 class="timeline__title">Novo conector: Elastic (beta)</h3>
-            <p class="timeline__desc">Conector oficial para busca full-text. Mantido pelo time de Plataforma. Inscrições para beta abertas em <code>#plat-dados</code>.</p>
-          </li>
-          <li class="timeline__item">
-            <p class="timeline__date">30 set 2025</p>
-            <h3 class="timeline__title">Painel de observabilidade redesenhado</h3>
-            <p class="timeline__desc">Novo painel Grafana com drill-down por partição e correlação com SLOs por área.</p>
-          </li>
-          <li class="timeline__item">
-            <p class="timeline__date">12 set 2025</p>
-            <h3 class="timeline__title">RBAC por domínio</h3>
-            <p class="timeline__desc">Permissões agora se aplicam a domínios inteiros, não só tópicos individuais. Reduz boilerplate em 80%.</p>
-          </li>
-        </ol>
-      </section>
-
-      <section data-reveal>
-        <h2>Próximos passos</h2>
-        <p>Três caminhos típicos, dependendo de onde sua squad está hoje:</p>
-        <ol>
-          <li><a href="#ferramentas">Acessar as ferramentas</a> — instalar SDK, autenticar CLI, fazer "hello world".</li>
-          <li>Conversar com o time em <code>#plat-dados</code> sobre o seu caso de uso (recomendado antes de migrar pipeline existente).</li>
-          <li>Ler <a href="#governanca">a política de governança</a> antes de criar tópicos em domínios regulados (PCI, dados pessoais sensíveis).</li>
-        </ol>
-        <aside class="callout callout--tip" role="note">
-          <div class="callout__icon" aria-hidden="true">✓</div>
-          <div class="callout__content">
-            <p class="callout__title">Sem urgência institucional</p>
-            <p>A adoção é opt-in, time a time. Migração de pipelines existentes acontece no ritmo de cada squad — sem prazos arbitrários impostos.</p>
-          </div>
+          <dl class="panel-data">
+            <div><dt>Bolsa mensal</dt><dd>R$&nbsp;2.800</dd></div>
+            <div><dt>Duração</dt><dd>9&nbsp;meses</dd></div>
+            <div><dt>Trilhas de formação</dt><dd>3</dd></div>
+            <div><dt>Formato</dt><dd>Híbrido — São&nbsp;Paulo</dd></div>
+            <div><dt>Inscrições até</dt><dd>17&nbsp;jul&nbsp;2026</dd></div>
+          </dl>
         </aside>
+      </section>
+
+      <section class="home-tese">
+        <h2>Por que formar, e não só contratar</h2>
+        <p class="capitular">O mercado brasileiro forma menos pessoas desenvolvedoras do que o banco precisa contratar a cada ano. Disputar os mesmos perfis prontos ficou caro — e deixa de fora quem nunca teve acesso à primeira oportunidade em tecnologia.</p>
+        <p>O Jovem Tech inverte essa lógica. Em vez de procurar currículos, o programa seleciona potencial e assume o custo da formação. A bolsa de R$&nbsp;2.800 existe para que estudar seja o trabalho de quem participa durante os 9&nbsp;meses — não uma atividade espremida entre dois empregos.</p>
+        <p>O compromisso vale nos dois sentidos: o banco garante a vaga na squad antes da primeira aula, e quem participa garante 30&nbsp;horas semanais de dedicação até a banca de projeto final. Conheça as <a href="#/trilhas">três trilhas</a> ou vá direto aos <a href="#/inscricao">critérios de inscrição</a>.</p>
       </section>
     </article>
 
-    <!-- ═══════════════════════════════════════════════════════════════
-         VIEW: CATALOGO — domínios, tabela de tópicos, busca
-         ═════════════════════════════════════════════════════════════── -->
-    <article class="view" id="catalogo" hidden aria-labelledby="catalogo-title">
-      <section class="view__hero">
-        <p class="kicker">Catálogo</p>
-        <h1 id="catalogo-title">Tópicos, schemas<br>e domínios.</h1>
-        <p class="lead">
-          A camada navegável da plataforma: 2.418 tópicos registrados,
-          organizados em 9 domínios de negócio, com schema versionado e
-          dono explícito por contrato.
-        </p>
-        <div class="view__meta">
-          <span><strong>2.418</strong> tópicos</span>
-          <span><strong>9</strong> domínios</span>
-          <span><strong>156</strong> times produtores</span>
-          <span><strong>312</strong> times consumidores</span>
-        </div>
-      </section>
+    <!-- ════ VIEW #/trilhas — lista editorial com fios e numerais ════ -->
+    <article class="view view--trilhas" data-view="trilhas" hidden aria-label="Trilhas">
+      <p class="eyebrow">Trilhas de formação</p>
+      <h1>Três trilhas que terminam dentro de uma squad.</h1>
+      <p class="lead">Os dois primeiros meses são um núcleo comum de lógica e fundamentos de engenharia. A escolha definitiva acontece na semana&nbsp;9, com orientação dos mentores.</p>
 
-      <section data-reveal>
-        <h2>Domínios de negócio</h2>
-        <p>Cada domínio agrupa tópicos com regras comuns de schema, RBAC e retenção. Times são produtores/consumidores de domínios, não de tópicos avulsos.</p>
-        <div class="cards">
-          <a href="#catalogo" class="card card--accent">
-            <p class="card__label">Risco</p>
-            <h3 class="card__title">412 tópicos · regulado</h3>
-            <p class="card__desc">Eventos de crédito, exposição, garantias. Retenção 7 anos, criptografia em trânsito e repouso obrigatória.</p>
-            <span class="card__cta">Abrir domínio →</span>
-          </a>
-          <a href="#catalogo" class="card card--plum">
-            <p class="card__label">Fraude</p>
-            <h3 class="card__title">298 tópicos · tempo real</h3>
-            <p class="card__desc">Sinais de transação, scoring, blocklists. SLO p99 &lt; 50ms. Consumo restrito por RBAC explícito.</p>
-            <span class="card__cta">Abrir domínio →</span>
-          </a>
-          <a href="#catalogo" class="card card--info">
-            <p class="card__label">Pagamentos</p>
-            <h3 class="card__title">387 tópicos · multi-região</h3>
-            <p class="card__desc">PIX, TED, cartão, boleto. Replicação SP↔RJ↔DF síncrona para garantia transacional.</p>
-            <span class="card__cta">Abrir domínio →</span>
-          </a>
-          <a href="#catalogo" class="card card--teal">
-            <p class="card__label">Investimentos</p>
-            <h3 class="card__title">521 tópicos · analítico</h3>
-            <p class="card__desc">Posições, ordens, NAV. Pareado com Snowflake e portal de relatórios diários para gestores.</p>
-            <span class="card__cta">Abrir domínio →</span>
-          </a>
-          <a href="#catalogo" class="card card--sage">
-            <p class="card__label">Atendimento</p>
-            <h3 class="card__title">189 tópicos · CX</h3>
-            <p class="card__desc">Interações app, chat, telefone. Base para personalização e métricas de jornada do cliente.</p>
-            <span class="card__cta">Abrir domínio →</span>
-          </a>
-          <a href="#catalogo" class="card card--info">
-            <p class="card__label">+4 domínios</p>
-            <h3 class="card__title">Compliance, Cadastro, Crédito, Operacional</h3>
-            <p class="card__desc">Domínios menores em maturidade variável. Veja a tabela abaixo para detalhamento por SLO e dono.</p>
-            <span class="card__cta">Ver tabela completa →</span>
-          </a>
-        </div>
-      </section>
-
-      <section data-reveal>
-        <h2>Domínios em detalhe</h2>
-        <p>Visão consolidada por domínio. Todos os 9 estão listados — nada truncado.</p>
-        <div class="table-wrap">
-          <table class="data-table" aria-label="Inventário completo de domínios">
-            <thead>
-              <tr>
-                <th>Domínio</th>
-                <th class="num">Tópicos</th>
-                <th class="num">Produtores</th>
-                <th class="num">Consumidores</th>
-                <th>SLO p99</th>
-                <th>Dono</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Risco</strong><small>Crédito, exposição, garantias</small></td>
-                <td class="num">412</td>
-                <td class="num">18</td>
-                <td class="num">47</td>
-                <td>200 ms</td>
-                <td>Tribo Risco</td>
-                <td><span class="badge badge--success">Maduro</span></td>
-              </tr>
-              <tr>
-                <td><strong>Fraude</strong><small>Scoring, blocklists, sinais</small></td>
-                <td class="num">298</td>
-                <td class="num">9</td>
-                <td class="num">28</td>
-                <td>50 ms</td>
-                <td>Tribo Antifraude</td>
-                <td><span class="badge badge--success">Maduro</span></td>
-              </tr>
-              <tr>
-                <td><strong>Pagamentos</strong><small>PIX, TED, cartão, boleto</small></td>
-                <td class="num">387</td>
-                <td class="num">22</td>
-                <td class="num">61</td>
-                <td>100 ms</td>
-                <td>Tribo Pagamentos</td>
-                <td><span class="badge badge--success">Maduro</span></td>
-              </tr>
-              <tr>
-                <td><strong>Investimentos</strong><small>Posições, ordens, NAV</small></td>
-                <td class="num">521</td>
-                <td class="num">31</td>
-                <td class="num">54</td>
-                <td>500 ms</td>
-                <td>Tribo Investimentos</td>
-                <td><span class="badge badge--success">Maduro</span></td>
-              </tr>
-              <tr>
-                <td><strong>Atendimento</strong><small>App, chat, telefone, agências</small></td>
-                <td class="num">189</td>
-                <td class="num">14</td>
-                <td class="num">36</td>
-                <td>300 ms</td>
-                <td>Tribo CX</td>
-                <td><span class="badge badge--success">Maduro</span></td>
-              </tr>
-              <tr>
-                <td><strong>Compliance</strong><small>KYC, sanções, comunicados</small></td>
-                <td class="num">142</td>
-                <td class="num">11</td>
-                <td class="num">22</td>
-                <td>1000 ms</td>
-                <td>Tribo Compliance</td>
-                <td><span class="badge badge--info">Adoção</span></td>
-              </tr>
-              <tr>
-                <td><strong>Cadastro</strong><small>Pessoa, conta, perfil</small></td>
-                <td class="num">218</td>
-                <td class="num">19</td>
-                <td class="num">45</td>
-                <td>200 ms</td>
-                <td>Tribo Identidade</td>
-                <td><span class="badge badge--info">Adoção</span></td>
-              </tr>
-              <tr>
-                <td><strong>Crédito</strong><small>Limite, política, decisão</small></td>
-                <td class="num">147</td>
-                <td class="num">12</td>
-                <td class="num">14</td>
-                <td>400 ms</td>
-                <td>Tribo Crédito</td>
-                <td><span class="badge badge--info">Adoção</span></td>
-              </tr>
-              <tr>
-                <td><strong>Operacional</strong><small>Logs, métricas internas</small></td>
-                <td class="num">104</td>
-                <td class="num">20</td>
-                <td class="num">5</td>
-                <td>2000 ms</td>
-                <td>Tribo Plataforma</td>
-                <td><span class="badge badge--warn">Piloto</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p>Total: <strong>2.418 tópicos · 156 squads produtoras · 312 squads consumidoras</strong>. A categoria <em>Piloto</em> indica domínio com adoção restrita ao próprio time de Plataforma, ainda sem garantias de SLO.</p>
-      </section>
-
-      <section data-reveal>
-        <h2>Como pesquisar e linkar</h2>
-        <p>Três entradas principais. Escolha conforme a tarefa:</p>
-        <div class="res-list">
-          <a href="#catalogo" class="res-item">
-            <span class="res-tag">web</span>
-            <div class="res-item__body">
-              <p class="res-item__title">Portal de busca — dados.cloud.itau/catalog</p>
-              <p class="res-item__desc">Busca full-text por nome, schema, owner. Filtros por domínio, criticidade, retenção.</p>
-            </div>
-            <span class="res-item__arrow">→</span>
-          </a>
-          <a href="#ferramentas" class="res-item">
-            <span class="res-tag">cli</span>
-            <div class="res-item__body">
-              <p class="res-item__title">CLI — <code>dados catalog search &lt;query&gt;</code></p>
-              <p class="res-item__desc">Mesma busca, no terminal. Saída em JSON, ideal para scripts e CI.</p>
-            </div>
-            <span class="res-item__arrow">→</span>
-          </a>
-          <a href="#catalogo" class="res-item">
-            <span class="res-tag">api</span>
-            <div class="res-item__body">
-              <p class="res-item__title">API GraphQL — <code>catalog.dados.cloud.itau/graphql</code></p>
-              <p class="res-item__desc">Integrações com data lineage, descoberta automática em IDEs e portais internos.</p>
-            </div>
-            <span class="res-item__arrow">→</span>
-          </a>
-        </div>
-
-        <aside class="callout callout--info" role="note">
-          <div class="callout__icon" aria-hidden="true">i</div>
-          <div class="callout__content">
-            <p class="callout__title">Linhagem é obrigatória</p>
-            <p>Todo tópico no catálogo tem linhagem upstream/downstream visível. Sem isso, o registro não passa em CI — não é possível registrar tópico "órfão" sem produtor declarado.</p>
-          </div>
-        </aside>
-      </section>
-    </article>
-
-    <!-- ═══════════════════════════════════════════════════════════════
-         VIEW: FERRAMENTAS — SDKs, CLI, conectores, suporte
-         ═════════════════════════════════════════════════════════════── -->
-    <article class="view" id="ferramentas" hidden aria-labelledby="ferramentas-title">
-      <section class="view__hero">
-        <p class="kicker">Ferramentas</p>
-        <h1 id="ferramentas-title">SDKs, CLI<br>e conectores oficiais.</h1>
-        <p class="lead">
-          O kit que sua squad usa para produzir e consumir dados.
-          Tudo mantido pelo time de Plataforma — versionado, com release notes
-          e canal dedicado para issues e PRs.
-        </p>
-      </section>
-
-      <section data-reveal>
-        <h2>SDKs por linguagem</h2>
-        <p>Três SDKs cobrem 96% dos casos. Para outras linguagens, use o protocolo HTTP/gRPC diretamente — exemplos no handbook.</p>
-        <div class="res-list">
-          <a href="#ferramentas" class="res-item">
-            <span class="res-tag">npm</span>
-            <div class="res-item__body">
-              <p class="res-item__title">@itau/dados-sdk <strong>2.4.1</strong></p>
-              <p class="res-item__desc">TypeScript. Para Node.js (BFFs, microsserviços) e front-end (com bundle reduzido). Tree-shakeable, types completos.</p>
-            </div>
-            <span class="res-item__arrow">→</span>
-          </a>
-          <a href="#ferramentas" class="res-item">
-            <span class="res-tag">pip</span>
-            <div class="res-item__body">
-              <p class="res-item__title">itau-dados <strong>1.9.2</strong></p>
-              <p class="res-item__desc">Python 3.10+. Para data engineering, notebooks Jupyter e jobs analíticos. Suporte assíncrono via <code>asyncio</code>.</p>
-            </div>
-            <span class="res-item__arrow">→</span>
-          </a>
-          <a href="#ferramentas" class="res-item">
-            <span class="res-tag">maven</span>
-            <div class="res-item__body">
-              <p class="res-item__title">br.com.itau:dados-sdk <strong>3.2.0</strong></p>
-              <p class="res-item__desc">Java 17+. Para serviços JVM em produção. Integração nativa com Spring Boot starter <code>dados-spring-starter</code>.</p>
-            </div>
-            <span class="res-item__arrow">→</span>
-          </a>
-        </div>
-      </section>
-
-      <section data-reveal>
-        <h2>CLI <code>dados</code></h2>
-        <p>Para criar tópicos, gerenciar schemas, fazer replay, inspecionar lag de consumidores. Funciona em macOS, Linux e WSL.</p>
-        <div class="two-col">
+      <div class="trilhas-list">
+        <section class="trilha">
+          <span class="trilha__num" aria-hidden="true">01</span>
           <div>
-            <h4>Comandos principais</h4>
-            <ul>
-              <li><code>dados topic create</code> — registra novo tópico no catálogo</li>
-              <li><code>dados schema register</code> — versiona contrato</li>
-              <li><code>dados replay</code> — reprocessa janela histórica</li>
-              <li><code>dados lag</code> — diagnostica consumidor atrasado</li>
-              <li><code>dados auth login</code> — SSO via OIDC corporativo</li>
-            </ul>
+            <h2 class="trilha__title">Backend &amp; APIs</h2>
+            <p class="trilha__claim">A espinha dorsal transacional do banco, de Java a APIs em produção.</p>
+            <p class="trilha__modules"><b>Módulos:</b> fundamentos de programação · Java e Spring Boot · APIs e integrações · bancos de dados relacionais · projeto final em squad</p>
           </div>
+          <div class="trilha__hours">
+            <span class="trilha__hours-num">520&nbsp;h</span>
+            <span class="trilha__hours-label">carga horária total</span>
+          </div>
+        </section>
+
+        <section class="trilha">
+          <span class="trilha__num" aria-hidden="true">02</span>
           <div>
-            <h4>Instalação</h4>
-            <ul>
-              <li>macOS — <code>brew install itau/tap/dados</code></li>
-              <li>Linux — <code>apt install dados-cli</code> (repo interno)</li>
-              <li>WSL — mesma via apt do Linux</li>
-              <li>Windows nativo — não suportado oficialmente</li>
-            </ul>
+            <h2 class="trilha__title">Dados &amp; Analytics</h2>
+            <p class="trilha__claim">Do SQL ao pipeline que alimenta a decisão de crédito.</p>
+            <p class="trilha__modules"><b>Módulos:</b> fundamentos de programação · SQL avançado · engenharia de dados com Python · visualização e métricas · projeto final em squad</p>
           </div>
-        </div>
-      </section>
-
-      <section data-reveal>
-        <h2>Conectores oficiais</h2>
-        <p>Pontes mantidas pela Plataforma. Sete em produção, um em beta. Para fontes não cobertas, use o SDK diretamente.</p>
-        <div class="res-list">
-          <a href="#ferramentas" class="res-item">
-            <span class="res-tag">sink</span>
-            <div class="res-item__body">
-              <p class="res-item__title">Snowflake — warehouse principal</p>
-              <p class="res-item__desc">Sincronização de tópicos para o DW com batching configurável (default 60s).</p>
-            </div>
-            <span class="res-item__arrow">→</span>
-          </a>
-          <a href="#ferramentas" class="res-item">
-            <span class="res-tag">source</span>
-            <div class="res-item__body">
-              <p class="res-item__title">Oracle CDC — legado de risco e crédito</p>
-              <p class="res-item__desc">Change data capture para Oracle on-premise via LogMiner. Cobre 80% dos sistemas legados.</p>
-            </div>
-            <span class="res-item__arrow">→</span>
-          </a>
-          <a href="#ferramentas" class="res-item">
-            <span class="res-tag">source</span>
-            <div class="res-item__body">
-              <p class="res-item__title">Postgres CDC</p>
-              <p class="res-item__desc">CDC via <code>pgoutput</code> (logical replication). Padrão para sistemas modernos.</p>
-            </div>
-            <span class="res-item__arrow">→</span>
-          </a>
-          <a href="#ferramentas" class="res-item">
-            <span class="res-tag">sink</span>
-            <div class="res-item__body">
-              <p class="res-item__title">S3 Sink</p>
-              <p class="res-item__desc">Archive e exportação para S3 em Parquet, particionado por data. Para retenção longa e disaster recovery.</p>
-            </div>
-            <span class="res-item__arrow">→</span>
-          </a>
-          <a href="#ferramentas" class="res-item">
-            <span class="res-tag">sink</span>
-            <div class="res-item__body">
-              <p class="res-item__title">BigQuery Sink</p>
-              <p class="res-item__desc">Para analytics em Google Cloud. Mesmo modelo de batching do Snowflake.</p>
-            </div>
-            <span class="res-item__arrow">→</span>
-          </a>
-          <a href="#ferramentas" class="res-item">
-            <span class="res-tag">source</span>
-            <div class="res-item__body">
-              <p class="res-item__title">MQ-Series Bridge</p>
-              <p class="res-item__desc">Ponte para IBM MQ — usado por sistemas core bancários ainda não migrados.</p>
-            </div>
-            <span class="res-item__arrow">→</span>
-          </a>
-          <a href="#ferramentas" class="res-item">
-            <span class="res-tag">bidirectional</span>
-            <div class="res-item__body">
-              <p class="res-item__title">Kafka Bridge</p>
-              <p class="res-item__desc">Para squads que ainda operam clusters Kafka internos. Migração gradual sem rewrite.</p>
-            </div>
-            <span class="res-item__arrow">→</span>
-          </a>
-          <a href="#ferramentas" class="res-item">
-            <span class="res-tag">sink · beta</span>
-            <div class="res-item__body">
-              <p class="res-item__title">Elastic Sink (busca full-text)</p>
-              <p class="res-item__desc">Beta — inscrições abertas em <code>#plat-dados</code>. Lançamento previsto para dezembro/2025.</p>
-            </div>
-            <span class="res-item__arrow">→</span>
-          </a>
-        </div>
-
-        <aside class="callout callout--warn" role="note">
-          <div class="callout__icon" aria-hidden="true">!</div>
-          <div class="callout__content">
-            <p class="callout__title">Conector não-oficial?</p>
-            <p>Conectores comunitários (mantidos por outras squads) vivem no repo <code>plat-dados/community-connectors</code> e <strong>não têm SLA da Plataforma</strong>. Use com a expectativa correta.</p>
+          <div class="trilha__hours">
+            <span class="trilha__hours-num">480&nbsp;h</span>
+            <span class="trilha__hours-label">carga horária total</span>
           </div>
-        </aside>
-      </section>
+        </section>
 
-      <section data-reveal>
-        <h2>Documentação e exemplos</h2>
-        <p>Onde a verdade vive.</p>
-        <div class="res-list">
-          <a href="#ferramentas" class="res-item">
-            <span class="res-tag">handbook</span>
-            <div class="res-item__body">
-              <p class="res-item__title">Handbook técnico completo</p>
-              <p class="res-item__desc">Documentação canônica: arquitetura, contratos, operação, runbooks de incidentes.</p>
-            </div>
-            <span class="res-item__arrow">→</span>
-          </a>
-          <a href="#ferramentas" class="res-item">
-            <span class="res-tag">repo</span>
-            <div class="res-item__body">
-              <p class="res-item__title">Exemplos por linguagem</p>
-              <p class="res-item__desc">Repositório <code>plat-dados/examples</code> — código rodável, atualizado a cada release do SDK.</p>
-            </div>
-            <span class="res-item__arrow">→</span>
-          </a>
-          <a href="#ferramentas" class="res-item">
-            <span class="res-tag">quickstart</span>
-            <div class="res-item__body">
-              <p class="res-item__title">Seu primeiro tópico em 15 minutos</p>
-              <p class="res-item__desc">Do <code>npm install</code> ao primeiro evento publicado em produção — passo a passo guiado.</p>
-            </div>
-            <span class="res-item__arrow">→</span>
-          </a>
-        </div>
-      </section>
+        <section class="trilha">
+          <span class="trilha__num" aria-hidden="true">03</span>
+          <div>
+            <h2 class="trilha__title">Plataforma &amp; Cloud</h2>
+            <p class="trilha__claim">A infraestrutura que mantém o banco no ar, tratada como código.</p>
+            <p class="trilha__modules"><b>Módulos:</b> fundamentos de programação · Linux e redes · nuvem e containers · observabilidade e incident response · projeto final em squad</p>
+          </div>
+          <div class="trilha__hours">
+            <span class="trilha__hours-num">440&nbsp;h</span>
+            <span class="trilha__hours-label">carga horária total</span>
+          </div>
+        </section>
+      </div>
+
+      <p class="trilhas-nota">As cargas horárias incluem o núcleo comum de 160&nbsp;h. Nas três trilhas, o último mês é dedicado integralmente ao projeto final, desenvolvido dentro da squad que vai receber a pessoa formada.</p>
     </article>
 
-    <!-- ═══════════════════════════════════════════════════════════════
-         VIEW: GOVERNANCA — política, SLOs, evolução de cobertura
-         ═════════════════════════════════════════════════════════════── -->
-    <article class="view" id="governanca" hidden aria-labelledby="governanca-title">
-      <section class="view__hero">
-        <p class="kicker">Governança</p>
-        <h1 id="governanca-title">Política, SLOs<br>e trilha de auditoria.</h1>
-        <p class="lead">
-          A camada de garantias da plataforma. Schemas versionados em CI,
-          SLOs publicados por domínio, trilha de auditoria para
-          quem leu, escreveu ou alterou cada tópico.
-        </p>
-      </section>
+    <!-- ════ VIEW #/mentores — definition list editorial ════ -->
+    <article class="view view--mentores" data-view="mentores" hidden aria-label="Mentores">
+      <p class="eyebrow">Corpo de mentores</p>
+      <h1>Quem ensina aqui escreve código em produção.</h1>
+      <p class="lead">Os mentores são engenheiras e engenheiros do quadro do banco, cedidos ao programa por 8&nbsp;horas semanais. Nenhum é instrutor profissional — todos respondem por sistemas reais.</p>
 
-      <section data-reveal>
-        <h2>Quatro princípios que não voltam atrás</h2>
-        <div class="cards">
-          <div class="card card--accent" style="cursor:default">
-            <p class="card__label">Princípio 1</p>
-            <h3 class="card__title">Schema-first</h3>
-            <p class="card__desc">Todo dado entra e sai por um schema versionado. Quebras são bloqueadas em CI, não em produção. Compatibilidade backward é o default.</p>
-          </div>
-          <div class="card card--info" style="cursor:default">
-            <p class="card__label">Princípio 2</p>
-            <h3 class="card__title">Event-driven por padrão</h3>
-            <p class="card__desc">Não existe "batch noturno" como caminho feliz. Mudanças propagam em segundos via streams. Batch vira caso especial.</p>
-          </div>
-          <div class="card card--teal" style="cursor:default">
-            <p class="card__label">Princípio 3</p>
-            <h3 class="card__title">Multi-região nativo</h3>
-            <p class="card__desc">Latência regional é resolvida no design, não no SLA. Dados se replicam entre SP, RJ e DF conforme política do domínio.</p>
-          </div>
-          <div class="card card--sage" style="cursor:default">
-            <p class="card__label">Princípio 4</p>
-            <h3 class="card__title">Self-service com guard-rails</h3>
-            <p class="card__desc">Times criam tópicos sem ticket. Limites, RBAC e validação de schema garantem que self-service não vira caos.</p>
-          </div>
+      <dl class="mentores">
+        <div class="mentor">
+          <dt>
+            <span class="mentor__name">Marina Duarte</span>
+            <span class="mentor__role">Engenheira principal · Plataformas de Crédito</span>
+          </dt>
+          <dd>
+            <p>Catorze anos de banco; liderou a reescrita do motor de decisão de crédito. Coordena o currículo de Java e o desenho dos projetos finais.</p>
+            <p class="mentor__trilha">Mentora da trilha Backend &amp; APIs</p>
+          </dd>
         </div>
-      </section>
 
-      <section data-reveal>
-        <h2>Evolução da cobertura de schemas</h2>
-        <p>Percentual de tópicos com schema versionado e contrato registrado.
-          Meta interna 2025: <strong>≥ 95%</strong> ao final do ano. Dados mensais consolidados desde o início da iniciativa.</p>
-        <div class="chart-wrap">
-          <div class="chart-wrap__head">
-            <p class="chart-wrap__title">Cobertura mensal de schemas</p>
-            <p class="chart-wrap__sub">Jan/2024 — Out/2025 · % do total</p>
-          </div>
-          <div class="chart-canvas">
-            <canvas id="chart-coverage" aria-label="Evolução percentual de cobertura de schemas, de janeiro de 2024 a outubro de 2025"></canvas>
-          </div>
+        <div class="mentor">
+          <dt>
+            <span class="mentor__name">Rodrigo Tanaka</span>
+            <span class="mentor__role">Arquiteto de soluções · Atacado</span>
+          </dt>
+          <dd>
+            <p>Desenha as integrações entre sistemas legados e serviços novos. No programa, responde pelo módulo de APIs e pela banca de projeto final.</p>
+            <p class="mentor__trilha">Mentor da trilha Backend &amp; APIs</p>
+          </dd>
         </div>
-      </section>
 
-      <section data-reveal>
-        <h2>SLOs por categoria de domínio</h2>
-        <p>Cada domínio se classifica em uma das três categorias abaixo, definindo SLOs mínimos e cadência de revisão. Esses números são revisados trimestralmente em conjunto com o time de Risco Operacional.</p>
-        <div class="table-wrap">
-          <table class="data-table" aria-label="SLOs mínimos por categoria de domínio">
-            <thead>
-              <tr>
-                <th>Categoria</th>
-                <th>Domínios</th>
-                <th class="num">SLO disponibilidade</th>
-                <th class="num">SLO latência p99</th>
-                <th class="num">RPO</th>
-                <th>Auditoria</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Tempo real crítico</strong></td>
-                <td>Fraude, Pagamentos</td>
-                <td class="num">99,99%</td>
-                <td class="num">100 ms</td>
-                <td class="num">0 s</td>
-                <td><span class="badge badge--plum">Mandatória</span></td>
-              </tr>
-              <tr>
-                <td><strong>Transacional</strong></td>
-                <td>Risco, Cadastro, Crédito</td>
-                <td class="num">99,95%</td>
-                <td class="num">500 ms</td>
-                <td class="num">5 s</td>
-                <td><span class="badge badge--info">Recomendada</span></td>
-              </tr>
-              <tr>
-                <td><strong>Analítico</strong></td>
-                <td>Investimentos, Atendimento, Compliance, Operacional</td>
-                <td class="num">99,9%</td>
-                <td class="num">2000 ms</td>
-                <td class="num">5 min</td>
-                <td><span class="badge badge--sage">Opt-in</span></td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="mentor">
+          <dt>
+            <span class="mentor__name">Caio Nogueira</span>
+            <span class="mentor__role">Engenheiro de dados sênior · Riscos</span>
+          </dt>
+          <dd>
+            <p>Mantém os pipelines que alimentam os modelos de risco do varejo. Conduz o módulo de SQL avançado desde o desenho do programa.</p>
+            <p class="mentor__trilha">Mentor da trilha Dados &amp; Analytics</p>
+          </dd>
         </div>
-        <p><strong>RPO</strong> (Recovery Point Objective) = quanto de dado podemos perder em caso de falha catastrófica. <strong>Auditoria mandatória</strong> = trilha de leitura também é registrada, não só escrita.</p>
-      </section>
 
-      <section data-reveal>
-        <h2>Como mudanças de política são decididas</h2>
-        <ol class="timeline">
-          <li class="timeline__item">
-            <p class="timeline__date">Etapa 1</p>
-            <h3 class="timeline__title">RFC aberta no repositório público interno</h3>
-            <p class="timeline__desc">Qualquer engenheiro do banco pode abrir RFC em <code>plat-dados/rfcs</code>. Template pronto, sem aprovação prévia.</p>
-          </li>
-          <li class="timeline__item">
-            <p class="timeline__date">Etapa 2</p>
-            <h3 class="timeline__title">Comentários e revisão (≥ 7 dias)</h3>
-            <p class="timeline__desc">Período mínimo aberto para qualquer time comentar. Itens críticos para Risco/Compliance têm revisão obrigatória dessas áreas.</p>
-          </li>
-          <li class="timeline__item">
-            <p class="timeline__date">Etapa 3</p>
-            <h3 class="timeline__title">Decisão do comitê quinzenal</h3>
-            <p class="timeline__desc">Comitê de 5 pessoas: 2 da Plataforma, 1 de Risco Op, 1 de Arquitetura, 1 rotativo (time consumidor diferente a cada ciclo).</p>
-          </li>
-          <li class="timeline__item">
-            <p class="timeline__date">Etapa 4</p>
-            <h3 class="timeline__title">Publicação + janela de implementação</h3>
-            <p class="timeline__desc">RFC aprovada vira política. Janela mínima de 60 dias antes de virar obrigatória — tempo para times adaptarem.</p>
-          </li>
-        </ol>
-        <aside class="callout callout--info" role="note">
-          <div class="callout__icon" aria-hidden="true">i</div>
-          <div class="callout__content">
-            <p class="callout__title">Política vigente</p>
-            <p>O conjunto completo de políticas em vigor está em <code>plat-dados/policies</code>. Cada arquivo tem ID, versão, link para a RFC original e datas de revisão.</p>
-          </div>
-        </aside>
-      </section>
+        <div class="mentor">
+          <dt>
+            <span class="mentor__name">Ana Beatriz Lima</span>
+            <span class="mentor__role">Cientista de dados · Modelagem de Crédito</span>
+          </dt>
+          <dd>
+            <p>Trabalha com atributos de crédito calculados em tempo real. No programa, ensina visualização de dados e leitura crítica de métricas.</p>
+            <p class="mentor__trilha">Mentora da trilha Dados &amp; Analytics</p>
+          </dd>
+        </div>
+
+        <div class="mentor">
+          <dt>
+            <span class="mentor__name">Letícia Prado</span>
+            <span class="mentor__role">SRE sênior · Canais Digitais</span>
+          </dt>
+          <dd>
+            <p>Opera a malha de observabilidade dos canais digitais e os plantões de pico. Ensina incident response com simulações de incidente real.</p>
+            <p class="mentor__trilha">Mentora da trilha Plataforma &amp; Cloud</p>
+          </dd>
+        </div>
+
+        <div class="mentor">
+          <dt>
+            <span class="mentor__name">Felipe Arruda</span>
+            <span class="mentor__role">Engenheiro de cloud · Infraestrutura Central</span>
+          </dt>
+          <dd>
+            <p>Migrou os primeiros workloads do mainframe para containers. Responde pelos módulos de nuvem e pela infraestrutura dos laboratórios.</p>
+            <p class="mentor__trilha">Mentor da trilha Plataforma &amp; Cloud</p>
+          </dd>
+        </div>
+      </dl>
     </article>
 
-    <!-- ═══════════════════════════════════════════════════════════════
-         VIEW: CONTATO — canais, SLAs, formulário
-         ═════════════════════════════════════════════════════════════── -->
-    <article class="view" id="contato" hidden aria-labelledby="contato-title">
-      <section class="view__hero">
-        <p class="kicker">Contato</p>
-        <h1 id="contato-title">Falar com<br>a Plataforma de Dados.</h1>
-        <p class="lead">
-          Quatro canais oficiais. Use o certo para o tipo de demanda — isso
-          ajuda a manter o on-call dormindo à noite quando não há incidente.
-        </p>
-      </section>
+    <!-- ════ VIEW #/inscricao — coluna editorial + tabela broadsheet ════ -->
+    <article class="view view--inscricao" data-view="inscricao" hidden aria-label="Inscrição">
+      <p class="eyebrow">Processo seletivo 2026</p>
+      <h1>A seleção mede raciocínio, não currículo.</h1>
+      <p class="lead">Não há prova de programação, exigência de inglês nem filtro por universidade. As etapas avaliam lógica, colaboração e disposição para aprender.</p>
 
-      <section data-reveal>
-        <h2>Canais e SLA</h2>
-        <p>Em ordem do mais informal ao mais formal. Todos têm dono e tempo de resposta declarado.</p>
-        <div class="res-list">
-          <a href="#contato" class="res-item">
-            <span class="res-tag">slack</span>
-            <div class="res-item__body">
-              <p class="res-item__title">#plat-dados — conversa aberta</p>
-              <p class="res-item__desc">Para perguntas rápidas, dúvidas de uso, ideias. Sem SLA — respondemos quando podemos, em geral no mesmo dia útil.</p>
-            </div>
-            <span class="res-item__arrow">→</span>
-          </a>
-          <a href="#contato" class="res-item">
-            <span class="res-tag">slack</span>
-            <div class="res-item__body">
-              <p class="res-item__title">#plat-dados-suporte — suporte estruturado</p>
-              <p class="res-item__desc">Para dúvidas de uso, ajuda em integração, code review. SLA: primeira resposta em 4 horas úteis.</p>
-            </div>
-            <span class="res-item__arrow">→</span>
-          </a>
-          <a href="#contato" class="res-item">
-            <span class="res-tag">slack</span>
-            <div class="res-item__body">
-              <p class="res-item__title">#plat-dados-oncall — incidentes em produção</p>
-              <p class="res-item__desc">Apenas para incidentes ativos afetando produção. SLA: primeiro contato em 15 minutos, 24/7.</p>
-            </div>
-            <span class="res-item__arrow">→</span>
-          </a>
-          <a href="#contato" class="res-item">
-            <span class="res-tag">repo</span>
-            <div class="res-item__body">
-              <p class="res-item__title">plat-dados/issues — bugs e features</p>
-              <p class="res-item__desc">Para registrar bug com reprodução, propor feature, abrir RFC. Triagem semanal. Priorização discutida no comitê.</p>
-            </div>
-            <span class="res-item__arrow">→</span>
-          </a>
-        </div>
-      </section>
+      <h2>Critérios de participação</h2>
+      <ol class="criterios">
+        <li>Ter 18&nbsp;anos ou mais na data da matrícula.</li>
+        <li>Ensino médio completo — graduação não é exigida em nenhuma trilha.</li>
+        <li>Nenhuma experiência prévia em programação é necessária.</li>
+        <li>Disponibilidade de 30&nbsp;horas semanais durante os 9&nbsp;meses de formação.</li>
+        <li>Residir na região metropolitana de São&nbsp;Paulo ou ter disponibilidade para os 2&nbsp;dias presenciais por semana do formato híbrido.</li>
+      </ol>
 
-      <section data-reveal>
-        <h2>Office hours</h2>
-        <p>Toda <strong>quinta-feira, 16h–17h</strong>, dois engenheiros da Plataforma ficam disponíveis em videochamada aberta para qualquer squad. Sem pauta — chega quem quer, traz o problema, sai com encaminhamento.</p>
-        <p>Link no canal <code>#plat-dados</code> à 15h55 toda quinta. Gravações ficam em <code>plat-dados/office-hours</code> com índice por tema (não por data).</p>
-      </section>
+      <h2>Cronograma</h2>
+      <table class="cronograma">
+        <caption>Datas da turma 2026. Convocações por e-mail a cada etapa.</caption>
+        <thead>
+          <tr><th scope="col">Etapa</th><th scope="col">Formato</th><th scope="col">Período</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Inscrições abertas</td><td>online</td><td>15&nbsp;jun – 17&nbsp;jul&nbsp;2026</td></tr>
+          <tr><td>Teste de lógica e raciocínio</td><td>online</td><td>20 – 26&nbsp;jul&nbsp;2026</td></tr>
+          <tr><td>Dinâmicas em grupo</td><td>presencial</td><td>3 – 14&nbsp;ago&nbsp;2026</td></tr>
+          <tr><td>Entrevistas com mentores</td><td>online</td><td>17 – 28&nbsp;ago&nbsp;2026</td></tr>
+          <tr><td>Resultado final</td><td>e-mail</td><td>4&nbsp;set&nbsp;2026</td></tr>
+          <tr class="cronograma__final"><td>Início da formação</td><td>híbrido</td><td>21&nbsp;set&nbsp;2026</td></tr>
+        </tbody>
+      </table>
 
-      <section data-reveal>
-        <h2>Enviar uma mensagem direta</h2>
-        <p>Para casos que não se encaixam nos canais acima — parcerias institucionais, demandas regulatórias, casos sensíveis.
-          Esse formulário envia para <code>plat-dados@itau-unibanco.com.br</code> e é lido pela liderança da Plataforma. <strong>Não use para incidentes</strong> (não tem SLA).</p>
-        <form class="form" data-contact-form aria-label="Formulário de contato">
-          <div class="form__row">
-            <label class="form__label" for="contact-name">Seu nome</label>
-            <input class="form__input" type="text" id="contact-name" name="name" required autocomplete="name">
-          </div>
-          <div class="form__row">
-            <label class="form__label" for="contact-email">E-mail corporativo</label>
-            <input class="form__input" type="email" id="contact-email" name="email" required autocomplete="email" pattern=".+@itau.*">
-            <p class="form__hint">Use seu e-mail @itau ou @itau-unibanco.</p>
-          </div>
-          <div class="form__row">
-            <label class="form__label" for="contact-topic">Assunto</label>
-            <select class="form__select" id="contact-topic" name="topic" required>
-              <option value="">Selecione...</option>
-              <option>Parceria institucional</option>
-              <option>Demanda regulatória</option>
-              <option>Caso sensível ou confidencial</option>
-              <option>Sugestão estratégica</option>
-              <option>Outro</option>
-            </select>
-          </div>
-          <div class="form__row">
-            <label class="form__label" for="contact-message">Mensagem</label>
-            <textarea class="form__textarea" id="contact-message" name="message" required maxlength="2000" placeholder="Descreva o contexto e o que você precisa. Quanto mais específico, mais rápido encaminhamos."></textarea>
-          </div>
-          <button class="form__submit" type="submit">Enviar mensagem</button>
-          <p class="form__status" data-form-status hidden role="status" aria-live="polite">Mensagem registrada. A liderança da Plataforma responde em até 3 dias úteis.</p>
-        </form>
-      </section>
-
-      <section data-reveal>
-        <h2>Tudo o que falta</h2>
-        <p>Se você precisa de algo que não está nesse site, três caminhos:</p>
-        <ul>
-          <li>Para a documentação técnica completa → handbook em <code>handbook.dados.cloud.itau</code>.</li>
-          <li>Para acompanhar releases e changelog → newsletter quinzenal (assinatura por e-mail corporativo).</li>
-          <li>Para falar com a liderança em pessoa → office hours acima.</li>
-        </ul>
-      </section>
+      <h2>Perguntas frequentes</h2>
+      <div class="faq">
+        <details>
+          <summary>Preciso saber programar antes de me inscrever?</summary>
+          <p>Não. O programa parte do zero absoluto: os dois primeiros meses são dedicados a lógica e fundamentos, e a seleção não inclui nenhuma prova técnica. Quem já programa também pode participar — o ritmo dos módulos se ajusta por turma.</p>
+        </details>
+        <details>
+          <summary>A bolsa permite manter outro vínculo de trabalho?</summary>
+          <p>A bolsa de R$&nbsp;2.800 pressupõe dedicação de 30&nbsp;horas semanais, e o contrato de formação não permite vínculo CLT simultâneo. Atividades autônomas de fim de semana são aceitas, desde que não comprometam as etapas presenciais.</p>
+        </details>
+        <details>
+          <summary>Posso trocar de trilha depois do início?</summary>
+          <p>Sim, até a semana&nbsp;9 — a escolha feita na inscrição é uma sinalização, não um compromisso “definitivo”. Durante o núcleo comum, os mentores ajudam cada participante a confirmar ou rever a trilha. Depois da semana&nbsp;9, a troca passa a depender de vaga na trilha de destino.</p>
+        </details>
+        <details>
+          <summary>O que acontece ao final dos 9&nbsp;meses?</summary>
+          <p>O programa termina com uma banca de projeto final, avaliada pelos mentores e pela squad de destino. Quem é aprovado recebe proposta de contratação CLT como pessoa desenvolvedora júnior — a vaga fica reservada desde a matrícula, por isso o número de participantes é igual ao número de posições abertas: 120.</p>
+        </details>
+      </div>
     </article>
-
   </main>
 
-  <footer class="footer" role="contentinfo">
+  <footer class="footer">
     <div class="footer__inner">
-      <div class="footer__col">
-        <p class="footer__brand">Plataforma de Dados</p>
-        <p class="footer__tag">Iniciativa interna do Itaú Unibanco. Mantida pelo time de Plataforma de Dados.</p>
-      </div>
-      <div class="footer__col">
-        <h4>Navegação</h4>
-        <ul>
-          <li><a href="#home">Visão geral</a></li>
-          <li><a href="#catalogo">Catálogo</a></li>
-          <li><a href="#ferramentas">Ferramentas</a></li>
-          <li><a href="#governanca">Governança</a></li>
-          <li><a href="#contato">Contato</a></li>
-        </ul>
-      </div>
-      <div class="footer__col">
-        <h4>Recursos</h4>
-        <ul>
-          <li><a href="#ferramentas">SDKs</a></li>
-          <li><a href="#ferramentas">CLI dados</a></li>
-          <li><a href="#ferramentas">Conectores</a></li>
-          <li><a href="#ferramentas">Handbook</a></li>
-        </ul>
-      </div>
-      <div class="footer__col">
-        <h4>Suporte</h4>
-        <ul>
-          <li><a href="#contato">#plat-dados</a></li>
-          <li><a href="#contato">On-call 24/7</a></li>
-          <li><a href="#contato">Office hours</a></li>
-          <li><a href="#contato">RFC repo</a></li>
-        </ul>
-      </div>
+      <p>Programa Jovem Tech · Itaú Unibanco — turma 2026</p>
+      <p>Exemplo canônico da skill slideless · conteúdo fictício-plausível para demonstração</p>
     </div>
-    <p class="footer__meta">Itaú Unibanco · Plataforma de Dados · v2025.10 · Conteúdo ilustrativo para o exemplo do slideless</p>
   </footer>
 
   <script>
-    /* ─────────────────────────────────────────────────────────────────
-       Theme toggle (idempotente — pode rodar em qualquer ordem)
-       ───────────────────────────────────────────────────────────────── */
-    (function() {
-      var root = document.documentElement;
-      document.querySelectorAll('.theme-toggle').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-          var cur = root.getAttribute('data-theme');
-          var next = cur === 'dark' ? 'light' : 'dark';
-          root.setAttribute('data-theme', next);
-          try { localStorage.setItem('theme', next); } catch (e) {}
-          // Re-render gráficos para refletir novo tema
-          if (window.__rerenderCharts) window.__rerenderCharts();
-        });
-      });
-    })();
+    // ── Tema ──────────────────────────────────────────────────────────
+    // Régua de craft: .no-transitions evita o "respiro" da página inteira
+    // no switch (só o toggle paga o custo, removido no próximo frame).
+    document.querySelector('.theme-toggle').addEventListener('click', () => {
+      const h = document.documentElement;
+      const next = h.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      h.classList.add('no-transitions');
+      h.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+      requestAnimationFrame(() => requestAnimationFrame(() => h.classList.remove('no-transitions')));
+    });
 
-    /* ─────────────────────────────────────────────────────────────────
-       Hash router (canônico — modelo site.md)
-       — Aceita rotas conhecidas; fallback para #home se hash inválido.
-       — Usa history.replaceState ao clicar em link interno: troca de
-         view não polui o histórico do browser. O usuário pode usar
-         "voltar" para sair do site para a página anterior.
-       ───────────────────────────────────────────────────────────────── */
-    var VALID_ROUTES = ['home', 'catalogo', 'ferramentas', 'governanca', 'contato'];
-
-    function currentRoute() {
-      var id = (location.hash || '#home').slice(1).split('?')[0];
-      return VALID_ROUTES.indexOf(id) !== -1 ? id : 'home';
-    }
-
-    function route() {
-      var id = currentRoute();
-      var views = document.querySelectorAll('.view');
-      views.forEach(function(v) {
-        var on = v.id === id;
-        v.classList.toggle('is-active', on);
-        if (on) {
-          v.hidden = false;
-        } else {
-          v.hidden = true;
-        }
-      });
-      document.querySelectorAll('.topnav__link, .footer__col a').forEach(function(a) {
-        var href = a.getAttribute('href');
-        var isActive = href === '#' + id;
-        a.classList.toggle('is-active', isActive && a.classList.contains('topnav__link'));
-        if (isActive) {
-          a.setAttribute('aria-current', 'page');
-        } else {
-          a.removeAttribute('aria-current');
-        }
-      });
-
-      // Atualiza title da aba
-      var titles = {
-        home: 'Plataforma de Dados Itaú',
-        catalogo: 'Catálogo — Plataforma de Dados Itaú',
-        ferramentas: 'Ferramentas — Plataforma de Dados Itaú',
-        governanca: 'Governança — Plataforma de Dados Itaú',
-        contato: 'Contato — Plataforma de Dados Itaú'
-      };
-      document.title = titles[id] || titles.home;
-
-      // Foco em conteúdo principal para a11y (skip anúncio de rota inteira)
-      var heading = document.getElementById(id + '-title');
-      if (heading) {
-        heading.setAttribute('tabindex', '-1');
-      }
-
-      // Scroll ao topo + reveal das seções da view ativa
-      window.scrollTo({ top: 0, behavior: 'instant' });
-      requestAnimationFrame(function() {
-        document.querySelectorAll('.view.is-active [data-reveal]').forEach(function(el, i) {
-          el.style.setProperty('--i', i);
-          el.classList.add('is-visible');
-        });
-      });
-    }
-
-    // Interceptar clicks em links de hash da própria navegação interna
-    // para usar history.replaceState (não pollui histórico)
-    document.addEventListener('click', function(e) {
-      var a = e.target.closest('a[href^="#"]');
-      if (!a) return;
-      var href = a.getAttribute('href');
-      var id = href.slice(1);
-      if (VALID_ROUTES.indexOf(id) === -1) return;
-      // Só interceptar nav principal e footer (não scroll-to-id intra-view)
-      if (!a.closest('.topnav, .footer, .topbar__brand, .card, .res-item')) return;
-      e.preventDefault();
-      if (location.hash === href) {
-        // Mesma rota — apenas scroll ao topo
-        window.scrollTo({ top: 0, behavior: 'instant' });
+    // ── Assinatura M1 + W2: o número 120 se constrói UMA vez, na home,
+    //    SINCRONIZADO ao medidor (--vagas-fill). Número e fio crescem juntos.
+    let vagasCounted = false;
+    function runCounter() {
+      if (vagasCounted) return;
+      vagasCounted = true;
+      const el = document.getElementById('num-vagas');
+      const meter = document.getElementById('vagas-meter');
+      const target = 120;
+      // reduced-motion: estado final já é o base (texto "120" + fio cheio).
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        el.textContent = String(target);
         return;
       }
-      history.replaceState(null, '', href);
-      route();
-    });
-
-    window.addEventListener('hashchange', route);
-    window.addEventListener('DOMContentLoaded', route);
-
-    /* ─────────────────────────────────────────────────────────────────
-       Reveal on scroll (IntersectionObserver — para views já ativas)
-       ───────────────────────────────────────────────────────────────── */
-    var rio = new IntersectionObserver(function(entries) {
-      entries.forEach(function(e, i) {
-        if (e.isIntersecting) {
-          e.target.classList.add('is-visible');
-          rio.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-    document.querySelectorAll('[data-reveal]').forEach(function(el) { rio.observe(el); });
-
-    /* ─────────────────────────────────────────────────────────────────
-       Form de contato — mock (não envia, apenas mostra confirmação)
-       ───────────────────────────────────────────────────────────────── */
-    document.querySelectorAll('[data-contact-form]').forEach(function(form) {
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        var status = form.querySelector('[data-form-status]');
-        if (status) {
-          status.hidden = false;
-          status.textContent = 'Mensagem registrada. A liderança da Plataforma responde em até 3 dias úteis.';
-        }
-        form.reset();
-      });
-    });
-
-    /* ─────────────────────────────────────────────────────────────────
-       Chart.js — Cobertura de schemas (Jan/2024 a Out/2025)
-       ───────────────────────────────────────────────────────────────── */
-    var coverageChart = null;
-
-    function css(v) {
-      return getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+      const dur = 900; // assinatura: único movimento do site autorizado a exceder 500ms
+      const t0 = performance.now();
+      el.textContent = '0';
+      if (meter) meter.style.setProperty('--vagas-fill', '0%');
+      (function tick(now) {
+        const p = Math.min((now - t0) / dur, 1);
+        const eased = 1 - Math.pow(1 - p, 3); // papel: easing da assinatura (decelera no valor real)
+        el.textContent = String(Math.round(eased * target));
+        if (meter) meter.style.setProperty('--vagas-fill', (eased * 100).toFixed(2) + '%'); // W2: fio em sincronia
+        if (p < 1) requestAnimationFrame(tick);
+        else if (meter) meter.style.removeProperty('--vagas-fill'); // volta ao base (100%) — fonte única de verdade
+      })(t0);
     }
 
-    function buildCoverageChart() {
-      var canvas = document.getElementById('chart-coverage');
-      if (!canvas || typeof Chart === 'undefined') return;
-      if (coverageChart) { coverageChart.destroy(); coverageChart = null; }
-
-      var labels = [
-        'Jan/24','Fev/24','Mar/24','Abr/24','Mai/24','Jun/24',
-        'Jul/24','Ago/24','Set/24','Out/24','Nov/24','Dez/24',
-        'Jan/25','Fev/25','Mar/25','Abr/25','Mai/25','Jun/25',
-        'Jul/25','Ago/25','Set/25','Out/25'
-      ];
-      // 22 pontos mensais — dados completos, sem omissões
-      var data = [
-        18, 22, 28, 34, 41, 48,
-        54, 58, 63, 67, 71, 74,
-        77, 80, 83, 86, 88, 90,
-        91, 92, 93, 94
-      ];
-      var meta = labels.map(function() { return 95; });
-
-      coverageChart = new Chart(canvas, {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: [
-            {
-              label: 'Cobertura de schemas',
-              data: data,
-              borderColor: css('--color-accent'),
-              backgroundColor: css('--color-accent-dim'),
-              borderWidth: 2.5,
-              tension: 0.32,
-              fill: true,
-              pointRadius: 3,
-              pointHoverRadius: 6,
-              pointBackgroundColor: css('--color-accent'),
-              pointBorderColor: css('--color-bg-elevated'),
-              pointBorderWidth: 1.5
-            },
-            {
-              label: 'Meta interna (95%)',
-              data: meta,
-              borderColor: css('--color-fg-muted'),
-              borderWidth: 1.5,
-              borderDash: [5, 4],
-              pointRadius: 0,
-              fill: false,
-              tension: 0
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          interaction: { mode: 'index', intersect: false },
-          plugins: {
-            legend: {
-              position: 'bottom',
-              labels: {
-                color: css('--color-fg-muted'),
-                font: { size: 12, family: "'Inter', system-ui, sans-serif" },
-                padding: 14,
-                boxWidth: 14,
-                boxHeight: 14
-              }
-            },
-            tooltip: {
-              backgroundColor: css('--color-bg-elevated'),
-              titleColor: css('--color-fg'),
-              bodyColor: css('--color-fg-muted'),
-              borderColor: css('--color-border'),
-              borderWidth: 1,
-              padding: 12,
-              callbacks: {
-                label: function(ctx) {
-                  return ctx.dataset.label + ': ' + ctx.parsed.y + '%';
-                }
-              }
-            }
-          },
-          scales: {
-            x: {
-              grid: { display: false },
-              ticks: {
-                color: css('--color-fg-muted'),
-                font: { size: 11, family: "'JetBrains Mono', monospace" },
-                maxRotation: 0,
-                autoSkip: true,
-                autoSkipPadding: 12
-              }
-            },
-            y: {
-              min: 0,
-              max: 100,
-              grid: { color: css('--color-border'), drawTicks: false },
-              border: { display: false },
-              ticks: {
-                color: css('--color-fg-muted'),
-                font: { size: 11, family: "'JetBrains Mono', monospace" },
-                stepSize: 25,
-                padding: 8,
-                callback: function(v) { return v + '%'; }
-              }
-            }
-          }
-        }
-      });
-    }
-
-    // Chart rebuild on theme change
-    window.__rerenderCharts = function() {
-      // Delay para tokens já estarem atualizados após o data-theme
-      requestAnimationFrame(buildCoverageChart);
+    // ── Hash routing (#/ · #/trilhas · #/mentores · #/inscricao) ─────
+    const VIEW_TITLES = {
+      home: 'Programa Jovem Tech — Itaú',
+      trilhas: 'Trilhas — Programa Jovem Tech',
+      mentores: 'Mentores — Programa Jovem Tech',
+      inscricao: 'Inscrição — Programa Jovem Tech'
     };
 
-    // Build inicial — após DOM e após hash route (canvas precisa estar visível)
-    window.addEventListener('DOMContentLoaded', function() {
-      requestAnimationFrame(buildCoverageChart);
-    });
-
-    // Rebuild ao entrar na view de governanca (canvas pode estar oculto na 1ª carga)
-    window.addEventListener('hashchange', function() {
-      if (currentRoute() === 'governanca') {
-        requestAnimationFrame(buildCoverageChart);
+    // render(): troca a view no DOM. NÃO faz transição — é a mutação pura,
+    // reaproveitada pelo guard de View Transitions (W5).
+    function render() {
+      let key = location.hash.replace(/^#\/?/, '') || 'home';
+      let found = false;
+      document.querySelectorAll('.view').forEach(v => {
+        const on = v.dataset.view === key;
+        v.classList.toggle('is-active', on);
+        v.classList.remove('kinetic-in'); // rearma a manchete cinética (W3)
+        v.hidden = !on;
+        if (on) found = true;
+      });
+      if (!found) {
+        key = 'home';
+        const home = document.querySelector('.view[data-view="home"]');
+        home.classList.add('is-active');
+        home.hidden = false;
       }
-    });
+      document.querySelectorAll('.topnav__link').forEach(a => {
+        const on = a.dataset.view === key;
+        a.classList.toggle('is-active', on);
+        if (on) a.setAttribute('aria-current', 'page');
+        else a.removeAttribute('aria-current');
+      });
+      document.title = VIEW_TITLES[key] || VIEW_TITLES.home;
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      return key;
+    }
 
-    // Cobertura para clique programático (history.replaceState não dispara hashchange)
-    var origRoute = route;
-    // (já cobre — buildCoverageChart é idempotente; chamamos novamente após pintar a view)
-    document.addEventListener('click', function(e) {
-      var a = e.target.closest('a[href="#governanca"]');
-      if (a) {
-        setTimeout(function() {
-          requestAnimationFrame(buildCoverageChart);
-        }, 50);
+    // pós-troca: dispara reveal, counter e a entrada cinética da manchete (W3).
+    function afterRender(key) {
+      requestAnimationFrame(() => {
+        document.querySelector('.view.is-active')?.classList.add('kinetic-in'); // W3: manchete da view entra
+        document.querySelectorAll('.view.is-active [data-reveal]').forEach(el => el.classList.add('is-visible'));
+      });
+      if (key === 'home') runCounter();
+    }
+
+    // route(): orquestra a troca. W5 — envolve render() em startViewTransition
+    // COM GUARD; sem a API (ou reduced-motion) cai em troca instantânea.
+    function route(animate) {
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!animate || !document.startViewTransition || reduce) {
+        afterRender(render());
+        return;
       }
-    });
+      let key;
+      const vt = document.startViewTransition(() => { key = render(); });
+      vt.finished.finally(() => afterRender(key)); // kinetic só após a transição assentar
+    }
+    addEventListener('hashchange', () => route(true));
+    addEventListener('DOMContentLoaded', () => route(false)); // 1ª pintura sem transição
+
+    // ── Reveal editorial (só figuras/dados) ──────────────────────────
+    const rio = new IntersectionObserver(es => {
+      es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); rio.unobserve(e.target); } });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('[data-reveal]').forEach(el => rio.observe(el));
   </script>
-
 </body>
 </html>

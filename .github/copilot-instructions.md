@@ -14,7 +14,10 @@ Não carregar inline. Abrir só quando o trabalho exigir:
 
 - [SKILL.md](../SKILL.md) — router principal, 6 modelos, comandos, princípios
 - [README.md](../README.md) — onboarding humano, comandos completos
-- [references/anti-patterns.md](../references/anti-patterns.md) — PPT-isms proibidos (ler antes da 1ª geração)
+- [references/direcao-de-arte.md](../references/direcao-de-arte.md) — o Parti: 7 decisões por documento (LER ANTES DE GERAR)
+- [references/ambicao.md](../references/ambicao.md) — teto cutting-edge: eixo A1/A2/A3 + momentos-wow W1-W9
+- [references/type-kits.md](../references/type-kits.md) — kits tipográficos + fontes banidas
+- [references/anti-patterns.md](../references/anti-patterns.md) — PPT-isms e AI-tells proibidos (ler antes da 1ª geração)
 - [references/design-system.md](../references/design-system.md) — tokens, dark mode, boot script
 - [references/componentes.md](../references/componentes.md) — biblioteca de componentes
 - [references/css-patterns.md](../references/css-patterns.md) — gráficos, tabelas, depth tiers, Mermaid
@@ -23,7 +26,7 @@ Não carregar inline. Abrir só quando o trabalho exigir:
 - [references/protocolo-sem-conteudo.md](../references/protocolo-sem-conteudo.md) — sem dados reais, sem geração
 - [references/workflow.md](../references/workflow.md) — passo-a-passo completo
 - [references/modelos/](../references/modelos/) — spec detalhada por modelo
-- [commands/](../commands/) — 30 slash commands (1 arquivo cada)
+- [commands/](../commands/) — 31 slash commands (1 arquivo cada)
 
 ## Estrutura do projeto
 
@@ -35,9 +38,9 @@ slideless/
   README.md                         ← onboarding humano
   assets/templates/                 ← templates base por modelo
   assets/temas/                     ← itau.css, neutro.css
-  commands/                         ← 30 slash commands
+  commands/                         ← 31 slash commands
   references/                       ← documentação técnica detalhada (consultar on-demand)
-  demos/                            ← 3 demos × 6 modelos cada
+  demos/                            ← 3 famílias × 7 documentos (os 6 modelos + deck-overdrive)
 ```
 
 ## Comandos principais (digitar `/` no chat para lista completa)
@@ -63,5 +66,7 @@ slideless/
 6. **Conteúdo real obrigatório** — sem fonte do usuário, não inventar dados internos do Itaú.
 7. **WCAG AA** — foco visível, ARIA correto, keyboard nav, `prefers-reduced-motion` respeitado.
 8. **Tipografia editorial fora de `deck`** — h1 ~2.5rem, h2 ~1.75rem, body 1rem. NUNCA `clamp(vw)` gigante fora do `deck`.
+9. **Nenhum HTML antes do parti** — todo documento nasce do bloco `<!-- slideless:parti -->` no `<head>` com 7 decisões derivadas do conteúdo (registro, kit tipográfico, capa, superfície, motion, ambição, assinatura) + `nao-vai-ter`. Kit de [type-kits.md](../references/type-kits.md); Inter como display é PROIBIDO. Mecanismo: [direcao-de-arte.md](../references/direcao-de-arte.md).
+10. **Ambição derivada do conteúdo** — a 7ª decisão (A1-contido / A2-elevado / A3-extraordinário) é ortogonal ao registro; A2/A3 exige ≥1 momento-wow com `@supports`+fallback e branch reduced-motion. Ver [ambicao.md](../references/ambicao.md).
 
 Detalhes completos no [SKILL.md](../SKILL.md).

@@ -4,21 +4,29 @@ Biblioteca de padrões copy-paste para todos os modelos. Cada bloco é standalon
 
 ---
 
-## 1. Background Atmosphere
+## 1. Tratamento de fundo — DECISÃO do parti, nunca default
 
-Backgrounds planos parecem mortos. Escolher um dos quatro padrões abaixo.
+> v4: a regra antiga ("backgrounds planos parecem mortos") está REVOGADA — ela produziu o glow universal que virou o fingerprint da casa. **Flat é opção legítima e é a escolha certa para report, registro impresso e qualquer documento destinado a PDF.** O tratamento é o eixo `superficie` do bloco `<!-- slideless:parti -->` ([direcao-de-arte.md](direcao-de-arte.md)) — cardápio completo lá (inclui grain feTurbulence em data-URI e pauta de linhas). Os padrões abaixo são as implementações de referência.
 
-### 1a. Radial glow (recomendado para deck/hero)
+### 1a. Flat (registro impresso/sóbrio)
 ```css
-body {
-  background: var(--color-bg);
-  background-image:
-    radial-gradient(ellipse 90% 70% at 50% 0%,   var(--color-accent-dim) 0%, transparent 60%),
-    radial-gradient(ellipse 70% 50% at 20% 100%,  var(--color-info-dim)   0%, transparent 55%);
+body { background: var(--color-bg); }
+/* a decisão visual está no fio, no espaço e no contraste — não no fundo */
+```
+
+### 1b. Radial glow — LOCALIZADO (máx 1 por documento, atrás de UM elemento)
+```css
+/* NUNCA em body::before incondicional (anti-pattern C8). Posicionar atrás
+   do elemento-herói que o parti declarou: */
+.hero-data { position: relative; }
+.hero-data::before {
+  content: ''; position: absolute; inset: -20% -10%;
+  background: radial-gradient(ellipse 80% 70% at 50% 40%, var(--color-accent-dim) 0%, transparent 60%);
+  pointer-events: none; z-index: -1;
 }
 ```
 
-### 1b. Dot grid (blueprint / técnico)
+### 1c. Dot grid (blueprint / técnico)
 ```css
 body {
   background-color: var(--color-bg);
@@ -27,7 +35,7 @@ body {
 }
 ```
 
-### 1c. Diagonal lines (editorial sutil)
+### 1d. Diagonal lines (editorial sutil)
 ```css
 body {
   background-color: var(--color-bg);
@@ -40,13 +48,20 @@ body {
 }
 ```
 
-### 1d. Gradient mesh (deck dark hero)
+### 1e. Grain (feTurbulence em data-URI — quente/editorial, custo zero de rede)
+```css
+:root { --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+body::after { content: ''; position: fixed; inset: 0; background: var(--grain);
+  opacity: .06; mix-blend-mode: soft-light; pointer-events: none; z-index: 9999; }
+@media print { body::after { display: none; } }
+```
+
+### 1f. Pauta de linhas (noticioso / despacho)
 ```css
 body {
-  background-image:
-    radial-gradient(at 20% 20%, var(--color-accent-dim) 0%, transparent 50%),
-    radial-gradient(at 80% 60%, var(--color-info-dim)   0%, transparent 50%),
-    radial-gradient(at 50% 90%, var(--color-teal-dim)   0%, transparent 50%);
+  background-color: var(--color-bg);
+  background-image: repeating-linear-gradient(to bottom,
+    transparent, transparent 31px, var(--color-border) 31px, var(--color-border) 32px);
 }
 ```
 
@@ -95,15 +110,17 @@ O sistema de três profundidades sinaliza importância sem cores flashy. **Nunca
 .ve-card--teal    { border-left: 3px solid var(--color-teal); }
 .ve-card--plum    { border-left: 3px solid var(--color-plum); }
 
-/* Hover lift */
-.ve-card--hoverable:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-lg);
-  border-color: var(--color-accent);
-}
+/* Hover — POR PAPEL, nunca universal (tell hover-lift do vocabulário nao-vai-ter).
+   Card informativo não-clicável: NENHUM hover transform.
+   Card clicável: escolher 1 affordance por documento: */
+.ve-card--clickable:hover { border-color: var(--color-border-strong); }          /* contraste  */
+.ve-card--clickable.aff-draw:hover { box-shadow: inset 0 -2px 0 var(--color-accent); } /* border-draw */
+/* translateY(-Npx) como hover: APENAS card clicável E APENAS perfil de motion
+   cinemático declarado no parti — nunca como default. */
 ```
 
-### Label monospace dentro de card
+### Label monospace dentro de card — QUOTA: 1 papel por documento
+O label mono-uppercase era O tique da casa. Permitido em no máximo 1 papel por documento (kicker de seção OU th de tabela OU data de timeline). Alternativas no cardápio de labels de [direcao-de-arte.md §7](direcao-de-arte.md): small-caps com tracking, numeral de seção em serif, fio lateral.
 ```css
 .ve-card__label {
   font-family: var(--font-mono);
@@ -329,7 +346,7 @@ Todo diagrama Mermaid precisa de zoom/pan. Copiar estrutura HTML + CSS + JS abai
   font: inherit;
   font-size: 0.875rem;
   color: var(--color-fg-muted);
-  transition: all var(--duration-fast);
+  transition: background-color var(--duration-fast), border-color var(--duration-fast), color var(--duration-fast);
 }
 .zoom-btn:hover {
   background: var(--color-bg-sunken);
@@ -496,6 +513,85 @@ mermaid.initialize({
 
 CDN: `<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>`
 
+### 5.0 Bloco de defaults — OBRIGATÓRIO antes do primeiro `new Chart()`
+
+O Chart.js sem este bloco renderiza na Helvetica default com formatação en-US ("1,234.5") — o tell de IA mais imediato e mais barato de matar. Colar UMA vez, antes de qualquer gráfico:
+
+```js
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+// Fonte e cor do DOCUMENTO, nunca o default da lib
+Chart.defaults.font.family = css('--font-ui') || css('--font-text');
+Chart.defaults.font.size = 12;
+Chart.defaults.color = css('--color-fg-muted');
+
+// Formatação numérica pt-BR — consistente com o texto do documento
+// ("22.3%" no tick e "22,3%" no corpo é tell maior que qualquer fonte)
+const fmtBR  = (v, dec = 0) => v.toLocaleString('pt-BR', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+const fmtBRL = (v, suf = '') => 'R$ ' + fmtBR(v, v % 1 ? 1 : 0) + (suf ? ' ' + suf : '');
+// uso: ticks: { callback: v => fmtBRL(v, 'bi') }  →  "R$ 1,2 bi"
+
+// Tooltip tematizado (não o chrome default)
+Chart.defaults.plugins.tooltip.backgroundColor = css('--color-bg-elevated');
+Chart.defaults.plugins.tooltip.titleColor = css('--color-fg');
+Chart.defaults.plugins.tooltip.bodyColor = css('--color-fg-muted');
+Chart.defaults.plugins.tooltip.borderColor = css('--color-border-strong');
+Chart.defaults.plugins.tooltip.borderWidth = 1;
+```
+
+**Regras de design de dados (somam-se às de fidelidade abaixo):**
+- `tension`: **0 para medições discretas/regulatórias/financeiras** (trimestres, saldos, índices oficiais); ≤0.3 apenas para narrativa contínua. Nunca 0.4 por omissão.
+- `borderRadius` em barras: 0 por default — radius em barra é decisão declarada, não herança.
+- **≤3 séries → legenda default PROIBIDA**: usar rotulagem direta no fim da linha (plugin abaixo).
+- O **gráfico-tese** do documento tem ≥1 anotação desenhada (linha de referência, banda de evento ou label no ponto-chave que o texto narra).
+- Ticks numéricos herdam `tabular-nums` visualmente: usar a MESMA formatação pt-BR do texto.
+- Re-render no toggle de tema (os `css()` são lidos na criação — escutar o evento de tema e `chart.update()`).
+
+### 5.0a Plugin de direct-label (copiar, não reescrever)
+
+```js
+// Rotula cada série no fim da linha — substitui a legenda quando ≤3 séries
+const directLabel = {
+  id: 'directLabel',
+  afterDatasetsDraw(chart) {
+    const { ctx } = chart;
+    chart.data.datasets.forEach((ds, i) => {
+      const meta = chart.getDatasetMeta(i);
+      if (!meta.data.length || meta.hidden) return;
+      const last = meta.data[meta.data.length - 1];
+      ctx.save();
+      ctx.font = `600 12px ${Chart.defaults.font.family}`;
+      ctx.fillStyle = ds.borderColor;
+      ctx.textBaseline = 'middle';
+      ctx.fillText(ds.label, last.x + 8, last.y);
+      ctx.restore();
+    });
+  }
+};
+// uso: new Chart(el, { ..., plugins: [directLabel], options: { plugins: { legend: { display: false } }, layout: { padding: { right: 90 } } } })
+```
+
+### 5.0b Anotação de evento (banda ou linha de referência)
+
+```js
+// Banda sombreada marcando um período que o texto narra (ex.: "guerra comercial 2018-20")
+const eventBand = (fromLabel, toLabel, text) => ({
+  id: 'eventBand',
+  beforeDatasetsDraw(chart) {
+    const { ctx, chartArea, scales: { x } } = chart;
+    const x1 = x.getPixelForValue(fromLabel), x2 = x.getPixelForValue(toLabel);
+    ctx.save();
+    ctx.fillStyle = css('--color-warn-dim') || 'rgba(0,0,0,0.05)';
+    ctx.fillRect(x1, chartArea.top, x2 - x1, chartArea.bottom - chartArea.top);
+    ctx.font = `600 11px ${Chart.defaults.font.family}`;
+    ctx.fillStyle = css('--color-fg-muted');
+    ctx.fillText(text, x1 + 6, chartArea.top + 14);
+    ctx.restore();
+  }
+});
+// linha de referência horizontal (meta, média, limite regulatório): mesmo padrão com ctx.moveTo/lineTo no y.getPixelForValue(valor)
+```
+
 ### Regras de fidelidade (OBRIGATÓRIAS)
 
 | Regra | Correto | Errado |
@@ -540,7 +636,7 @@ new Chart(document.getElementById('chart-mixed'), {
         backgroundColor: css('--color-accent-dim'),
         borderColor: css('--color-accent'),
         borderWidth: 2,
-        borderRadius: 4,
+        borderRadius: 0, // radius em barra é decisão declarada, não default
         yAxisID: 'y',
       },
       {
@@ -552,7 +648,7 @@ new Chart(document.getElementById('chart-mixed'), {
         borderDash: [4, 4],
         pointRadius: 0,
         fill: false,
-        tension: 0.4,
+        tension: 0, // medição anual discreta — sem suavização
         yAxisID: 'y',
       }
     ]
@@ -597,7 +693,7 @@ new Chart(document.getElementById('chart-bar'), {
       backgroundColor: css('--color-accent-dim'),
       borderColor: css('--color-accent'),
       borderWidth: 2,
-      borderRadius: 6,
+      borderRadius: 0, // radius em barra é decisão declarada, não default
     }]
   },
   options: {
@@ -629,7 +725,7 @@ new Chart(document.getElementById('chart-line'), {
       data: [0.7, 0.85, 0.95, 1.1, 1.19],
       borderColor: css('--color-accent'),
       backgroundColor: css('--color-accent-dim'),
-      tension: 0.4,
+      tension: 0, // medição anual discreta — sem suavização (0.4 default é tell)
       fill: true,
       pointRadius: 5,
       pointHoverRadius: 7,
@@ -714,7 +810,7 @@ new Chart(document.getElementById('spark-1'), {
     labels: ['', '', '', '', '', ''],
     datasets: [{ data: [0.7, 0.82, 0.91, 1.0, 1.1, 1.19],
       borderColor: css('--color-accent'), borderWidth: 2,
-      tension: 0.4, pointRadius: 0, fill: false }]
+      tension: 0.3, pointRadius: 0, fill: false }] // sparkline narrativo: ≤0.3
   },
   options: { responsive: true, maintainAspectRatio: false,
     plugins: { legend: { display: false }, tooltip: { enabled: false } },
@@ -974,46 +1070,29 @@ li::marker { color: var(--color-fg-subtle); }
 
 ---
 
-## 7. Animações (entrance reveals)
+## 7. Motion — perfil do parti, nunca kit universal
+
+> v4: o fade-up universal com stagger `--i` que vivia aqui está REVOGADO — era a assinatura de motion da casa (e de toda UI gerada por IA). Motion é o eixo `motion` do bloco `<!-- slideless:parti -->`: o documento declara 1 de 3 perfis (**estático / editorial / cinemático** — CSS completo em [direcao-de-arte.md §5](direcao-de-arte.md)) e cola o bloco do perfil. O perfil determina QUAIS keyframes existem no arquivo — report estático não contém keyframe de entrada nenhum.
+
+Regras transversais (qualquer perfil):
+- `transition` sempre property-scoped — **`transition: all` é proibido**.
+- 2–3 easings nomeadas com papel comentado; nunca a mesma curva para entrada e hover.
+- Tabela, texto corrido, TOC e nav **nunca** animam entrada; quote entra seca.
+- Reveal em ≤40% das `<section>`; stagger só em grupo homogêneo (barras do mesmo gráfico), máx 1 grupo por viewport.
+- Entrada ≤500ms; micro-interação 120–200ms; só o momento assinatura excede 500ms.
+- Counter animado SÓ no número declarado como assinatura no parti.
+
+Keyframes de referência (usar apenas o que o perfil declarado pede — copiar o necessário, nunca o bloco inteiro):
 
 ```css
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(14px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+/* entrada de figura/dado (perfil editorial/cinemático) */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-@keyframes fadeScale {
-  from { opacity: 0; transform: scale(0.94); }
-  to   { opacity: 1; transform: scale(1); }
-}
+/* hero de deck cinemático — ESCOLHER 1 gesto, não empilhar */
+@keyframes heroBlur { from { opacity: 0; filter: blur(16px); } to { opacity: 1; filter: blur(0); } }
+@keyframes heroWipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
 
-@keyframes heroIn {
-  from { opacity: 0; filter: blur(16px); transform: translateY(28px) scale(0.96); }
-  to   { opacity: 1; filter: blur(0);    transform: translateY(0)    scale(1); }
-}
-
-/* Aplicar com stagger via --i CSS variable */
-.anim-fade-up {
-  animation: fadeUp 0.5s var(--ease-out) both;
-  animation-delay: calc(var(--i, 0) * 0.06s);
-}
-
-.anim-fade-scale {
-  animation: fadeScale 0.5s var(--ease-out) both;
-  animation-delay: calc(var(--i, 0) * 0.07s);
-}
-
-/* Reveal on scroll */
-[data-reveal] {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 700ms var(--ease-out),
-              transform 700ms var(--ease-out);
-  transition-delay: calc(var(--i, 0) * 60ms);
-}
-[data-reveal].is-visible { opacity: 1; transform: none; }
-
-/* Prefers-reduced-motion — OBRIGATÓRIO */
+/* Prefers-reduced-motion — OBRIGATÓRIO em todo documento com motion */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -1112,31 +1191,11 @@ li::marker { color: var(--color-fg-subtle); }
 
 ---
 
-## 10. Font Pairings — escolher por projeto
+## 10. Tipografia — usar os kits de type-kits.md
 
-Nunca usar Inter sozinho como fonte primária. Escolher um par e ser consistente.
+> v4: a tabela de pairings que vivia aqui está REVOGADA (incluía Instrument Serif — fonte-assinatura de IA de 2ª geração, hoje banida). A escolha tipográfica é a **decisão nº 2 do parti**: 1 kit completo de [type-kits.md](type-kits.md) (link com eixos limitados + tokens `--kit-*` + tabela de tracking + features OpenType + fallback de sistema). Lista de fontes banidas no topo daquele arquivo.
 
-| Pair | Uso ideal | Google Fonts link |
-|---|---|---|
-| **DM Sans + Fira Code** | Técnico, preciso | `family=DM+Sans:wght@400;500;600;700&family=Fira+Code:wght@400;500` |
-| **Instrument Serif + JetBrains Mono** | Editorial, refinado | `family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600` |
-| **IBM Plex Sans + IBM Plex Mono** | Confiável, corporativo | `family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500` |
-| **Bricolage Grotesque + Fragment Mono** | Bold, caracterful | `family=Bricolage+Grotesque:wght@400;500;600;700;800&family=Fragment+Mono` |
-| **Plus Jakarta Sans + Azeret Mono** | Arredondado, tech | `family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Azeret+Mono:wght@400;500` |
-
-Para tema itau, as fontes proprietárias (Itaú Display/Text) têm precedência dentro da rede interna. Fora da rede, o fallback automático para Inter é aceitável — mas para demos e documentos externos, considerar um dos pares acima.
-
-```html
-<!-- Exemplo: Instrument Serif + JetBrains Mono -->
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --font-display: 'Instrument Serif', Georgia, serif;
-    --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
-    /* --font-text: override para body se necessário */
-  }
-</style>
-```
+Para tema itau, Itau Display/Text têm precedência dentro da rede interna; o kit é o fallback desenhado fora dela. **O fallback automático para Inter NÃO é mais aceitável.**
 
 ---
 
@@ -1145,18 +1204,21 @@ Para tema itau, as fontes proprietárias (Itaú Display/Text) têm precedência 
 Para páginas longa com texto editorial.
 
 ```css
+/* Pull quote v4: TIPOGRAFIA, não caixinha. A versão antiga (border-left +
+   padding de caixa) é o tell do pull-quote-caixa — pull quote de estúdio não tem moldura. */
 .pull-quote {
-  border-left: 3px solid var(--color-accent);
   margin: var(--space-8) 0;
-  padding: var(--space-4) var(--space-6);
   font-family: var(--font-display);
-  font-size: var(--size-h3);
-  font-weight: 600;
-  line-height: 1.35;
-  letter-spacing: -0.015em;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-style: italic;            /* itálico VERDADEIRO da fonte do kit */
+  font-weight: 350;
+  line-height: 1.25;
+  max-width: 24ch;
   color: var(--color-fg);
-  font-style: italic;
+  hanging-punctuation: first;    /* Safari; fallback abaixo */
 }
+.pull-quote::before { content: '\201C'; margin-left: -0.45em; } /* aspas curvas penduradas */
+/* PROIBIDO: background, border-left, border-radius no pull quote */
 
 .lede {
   font-size: var(--size-lead);
@@ -1261,18 +1323,136 @@ document.querySelectorAll('[id]').forEach(el => {
 ## Checklist visual antes de entregar
 
 1. **Squint test**: blur os olhos — hierarchy ainda visível?
-2. **Swap test**: substituir fonts/cores por Inter+roxo genérico seria indistinguível?
+2. **Swap test v4**: cobrindo o logo e o laranja, este documento é distinguível do exemplo canônico do modelo e do último documento da pasta? (comparar blocos parti — capa/kit/superfície não podem coincidir com o canônico)
 3. **Ambos os temas**: light e dark funcionam sem flash ou cores quebradas?
 4. **Sem overflow**: redimensionar janela — algo fica clipado?
 5. **Informação completa**: tudo da fonte original está presente?
 6. **Mermaid zoom controls**: presente em todo diagrama Mermaid?
-7. **Tabelas HTML**: 4+ linhas ou 3+ colunas usam `<table>` (nunca ASCII)? Todas as linhas da fonte estão presentes (sem truncagem)?
-8. **Gráficos Chart.js**: dados numéricos relevantes têm representação visual? Todos os pontos/categorias da fonte estão no gráfico (sem omissão)? Eixo Y começa em 0 para magnitudes? Unidade nos ticks?
-9. **Sem slop signals** (checar):
-   - Inter font + violet/indigo accents? ✗
-   - Gradient text headings? ✗
-   - Emoji icons em seções? ✗
-   - Animated glowing box-shadows? ✗
-   - Cyan-magenta-pink on dark? ✗
-   - Grid uniforme sem hierarchy? ✗
-   - Three-dot code block chrome? ✗
+7. **Tabelas HTML**: 4+ linhas ou 3+ colunas usam `<table>` (nunca ASCII)? Todas as linhas presentes? `tabular-nums` nas células numéricas?
+8. **Gráficos Chart.js**: `Chart.defaults.font.family` setado dos tokens? Formatação pt-BR nos ticks/tooltips? Todos os pontos da fonte presentes? Eixo Y em 0 para magnitudes? Unidade nos ticks? ≤3 séries sem legenda default (direct labels)? Gráfico-tese com ≥1 anotação?
+9. **Sem slop de 1ª geração** (tells óbvios):
+   - Inter como display? ✗ · violet/indigo? ✗ · gradient text? ✗ · emoji-ícone? ✗
+   - Glowing box-shadows animados? ✗ · cyan-magenta on dark? ✗
+10. **Sem slop da casa** (tells de 2ª geração — a coocorrência denuncia):
+    - Glow radial em body::before incondicional? ✗
+    - Hover translateY em elemento não-clicável? ✗
+    - Fade-up idêntico em toda section? ✗
+    - Kicker mono-uppercase em mais de 1 papel? ✗
+    - `<em>` accent em >25% dos títulos? ✗
+    - `transition: all`? ✗ · uma única cubic-bezier no arquivo? ✗
+    - Paleta accent/info/teal/plum distribuída em sequência decorativa? ✗
+    - Tudo é card com a mesma sombra e o mesmo radius? ✗
+
+---
+
+## 13. Arsenal cutting-edge (nível A2/A3 — ver [ambicao.md](ambicao.md))
+
+> Blocos copiáveis dos momentos-wow e da materialidade. **Os 3 invariantes valem em todos:** (1) dentro de `@media (prefers-reduced-motion: no-preference)` ou com branch `reduce`; (2) dentro de `@supports` com o **estado final visível como base** (num Chrome travado nada some); (3) só animar `transform`/`opacity` (gradiente/blur só em área pequena). **report:** só grain estático + specular 1px — nada animado.
+
+### 13.1 Régua de craft (tokens — base de TODA ambição, inclusive A1)
+```css
+:root {
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);   /* entrada/saída */
+  --ease-io-strong:  cubic-bezier(0.77, 0, 0.175, 1);  /* morph/movimento */
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);         /* fallback com overshoot */
+  --dur-fast: 150ms; --dur-ui: 220ms; --dur-modal: 320ms;  /* teto 300-320ms p/ UI */
+}
+@supports (animation-timing-function: linear(0,1)) {
+  :root { --spring: linear(0, 0.006, 0.025, 0.101, 0.539, 0.826, 0.949, 1.01, 1.036, 1.022, 1, 0.994, 1); }
+}
+/* nunca scale(0) → use 0.96; entrada lenta / saída rápida; origem espacial no transform-origin do gatilho */
+```
+
+### 13.2 Materialidade — os 4 premium baratos (0KB)
+
+**Aurora mesh** (assinatura Linear/Vercel; W7):
+```css
+.aurora { position:absolute; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(40% 50% at 20% 30%, color-mix(in srgb, var(--color-accent) 22%, transparent), transparent 70%),
+    radial-gradient(45% 55% at 80% 25%, color-mix(in srgb, var(--color-info)  18%, transparent), transparent 70%),
+    radial-gradient(50% 60% at 60% 80%, color-mix(in srgb, var(--color-teal)  14%, transparent), transparent 70%);
+  background-size: 200% 200%, 200% 200%, 200% 200%; }
+@media (prefers-reduced-motion: no-preference) { .aurora { animation: auroraDrift 28s ease-in-out infinite alternate; } }
+@keyframes auroraDrift { 0%{background-position:0% 0%,100% 0%,50% 100%} 100%{background-position:100% 50%,0% 80%,30% 0%} }
+/* fallback: sem animação ainda fica lindo — é o próprio fallback do minigl (W9) */
+```
+
+**Grain `feTurbulence`** (W7 — tato de papel; mata banding):
+```css
+:root { --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+body::after { content:''; position:fixed; inset:0; z-index:9999; pointer-events:none; opacity:.06; mix-blend-mode:soft-light; background-image:var(--grain); }
+@media print { body::after { display:none; } }
+/* animado (opcional, não-report): .grain-anim::after { animation: grainShift .5s steps(8) infinite; } com translate em keyframes */
+```
+
+**Borda de luz 1px + glow** (W7 — "design system caro"):
+```css
+.lux { position:relative; border-radius:var(--radius-lg);
+  background: linear-gradient(var(--color-bg-elevated),var(--color-bg-elevated)) padding-box,
+              linear-gradient(180deg, color-mix(in srgb,var(--color-fg) 22%,transparent), transparent 40%) border-box;
+  border:1px solid transparent;
+  box-shadow: inset 0 1px 0 color-mix(in srgb,var(--color-fg) 8%,transparent), 0 20px 40px -24px rgba(0,0,0,.5); }
+@supports not (background: linear-gradient(red) padding-box) { .lux { border:1px solid var(--color-border); } }
+```
+
+**Glass com fallback** (W7 — vidro 2026; máx 3-5/viewport, nunca animar blur):
+```css
+.glass { background: color-mix(in srgb, var(--color-bg-elevated) 70%, transparent);
+  backdrop-filter: blur(20px) saturate(1.6); -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  border:1px solid color-mix(in srgb,var(--color-fg) 14%,transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb,#fff 20%,transparent), 0 8px 32px rgba(0,0,0,.2); }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass { background: var(--color-bg-elevated); }   /* fallback sólido */ }
+```
+
+**Conic glow `@property`** (Tier A — 1-2/doc, A2/A3, NÃO report):
+```css
+@property --ang { syntax:'<angle>'; initial-value:0deg; inherits:false; }
+.glow-ring::before { content:''; position:absolute; inset:-2px; border-radius:inherit; z-index:-1; filter:blur(8px); opacity:.7;
+  background: conic-gradient(from var(--ang), var(--color-accent), var(--color-info), var(--color-accent)); }
+@media (prefers-reduced-motion: no-preference) { .glow-ring::before { animation: spin 4s linear infinite; } }
+@keyframes spin { to { --ang: 360deg; } }
+/* sem @property: ângulo fica fixo (initial-value) — base bonita; é o fallback */
+```
+
+### 13.3 Scroll-driven reveal (W1/W6 — substitui o IO de reveal por CSS nativo)
+```css
+@supports (animation-timeline: view()) { @media (prefers-reduced-motion: no-preference) {
+  .reveal { animation: reveal-up linear both; animation-timeline: view(); animation-range: entry 0% cover 35%; }
+  @keyframes reveal-up { from { opacity:0; transform: translateY(24px); } to { opacity:1; transform:none; } }
+  .progress-bar { transform-origin:left; animation: grow linear both; animation-timeline: scroll(root block); }
+  @keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+}}
+.reveal { opacity:1; }   /* BASE = estado final (Chrome travado não esconde conteúdo) */
+/* manchete cinética W3 / text reveal W6 / counter sincronizado W2: ver ambicao.md (receitas completas) */
+```
+
+### 13.4 View Transitions same-document (W5 — site/hub, morph sem framework)
+```js
+function navigate(updateDOM){
+  if (!document.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches) { updateDOM(); return; }
+  document.startViewTransition(updateDOM);
+}
+```
+```css
+.card-hero{ view-transition-name: hero; } .panel-hero{ view-transition-name: hero; } /* mesmo nome → morph */
+@media (prefers-reduced-motion: reduce) { ::view-transition-group(*){ animation:none !important; } }
+/* nome único por snapshot; fallback é o guard if() — troca instantânea */
+```
+
+### 13.5 `@starting-style` — entrada de painel/toast sem JS de classe
+```css
+.panel { opacity:1; transform: translateY(0);
+  transition: opacity var(--dur-ui) var(--ease-out-strong), transform var(--dur-ui) var(--ease-out-strong),
+              display var(--dur-ui) allow-discrete, overlay var(--dur-ui) allow-discrete; }
+@starting-style { .panel[open], .panel.is-open { opacity:0; transform: translateY(12px); } }
+/* sem suporte: aparece sem animar — degradação trivial */
+```
+
+### 13.6 Anotação viva no gráfico-tese (W8 — generaliza o annoPlugin do exemplo-scrollytelling)
+```js
+// plugin Chart.js: lê objeto `anno` mutável {from,to,label,y} e desenha banda + leader-line no afterDatasetsDraw.
+// Crosshair de leitura (hover): options.onHover → linha vertical no índice + valor fmtBR. Ver §5.0b (eventBand) e exemplo-scrollytelling.
+// Fallback: desenhar a anotação no 1º render (não depender de scroll/hover).
+```

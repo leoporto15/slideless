@@ -15,13 +15,15 @@ Você foi invocado para gerar um documento `deck` (slideless). Este é o **únic
 
 ## Procedimento
 
+0. **Parti (obrigatório, antes de qualquer HTML)** — [../references/direcao-de-arte.md](../references/direcao-de-arte.md): 7 decisões + `nao-vai-ter` derivadas do CONTEÚDO do pitch (capa/kit/superfície ≠ [exemplo-deck](../assets/exemplos/exemplo-deck.html) e ≠ último deck da pasta), bloco no `<head>`. A 7ª decisão é `ambicao` ([../references/ambicao.md](../references/ambicao.md)) — **default A2-elevado** para deck; se A2/A3, o campo `momento-wow` (W1-W9 ligado ao dado-tese) é **obrigatório**. A3 só com conteúdo à altura (lançamento/all-hands).
 1. Copiar [../assets/templates/template-deck.html](../assets/templates/template-deck.html).
-2. Aplicar tema (no `itau` o Inter inclui peso 800 — `family=Inter:wght@400;500;600;700;800`).
-3. Para cada slide do roteiro, escolher layout em [../references/modelos/deck.md](../references/modelos/deck.md#layouts-de-slide) e popular.
-4. Aplicar `data-anim` com `--anim-i: N` para stagger; `data-fragment` para reveal sequencial.
-5. Keyboard nav já está no template — não duplicar nem remover.
-6. Indicador de slide (X / Y) atualizado pelo JS — verificar que `id="cur"`, `id="tot"` estão presentes.
-7. Validar e entregar em `/mnt/user-data/outputs/deck-<slug>.html`.
+2. Aplicar tema e preencher o slot `SLIDELESS:TYPE-KIT` com o kit do parti ([../references/type-kits.md](../references/type-kits.md)). PROIBIDO Inter como display.
+3. Para cada slide do roteiro, escolher layout em [../references/modelos/deck.md](../references/modelos/deck.md#layouts-de-slide) e **compor**.
+4. **Regra de ritmo (anti-pasteurização):** a cada bloco de 4-5 slides, ≥1 slide abandona o esqueleto kicker→título→corpo (número 20vw, tabela full-bleed, quote sem chrome, diagrama SVG). Kicker em ≤50% dos slides; `<em>` accent em ≤25% dos títulos; cards em ≤1/3 dos slides; ≥1 slide com assimetria real (2fr/1fr ou elemento sangrando a margem).
+5. Motion conforme o perfil do parti (cinemático: até 3 gestos POR PAPEL; quote entra seca). `data-anim`/`data-fragment` para reveals sequenciais; stagger só em grupo homogêneo.
+6. **Re-ancoragem anti-drift:** a cada ~5 slides, reler o parti — o modo de falha real é os slides finais regredirem ao grid de cards default.
+7. Keyboard nav já está no template — não duplicar nem remover. Indicador de slide (`id="cur"`, `id="tot"`) presente.
+8. Validar (categoria P) + checklist (bloco 🎨) + gate perceptual se disponível. Entregar em `outputs/deck-<slug>.html` e reportar o parti em 1 linha.
 
 ## Anti-patterns críticos
 

@@ -23,7 +23,10 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- SLIDELESS:TYPE-KIT — colar aqui o <link> do kit tipográfico escolhido em
+       references/type-kits.md (decisão do parti — references/direcao-de-arte.md).
+       PROIBIDO entregar com este slot vazio ou com Inter como fonte display. -->
+  <!-- SLIDELESS:TYPE-KIT-END -->
 
   <style>
     /* SLIDELESS:THEME */
@@ -75,14 +78,20 @@
     </nav>
 
     <div class="grid">
+      <!-- Ícone: SVG inline stroke (currentColor) ou NENHUM — NUNCA emoji/glyph (anti-pattern).
+           Trocar o path pelo ícone real do card; 22px, stroke 1.5, sem fill. -->
       <a class="card" href="#panel-1" data-category="categoria-a" data-target="panel-1">
-        <div class="card__icon" aria-hidden="true">▣</div>
+        <div class="card__icon" aria-hidden="true">
+          <svg viewBox="0 0 20 20" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17V7M9 17V3M15 17v-7"/></svg>
+        </div>
         <h3 class="card__title">Card 1</h3>
         <p class="card__desc">Descrição curta.</p>
         <span class="card__cta">Abrir →</span>
       </a>
       <a class="card" href="#panel-2" data-category="categoria-b" data-target="panel-2">
-        <div class="card__icon" aria-hidden="true">◆</div>
+        <div class="card__icon" aria-hidden="true">
+          <svg viewBox="0 0 20 20" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2.5 17 6v8l-7 3.5L3 14V6z"/></svg>
+        </div>
         <h3 class="card__title">Card 2</h3>
         <p class="card__desc">Descrição curta.</p>
         <span class="card__cta">Abrir →</span>

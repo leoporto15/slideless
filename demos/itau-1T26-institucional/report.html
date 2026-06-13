@@ -1,10 +1,29 @@
 <!DOCTYPE html>
+<!--
+  slideless / report.html — demo itau-1T26-institucional (modelo REPORT)
+  Reforma anti-slop v4: pele Broadsheet, engine intocado, conteúdo 100% preservado.
+  Perfil de motion: ESTÁTICO — zero @keyframes de entrada neste arquivo.
+-->
+<!-- slideless:parti
+conteudo: Resultados 1T26 (report) — tese: "resultado recorrente de R$ 12,3 bi (+10,4% YoY) com ROE de 24,8% — a escala centenária convertida em eficiência de 36,2%"
+registro: relatorio-de-bancada (vai virar PDF de RI; o documento argumenta com dezenas de números — performance, risco, guidance)
+kit: 01-broadsheet (Newsreader + Archivo + IBM Plex Mono — números protagonistas pedem serif de jornal + tnum)
+capa: manchete-broadsheet (capa de jornal financeiro: manchete peso 800 + dateline + fio — a manchete É o resultado do trimestre)
+superficie: flat + fio de coluna 1px; luz flat (profundidade por fio e contraste, zero sombra)
+motion: estatico (ZERO keyframes de entrada no arquivo; única transição: toggle de tema)
+ambicao: A1-contido (RI que vira PDF de resultados — sobriedade é requisito; materialidade por fio)
+assinatura: M0 — a tabela de resultados consolidados (seção 07, performance financeira do trimestre) em full-bleed broadsheet com fio duplo no total (R$ 12,3 bi)
+nao-vai-ter: glow-radial; fade-up; sombra-difusa-em-tudo
+serie: familia itau-1T26
+-->
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Apresentação Institucional Itaú · 1T26 — Relatório Institucional</title>
+  <meta name="description" content="Relatório institucional 1T26 do Itaú Unibanco — resultado recorrente de R$ 12,3 bi, ROE de 24,8%, carteira de R$ 1.483 bi, ESG, transformação digital e guidance 2026.">
 
+  <!-- Boot: lê preferência de tema antes do paint para evitar flash -->
   <script>
     (function() {
       try {
@@ -19,14 +38,22 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- SLIDELESS:TYPE-KIT — Kit 01 Broadsheet (Newsreader + Archivo + IBM Plex Mono) -->
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,500;0,6..72,800;1,6..72,400&family=Archivo:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- SLIDELESS:TYPE-KIT-END -->
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 
   <style>
-    /* ═══════════════════════════════════════════════════════════════
-       TEMA ITAU (de assets/temas/itau.css)
-       ═══════════════════════════════════════════════════════════════ */
+    /* ═══ KIT 01 — Broadsheet (ANTES do tema) ════════════════════════ */
+    :root {
+      --kit-display: 'Newsreader';    /* capa: wght 800 + opsz alto; ênfase: itálico VERDADEIRO */
+      --kit-text:    'Newsreader';    /* corpo serif 17px, registro de jornal */
+      --kit-ui:      'Archivo';       /* th, labels, dateline, ticks de gráfico */
+      --kit-mono:    'IBM Plex Mono'; /* SÓ código e carimbos */
+    }
+
+    /* ═══ TEMA ITAU v4 — camada [MARCA] (copiada, inviolável) ════════ */
     :root {
       --itau-orange:     #FF6200;
       --itau-orange-2:   #F88104;
@@ -40,10 +67,10 @@
       --color-accent-fg:     #ffffff;
       --color-info:          var(--itau-blue-3);
       --color-info-dim:      rgba(59, 133, 250, 0.08);
-      --color-success:       #4d7c0f;
-      --color-success-dim:   rgba(77, 124, 15, 0.08);
-      --color-sage:          #65a30d;
-      --color-sage-dim:      rgba(101, 163, 13, 0.08);
+      --color-success:       #3f6f1f;
+      --color-success-dim:   rgba(63, 111, 31, 0.08);
+      --color-sage:          var(--color-success);
+      --color-sage-dim:      var(--color-success-dim);
       --color-teal:          #0f766e;
       --color-teal-dim:      rgba(15, 118, 110, 0.08);
       --color-plum:          #9f1239;
@@ -63,45 +90,46 @@
       --color-border-strong: rgba(41, 32, 23, 0.18);
       --color-accent-hover:  var(--itau-orange-2);
 
-      --glow-warm:    radial-gradient(ellipse 80% 60% at 80% 0%, rgba(255, 98, 0, 0.10) 0%, transparent 55%);
-      --glow-cool:    radial-gradient(ellipse 70% 50% at 20% 100%, rgba(59, 133, 250, 0.08) 0%, transparent 55%);
+      /* [DIREÇÃO — parti: flat] Sem glow, sem sombra, sem vinheta.
+         Profundidade = fio 1px + contraste de peso tipográfico. */
 
-      --font-text:    'Inter', -apple-system, system-ui, sans-serif;
-      --font-display: 'Fraunces', Georgia, serif;
-      --font-mono:    'JetBrains Mono', 'IBM Plex Mono', 'SF Mono', Consolas, monospace;
+      /* [DIREÇÃO] Tipografia — slots do kit */
+      --font-display: 'Itau Display', var(--kit-display, Georgia), serif;
+      --font-text:    'Itau Text', var(--kit-text, Georgia, 'Times New Roman'), serif;
+      --font-ui:      'Itau Text', var(--kit-ui, 'Segoe UI', Arial), sans-serif;
+      --font-mono:    var(--kit-mono, Consolas), monospace;
 
-      /* Escala editorial fixa — sem clamp grande (report ≠ deck) */
-      --size-xs:      0.8125rem;
-      --size-small:   0.9375rem;
-      --size-body:    1rem;
-      --size-lead:    1.1875rem;
-      --size-h4:      1.0625rem;
-      --size-h3:      1.25rem;
-      --size-h2:      1.75rem;
-      --size-h1:      2.5rem;
+      /* [SISTEMA] Escala editorial fixa — sem clamp grande (report ≠ deck) */
+      --size-xs:      0.75rem;
+      --size-small:   0.875rem;
+      --size-body:    1.0625rem;
+      --size-lead:    clamp(1.2rem, 1.1rem + 0.4vw, 1.4rem);
+      --size-h4:      1.125rem;
+      --size-h3:      1.3125rem;
+      --size-h2:      clamp(1.6rem, 1.4rem + 0.8vw, 2rem);
+      --size-h1:      clamp(2.5rem, 2rem + 1.8vw, 3.6rem);
 
       --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem;
       --space-4: 1rem;    --space-5: 1.5rem; --space-6: 2rem;
       --space-7: 2.5rem;  --space-8: 3rem;   --space-10: 4rem;
       --space-12: 5rem;   --space-16: 7rem;
 
-      --content-max: 800px;
-      --header-h:    64px;
+      /* [SISTEMA] Tokens do report */
+      --report-max:      780px;
+      --report-bleed:    1080px;
+      --report-gutter:   var(--space-6);
+      --header-h:        56px;
 
+      /* [DIREÇÃO] 1 único radius no documento (foco + toggle) */
       --radius-sm: 4px;
-      --radius:    10px;
-      --radius-lg: 16px;
 
-      --shadow-xs: 0 1px 2px rgba(41, 32, 23, 0.04);
-      --shadow-sm: 0 2px 4px rgba(41, 32, 23, 0.06), 0 1px 2px rgba(41, 32, 23, 0.04);
-      --shadow:    0 4px 12px rgba(41, 32, 23, 0.08), 0 1px 3px rgba(41, 32, 23, 0.05);
-      --shadow-lg: 0 12px 32px rgba(41, 32, 23, 0.12), 0 4px 12px rgba(41, 32, 23, 0.06);
-      --inset-sm:  inset 0 1px 3px rgba(41, 32, 23, 0.06);
+      /* Motion (perfil estático): 1 easing, papel comentado */
+      --ease-snap: cubic-bezier(0.2, 0, 0, 1); /* papel: micro-interação (toggle de tema) */
+      --duration-fast: 150ms;
 
-      --ease-out:       cubic-bezier(0.22, 1, 0.36, 1);
-      --duration-fast:  150ms;
-      --duration:       250ms;
-      --duration-hero:  900ms;
+      /* Fio duplo contábil — motivo gráfico do documento
+         (masthead da capa → total da tabela-protagonista → fechamento) */
+      --fio-duplo: 3px double var(--color-fg);
     }
 
     [data-theme="dark"] {
@@ -118,26 +146,43 @@
       --color-accent-fg:     #14110d;
       --color-accent-dim:    rgba(250, 159, 9, 0.10);
       --color-info-dim:      rgba(59, 133, 250, 0.12);
-      --color-success:       #a3e635;
-      --color-success-dim:   rgba(163, 230, 53, 0.10);
-      --color-sage:          #bef264;
-      --color-sage-dim:      rgba(190, 242, 100, 0.10);
-      --color-teal:          #5eead4;
-      --color-teal-dim:      rgba(94, 234, 212, 0.10);
-      --color-plum:          #fb7185;
-      --color-plum-dim:      rgba(251, 113, 133, 0.10);
+      --color-success:       #8fcc5a;
+      --color-success-dim:   rgba(143, 204, 90, 0.10);
+      --color-sage:          var(--color-success);
+      --color-sage-dim:      var(--color-success-dim);
+      --color-teal:          #6fd0c0;
+      --color-teal-dim:      rgba(111, 208, 192, 0.10);
+      --color-plum:          #e8889c;
+      --color-plum-dim:      rgba(232, 136, 156, 0.10);
       --color-warn-dim:      rgba(251, 195, 5, 0.12);
       --color-danger:        #f87171;
       --color-danger-dim:    rgba(248, 113, 113, 0.10);
-      --shadow-sm: 0 2px 4px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
-      --shadow:    0 4px 12px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.3);
-      --shadow-lg: 0 12px 32px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.3);
-      --inset-sm:  inset 0 1px 3px rgba(0,0,0,0.4);
-      --glow-warm:    radial-gradient(ellipse 80% 60% at 80% 0%, rgba(250, 159, 9, 0.18) 0%, transparent 55%);
-      --glow-cool:    radial-gradient(ellipse 70% 50% at 20% 100%, rgba(59, 133, 250, 0.14) 0%, transparent 55%);
     }
 
-    /* ═══ Reset base ═══ */
+    @supports (color: oklch(60% 0.1 50)) {
+      :root {
+        --color-success: oklch(52% 0.11 140);
+        --color-success-dim: oklch(52% 0.11 140 / 0.08);
+        --color-teal:    oklch(52% 0.08 200);
+        --color-teal-dim: oklch(52% 0.08 200 / 0.08);
+        --color-plum:    oklch(46% 0.12 355);
+        --color-plum-dim: oklch(46% 0.12 355 / 0.08);
+        --color-danger:  oklch(50% 0.16 27);
+        --color-danger-dim: oklch(50% 0.16 27 / 0.08);
+      }
+      [data-theme="dark"] {
+        --color-success: oklch(76% 0.13 140);
+        --color-success-dim: oklch(76% 0.13 140 / 0.10);
+        --color-teal:    oklch(78% 0.09 195);
+        --color-teal-dim: oklch(78% 0.09 195 / 0.10);
+        --color-plum:    oklch(74% 0.11 0);
+        --color-plum-dim: oklch(74% 0.11 0 / 0.10);
+        --color-danger:  oklch(70% 0.15 25);
+        --color-danger-dim: oklch(70% 0.15 25 / 0.10);
+      }
+    }
+
+    /* ═══ MODELO REPORT — superfície flat, luz por fio ═══════════════ */
     *, *::before, *::after { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
@@ -147,11 +192,11 @@
       line-height: 1.7;
       color: var(--color-fg);
       background: var(--color-bg);
-      background-image: var(--glow-warm), var(--glow-cool);
-      background-attachment: fixed;
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
-      transition: background var(--duration-fast), color var(--duration-fast);
+      font-variant-numeric: oldstyle-nums proportional-nums; /* corpo: onum/pnum (kit 01) */
+      transition: background-color var(--duration-fast) var(--ease-snap),
+                  color var(--duration-fast) var(--ease-snap);
     }
     :focus-visible {
       outline: 2px solid var(--color-accent);
@@ -161,296 +206,271 @@
     h1, h2, h3, h4 {
       font-family: var(--font-display);
       color: var(--color-fg);
-      line-height: 1.15;
-      letter-spacing: -0.022em;
-      font-weight: 700;
-      font-feature-settings: 'ss01';
+      line-height: 1.12;
+      text-wrap: balance;
+      font-variant-numeric: lining-nums;
     }
-    p { margin: 0 0 var(--space-4); color: var(--color-fg); max-width: 68ch; }
+    p { margin: 0 0 var(--space-4); color: var(--color-fg); max-width: 68ch; text-wrap: pretty; }
     a { color: var(--color-accent); text-decoration: none; }
     a:hover { color: var(--color-accent-hover); text-decoration: underline; text-underline-offset: 3px; }
     strong { font-weight: 700; color: var(--color-fg); }
-    em { color: var(--color-accent); font-style: italic; }
+    /* Ênfase broadsheet: itálico VERDADEIRO da Newsreader + peso — nunca cor accent */
+    em { font-style: italic; font-weight: 500; color: inherit; }
 
-    /* ═══ Header sticky ═══ */
+    /* Label: Archivo caps com tracking (cardápio §7, opção 2 — sem dot) */
+    .label-caps {
+      font-family: var(--font-ui);
+      font-size: var(--size-xs);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-fg-subtle);
+      font-variant-numeric: lining-nums;
+    }
+
+    /* ═══ Header sticky (chrome de tela; some no print) ═══ */
     .report-header {
       position: sticky; top: 0; z-index: 100;
       height: var(--header-h);
-      background: rgba(250, 247, 245, 0.88);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-bottom: 1px solid var(--color-border);
+      background: var(--color-bg);
+      border-bottom: 1px solid var(--color-border-strong);
       display: flex; align-items: center; justify-content: space-between;
-      padding: 0 var(--space-8); gap: var(--space-6);
-    }
-    [data-theme="dark"] .report-header { background: rgba(20, 17, 13, 0.88); }
-    .report-header::after {
-      content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, var(--color-accent) 0%, var(--itau-orange-3) 50%, transparent 100%);
-      opacity: 0.6;
+      padding: 0 var(--report-gutter); gap: var(--space-6);
     }
     .report-header__brand { display: flex; align-items: center; gap: var(--space-4); min-width: 0; }
     .report-header__logo {
-      width: 36px; height: 36px; border-radius: var(--radius-sm);
+      width: 32px; height: 32px;
       background: var(--color-accent);
       display: grid; place-items: center;
       font-family: var(--font-display); font-weight: 800;
-      color: #fff; font-size: 0.95rem; letter-spacing: -0.03em;
+      color: var(--color-accent-fg); font-size: 1rem;
       flex-shrink: 0;
     }
     .report-header__txt { min-width: 0; }
-    .report-header__org { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; color: var(--color-fg); letter-spacing: -0.02em; }
-    .report-header__doc { margin: 0; font-size: var(--size-xs); color: var(--color-fg-muted); font-family: var(--font-mono); }
+    .report-header__org {
+      margin: 0; font-family: var(--font-ui); font-weight: 700;
+      font-size: var(--size-small); color: var(--color-fg);
+    }
+    .report-header__doc {
+      margin: 0; font-family: var(--font-ui); font-size: var(--size-xs);
+      color: var(--color-fg-subtle); letter-spacing: 0.04em; text-transform: uppercase;
+      font-variant-numeric: lining-nums;
+    }
     .report-header__meta { display: flex; align-items: center; gap: var(--space-4); }
-    .report-header__date { margin: 0; font-size: var(--size-small); color: var(--color-fg-muted); font-weight: 500; }
+    .report-header__date {
+      margin: 0; font-family: var(--font-ui); font-size: var(--size-small);
+      color: var(--color-fg-muted); font-weight: 500;
+    }
     .theme-toggle {
-      width: 36px; height: 36px;
+      width: 34px; height: 34px;
       display: grid; place-items: center;
       background: var(--color-bg-elevated);
       border: 1px solid var(--color-border);
-      border-radius: 999px; cursor: pointer;
+      border-radius: var(--radius-sm); cursor: pointer;
       color: var(--color-fg); font-size: 14px;
-      transition: all var(--duration-fast);
+      /* única micro-interação do documento (perfil estático) */
+      transition: background-color var(--duration-fast) var(--ease-snap),
+                  border-color var(--duration-fast) var(--ease-snap);
     }
-    .theme-toggle:hover { background: var(--color-bg-sunken); border-color: var(--color-border-strong); transform: translateY(-1px); }
+    .theme-toggle:hover { background: var(--color-bg-sunken); border-color: var(--color-border-strong); }
 
-    /* ═══ Cover ═══ */
+    /* ═══ Capa: manchete-broadsheet (fio duplo + dateline + peso 800) ═══ */
     .report-cover {
-      max-width: var(--content-max);
-      margin: 0 auto;
-      padding: var(--space-12) var(--space-8) var(--space-10);
-      border-bottom: 1px solid var(--color-border);
+      max-width: var(--report-max);
+      margin: var(--space-8) auto 0;
+      padding: 0 var(--report-gutter) var(--space-10);
+      border-bottom: 1px solid var(--color-border-strong);
     }
-    .report-cover__kicker {
-      font-family: var(--font-mono);
-      font-size: var(--size-xs);
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--color-accent);
-      margin: 0 0 var(--space-5);
-      display: inline-flex; align-items: center; gap: 8px;
+    .report-cover__masthead {
+      display: flex; align-items: baseline; justify-content: space-between;
+      gap: var(--space-4); flex-wrap: wrap;
+      border-top: var(--fio-duplo);
+      border-bottom: 1px solid var(--color-border-strong);
+      padding: var(--space-3) 0;
+      margin-bottom: var(--space-8);
     }
-    .report-cover__kicker::before {
-      content: ''; width: 6px; height: 6px; border-radius: 50%;
-      background: var(--color-accent);
-    }
+    .report-cover__kicker { margin: 0; color: var(--color-fg-muted); }
+    .report-cover__date { margin: 0; color: var(--color-fg-subtle); }
     .report-cover__title {
-      font-family: var(--font-display);
       font-size: var(--size-h1);
       font-weight: 800;
-      letter-spacing: -0.032em;
-      line-height: 1.05;
-      margin: 0 0 var(--space-4);
-      color: var(--color-fg);
-      max-width: 22ch;
+      letter-spacing: -0.025em;          /* tracking display (kit 01) */
+      line-height: 1.04;
+      margin: 0 0 var(--space-5);
+      max-width: 20ch;
     }
     .report-cover__subtitle {
       font-family: var(--font-display);
       font-size: var(--size-lead);
-      color: var(--color-fg-muted);
+      font-style: italic;                 /* itálico verdadeiro Newsreader */
       font-weight: 400;
-      margin: 0 0 var(--space-7);
-      max-width: 50ch;
+      color: var(--color-fg-muted);
+      margin: 0 0 var(--space-8);
+      max-width: 52ch;
       line-height: 1.45;
     }
     .report-cover__meta {
       display: flex; flex-wrap: wrap;
       gap: var(--space-7);
-      padding-top: var(--space-5);
+      padding-top: var(--space-4);
       border-top: 1px solid var(--color-border);
     }
     .report-cover__meta div { display: flex; flex-direction: column; gap: 4px; }
     .report-cover__meta strong {
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
+      font-family: var(--font-ui);
+      font-size: var(--size-xs);
       text-transform: uppercase;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.08em;
       color: var(--color-fg-subtle);
-      font-weight: 600;
+      font-weight: 500;
     }
     .report-cover__meta span {
       font-size: var(--size-small);
       color: var(--color-fg);
       font-weight: 500;
+      font-variant-numeric: lining-nums;
     }
 
-    /* ═══ Sumário executivo ═══ */
+    /* ═══ Sumário executivo — bloco editorial, fio e contraste ═══ */
     .report-summary {
-      max-width: var(--content-max);
+      max-width: var(--report-max);
       margin: var(--space-10) auto var(--space-10);
-      padding: 0 var(--space-8);
+      padding: 0 var(--report-gutter);
     }
-    .report-summary__inner {
-      background: var(--color-bg-elevated);
-      border-left: 4px solid var(--color-accent);
-      border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
-      padding: var(--space-8);
-      box-shadow: var(--shadow-lg);
-      position: relative;
-      overflow: hidden;
-    }
-    .report-summary__inner::before {
-      content: '';
-      position: absolute;
-      top: 0; right: 0;
-      width: 300px; height: 300px;
-      background: radial-gradient(circle, var(--color-accent-dim) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    .report-summary__label {
-      font-size: var(--size-xs);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--color-accent);
-      margin: 0 0 var(--space-4);
-      font-family: var(--font-mono);
-    }
+    .report-summary__label { margin: 0 0 var(--space-5); color: var(--color-accent); }
     .report-summary__lead {
       font-family: var(--font-display);
       font-size: var(--size-lead);
-      line-height: 1.55;
+      line-height: 1.5;
       color: var(--color-fg);
       margin: 0 0 var(--space-5);
-      max-width: 60ch;
-      font-weight: 400;
+      max-width: 58ch;
+      font-weight: 300;                  /* contraste de peso 300↔700 (kit 01) */
     }
-    .report-summary__lead strong { color: var(--color-accent); font-weight: 700; }
-    .report-summary p { font-size: var(--size-body); margin: 0 0 var(--space-4); max-width: 65ch; color: var(--color-fg-muted); }
-    .report-summary p:last-of-type { margin-bottom: var(--space-6); }
+    .report-summary__lead strong { font-weight: 800; color: var(--color-fg); }
+    .report-summary p:not(.report-summary__lead):not(.report-summary__label) {
+      font-size: var(--size-body);
+      margin: 0 0 var(--space-4);
+      max-width: 66ch;
+      color: var(--color-fg);
+      hyphens: auto; -webkit-hyphens: auto;
+    }
     .report-summary__kpis {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: var(--space-5);
+      margin-top: var(--space-7);
       padding-top: var(--space-5);
-      border-top: 1px solid var(--color-border);
-      position: relative;
+      border-top: 1px solid var(--color-border-strong);
     }
-    .summary-kpi { border-top: 2px solid var(--color-border-strong); padding-top: var(--space-3); }
+    .summary-kpi { border-top: 2px solid var(--color-fg); padding-top: var(--space-3); }
     .summary-kpi__val {
       font-family: var(--font-display);
-      font-size: 1.85rem;
+      font-size: 1.7rem;
       font-weight: 800;
-      color: var(--color-accent);
+      color: var(--color-fg);
       margin: 0 0 var(--space-1);
-      letter-spacing: -0.03em;
-      line-height: 1;
+      letter-spacing: -0.01em;
+      line-height: 1.05;
+      font-variant-numeric: tabular-nums lining-nums;
     }
     .summary-kpi__label {
       font-size: var(--size-xs);
+      font-family: var(--font-ui);
       color: var(--color-fg-muted);
       margin: 0;
-      font-weight: 500;
-      max-width: 22ch;
-      line-height: 1.4;
+      max-width: 24ch;
+      line-height: 1.45;
     }
 
-    /* ═══ TOC numerado ═══ */
+    /* ═══ TOC numerada (gerada por JS; some no print) ═══ */
     .report-toc {
-      max-width: var(--content-max);
-      margin: 0 auto var(--space-10);
-      padding: var(--space-5) var(--space-8);
-      background: var(--color-bg-sunken);
-      border-top: 1px solid var(--color-border);
-      border-bottom: 1px solid var(--color-border);
+      max-width: var(--report-max);
+      margin: 0 auto var(--space-12);
+      padding: var(--space-5) var(--report-gutter) 0;
+      border-top: 1px solid var(--color-border-strong);
     }
-    .report-toc__heading {
-      font-family: var(--font-mono);
-      font-size: var(--size-xs);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--color-fg-subtle);
-      margin: 0 0 var(--space-4);
-    }
+    .report-toc__heading { margin: 0 0 var(--space-3); }
     .report-toc__list {
       list-style: none;
       padding: 0;
       margin: 0;
       columns: 2;
-      column-gap: var(--space-6);
+      column-gap: var(--space-8);
     }
-    .report-toc__list li {
-      margin-bottom: var(--space-2);
-      break-inside: avoid;
-    }
+    .report-toc__list li { break-inside: avoid; border-bottom: 1px solid var(--color-border); }
     .report-toc__list a {
       display: flex;
       align-items: baseline;
-      gap: var(--space-3);
+      gap: var(--space-4);
       font-size: var(--size-small);
-      color: var(--color-fg-muted);
+      color: var(--color-fg);
       text-decoration: none;
-      padding: var(--space-1) 0;
-      border-bottom: 1px dotted var(--color-border);
-      transition: color var(--duration-fast);
+      padding: var(--space-2) 0;
+      transition: color var(--duration-fast) var(--ease-snap); /* micro-interação */
     }
     .report-toc__list a:hover,
-    .report-toc__list a.is-active {
-      color: var(--color-accent);
-      border-color: var(--color-accent);
-    }
+    .report-toc__list a.is-active { color: var(--color-accent); }
     .toc-num {
-      font-family: var(--font-mono);
-      font-size: var(--size-xs);
-      color: var(--color-accent);
-      font-weight: 700;
+      font-family: var(--font-display);
+      font-variant-numeric: oldstyle-nums;
+      font-size: 1rem;
+      color: var(--color-fg-subtle);
       flex-shrink: 0;
-      min-width: 2ch;
+      min-width: 2.2ch;
     }
 
     /* ═══ Corpo + seções ═══ */
     .report-body {
-      max-width: var(--content-max);
+      max-width: var(--report-max);
       margin: 0 auto;
-      padding: var(--space-6) var(--space-8);
+      padding: 0 var(--report-gutter);
     }
+    .report-body > .report-section > p { hyphens: auto; -webkit-hyphens: auto; }
     .report-section {
-      margin-bottom: var(--space-12);
+      margin-bottom: var(--space-16);
       scroll-margin-top: calc(var(--header-h) + var(--space-4));
     }
+    /* Numeral de seção: Newsreader old-style grande, sem caixa, sem dot (§7, opção 3) */
     .section-header {
       display: flex;
-      align-items: flex-end;
+      align-items: baseline;
       gap: var(--space-5);
       margin-bottom: var(--space-6);
       padding-bottom: var(--space-4);
-      border-bottom: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border-strong);
     }
     .section-num {
-      font-family: var(--font-mono);
-      font-size: 3.5rem;
-      color: var(--color-border-strong);
-      line-height: 0.85;
+      font-family: var(--font-display);
+      font-variant-numeric: oldstyle-nums;
+      font-size: 3.25rem;
       font-weight: 400;
+      line-height: 0.9;
+      color: var(--color-fg-subtle);
       flex-shrink: 0;
       user-select: none;
-      letter-spacing: -0.02em;
     }
     .report-section h2 {
       font-size: var(--size-h2);
-      font-weight: 700;
+      font-weight: 800;
+      letter-spacing: -0.01em;           /* tracking heading (kit 01) */
       margin: 0;
-      letter-spacing: -0.025em;
-      color: var(--color-fg);
     }
     .report-section h3 {
       font-size: var(--size-h3);
-      font-weight: 700;
+      font-weight: 500;
+      letter-spacing: -0.005em;
       margin: var(--space-7) 0 var(--space-3);
-      color: var(--color-fg);
     }
     .report-section h4 {
       font-size: var(--size-h4);
-      font-weight: 600;
+      font-weight: 500;
       margin: var(--space-5) 0 var(--space-2);
-      color: var(--color-fg);
     }
     .report-section ul, .report-section ol {
       padding-left: var(--space-5);
       margin: 0 0 var(--space-5);
-      color: var(--color-fg-muted);
+      color: var(--color-fg);
     }
     .report-section li {
       margin-bottom: var(--space-2);
@@ -459,110 +479,102 @@
     }
     .report-section li::marker { color: var(--color-fg-subtle); }
 
-    /* ═══ Pull quote ═══ */
+    /* ═══ Pull quote display, sem caixa (aspas penduradas) ═══ */
     .report-pullquote {
-      border-left: 4px solid var(--color-accent);
-      background: var(--color-accent-dim);
-      padding: var(--space-5) var(--space-6);
-      margin: var(--space-7) 0;
-      border-radius: 0 var(--radius) var(--radius) 0;
+      margin: var(--space-8) 0;
+      padding: 0 0 0 var(--space-6);
+      border-left: 1px solid var(--color-border-strong);
     }
     .report-pullquote p {
       font-family: var(--font-display);
       font-size: var(--size-lead);
       font-style: italic;
+      font-weight: 400;
       color: var(--color-fg);
       line-height: 1.45;
       margin: 0 0 var(--space-2);
-      max-width: 60ch;
+      max-width: 54ch;
+      text-indent: -0.45ch;              /* aspas penduradas */
     }
     .report-pullquote cite {
-      font-size: var(--size-small);
-      color: var(--color-fg-muted);
+      font-family: var(--font-ui);
+      font-size: var(--size-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-fg-subtle);
       font-style: normal;
       font-weight: 500;
     }
 
-    /* ═══ Callouts ═══ */
+    /* ═══ Callouts — nota tipográfica flat, fio 2px ═══ */
     .callout {
-      display: flex;
-      gap: var(--space-4);
       padding: var(--space-4) var(--space-5);
-      margin: var(--space-5) 0;
-      border-left: 3px solid;
-      border-radius: var(--radius);
+      margin: var(--space-6) 0;
+      border-left: 2px solid;
       break-inside: avoid;
     }
-    .callout--info    { background: var(--color-info-dim);    border-color: var(--color-info); }
-    .callout--tip     { background: var(--color-success-dim); border-color: var(--color-success); }
-    .callout--warn    { background: var(--color-warn-dim);    border-color: var(--color-warn); }
-    .callout__icon {
-      flex-shrink: 0; width: 22px; height: 22px;
-      display: grid; place-items: center;
-      border-radius: 50%; font-weight: 700;
-      font-size: 0.7rem; color: white; margin-top: 2px;
+    .callout--info { background: var(--color-info-dim);    border-color: var(--color-info); }
+    .callout--tip  { background: var(--color-success-dim); border-color: var(--color-success); }
+    .callout--warn { background: var(--color-warn-dim);    border-color: var(--color-warn); }
+    .callout__content { min-width: 0; }
+    .callout__title {
+      font-family: var(--font-ui);
+      font-weight: 700;
+      margin: 0 0 var(--space-1);
+      font-size: var(--size-small);
+      color: var(--color-fg);
     }
-    .callout--info   .callout__icon { background: var(--color-info); }
-    .callout--tip    .callout__icon { background: var(--color-success); }
-    .callout--warn   .callout__icon { background: var(--color-warn); color: var(--itau-warm-black); }
-    .callout__content { flex: 1; min-width: 0; }
-    .callout__title { font-weight: 700; margin: 0 0 var(--space-1); font-size: var(--size-small); color: var(--color-fg); font-family: var(--font-text); }
     .callout__content p { margin: 0; font-size: var(--size-small); color: var(--color-fg-muted); }
 
-    /* ═══ Tabelas ═══ */
-    .table-wrap {
-      overflow-x: auto;
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--color-border);
-      box-shadow: var(--shadow-sm);
-      margin: var(--space-5) 0;
-      break-inside: avoid;
-    }
+    /* ═══ Tabelas broadsheet: sem card, sem radius, sem sombra ═══ */
+    .table-wrap { overflow-x: auto; margin: var(--space-6) 0; break-inside: avoid; }
     table.data-table {
       width: 100%;
       border-collapse: collapse;
       font-size: var(--size-small);
-      background: var(--color-bg-elevated);
-    }
-    table.data-table thead {
-      background: var(--color-bg-sunken);
+      border-top: 2px solid var(--color-fg);
+      margin: 0;
     }
     table.data-table th {
-      padding: var(--space-3) var(--space-4);
-      text-align: left;
+      font-family: var(--font-ui);
       font-size: var(--size-xs);
-      font-weight: 700;
+      font-weight: 500;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--color-fg-subtle);
-      border-bottom: 2px solid var(--color-border-strong);
-      white-space: nowrap;
-      font-family: var(--font-mono);
-    }
-    table.data-table th.num { text-align: right; }
-    table.data-table td {
-      padding: var(--space-3) var(--space-4);
-      border-bottom: 1px solid var(--color-border);
+      letter-spacing: 0.07em;
       color: var(--color-fg-muted);
+      text-align: left;
+      padding: var(--space-3) var(--space-4) var(--space-2) 0;
+      border-bottom: 1px solid var(--color-border-strong);
+      vertical-align: bottom;
+    }
+    table.data-table td {
+      padding: var(--space-3) var(--space-4) var(--space-3) 0;
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-fg);
       vertical-align: top;
       line-height: 1.5;
     }
+    table.data-table th:last-child, table.data-table td:last-child { padding-right: 0; }
+    table.data-table th.num { text-align: right; }
     table.data-table td.num {
       text-align: right;
-      font-family: var(--font-mono);
-      font-variant-numeric: tabular-nums;
+      font-variant-numeric: tabular-nums lining-nums;
+      white-space: nowrap;
       color: var(--color-fg);
     }
-    table.data-table tbody tr:nth-child(even) td { background: rgba(41, 32, 23, 0.02); }
-    [data-theme="dark"] table.data-table tbody tr:nth-child(even) td { background: rgba(237, 229, 221, 0.02); }
-    table.data-table tbody tr:hover td { background: var(--color-accent-dim); }
-    table.data-table tbody tr:last-child td { border-bottom: none; }
     table.data-table tr.is-emphasis td {
-      background: var(--color-accent-dim) !important;
       font-weight: 700;
       color: var(--color-fg);
+      border-top: 1px solid var(--color-border-strong);
+      border-bottom: 1px solid var(--color-border-strong);
     }
-    table.data-table tr.is-emphasis td.num { color: var(--color-accent); }
+    /* Linha de total — fio duplo contábil (motivo do documento) */
+    table.data-table tr.is-total td {
+      border-top: var(--fio-duplo);
+      border-bottom: none;
+      font-weight: 700;
+      padding-top: var(--space-3);
+    }
     .td-strong { font-weight: 700; color: var(--color-fg); }
     .td-sub {
       display: block;
@@ -572,50 +584,70 @@
       margin-top: 2px;
     }
 
-    /* ═══ Badges ═══ */
-    .badge {
-      display: inline-flex; align-items: center; gap: 4px;
-      padding: 2px 8px; border-radius: 999px;
-      font-size: 0.7rem; font-weight: 700;
-      font-family: var(--font-mono); white-space: nowrap;
-      text-transform: uppercase; letter-spacing: 0.04em;
+    /* Assinatura M0 — tabela de resultados em full-bleed broadsheet */
+    .bleed {
+      width: min(var(--report-bleed), calc(100vw - 2 * var(--report-gutter)));
+      margin-left: calc((100% - min(var(--report-bleed), calc(100vw - 2 * var(--report-gutter)))) / 2);
     }
-    .badge::before {
-      content: ''; width: 5px; height: 5px; border-radius: 50%;
-      background: currentColor; flex-shrink: 0;
+    .data-table--protagonista .td-strong {
+      font-family: var(--font-display);
+      font-weight: 500;
+      font-size: 1.0625rem;
+      letter-spacing: -0.005em;
     }
-    .badge-accent   { background: var(--color-accent-dim);   color: var(--color-accent); }
-    .badge-info     { background: var(--color-info-dim);     color: var(--color-info); }
-    .badge-success  { background: var(--color-success-dim);  color: var(--color-success); }
-    .badge-teal     { background: var(--color-teal-dim);     color: var(--color-teal); }
-    .badge-plum     { background: var(--color-plum-dim);     color: var(--color-plum); }
-    .badge-warn     { background: var(--color-warn-dim);     color: var(--color-fg-muted); }
-    .badge-danger   { background: var(--color-danger-dim);   color: var(--color-danger); }
+    .data-table--protagonista td { padding-top: var(--space-4); padding-bottom: var(--space-4); }
+    .data-table--protagonista td:nth-child(2) {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.25rem;
+      letter-spacing: -0.01em;
+    }
+    .data-table--protagonista tr.is-total td:nth-child(2) { font-size: 1.45rem; }
+    .data-table--protagonista tr.is-total .td-strong { font-weight: 800; }
 
-    /* ═══ Figura (Chart.js) ═══ */
+    /* ═══ Tags semânticas (ex-badges): Archivo caps, sem pill, sem dot ═══ */
+    .badge {
+      font-family: var(--font-ui);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      white-space: nowrap;
+      font-variant-numeric: lining-nums;
+    }
+    .badge-accent  { color: var(--color-accent); }
+    .badge-info    { color: var(--color-info); }
+    .badge-success { color: var(--color-success); }
+    .badge-teal    { color: var(--color-teal); }
+    .badge-plum    { color: var(--color-plum); }
+    .badge-warn    { color: var(--color-fg-muted); }
+    .badge-danger  { color: var(--color-danger); }
+
+    /* ═══ Figura (Chart.js) — flat: fio, não card ═══ */
     .report-figure {
-      background: var(--color-bg-elevated);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-lg);
-      padding: var(--space-6);
-      box-shadow: var(--shadow-sm);
-      margin: var(--space-6) 0;
+      margin: var(--space-7) 0;
+      padding: var(--space-5) 0;
+      border-top: 1px solid var(--color-border-strong);
+      border-bottom: 1px solid var(--color-border);
       break-inside: avoid;
     }
     .report-figure__title {
       font-family: var(--font-display);
       font-size: var(--size-h3);
-      font-weight: 700;
+      font-weight: 500;
+      letter-spacing: -0.005em;
       margin: 0 0 var(--space-1);
       color: var(--color-fg);
+      text-wrap: balance;
     }
     .report-figure__subtitle {
+      font-family: var(--font-ui);
       font-size: var(--size-xs);
       color: var(--color-fg-subtle);
       margin: 0 0 var(--space-5);
-      font-family: var(--font-mono);
       letter-spacing: 0.04em;
       text-transform: uppercase;
+      font-variant-numeric: lining-nums;
     }
     .chart-inner { position: relative; height: 320px; }
     .chart-inner-tall { position: relative; height: 420px; }
@@ -624,172 +656,141 @@
       padding-top: var(--space-3);
       border-top: 1px solid var(--color-border);
       font-size: var(--size-xs);
+      font-family: var(--font-ui);
       color: var(--color-fg-subtle);
       line-height: 1.5;
     }
     .report-figure figcaption strong { color: var(--color-fg-muted); font-weight: 700; }
 
-    /* ═══ Cards/KPIs em grid ═══ */
+    /* ═══ KPIs em grid — friso broadsheet, fio no topo ═══ */
     .metrics-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: var(--space-4);
-      margin: var(--space-5) 0;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: var(--space-5);
+      margin: var(--space-6) 0;
     }
-    .metric-card {
-      background: var(--color-bg-elevated);
-      border: 1px solid var(--color-border);
-      border-left: 3px solid var(--color-accent);
-      border-radius: var(--radius);
-      padding: var(--space-4) var(--space-5);
-      box-shadow: var(--shadow-sm);
-    }
-    .metric-card.var-info    { border-left-color: var(--color-info); }
-    .metric-card.var-success { border-left-color: var(--color-success); }
-    .metric-card.var-sage    { border-left-color: var(--color-sage); }
-    .metric-card.var-teal    { border-left-color: var(--color-teal); }
-    .metric-card.var-plum    { border-left-color: var(--color-plum); }
-    .metric-card.var-warn    { border-left-color: var(--color-warn); }
-    .metric-card.var-danger  { border-left-color: var(--color-danger); }
+    .metric-card { border-top: 2px solid var(--color-fg); padding-top: var(--space-3); }
+    /* cor = informação: o fio de 2px carrega a dimensão semântica */
+    .metric-card.var-accent  { border-top-color: var(--color-accent); }
+    .metric-card.var-info    { border-top-color: var(--color-info); }
+    .metric-card.var-success { border-top-color: var(--color-success); }
+    .metric-card.var-sage    { border-top-color: var(--color-sage); }
+    .metric-card.var-teal    { border-top-color: var(--color-teal); }
+    .metric-card.var-plum    { border-top-color: var(--color-plum); }
+    .metric-card.var-warn    { border-top-color: var(--color-warn); }
+    .metric-card.var-danger  { border-top-color: var(--color-danger); }
     .metric-card__kicker {
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
+      font-family: var(--font-ui);
+      font-size: 0.6875rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--color-fg-subtle);
       margin: 0 0 var(--space-2);
+      font-variant-numeric: lining-nums;
     }
     .metric-card__val {
       font-family: var(--font-display);
       font-weight: 800;
-      font-size: 1.75rem;
-      letter-spacing: -0.03em;
+      font-size: 1.55rem;
+      letter-spacing: -0.01em;
       color: var(--color-fg);
       display: block;
       line-height: 1.05;
       margin: 0;
+      font-variant-numeric: tabular-nums lining-nums;
     }
-    .metric-card.var-accent  .metric-card__val { color: var(--color-accent); }
-    .metric-card.var-info    .metric-card__val { color: var(--color-info); }
-    .metric-card.var-success .metric-card__val { color: var(--color-success); }
-    .metric-card.var-sage    .metric-card__val { color: var(--color-sage); }
-    .metric-card.var-teal    .metric-card__val { color: var(--color-teal); }
-    .metric-card.var-plum    .metric-card__val { color: var(--color-plum); }
-    .metric-card.var-danger  .metric-card__val { color: var(--color-danger); }
     .metric-card__label {
+      font-family: var(--font-ui);
       font-size: var(--size-xs);
       color: var(--color-fg-muted);
       margin-top: var(--space-2);
-      font-weight: 500;
-      line-height: 1.4;
+      line-height: 1.45;
     }
 
-    /* ═══ Footnotes ═══ */
-    sup { font-size: 0.7em; line-height: 1; vertical-align: super; }
+    /* ═══ Footnotes (link mútuo) ═══ */
+    sup { font-size: 0.72em; line-height: 1; vertical-align: super; }
     .fn-ref, .fn-back {
-      font-family: var(--font-mono);
-      font-size: 0.75em;
+      font-family: var(--font-ui);
+      font-size: 0.78em;
       color: var(--color-accent);
       text-decoration: none;
       font-weight: 700;
+      font-variant-numeric: lining-nums;
     }
     .fn-ref:hover, .fn-back:hover { text-decoration: underline; }
     .report-footnotes {
-      max-width: var(--content-max);
+      max-width: var(--report-max);
       margin: var(--space-10) auto 0;
-      padding: var(--space-7) var(--space-8) var(--space-8);
-      border-top: 1px solid var(--color-border);
+      padding: var(--space-6) var(--report-gutter) var(--space-8);
+      border-top: 1px solid var(--color-border-strong);
     }
-    .fn-label {
-      font-size: var(--size-xs);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--color-fg-subtle);
-      margin: 0 0 var(--space-4);
-      font-family: var(--font-mono);
-    }
-    .fn-list {
-      padding-left: var(--space-5);
-      margin: 0;
-    }
+    .fn-label { margin: 0 0 var(--space-4); }
+    .fn-list { padding-left: var(--space-5); margin: 0; }
     .fn-list li {
       font-size: var(--size-small);
       color: var(--color-fg-muted);
       margin-bottom: var(--space-3);
-      line-height: 1.55;
-      max-width: 70ch;
+      line-height: 1.6;
+      max-width: 72ch;
     }
 
-    /* ═══ Footer ═══ */
+    /* ═══ Fechamento — fio duplo encerra o documento (motivo) ═══ */
     .report-footer {
-      max-width: var(--content-max);
+      max-width: var(--report-max);
       margin: 0 auto;
-      padding: var(--space-6) var(--space-8) var(--space-10);
-      border-top: 1px solid var(--color-border);
-      display: flex; align-items: center; justify-content: space-between;
-      gap: var(--space-4); flex-wrap: wrap;
+      padding: var(--space-6) var(--report-gutter) var(--space-12);
+      border-top: var(--fio-duplo);
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: var(--space-6); flex-wrap: wrap;
     }
     .report-footer__brand {
       font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 0.875rem;
-      color: var(--color-fg-subtle);
+      font-weight: 500;
+      font-size: var(--size-small);
+      color: var(--color-fg);
+      white-space: nowrap;
+      font-variant-numeric: lining-nums;
     }
     .report-footer__disclaimer {
+      font-family: var(--font-ui);
       font-size: var(--size-xs);
       color: var(--color-fg-subtle);
-      max-width: 52ch;
-      line-height: 1.5;
+      max-width: 56ch;
+      line-height: 1.55;
       margin: 0;
     }
 
-    /* ═══ Timeline horizontal ═══ */
+    /* ═══ Cronologia broadsheet (sem dot, sem linha-gradiente) ═══ */
     .timeline-list {
       list-style: none !important;
       padding: 0 !important;
-      margin: var(--space-5) 0;
-      position: relative;
-    }
-    .timeline-list::before {
-      content: '';
-      position: absolute;
-      left: 8px; top: 6px; bottom: 6px;
-      width: 2px;
-      background: linear-gradient(to bottom, var(--color-accent) 0%, var(--color-info) 100%);
-      border-radius: 2px;
+      margin: var(--space-4) 0 var(--space-6);
+      border-top: 1px solid var(--color-border-strong);
     }
     .timeline-list li {
-      position: relative;
-      padding-left: var(--space-7);
-      margin-bottom: var(--space-5);
-      max-width: 65ch;
-    }
-    .timeline-list li::before {
-      content: '';
-      position: absolute;
-      left: 2px; top: 8px;
-      width: 14px; height: 14px;
-      border-radius: 50%;
-      background: var(--color-bg);
-      border: 2px solid var(--color-accent);
-      box-shadow: 0 0 0 3px var(--color-bg);
+      display: grid;
+      grid-template-columns: 7.5rem 1fr;
+      gap: var(--space-4);
+      padding: var(--space-3) 0;
+      margin: 0 !important;
+      border-bottom: 1px solid var(--color-border);
+      max-width: none !important;
     }
     .timeline-list .tl-date {
-      display: block;
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
+      font-family: var(--font-ui);
+      font-size: var(--size-xs);
       font-weight: 700;
-      color: var(--color-accent);
-      letter-spacing: 0.08em;
+      color: var(--color-fg-muted);
+      letter-spacing: 0.05em;
       text-transform: uppercase;
-      margin-bottom: 4px;
+      font-variant-numeric: tabular-nums lining-nums;
+      padding-top: 2px;
     }
     .timeline-list .tl-title {
       font-family: var(--font-display);
-      font-size: 1.05rem;
-      font-weight: 700;
+      font-size: 1.0625rem;
+      font-weight: 500;
       color: var(--color-fg);
       display: block;
       margin-bottom: 2px;
@@ -800,15 +801,8 @@
       line-height: 1.5;
       display: block;
     }
-
-    /* ═══ Reveal on scroll ═══ */
-    [data-reveal] {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity var(--duration-hero) var(--ease-out),
-                  transform var(--duration-hero) var(--ease-out);
-    }
-    [data-reveal].is-visible { opacity: 1; transform: none; }
+    .timeline-list .tl-title, .timeline-list .tl-desc { grid-column: 2; }
+    .timeline-list .tl-date { grid-row: span 2; }
 
     /* ═══ Utilities ═══ */
     .section-divider {
@@ -816,81 +810,108 @@
       border-top: 1px solid var(--color-border);
       margin: var(--space-8) 0;
     }
-    .text-accent { color: var(--color-accent); }
-    .font-mono { font-family: var(--font-mono); }
     .num-positive { color: var(--color-success); font-weight: 600; }
     .num-negative { color: var(--color-danger); font-weight: 600; }
 
-    /* ═══ Print ═══ */
+    /* ═══ @media print — A4, rigoroso (contrato do modelo report) ═══ */
     @media print {
-      .report-header,
-      .report-toc,
-      .theme-toggle { display: none !important; }
-
-      body {
-        font-size: 10.5pt;
-        line-height: 1.55;
-        color: #000 !important;
-        background: #fff !important;
-        background-image: none !important;
-      }
-      .report-summary__inner,
-      .report-figure,
-      .metric-card,
-      .callout,
-      .table-wrap,
-      .report-pullquote {
-        box-shadow: none !important;
-        border-color: #ccc !important;
-      }
-      .report-cover { page-break-after: always; }
-      .report-summary { page-break-after: always; }
-      .report-section { page-break-before: always; }
-      table, .callout, .report-figure, .report-pullquote { page-break-inside: avoid; }
-      h2, h3, h4 { page-break-after: avoid; }
       @page { size: A4; margin: 2cm; }
       @page :first { margin-top: 3cm; }
-      a[href]::after {
+
+      /* chrome de tela fora do papel */
+      .report-header, .report-toc, .theme-toggle { display: none !important; }
+
+      /* força light: papel é branco, texto é preto */
+      :root, [data-theme="dark"] {
+        --color-bg:            #ffffff;
+        --color-bg-elevated:   #ffffff;
+        --color-bg-sunken:     #f4f4f4;
+        --color-fg:            #000000;
+        --color-fg-muted:      #222222;
+        --color-fg-subtle:     #444444;
+        --color-border:        rgba(0, 0, 0, 0.25);
+        --color-border-strong: rgba(0, 0, 0, 0.55);
+        --color-accent:        #000000;  /* links viram texto no papel */
+      }
+      body {
+        background: #ffffff !important;
+        color: #000000 !important;
+        font-size: 10.5pt;
+        line-height: 1.55;
+      }
+      a { color: #000000; text-decoration: none; }
+      /* URLs externas explicitadas; âncoras internas (footnotes/TOC) não */
+      a[href^="http"]::after {
         content: " (" attr(href) ")";
         font-size: 8pt;
-        color: #666;
+        color: #444444;
       }
-      .fn-ref::after, .fn-back::after,
-      a[href^="#"]::after { content: none; }
+      .fn-ref::after, .fn-back::after { content: none; }
+
+      /* capa = primeira página; sumário fecha a própria página */
+      .report-cover { page-break-after: always; border-bottom: none; }
+      .report-summary { page-break-after: always; margin-bottom: 0; }
+
+      /* cada seção numerada abre página nova */
+      .report-section { page-break-before: always; margin-bottom: var(--space-8); }
+      .report-section:first-of-type { page-break-before: avoid; }
+      h2, h3, h4 { page-break-after: avoid; }
+
+      /* nada quebra no meio */
+      table, .callout, .report-figure, .report-pullquote, .metric-card, .summary-kpi { page-break-inside: avoid; }
+      table.data-table tr { page-break-inside: avoid; }
       .chart-inner, .chart-inner-tall { max-height: 320px; }
+
+      /* full-bleed volta para a mancha da página */
+      .bleed { width: 100%; margin-left: 0; }
+
+      /* semânticas de variação em tinta de papel */
+      .num-positive, .num-negative { color: #000000; }
+      .badge-accent, .badge-info, .badge-success, .badge-teal,
+      .badge-plum, .badge-warn, .badge-danger { color: #222222; }
+
+      /* footnotes com fio simples; fechamento com fio duplo preto + fólio */
+      .report-footnotes { border-top: 1px solid #000000; }
+      .report-footer { border-top: 3px double #000000; padding-bottom: 0; }
+      .report-footer::after {
+        content: "Itaú Unibanco · Relatório Institucional 1T26 · Página " counter(page);
+        display: block;
+        width: 100%;
+        text-align: center;
+        font-size: 8pt;
+        color: #444444;
+        margin-top: 2em;
+      }
     }
 
-    /* ═══ Reduced motion ═══ */
+    /* ═══ Reduced motion (perfil já é estático; zera o restante) ═══ */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
       }
-      [data-reveal] { opacity: 1; transform: none; }
     }
 
     /* ═══ Responsivo ═══ */
     @media (max-width: 720px) {
       .report-header { padding: 0 var(--space-5); }
-      .report-cover { padding: var(--space-8) var(--space-5); }
+      .report-cover { padding: 0 var(--space-5) var(--space-8); }
       .report-summary { padding: 0 var(--space-5); }
-      .report-summary__inner { padding: var(--space-5); }
-      .report-toc { padding: var(--space-5); }
+      .report-toc { padding: var(--space-5) var(--space-5) 0; }
       .report-toc__list { columns: 1; }
-      .report-body { padding: var(--space-5); }
+      .report-body { padding: 0 var(--space-5); }
       .report-footnotes { padding: var(--space-6) var(--space-5); }
       .report-footer { padding: var(--space-5); }
-      .section-num { font-size: 2.5rem; }
-      .report-cover__title { font-size: 2rem; }
+      .section-num { font-size: 2.4rem; }
+      .report-cover__title { font-size: 2.1rem; }
       .report-section h2 { font-size: 1.4rem; }
+      .timeline-list li { grid-template-columns: 5.5rem 1fr; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ═══════════════ HEADER ═══════════════ -->
+  <!-- ═══════════════ HEADER (tela apenas) ═══════════════ -->
   <header class="report-header">
     <div class="report-header__brand">
       <span class="report-header__logo" aria-hidden="true">i</span>
@@ -901,17 +922,20 @@
     </div>
     <div class="report-header__meta">
       <p class="report-header__date">Maio 2026</p>
-      <button class="theme-toggle" aria-label="Alternar tema" type="button">
+      <button class="theme-toggle" aria-label="Alternar tema claro/escuro" type="button">
         <span aria-hidden="true">◐</span>
       </button>
     </div>
   </header>
 
-  <!-- ═══════════════ COVER ═══════════════ -->
+  <!-- ═══════════════ CAPA — MANCHETE BROADSHEET ═══════════════ -->
   <header class="report-cover">
-    <p class="report-cover__kicker">Itaú · 1T26 · Apresentação Institucional</p>
+    <div class="report-cover__masthead">
+      <p class="report-cover__kicker label-caps">Itaú · 1T26 · Apresentação Institucional</p>
+      <p class="report-cover__date label-caps">Maio de 2026</p>
+    </div>
     <h1 class="report-cover__title">Apresentação Institucional Itaú · 1T26</h1>
-    <p class="report-cover__subtitle">Resultado recorrente gerencial de R$ 12,3 bilhões no primeiro trimestre, ROE recorrente de 24,8% e carteira de crédito de R$ 1.483 bilhões — 101 anos de história e o caminho para o próximo capítulo.</p>
+    <p class="report-cover__subtitle">Resultado recorrente gerencial de R$&nbsp;12,3 bilhões no primeiro trimestre, ROE recorrente de 24,8% e carteira de crédito de R$&nbsp;1.483 bilhões — 101 anos de história e o caminho para o próximo capítulo.</p>
     <div class="report-cover__meta">
       <div>
         <strong>Emissor</strong>
@@ -933,43 +957,41 @@
   </header>
 
   <!-- ═══════════════ SUMÁRIO EXECUTIVO ═══════════════ -->
-  <section class="report-summary" aria-label="Sumário executivo" data-reveal>
-    <div class="report-summary__inner">
-      <p class="report-summary__label">Sumário Executivo</p>
-      <p class="report-summary__lead">No primeiro trimestre de 2026, o Itaú Unibanco entregou <strong>resultado recorrente gerencial de R$ 12,3 bilhões</strong> — alta de 10,4% sobre o 1T25 — com ROE recorrente de 24,8% e índice de eficiência de 36,2% no Brasil, consolidando 101 anos de história como o maior banco da América Latina<sup><a href="#fn1" class="fn-ref" id="fn-ref-1">[1]</a></sup>.</p>
+  <section class="report-summary" aria-label="Sumário executivo">
+    <p class="report-summary__label label-caps">Sumário Executivo</p>
+    <p class="report-summary__lead">No primeiro trimestre de 2026, o Itaú Unibanco entregou <strong>resultado recorrente gerencial de R$&nbsp;12,3 bilhões</strong> — alta de 10,4% sobre o 1T25 — com ROE recorrente de 24,8% e índice de eficiência de 36,2% no Brasil, consolidando 101 anos de história como o maior banco da América Latina<sup><a href="#fn1" class="fn-ref" id="fn-ref-1">[1]</a></sup>.</p>
 
-      <p>A operação reúne <strong>91,5 mil colaboradores</strong> em 18 países, R$ 3,2 trilhões de ativos totais e valor de mercado de US$ 96 bilhões. A marca, avaliada em US$ 9,9 bilhões, é a mais valiosa da América Latina. A receita do trimestre combina margem financeira com clientes (R$ 31,5 bi, +4,5% ano a ano), margem financeira com mercado (R$ 0,8 bi) e receita de serviços e seguros (R$ 14,0 bi, +5,3% YoY)<sup><a href="#fn2" class="fn-ref" id="fn-ref-2">[2]</a></sup>.</p>
+    <p>A operação reúne <strong>91,5&nbsp;mil colaboradores</strong> em 18 países, R$&nbsp;3,2 trilhões de ativos totais e valor de mercado de US$&nbsp;96 bilhões. A marca, avaliada em US$&nbsp;9,9 bilhões, é a mais valiosa da América Latina. A receita do trimestre combina margem financeira com clientes (R$&nbsp;31,5&nbsp;bi, +4,5% ano a ano), margem financeira com mercado (R$&nbsp;0,8&nbsp;bi) e receita de serviços e seguros (R$&nbsp;14,0&nbsp;bi, +5,3% YoY)<sup><a href="#fn2" class="fn-ref" id="fn-ref-2">[2]</a></sup>.</p>
 
-      <p>Em sustentabilidade, somos o único banco da América Latina presente no Índice Dow Jones de Sustentabilidade desde a sua criação, com compromisso de <strong>R$ 1 trilhão em finanças sustentáveis até 2030</strong> — dos quais R$ 577,6 bilhões já foram direcionados entre janeiro de 2020 e fevereiro de 2026<sup><a href="#fn3" class="fn-ref" id="fn-ref-3">[3]</a></sup>. As emissões diretas (Escopos 1+2) caíram 11,2% frente ao baseline.</p>
+    <p>Em sustentabilidade, somos o único banco da América Latina presente no Índice Dow Jones de Sustentabilidade desde a sua criação, com compromisso de <strong>R$&nbsp;1 trilhão em finanças sustentáveis até 2030</strong> — dos quais R$&nbsp;577,6 bilhões já foram direcionados entre janeiro de 2020 e fevereiro de 2026<sup><a href="#fn3" class="fn-ref" id="fn-ref-3">[3]</a></sup>. As emissões diretas (Escopos 1+2) caíram 11,2% frente ao baseline.</p>
 
-      <p>A transformação digital ganhou escala com <strong>+88% de uso de IA generativa</strong> versus 1T25, redução de 98% em incidentes de alto impacto desde 1T18 e +2.813% no volume de implantações no mesmo período, sustentados por mais de 20 mil colaboradores em cerca de 2,9 mil squads. O guidance de 2026 projeta crescimento de carteira entre 5,5% e 9,5%, custo do crédito entre R$ 38,5 bi e R$ 43,5 bi e despesas não decorrentes de juros crescendo entre 1,5% e 5,5%<sup><a href="#fn4" class="fn-ref" id="fn-ref-4">[4]</a></sup>.</p>
+    <p>A transformação digital ganhou escala com <strong>+88% de uso de IA generativa</strong> versus 1T25, redução de 98% em incidentes de alto impacto desde 1T18 e +2.813% no volume de implantações no mesmo período, sustentados por mais de 20&nbsp;mil colaboradores em cerca de 2,9&nbsp;mil squads. O guidance de 2026 projeta crescimento de carteira entre 5,5% e 9,5%, custo do crédito entre R$&nbsp;38,5&nbsp;bi e R$&nbsp;43,5&nbsp;bi e despesas não decorrentes de juros crescendo entre 1,5% e 5,5%<sup><a href="#fn4" class="fn-ref" id="fn-ref-4">[4]</a></sup>.</p>
 
-      <p>Este relatório consolida em oito seções o retrato institucional do banco: visão geral, cultura (jeito Ituber), presença e escala, ecossistema de produtos e atendimento, sustentabilidade e ESG, transformação digital, resultados financeiros do 1T26 e estratégia/guidance para o ano. O encerramento traz os canais de RI para diálogo com a comunidade investidora.</p>
+    <p>Este relatório consolida em oito seções o retrato institucional do banco: visão geral, cultura (jeito Ituber), presença e escala, ecossistema de produtos e atendimento, sustentabilidade e ESG, transformação digital, resultados financeiros do 1T26 e estratégia/guidance para o ano. O encerramento traz os canais de RI para diálogo com a comunidade investidora.</p>
 
-      <div class="report-summary__kpis">
-        <div class="summary-kpi">
-          <p class="summary-kpi__val">R$ 12,3 bi</p>
-          <p class="summary-kpi__label">Resultado recorrente 1T26 (+10,4% YoY)</p>
-        </div>
-        <div class="summary-kpi">
-          <p class="summary-kpi__val">24,8%</p>
-          <p class="summary-kpi__label">ROE recorrente</p>
-        </div>
-        <div class="summary-kpi">
-          <p class="summary-kpi__val">R$ 1.483 bi</p>
-          <p class="summary-kpi__label">Carteira de crédito (+7,2% YoY)</p>
-        </div>
-        <div class="summary-kpi">
-          <p class="summary-kpi__val">R$ 1 tri</p>
-          <p class="summary-kpi__label">Compromisso em finanças sustentáveis até 2030</p>
-        </div>
+    <div class="report-summary__kpis">
+      <div class="summary-kpi">
+        <p class="summary-kpi__val">R$&nbsp;12,3&nbsp;bi</p>
+        <p class="summary-kpi__label">Resultado recorrente 1T26 (+10,4% YoY)</p>
+      </div>
+      <div class="summary-kpi">
+        <p class="summary-kpi__val">24,8%</p>
+        <p class="summary-kpi__label">ROE recorrente</p>
+      </div>
+      <div class="summary-kpi">
+        <p class="summary-kpi__val">R$&nbsp;1.483&nbsp;bi</p>
+        <p class="summary-kpi__label">Carteira de crédito (+7,2% YoY)</p>
+      </div>
+      <div class="summary-kpi">
+        <p class="summary-kpi__val">R$&nbsp;1&nbsp;tri</p>
+        <p class="summary-kpi__label">Compromisso em finanças sustentáveis até 2030</p>
       </div>
     </div>
   </section>
 
   <!-- ═══════════════ TOC ═══════════════ -->
   <nav class="report-toc" aria-label="Sumário">
-    <p class="report-toc__heading">Conteúdo</p>
+    <p class="report-toc__heading label-caps">Conteúdo</p>
     <ol class="report-toc__list">
       <!-- preenchido por JS -->
     </ol>
@@ -979,15 +1001,15 @@
   <main class="report-body">
 
     <!-- ═══ SEÇÃO 1 — VISÃO GERAL ═══ -->
-    <section class="report-section" id="s1" data-reveal>
+    <section class="report-section" id="s1">
       <div class="section-header">
         <span class="section-num" aria-hidden="true">01</span>
         <h2>Visão geral</h2>
       </div>
 
-      <p>Com <strong>101 anos de história</strong>, o Itaú Unibanco consolidou-se como o maior banco da América Latina, atuando como banco universal em 18 países e mantendo posição de liderança em volume de ativos, valor de mercado e força de marca. A operação combina escala continental — <strong>R$ 3,2 trilhões em ativos totais</strong> ao final de março de 2026 — com obstinação por encantar o cliente em todas as dimensões: pessoa física, jurídica e atacado.</p>
+      <p>Com <strong>101 anos de história</strong>, o Itaú Unibanco consolidou-se como o maior banco da América Latina, atuando como banco universal em 18 países e mantendo posição de liderança em volume de ativos, valor de mercado e força de marca. A operação combina escala continental — <strong>R$&nbsp;3,2 trilhões em ativos totais</strong> ao final de março de 2026 — com obstinação por encantar o cliente em todas as dimensões: pessoa física, jurídica e atacado.</p>
 
-      <p>Os indicadores institucionais de abertura sintetizam essa escala: valor de mercado de US$ 96 bilhões em 30 de abril de 2026, carteira de crédito ampliada (incluindo garantias financeiras e títulos privados) de R$ 1.483 bi, ROE recorrente de 24,8% e índice de eficiência de 36,2% no Brasil em 12 meses findos em março de 2026. O valor da marca, mensurado externamente, alcançou US$ 9,9 bilhões — sustentando o título de marca mais valiosa da América Latina<sup><a href="#fn1" class="fn-ref" id="fn-ref-5">[1]</a></sup>.</p>
+      <p>Os indicadores institucionais de abertura sintetizam essa escala: valor de mercado de US$&nbsp;96 bilhões em 30 de abril de 2026, carteira de crédito ampliada (incluindo garantias financeiras e títulos privados) de R$&nbsp;1.483&nbsp;bi, ROE recorrente de 24,8% e índice de eficiência de 36,2% no Brasil em 12 meses findos em março de 2026. O valor da marca, mensurado externamente, alcançou US$&nbsp;9,9 bilhões — sustentando o título de marca mais valiosa da América Latina<sup><a href="#fn1" class="fn-ref" id="fn-ref-5">[1]</a></sup>.</p>
 
       <h3>1.1 Indicadores institucionais</h3>
       <p>A tabela abaixo consolida os oito indicadores institucionais centrais utilizados na abertura da apresentação 1T26.</p>
@@ -1002,14 +1024,14 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td class="td-strong">Valor de mercado</td><td class="num">US$ 96 bi</td><td>em 30/04/2026</td></tr>
-            <tr><td class="td-strong">Ativos totais</td><td class="num">R$ 3.200 bi</td><td>em 31/03/2026</td></tr>
-            <tr><td class="td-strong">Carteira de crédito</td><td class="num">R$ 1.483 bi</td><td>com garantias financeiras e títulos privados</td></tr>
+            <tr><td class="td-strong">Valor de mercado</td><td class="num">US$&nbsp;96&nbsp;bi</td><td>em 30/04/2026</td></tr>
+            <tr><td class="td-strong">Ativos totais</td><td class="num">R$&nbsp;3.200&nbsp;bi</td><td>em 31/03/2026</td></tr>
+            <tr><td class="td-strong">Carteira de crédito</td><td class="num">R$&nbsp;1.483&nbsp;bi</td><td>com garantias financeiras e títulos privados</td></tr>
             <tr><td class="td-strong">ROE recorrente</td><td class="num">24,8%</td><td>retorno sobre patrimônio</td></tr>
             <tr><td class="td-strong">Índice de eficiência</td><td class="num">36,2%</td><td>Brasil · 12m findos mar/26</td></tr>
-            <tr><td class="td-strong">Colaboradores</td><td class="num">91,5 mil</td><td>no conglomerado Itaú Unibanco</td></tr>
-            <tr class="is-emphasis"><td class="td-strong">Resultado 1T26</td><td class="num">R$ 12,3 bi</td><td>94,6% Brasil · 5,4% AL</td></tr>
-            <tr><td class="td-strong">Valor da marca</td><td class="num">US$ 9,9 bi</td><td>marca mais valiosa da América Latina</td></tr>
+            <tr><td class="td-strong">Colaboradores</td><td class="num">91,5&nbsp;mil</td><td>no conglomerado Itaú Unibanco</td></tr>
+            <tr class="is-emphasis"><td class="td-strong">Resultado 1T26</td><td class="num">R$&nbsp;12,3&nbsp;bi</td><td>94,6% Brasil · 5,4% AL</td></tr>
+            <tr><td class="td-strong">Valor da marca</td><td class="num">US$&nbsp;9,9&nbsp;bi</td><td>marca mais valiosa da América Latina</td></tr>
           </tbody>
         </table>
       </div>
@@ -1018,13 +1040,13 @@
       <p>Somos o <em>único banco da América Latina</em> presente no <strong>Índice Dow Jones de Sustentabilidade desde a sua criação</strong>. O conjunto de selos e reconhecimentos inclui B3, NYSE, S&amp;P Dow Jones, ISE B3, Bloomberg Gender-Equality Index e MSCI<sup><a href="#fn3" class="fn-ref" id="fn-ref-6">[3]</a></sup>.</p>
 
       <blockquote class="report-pullquote">
-        <p>"Somos o único banco da América Latina no Índice Dow Jones de Sustentabilidade desde sua criação."</p>
+        <p>“Somos o único banco da América Latina no Índice Dow Jones de Sustentabilidade desde sua criação.”</p>
         <cite>Itaú Unibanco · Apresentação Institucional 1T26</cite>
       </blockquote>
     </section>
 
     <!-- ═══ SEÇÃO 2 — PRINCÍPIOS E CULTURA ═══ -->
-    <section class="report-section" id="s2" data-reveal>
+    <section class="report-section" id="s2">
       <div class="section-header">
         <span class="section-num" aria-hidden="true">02</span>
         <h2>Princípios e cultura — o jeito Ituber</h2>
@@ -1055,16 +1077,15 @@
       </div>
 
       <div class="callout callout--tip">
-        <span class="callout__icon">✓</span>
         <div class="callout__content">
           <p class="callout__title">Ética inegociável como ponto de partida</p>
-          <p>A frase "pra gente, ética é inegociável" sintetiza o regimento cultural. As seis dimensões organizam decisões — não substituem julgamento ético, e sim o estruturam.</p>
+          <p>A frase “pra gente, ética é inegociável” sintetiza o regimento cultural. As seis dimensões organizam decisões — não substituem julgamento ético, e sim o estruturam.</p>
         </div>
       </div>
     </section>
 
     <!-- ═══ SEÇÃO 3 — PRESENÇA E ESCALA ═══ -->
-    <section class="report-section" id="s3" data-reveal>
+    <section class="report-section" id="s3">
       <div class="section-header">
         <span class="section-num" aria-hidden="true">03</span>
         <h2>Presença, escala e jornada</h2>
@@ -1089,7 +1110,7 @@
         <li><span class="tl-date">2002</span><span class="tl-title">BBA</span><span class="tl-desc">Aquisição do BBA — maior banco de investimento do Brasil</span></li>
         <li><span class="tl-date">2007</span><span class="tl-title">iPhone · SPB</span><span class="tl-desc">Lançamento do iPhone + criação do Sistema de Pagamentos Brasileiro</span></li>
         <li><span class="tl-date">2008</span><span class="tl-title">Fusão Itaú+Unibanco</span><span class="tl-desc">Fusão histórica + primeiro app de banco do Brasil</span></li>
-        <li><span class="tl-date">2012</span><span class="tl-title">R$ 11,1 bi em tech</span><span class="tl-desc">Anúncio de investimento em tecnologia, inovação e atendimento</span></li>
+        <li><span class="tl-date">2012</span><span class="tl-title">R$&nbsp;11,1&nbsp;bi em tech</span><span class="tl-desc">Anúncio de investimento em tecnologia, inovação e atendimento</span></li>
         <li><span class="tl-date">2014</span><span class="tl-title">Fintechs</span><span class="tl-desc">Fintechs ganham força no mercado brasileiro</span></li>
         <li><span class="tl-date">2019</span><span class="tl-title">ZUP</span><span class="tl-desc">Aquisição da ZUP acelera transformação digital</span></li>
         <li><span class="tl-date">2020</span><span class="tl-title">PIX · Open Finance</span><span class="tl-desc">PIX e Open Finance · Beyond banking · Íon</span></li>
@@ -1100,19 +1121,19 @@
         <li><span class="tl-date">2022</span><span class="tl-title">Itaú Shop</span><span class="tl-desc">Lançamento da plataforma Itaú Shop — marketplace beyond banking</span></li>
         <li><span class="tl-date">2023</span><span class="tl-title">Feito de Futuro</span><span class="tl-desc">Nova marca + Agenda associativa (Ideal, TOTVS)</span></li>
         <li><span class="tl-date">2024</span><span class="tl-title">100 anos · Um só Itaú</span><span class="tl-desc">Centenário + integração SuperApp e Íon + Orbia/Avenue</span></li>
-        <li><span class="tl-date">2025</span><span class="tl-title">ICTi · Itaú Emps</span><span class="tl-desc">Instituto de Ciência e Tecnologia · Campanha "Feito" · Itaú Emps</span></li>
+        <li><span class="tl-date">2025</span><span class="tl-title">ICTi · Itaú Emps</span><span class="tl-desc">Instituto de Ciência e Tecnologia · Campanha “Feito” · Itaú Emps</span></li>
         <li><span class="tl-date">2026 →</span><span class="tl-title">Próximo capítulo</span><span class="tl-desc">IA generativa em escala · principalidade · beyond banking</span></li>
       </ul>
     </section>
 
     <!-- ═══ SEÇÃO 4 — ECOSSISTEMA COMPLETO ═══ -->
-    <section class="report-section" id="s4" data-reveal>
+    <section class="report-section" id="s4">
       <div class="section-header">
         <span class="section-num" aria-hidden="true">04</span>
         <h2>Ecossistema completo — segmentação, produtos e atendimento</h2>
       </div>
 
-      <p>O modelo de relacionamento do Itaú Unibanco é organizado por segmentos para <strong>pessoa física</strong> e <strong>pessoa jurídica</strong>, sustentado por uma prateleira completa de produtos e por presença omnichannel: sete canais de atendimento remoto, mais 2,4 mil pontos físicos e 12,9 mil caixas eletrônicos no Brasil e na América Latina.</p>
+      <p>O modelo de relacionamento do Itaú Unibanco é organizado por segmentos para <strong>pessoa física</strong> e <strong>pessoa jurídica</strong>, sustentado por uma prateleira completa de produtos e por presença omnichannel: sete canais de atendimento remoto, mais 2,4&nbsp;mil pontos físicos e 12,9&nbsp;mil caixas eletrônicos no Brasil e na América Latina.</p>
 
       <h3>4.1 Segmentação por renda e porte</h3>
 
@@ -1126,10 +1147,10 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td><span class="badge badge-accent">PF</span></td><td class="td-strong">itaú</td><td>renda até R$ 7 mil</td></tr>
-            <tr><td><span class="badge badge-accent">PF</span></td><td class="td-strong">Uniclass</td><td>renda R$ 7 mil — R$ 15 mil</td></tr>
-            <tr><td><span class="badge badge-accent">PF</span></td><td class="td-strong">Personnalité</td><td>renda &gt; R$ 15 mil ou R$ 250 mil investidos</td></tr>
-            <tr><td><span class="badge badge-accent">PF</span></td><td class="td-strong">Private Bank</td><td>&gt; R$ 10 mi investidos</td></tr>
+            <tr><td><span class="badge badge-accent">PF</span></td><td class="td-strong">itaú</td><td>renda até R$&nbsp;7&nbsp;mil</td></tr>
+            <tr><td><span class="badge badge-accent">PF</span></td><td class="td-strong">Uniclass</td><td>renda R$&nbsp;7&nbsp;mil — R$&nbsp;15&nbsp;mil</td></tr>
+            <tr><td><span class="badge badge-accent">PF</span></td><td class="td-strong">Personnalité</td><td>renda &gt; R$&nbsp;15&nbsp;mil ou R$&nbsp;250&nbsp;mil investidos</td></tr>
+            <tr><td><span class="badge badge-accent">PF</span></td><td class="td-strong">Private Bank</td><td>&gt; R$&nbsp;10&nbsp;mi investidos</td></tr>
             <tr><td><span class="badge badge-info">PJ</span></td><td class="td-strong">itaú Emps</td><td>microempreendedores</td></tr>
             <tr><td><span class="badge badge-info">PJ</span></td><td class="td-strong">itaú Empresas</td><td>micro e pequenas empresas</td></tr>
             <tr><td><span class="badge badge-info">PJ</span></td><td class="td-strong">itaú BBA</td><td>médias e grandes empresas</td></tr>
@@ -1172,17 +1193,17 @@
       </div>
 
       <h3>4.3 Atendimento — onde o cliente quiser</h3>
-      <p>O atendimento combina <strong>sete canais remotos</strong> (WhatsApp, e-mail, telefone, chat, click-to-human, Bankline e mobile banking — 100% funcional no App) e <strong>infraestrutura física robusta</strong>: 2,4 mil pontos no Brasil e na América Latina e 12,9 mil caixas eletrônicos cobrindo Brasil, Chile, Colômbia, Paraguai e Uruguai.</p>
+      <p>O atendimento combina <strong>sete canais remotos</strong> (WhatsApp, e-mail, telefone, chat, click-to-human, Bankline e mobile banking — 100% funcional no App) e <strong>infraestrutura física robusta</strong>: 2,4&nbsp;mil pontos no Brasil e na América Latina e 12,9&nbsp;mil caixas eletrônicos cobrindo Brasil, Chile, Colômbia, Paraguai e Uruguai.</p>
 
       <div class="metrics-grid">
         <div class="metric-card var-accent">
           <p class="metric-card__kicker">Pontos físicos</p>
-          <span class="metric-card__val">2,4 mil</span>
+          <span class="metric-card__val">2,4&nbsp;mil</span>
           <p class="metric-card__label">no Brasil e América Latina</p>
         </div>
         <div class="metric-card var-teal">
           <p class="metric-card__kicker">Caixas eletrônicos</p>
-          <span class="metric-card__val">12,9 mil</span>
+          <span class="metric-card__val">12,9&nbsp;mil</span>
           <p class="metric-card__label">Brasil + Chile, Colômbia, Paraguai, Uruguai</p>
         </div>
         <div class="metric-card var-info">
@@ -1198,7 +1219,7 @@
       </div>
 
       <h3>4.4 Escuta do cliente em escala</h3>
-      <p>O banco mantém três programas estruturados de aproximação entre liderança executiva e clientes finais — combinados, somam mais de 130 mil interações ao ano de líderes ouvindo clientes diretamente.</p>
+      <p>O banco mantém três programas estruturados de aproximação entre liderança executiva e clientes finais — combinados, somam mais de 130&nbsp;mil interações ao ano de líderes ouvindo clientes diretamente.</p>
 
       <div class="table-wrap">
         <table class="data-table">
@@ -1210,8 +1231,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td class="td-strong">Ituber Entende</td><td class="num">+70 mil</td><td>ligações de líderes ouvindo clientes — foco em dores e oportunidades</td></tr>
-            <tr><td class="td-strong">Papo de Cliente</td><td class="num">+60 mil</td><td>encontros de colaboradores de agências aprimorando a experiência</td></tr>
+            <tr><td class="td-strong">Ituber Entende</td><td class="num">+70&nbsp;mil</td><td>ligações de líderes ouvindo clientes — foco em dores e oportunidades</td></tr>
+            <tr><td class="td-strong">Papo de Cliente</td><td class="num">+60&nbsp;mil</td><td>encontros de colaboradores de agências aprimorando a experiência</td></tr>
             <tr><td class="td-strong">Ituber Visita</td><td class="num">+1.000</td><td>visitas conectando lideranças e linha de frente</td></tr>
           </tbody>
         </table>
@@ -1219,13 +1240,13 @@
     </section>
 
     <!-- ═══ SEÇÃO 5 — SUSTENTABILIDADE & ESG ═══ -->
-    <section class="report-section" id="s5" data-reveal>
+    <section class="report-section" id="s5">
       <div class="section-header">
         <span class="section-num" aria-hidden="true">05</span>
         <h2>Sustentabilidade e ESG</h2>
       </div>
 
-      <p>A agenda ESG do Itaú Unibanco se organiza em <strong>três frentes substantivas</strong> — Social, Finanças sustentáveis e Transição climática — apoiadas em uma <em>base transversal de governança</em>. O compromisso central de longo prazo é direcionar <strong>R$ 1 trilhão em finanças sustentáveis até 2030</strong>, dos quais R$ 577,6 bilhões já foram canalizados entre janeiro de 2020 e fevereiro de 2026<sup><a href="#fn3" class="fn-ref" id="fn-ref-7">[3]</a></sup>.</p>
+      <p>A agenda ESG do Itaú Unibanco se organiza em <strong>três frentes substantivas</strong> — Social, Finanças sustentáveis e Transição climática — apoiadas em uma <em>base transversal de governança</em>. O compromisso central de longo prazo é direcionar <strong>R$&nbsp;1 trilhão em finanças sustentáveis até 2030</strong>, dos quais R$&nbsp;577,6 bilhões já foram canalizados entre janeiro de 2020 e fevereiro de 2026<sup><a href="#fn3" class="fn-ref" id="fn-ref-7">[3]</a></sup>.</p>
 
       <h3>5.1 Pilares ESG</h3>
 
@@ -1325,9 +1346,9 @@
             <tr><td><span class="badge badge-info">Fornecedores</span></td><td class="td-strong">Censo de diversidade</td><td class="num">47%</td><td>2030</td></tr>
             <tr><td><span class="badge badge-teal">Fornecedores</span></td><td class="td-strong">Inventário de emissões</td><td class="num">56%</td><td>2030</td></tr>
             <tr><td><span class="badge badge-success">Fornecedores</span></td><td class="td-strong">Auditoria ESG sensíveis</td><td class="num">98%</td><td>2030</td></tr>
-            <tr><td><span class="badge badge-accent">Crédito</span></td><td class="td-strong">Mulheres</td><td class="num">R$ 23 bi / R$ 34,7 bi</td><td>2030 · 9,3% × 2024</td></tr>
-            <tr><td><span class="badge badge-info">Crédito</span></td><td class="td-strong">Microcrédito</td><td class="num">R$ 2,8 bi / R$ 15 bi</td><td>2030 · 19% atingido</td></tr>
-            <tr><td><span class="badge badge-teal">Crédito</span></td><td class="td-strong">MPE — micro e pequenas empresas</td><td class="num">R$ 44,7 mi / R$ 67,1 bi</td><td>2030 · 67% atingido</td></tr>
+            <tr><td><span class="badge badge-accent">Crédito</span></td><td class="td-strong">Mulheres</td><td class="num">R$&nbsp;23&nbsp;bi / R$&nbsp;34,7&nbsp;bi</td><td>2030 · 9,3% × 2024</td></tr>
+            <tr><td><span class="badge badge-info">Crédito</span></td><td class="td-strong">Microcrédito</td><td class="num">R$&nbsp;2,8&nbsp;bi / R$&nbsp;15&nbsp;bi</td><td>2030 · 19% atingido</td></tr>
+            <tr><td><span class="badge badge-teal">Crédito</span></td><td class="td-strong">MPE — micro e pequenas empresas</td><td class="num">R$&nbsp;44,7&nbsp;mi / R$&nbsp;67,1&nbsp;bi</td><td>2030 · 67% atingido</td></tr>
           </tbody>
         </table>
       </div>
@@ -1360,26 +1381,26 @@
       </div>
 
       <h3>5.5 Finanças sustentáveis — R$ 1 trilhão até 2030</h3>
-      <p>O compromisso de R$ 1 trilhão em finanças sustentáveis tem prazo até 2030. O progresso acumulado mostra aceleração consistente entre dezembro de 2023 e fevereiro de 2026.</p>
+      <p>O compromisso de R$&nbsp;1 trilhão em finanças sustentáveis tem prazo até 2030. O progresso acumulado mostra aceleração consistente entre dezembro de 2023 e fevereiro de 2026.</p>
 
       <figure class="report-figure">
         <p class="report-figure__title">Figura 1. Progresso acumulado — finanças sustentáveis</p>
         <p class="report-figure__subtitle">% direcionado vs meta de R$ 1 trilhão até 2030</p>
         <div class="chart-inner">
-          <canvas id="chart-fin-sust" aria-label="Progresso acumulado de finanças sustentáveis"></canvas>
+          <canvas id="chart-fin-sust" aria-label="Progresso acumulado de finanças sustentáveis" role="img"></canvas>
         </div>
-        <figcaption><strong>Fonte:</strong> Itaú Unibanco · Apresentação Institucional 1T26. R$ 577,6 bi direcionados entre jan/20 e fev/26 (57,7% da meta).</figcaption>
+        <figcaption><strong>Fonte:</strong> Itaú Unibanco · Apresentação Institucional 1T26. R$&nbsp;577,6&nbsp;bi direcionados entre jan/20 e fev/26 (57,7% da meta).</figcaption>
       </figure>
     </section>
 
     <!-- ═══ SEÇÃO 6 — TRANSFORMAÇÃO DIGITAL ═══ -->
-    <section class="report-section" id="s6" data-reveal>
+    <section class="report-section" id="s6">
       <div class="section-header">
         <span class="section-num" aria-hidden="true">06</span>
         <h2>Transformação digital — metodologia, IA e eficiência</h2>
       </div>
 
-      <p>A transformação digital do banco se sustenta em <strong>quatro disciplinas integradas no centro do cliente</strong>: Design, Tecnologia, Produtos e Dados &amp; IA. A Inteligência Itaú — soluções de IA generativa conversacional como Pix no WhatsApp, Inteligência de Investimentos e o assistente do Itaú Emps — opera em escala apoiada por mais de 20 mil colaboradores em cerca de 2,9 mil squads.</p>
+      <p>A transformação digital do banco se sustenta em <strong>quatro disciplinas integradas no centro do cliente</strong>: Design, Tecnologia, Produtos e Dados &amp; IA. A Inteligência Itaú — soluções de IA generativa conversacional como Pix no WhatsApp, Inteligência de Investimentos e o assistente do Itaú Emps — opera em escala apoiada por mais de 20&nbsp;mil colaboradores em cerca de 2,9&nbsp;mil squads.</p>
 
       <h3>6.1 As quatro disciplinas integradas</h3>
       <ul>
@@ -1413,7 +1434,7 @@
             <tr><td><span class="badge badge-success">Qualidade</span></td><td class="num">-98%</td><td>incidentes de alto impacto (1T26 × 1T18)</td></tr>
             <tr class="is-emphasis"><td><span class="badge badge-teal">Velocidade</span></td><td class="num">+2.813%</td><td>volume de implantações (1T26 × 1T18)</td></tr>
             <tr><td><span class="badge badge-plum">Custo</span></td><td class="num">-44%</td><td>custo de transações únicas (1T26 × 1T18)</td></tr>
-            <tr><td><span class="badge badge-success">Squads</span></td><td class="num">+20 mil</td><td>colaboradores em &gt;2,9 mil squads</td></tr>
+            <tr><td><span class="badge badge-success">Squads</span></td><td class="num">+20&nbsp;mil</td><td>colaboradores em &gt;2,9&nbsp;mil squads</td></tr>
           </tbody>
         </table>
       </div>
@@ -1434,8 +1455,8 @@
         </div>
         <div class="metric-card var-info">
           <p class="metric-card__kicker">Squads ativos</p>
-          <span class="metric-card__val">+20 mil</span>
-          <p class="metric-card__label">colaboradores em &gt;2,9 mil squads</p>
+          <span class="metric-card__val">+20&nbsp;mil</span>
+          <p class="metric-card__label">colaboradores em &gt;2,9&nbsp;mil squads</p>
         </div>
         <div class="metric-card var-teal">
           <p class="metric-card__kicker">Cultura</p>
@@ -1448,25 +1469,27 @@
         <p class="report-figure__title">Figura 2. Índice de eficiência</p>
         <p class="report-figure__subtitle">% — quatro recortes · 4T24 → 1T26</p>
         <div class="chart-inner">
-          <canvas id="chart-eficiencia" aria-label="Índice de Eficiência"></canvas>
+          <canvas id="chart-eficiencia" aria-label="Índice de Eficiência" role="img"></canvas>
         </div>
         <figcaption><strong>Fonte:</strong> Itaú Unibanco · 1T26 Apresentação Institucional. Acumulado 12m total e Brasil; índice do trimestre total e Brasil. Escala 30–42%.</figcaption>
       </figure>
     </section>
 
     <!-- ═══ SEÇÃO 7 — RESULTADOS FINANCEIROS 1T26 ═══ -->
-    <section class="report-section" id="s7" data-reveal>
+    <section class="report-section" id="s7">
       <div class="section-header">
         <span class="section-num" aria-hidden="true">07</span>
         <h2>Resultados financeiros 1T26</h2>
       </div>
 
-      <p>O resultado recorrente gerencial do <strong>1T26 totalizou R$ 12,3 bilhões</strong>, alta de 10,4% versus o 1T25. A margem financeira com clientes alcançou R$ 31,5 bi (+4,5% YoY); a receita de serviços e seguros, R$ 14,0 bi (+5,3% YoY); e o custo do crédito, R$ 10,0 bi. O balanço permanece sólido, com NPL 90 dias estável em 1,9% e capital nível 1 em 13,4%.</p>
+      <p>O resultado recorrente gerencial do <strong>1T26 totalizou R$&nbsp;12,3 bilhões</strong>, alta de 10,4% versus o 1T25. A margem financeira com clientes alcançou R$&nbsp;31,5&nbsp;bi (+4,5% YoY); a receita de serviços e seguros, R$&nbsp;14,0&nbsp;bi (+5,3% YoY); e o custo do crédito, R$&nbsp;10,0&nbsp;bi. O balanço permanece sólido, com NPL 90 dias estável em 1,9% e capital nível 1 em 13,4%.</p>
 
       <h3>7.1 Performance financeira do trimestre</h3>
 
-      <div class="table-wrap">
-        <table class="data-table">
+      <!-- Assinatura M0 — tabela de resultados consolidados em full-bleed broadsheet,
+           fio duplo contábil no total (R$ 12,3 bi) -->
+      <div class="table-wrap bleed">
+        <table class="data-table data-table--protagonista">
           <thead>
             <tr>
               <th>Linha</th>
@@ -1477,12 +1500,12 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td class="td-strong">Margem financeira clientes</td><td class="num">R$ 31,5 bi</td><td class="num"><span class="num-negative">-0,7%</span></td><td class="num"><span class="num-positive">+4,5%</span></td><td>20,0 · 24,0 · 26,5 · 30,2</td></tr>
-            <tr><td class="td-strong">Margem financeira mercado</td><td class="num">R$ 0,8 bi</td><td class="num"><span class="num-positive">+37,4%</span></td><td class="num"><span class="num-negative">-11,2%</span></td><td>1,0 · 0,6 · 1,1 · 0,9</td></tr>
-            <tr><td class="td-strong">Custo do crédito</td><td class="num">R$ 10,0 bi</td><td class="num"><span class="num-negative">+2,5%</span></td><td class="num"><span class="num-negative">+4,5%</span></td><td>7,0 · 9,1 · 9,4 · 9,5</td></tr>
-            <tr><td class="td-strong">Receita serviços e seguros</td><td class="num">R$ 14,0 bi</td><td class="num"><span class="num-negative">-5,7%</span></td><td class="num"><span class="num-positive">+5,3%</span></td><td>11,6 · 12,4 · 12,7 · 13,3</td></tr>
-            <tr><td class="td-strong">Despesas não decorrentes de juros</td><td class="num">R$ 16,2 bi</td><td class="num"><span class="num-positive">-5,0%</span></td><td class="num"><span class="num-negative">+4,8%</span></td><td>12,8 · 13,8 · 14,0 · 15,5</td></tr>
-            <tr class="is-emphasis"><td class="td-strong">Resultado recorrente</td><td class="num">R$ 12,3 bi</td><td class="num"><span class="num-negative">-0,3%</span></td><td class="num"><span class="num-positive">+10,4%</span></td><td>7,4 · 8,4 · 9,8 · 11,1</td></tr>
+            <tr><td class="td-strong">Margem financeira clientes</td><td class="num">R$&nbsp;31,5&nbsp;bi</td><td class="num"><span class="num-negative">-0,7%</span></td><td class="num"><span class="num-positive">+4,5%</span></td><td>20,0 · 24,0 · 26,5 · 30,2</td></tr>
+            <tr><td class="td-strong">Margem financeira mercado</td><td class="num">R$&nbsp;0,8&nbsp;bi</td><td class="num"><span class="num-positive">+37,4%</span></td><td class="num"><span class="num-negative">-11,2%</span></td><td>1,0 · 0,6 · 1,1 · 0,9</td></tr>
+            <tr><td class="td-strong">Custo do crédito</td><td class="num">R$&nbsp;10,0&nbsp;bi</td><td class="num"><span class="num-negative">+2,5%</span></td><td class="num"><span class="num-negative">+4,5%</span></td><td>7,0 · 9,1 · 9,4 · 9,5</td></tr>
+            <tr><td class="td-strong">Receita serviços e seguros</td><td class="num">R$&nbsp;14,0&nbsp;bi</td><td class="num"><span class="num-negative">-5,7%</span></td><td class="num"><span class="num-positive">+5,3%</span></td><td>11,6 · 12,4 · 12,7 · 13,3</td></tr>
+            <tr><td class="td-strong">Despesas não decorrentes de juros</td><td class="num">R$&nbsp;16,2&nbsp;bi</td><td class="num"><span class="num-positive">-5,0%</span></td><td class="num"><span class="num-negative">+4,8%</span></td><td>12,8 · 13,8 · 14,0 · 15,5</td></tr>
+            <tr class="is-total"><td class="td-strong">Resultado recorrente</td><td class="num">R$&nbsp;12,3&nbsp;bi</td><td class="num"><span class="num-negative">-0,3%</span></td><td class="num"><span class="num-positive">+10,4%</span></td><td>7,4 · 8,4 · 9,8 · 11,1</td></tr>
           </tbody>
         </table>
       </div>
@@ -1494,7 +1517,7 @@
         <p class="report-figure__title">Figura 3. Geração de valor — 2013 → 1T26</p>
         <p class="report-figure__subtitle">Resultado recorrente gerencial decomposto + ROE e custo de capital</p>
         <div class="chart-inner-tall">
-          <canvas id="chart-valor" aria-label="Geração de valor consistente"></canvas>
+          <canvas id="chart-valor" aria-label="Geração de valor consistente" role="img"></canvas>
         </div>
         <figcaption><strong>Fonte:</strong> Itaú Unibanco · 1T26. Resultado recorrente gerencial = custo de capital + criação de valor (R$ bi, eixo esquerdo). ROE e custo de capital médio em % no eixo direito. +26% na criação de valor 1T26 × 1T25.</figcaption>
       </figure>
@@ -1514,10 +1537,10 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td class="td-strong">Carteira de crédito</td><td class="num">R$ 1.483 bi</td><td class="num"><span class="num-negative">-0,5%</span></td><td class="num"><span class="num-positive">+7,2%</span></td><td>1.032 · 1.153 · 1.222 · 1.383</td></tr>
+            <tr><td class="td-strong">Carteira de crédito</td><td class="num">R$&nbsp;1.483&nbsp;bi</td><td class="num"><span class="num-negative">-0,5%</span></td><td class="num"><span class="num-positive">+7,2%</span></td><td>1.032 · 1.153 · 1.222 · 1.383</td></tr>
             <tr class="is-emphasis"><td class="td-strong">NPL 90 dias c/ TVM</td><td class="num">1,9%</td><td class="num">0 pp</td><td class="num">0 pp</td><td>2,6 · 2,9 · 2,7 · 1,9</td></tr>
             <tr><td class="td-strong">Capital nível 1</td><td class="num">13,4%</td><td class="num"><span class="num-negative">-0,4 pp</span></td><td class="num"><span class="num-negative">-0,7 pp</span></td><td>12,5 · 13,5 · 14,5 · 14,1</td></tr>
-            <tr><td class="td-strong">Funding</td><td class="num">R$ 1.667 bi</td><td class="num"><span class="num-negative">-2,0%</span></td><td class="num"><span class="num-positive">+10,5%</span></td><td>1.111 · 1.301 · 1.395 · 1.509</td></tr>
+            <tr><td class="td-strong">Funding</td><td class="num">R$&nbsp;1.667&nbsp;bi</td><td class="num"><span class="num-negative">-2,0%</span></td><td class="num"><span class="num-positive">+10,5%</span></td><td>1.111 · 1.301 · 1.395 · 1.509</td></tr>
             <tr><td class="td-strong">LCR · liquidez curto prazo</td><td class="num">195,1%</td><td class="num"><span class="num-negative">-19,9 pp</span></td><td class="num"><span class="num-negative">-1,3 pp</span></td><td>150 · 162 · 194 · 196</td></tr>
             <tr><td class="td-strong">NSFR · funding estável</td><td class="num">122,0%</td><td class="num"><span class="num-negative">-2,8 pp</span></td><td class="num"><span class="num-negative">-0,3 pp</span></td><td>120 · 129 · 126 · 122</td></tr>
           </tbody>
@@ -1526,7 +1549,7 @@
     </section>
 
     <!-- ═══ SEÇÃO 8 — ESTRATÉGIA E GUIDANCE ═══ -->
-    <section class="report-section" id="s8" data-reveal>
+    <section class="report-section" id="s8">
       <div class="section-header">
         <span class="section-num" aria-hidden="true">08</span>
         <h2>Estratégia, guidance 2026 e encerramento</h2>
@@ -1584,8 +1607,8 @@
             <tr><td class="td-strong">Carteira de crédito total<sup><a href="#fn5" class="fn-ref" id="fn-ref-8">[5]</a></sup></td><td>Crescimento entre <strong>5,5% e 9,5%</strong></td></tr>
             <tr><td class="td-strong">Carteira de crédito — Brasil</td><td>Crescimento entre <strong>6,5% e 10,5%</strong></td></tr>
             <tr class="is-emphasis"><td class="td-strong">Margem financeira com clientes</td><td>Crescimento entre <strong>5,0% e 9,0%</strong></td></tr>
-            <tr><td class="td-strong">Margem financeira com mercado</td><td>Entre <strong>R$ 2,5 bi e R$ 5,5 bi</strong></td></tr>
-            <tr><td class="td-strong">Custo do crédito<sup><a href="#fn6" class="fn-ref" id="fn-ref-9">[6]</a></sup></td><td>Entre <strong>R$ 38,5 bi e R$ 43,5 bi</strong></td></tr>
+            <tr><td class="td-strong">Margem financeira com mercado</td><td>Entre <strong>R$&nbsp;2,5&nbsp;bi e R$&nbsp;5,5&nbsp;bi</strong></td></tr>
+            <tr><td class="td-strong">Custo do crédito<sup><a href="#fn6" class="fn-ref" id="fn-ref-9">[6]</a></sup></td><td>Entre <strong>R$&nbsp;38,5&nbsp;bi e R$&nbsp;43,5&nbsp;bi</strong></td></tr>
             <tr><td class="td-strong">Receita de serviços e seguros<sup><a href="#fn7" class="fn-ref" id="fn-ref-10">[7]</a></sup></td><td>Crescimento entre <strong>5,0% e 9,0%</strong></td></tr>
             <tr><td class="td-strong">Despesas não decorrentes de juros</td><td>Crescimento entre <strong>1,5% e 5,5%</strong></td></tr>
             <tr><td class="td-strong">Alíquota efetiva de IR/CS</td><td>Entre <strong>29,5% e 32,5%</strong></td></tr>
@@ -1615,7 +1638,6 @@
       </div>
 
       <div class="callout callout--info">
-        <span class="callout__icon">i</span>
         <div class="callout__content">
           <p class="callout__title">Itaú Unibanco Holding S.A.</p>
           <p>CNPJ 60.872.504/0001-23 · Praça Alfredo Egydio de Souza Aranha, 100 · Torre Olavo Setubal · São Paulo/SP.</p>
@@ -1625,39 +1647,55 @@
 
   </main>
 
-  <!-- ═══════════════ FOOTNOTES ═══════════════ -->
-  <div class="report-footnotes">
-    <p class="fn-label">Notas e fontes</p>
+  <!-- ═══════════════ FOOTNOTES (link mútuo) ═══════════════ -->
+  <aside class="report-footnotes" aria-label="Notas e fontes">
+    <p class="fn-label label-caps">Notas e fontes</p>
     <ol class="fn-list">
-      <li id="fn1"><a href="#fn-ref-1" class="fn-back">↑</a> Itaú Unibanco Holding S.A. · 1T26 Apresentação Institucional — indicadores institucionais (valor de mercado em 30/04/2026; ativos totais e carteira em 31/03/2026; ROE recorrente, índice de eficiência Brasil em 12m findos mar/26; resultado recorrente do trimestre; valor da marca).</li>
-      <li id="fn2"><a href="#fn-ref-2" class="fn-back">↑</a> Performance financeira 1T26 — margem financeira com clientes, margem financeira com mercado, custo do crédito, receita de serviços e seguros, despesas não decorrentes de juros e resultado recorrente gerencial. Variações YoY (vs 1T25) e QoQ (vs 4T25) conforme divulgação oficial Itaú Unibanco 1T26.</li>
-      <li id="fn3"><a href="#fn-ref-3" class="fn-back">↑</a> Compromisso de R$ 1 trilhão em finanças sustentáveis até 2030 · R$ 577,6 bi direcionados entre jan/20 e fev/26 (57,7% da meta). Pertencimento ao Índice Dow Jones de Sustentabilidade desde sua criação. Selos &amp; Reconhecimentos: B3 · NYSE · S&amp;P Dow Jones · ISE B3 · Bloomberg Gender-Equality Index · MSCI.</li>
-      <li id="fn4"><a href="#fn-ref-4" class="fn-back">↑</a> Guidance 2026 conforme divulgação oficial Itaú Unibanco. Premissas detalhadas nas notas 5 a 7 deste relatório.</li>
-      <li id="fn5"><a href="#fn-ref-8" class="fn-back">↑</a> Inclui garantias financeiras prestadas e títulos privados.</li>
-      <li id="fn6"><a href="#fn-ref-9" class="fn-back">↑</a> Composto por despesa de perda esperada, descontos concedidos e recuperação de créditos.</li>
-      <li id="fn7"><a href="#fn-ref-10" class="fn-back">↑</a> Receitas de prestação de serviços + resultado de seguros, previdência e capitalização + despesas com sinistros.</li>
+      <li id="fn1"><a href="#fn-ref-1" class="fn-back" aria-label="Voltar ao texto da nota 1">↑</a> Itaú Unibanco Holding S.A. · 1T26 Apresentação Institucional — indicadores institucionais (valor de mercado em 30/04/2026; ativos totais e carteira em 31/03/2026; ROE recorrente, índice de eficiência Brasil em 12m findos mar/26; resultado recorrente do trimestre; valor da marca).</li>
+      <li id="fn2"><a href="#fn-ref-2" class="fn-back" aria-label="Voltar ao texto da nota 2">↑</a> Performance financeira 1T26 — margem financeira com clientes, margem financeira com mercado, custo do crédito, receita de serviços e seguros, despesas não decorrentes de juros e resultado recorrente gerencial. Variações YoY (vs 1T25) e QoQ (vs 4T25) conforme divulgação oficial Itaú Unibanco 1T26.</li>
+      <li id="fn3"><a href="#fn-ref-3" class="fn-back" aria-label="Voltar ao texto da nota 3">↑</a> Compromisso de R$&nbsp;1 trilhão em finanças sustentáveis até 2030 · R$&nbsp;577,6&nbsp;bi direcionados entre jan/20 e fev/26 (57,7% da meta). Pertencimento ao Índice Dow Jones de Sustentabilidade desde sua criação. Selos &amp; Reconhecimentos: B3 · NYSE · S&amp;P Dow Jones · ISE B3 · Bloomberg Gender-Equality Index · MSCI.</li>
+      <li id="fn4"><a href="#fn-ref-4" class="fn-back" aria-label="Voltar ao texto da nota 4">↑</a> Guidance 2026 conforme divulgação oficial Itaú Unibanco. Premissas detalhadas nas notas 5 a 7 deste relatório.</li>
+      <li id="fn5"><a href="#fn-ref-8" class="fn-back" aria-label="Voltar ao texto da nota 5">↑</a> Inclui garantias financeiras prestadas e títulos privados.</li>
+      <li id="fn6"><a href="#fn-ref-9" class="fn-back" aria-label="Voltar ao texto da nota 6">↑</a> Composto por despesa de perda esperada, descontos concedidos e recuperação de créditos.</li>
+      <li id="fn7"><a href="#fn-ref-10" class="fn-back" aria-label="Voltar ao texto da nota 7">↑</a> Receitas de prestação de serviços + resultado de seguros, previdência e capitalização + despesas com sinistros.</li>
     </ol>
-  </div>
+  </aside>
 
-  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <!-- ═══════════════ FECHAMENTO ═══════════════ -->
   <footer class="report-footer">
     <span class="report-footer__brand">Itaú Unibanco · 2026</span>
     <p class="report-footer__disclaimer">Documento preparado a partir da Apresentação Institucional 1T26 do Itaú Unibanco Holding S.A. Os números refletem o resultado recorrente gerencial e podem diferir do resultado contábil. Para informações regulatórias completas, consulte os relatórios trimestrais e o Form 20-F.</p>
   </footer>
 
   <script>
-    // ═══ Theme toggle ═══
+    // ═══ Helpers ═══
+    function cssVar(name) {
+      return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    }
+    const css = v => cssVar(v);
+
+    // ═══ §5.0 Defaults do Chart.js — fonte e formatação do DOCUMENTO ═══
+    function setChartDefaults() {
+      Chart.defaults.font.family = css('--font-ui') || css('--font-text');
+      Chart.defaults.font.size = 12;
+      Chart.defaults.color = css('--color-fg-muted');
+      Chart.defaults.plugins.tooltip.backgroundColor = css('--color-bg-elevated');
+      Chart.defaults.plugins.tooltip.titleColor = css('--color-fg');
+      Chart.defaults.plugins.tooltip.bodyColor = css('--color-fg-muted');
+      Chart.defaults.plugins.tooltip.borderColor = css('--color-border-strong');
+      Chart.defaults.plugins.tooltip.borderWidth = 1;
+    }
+    // Formatação numérica pt-BR — consistente com o texto do documento
+    const fmtBR  = (v, dec = 0) => v.toLocaleString('pt-BR', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+    const fmtBRL = (v, suf = '') => 'R$ ' + fmtBR(v, v % 1 ? 1 : 0) + (suf ? ' ' + suf : '');
+
+    // ═══ Theme toggle (única micro-interação do documento) ═══
     document.querySelector('.theme-toggle')?.addEventListener('click', () => {
       const cur = document.documentElement.getAttribute('data-theme');
       const next = cur === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', next);
       try { localStorage.setItem('theme', next); } catch {}
-      if (window._reportCharts) {
-        window._reportCharts.forEach(chart => {
-          updateChartTheme(chart);
-          chart.update('none');
-        });
-      }
+      refreshCharts();
     });
 
     // ═══ TOC generated from h2 dentro de .report-section[id] ═══
@@ -1671,7 +1709,13 @@
         const id = h.closest('section').id;
         const a = document.createElement('a');
         a.href = '#' + id;
-        a.innerHTML = `<span class="toc-num">${n}</span><span>${h.textContent}</span>`;
+        const num = document.createElement('span');
+        num.className = 'toc-num';
+        num.textContent = n;
+        a.appendChild(num);
+        const txt = document.createElement('span');
+        txt.textContent = h.textContent;
+        a.appendChild(txt);
         li.appendChild(a);
         toc.appendChild(li);
       });
@@ -1689,29 +1733,15 @@
       sections.forEach(s => spy.observe(s));
     });
 
-    // ═══ Reveal on scroll ═══
-    const revealObserver = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('is-visible');
-          revealObserver.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-    document.querySelectorAll('[data-reveal]').forEach(el => revealObserver.observe(el));
-
-    // ═══ Helpers ═══
-    function cssVar(name) {
-      return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-    }
-
+    // ═══ Re-tematização dos gráficos (toggle de tema + print) ═══
     function updateChartTheme(chart) {
-      const fgMuted = cssVar('--color-fg-muted');
-      const border = cssVar('--color-border');
-      const accent = cssVar('--color-accent');
-      const info   = cssVar('--color-info');
-      const teal   = cssVar('--color-teal');
-      const subtle = cssVar('--color-fg-subtle');
+      setChartDefaults();
+      const fgMuted = css('--color-fg-muted');
+      const border  = css('--color-border');
+      const accent  = css('--color-accent');
+      const info    = css('--color-info');
+      const teal    = css('--color-teal');
+      const subtle  = css('--color-fg-subtle');
 
       if (chart.options.plugins?.legend?.labels) {
         chart.options.plugins.legend.labels.color = fgMuted;
@@ -1723,7 +1753,6 @@
           if (scale.title) scale.title.color = fgMuted;
         });
       }
-      // Atualizar cores de datasets sensíveis ao tema
       if (chart._reportTag === 'eficiencia') {
         chart.data.datasets[0].borderColor = accent;
         chart.data.datasets[0].pointBackgroundColor = accent;
@@ -1735,14 +1764,14 @@
         chart.data.datasets[3].pointBackgroundColor = teal;
       }
       if (chart._reportTag === 'fin-sust') {
-        const dim = cssVar('--color-accent-dim');
+        const dim = css('--color-accent-dim');
         chart.data.datasets[0].backgroundColor = [dim, dim, dim, accent];
         chart.data.datasets[0].borderColor = [accent, accent, accent, accent];
       }
       if (chart._reportTag === 'valor') {
         chart.data.datasets[0].backgroundColor = subtle;
         chart.data.datasets[0].borderColor = fgMuted;
-        chart.data.datasets[1].backgroundColor = cssVar('--color-accent-dim');
+        chart.data.datasets[1].backgroundColor = css('--color-accent-dim');
         chart.data.datasets[1].borderColor = accent;
         chart.data.datasets[2].borderColor = accent;
         chart.data.datasets[2].pointBackgroundColor = accent;
@@ -1750,18 +1779,39 @@
         chart.data.datasets[3].pointBackgroundColor = fgMuted;
       }
     }
+    function refreshCharts() {
+      (window._reportCharts || []).forEach(c => { updateChartTheme(c); c.update('none'); });
+    }
+
+    // ═══ Print força light: re-renderiza os canvas com cores de papel ═══
+    let _themeBeforePrint = null;
+    window.addEventListener('beforeprint', () => {
+      _themeBeforePrint = document.documentElement.getAttribute('data-theme');
+      if (_themeBeforePrint === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+      refreshCharts();
+    });
+    window.addEventListener('afterprint', () => {
+      if (_themeBeforePrint === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+      refreshCharts();
+      _themeBeforePrint = null;
+    });
 
     // ═══ CHARTS ═══
     window._reportCharts = [];
+    setChartDefaults();
 
     // Figura 1 — Progresso finanças sustentáveis (barra horizontal)
     (function() {
       const el = document.getElementById('chart-fin-sust');
-      if (!el) return;
-      const accent = cssVar('--color-accent');
-      const dim    = cssVar('--color-accent-dim');
-      const fgMuted = cssVar('--color-fg-muted');
-      const border = cssVar('--color-border');
+      if (!el || typeof Chart === 'undefined') return;
+      const accent  = css('--color-accent');
+      const dim     = css('--color-accent-dim');
+      const fgMuted = css('--color-fg-muted');
+      const border  = css('--color-border');
       const chart = new Chart(el, {
         type: 'bar',
         data: {
@@ -1772,17 +1822,18 @@
             backgroundColor: [dim, dim, dim, accent],
             borderColor: [accent, accent, accent, accent],
             borderWidth: 2,
-            borderRadius: 6
+            borderRadius: 0            // radius em barra é decisão declarada — aqui, nenhuma
           }]
         },
         options: {
           responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+          animation: false,            // perfil estático: o gráfico não "entra"
           plugins: {
             legend: { display: false },
-            tooltip: { callbacks: { label: ctx => 'R$ ' + (ctx.parsed.x * 10).toFixed(0) + ' bi · ' + ctx.parsed.x + '%' } }
+            tooltip: { callbacks: { label: ctx => fmtBRL(ctx.parsed.x * 10, 'bi') + ' · ' + fmtBR(ctx.parsed.x, 1) + '%' } }
           },
           scales: {
-            x: { min: 0, max: 100, grid: { color: border }, ticks: { color: fgMuted, callback: v => v + '%' } },
+            x: { min: 0, max: 100, grid: { color: border }, ticks: { color: fgMuted, callback: v => fmtBR(v) + '%' } },
             y: { grid: { display: false }, ticks: { color: fgMuted, font: { size: 12 } } }
           }
         }
@@ -1791,15 +1842,15 @@
       window._reportCharts.push(chart);
     })();
 
-    // Figura 2 — Índice de Eficiência (linha multi-série)
+    // Figura 2 — Índice de Eficiência (linha multi-série, 4 séries → legenda permitida)
     (function() {
       const el = document.getElementById('chart-eficiencia');
-      if (!el) return;
-      const accent  = cssVar('--color-accent');
-      const info    = cssVar('--color-info');
-      const teal    = cssVar('--color-teal');
-      const fgMuted = cssVar('--color-fg-muted');
-      const border  = cssVar('--color-border');
+      if (!el || typeof Chart === 'undefined') return;
+      const accent  = css('--color-accent');
+      const info    = css('--color-info');
+      const teal    = css('--color-teal');
+      const fgMuted = css('--color-fg-muted');
+      const border  = css('--color-border');
       const chart = new Chart(el, {
         type: 'line',
         data: {
@@ -1809,41 +1860,43 @@
               label: 'Acumulado 12m',
               data: [38.5, 38.4, 38.5, 38.4, 38.0, 38.0],
               borderColor: accent, backgroundColor: 'transparent',
-              borderWidth: 2.5, tension: 0.3,
+              borderWidth: 2.5, tension: 0,   /* medição trimestral oficial: linha reta */
               pointRadius: 4, pointHoverRadius: 6, pointBackgroundColor: accent
             },
             {
               label: 'Acumulado 12m Brasil',
               data: [36.8, 36.6, 36.7, 36.5, 36.3, 36.2],
               borderColor: info, backgroundColor: 'transparent',
-              borderWidth: 2.5, tension: 0.3,
+              borderWidth: 2.5, tension: 0,
               pointRadius: 4, pointHoverRadius: 6, pointBackgroundColor: info
             },
             {
               label: 'Trimestre',
               data: [39.6, 37.0, 38.0, 38.8, 38.3, 37.1],
               borderColor: fgMuted, backgroundColor: 'transparent',
-              borderWidth: 2, borderDash: [5, 4], tension: 0.3,
+              borderWidth: 2, borderDash: [5, 4], tension: 0,
               pointRadius: 3, pointHoverRadius: 5, pointBackgroundColor: fgMuted
             },
             {
               label: 'Trimestre Brasil',
               data: [37.4, 35.1, 36.3, 37.1, 36.4, 34.9],
               borderColor: teal, backgroundColor: 'transparent',
-              borderWidth: 2, borderDash: [5, 4], tension: 0.3,
+              borderWidth: 2, borderDash: [5, 4], tension: 0,
               pointRadius: 3, pointHoverRadius: 5, pointBackgroundColor: teal
             }
           ]
         },
         options: {
           responsive: true, maintainAspectRatio: false,
+          animation: false,
           plugins: {
             legend: { position: 'bottom', labels: { color: fgMuted, font: { size: 11 }, padding: 12, usePointStyle: true, pointStyle: 'line' } },
-            tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y + '%' } }
+            tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + fmtBR(ctx.parsed.y, 1) + '%' } }
           },
           scales: {
             x: { grid: { display: false }, ticks: { color: fgMuted } },
-            y: { min: 30, max: 42, grid: { color: border }, ticks: { color: fgMuted, callback: v => v + '%' } }
+            /* exceção de escala declarada: série de índice relativo (%) — faixa 30–42 da fonte */
+            y: { min: 30, max: 42, grid: { color: border }, ticks: { color: fgMuted, callback: v => fmtBR(v) + '%' } }
           }
         }
       });
@@ -1852,17 +1905,34 @@
     })();
 
     // Figura 3 — Geração de valor (chart MISTO: barras empilhadas + 2 linhas, 4 séries)
+    // Gráfico-tese: anotação desenhada no dado que o texto narra (+26% na criação de valor)
+    const anotacaoCriacao = {
+      id: 'anotacaoCriacao',
+      afterDatasetsDraw(chart) {
+        const meta = chart.getDatasetMeta(1); // criação de valor (topo da pilha)
+        if (!meta || !meta.data.length) return;
+        const last = meta.data[meta.data.length - 1];
+        const { ctx } = chart;
+        ctx.save();
+        ctx.font = '600 11px ' + Chart.defaults.font.family;
+        ctx.fillStyle = css('--color-accent');
+        ctx.textAlign = 'center';
+        ctx.fillText('+26% YoY', last.x, last.y - 8);
+        ctx.restore();
+      }
+    };
     (function() {
       const el = document.getElementById('chart-valor');
-      if (!el) return;
-      const accent  = cssVar('--color-accent');
-      const accentDim = cssVar('--color-accent-dim');
-      const fgMuted = cssVar('--color-fg-muted');
-      const subtle  = cssVar('--color-fg-subtle');
-      const border  = cssVar('--color-border');
-      const labels  = ['2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023','2024','2025','1T25','1T26'];
+      if (!el || typeof Chart === 'undefined') return;
+      const accent    = css('--color-accent');
+      const accentDim = css('--color-accent-dim');
+      const fgMuted   = css('--color-fg-muted');
+      const subtle    = css('--color-fg-subtle');
+      const border    = css('--color-border');
+      const labels    = ['2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023','2024','2025','1T25','1T26'];
       const chart = new Chart(el, {
         type: 'bar',
+        plugins: [anotacaoCriacao],
         data: {
           labels,
           datasets: [
@@ -1870,19 +1940,19 @@
               type: 'bar', label: 'Custo de capital (R$ bi)',
               data: [12.3, 15.3, 15.6, 17.7, 16.7, 16.5, 15.6, 15.9, 17.5, 20.6, 23.3, 24.8, 28.3, 6.8, 6.9],
               backgroundColor: subtle, borderColor: fgMuted,
-              borderWidth: 1, stack: 'rev', yAxisID: 'y', order: 2
+              borderWidth: 1, borderRadius: 0, stack: 'rev', yAxisID: 'y', order: 2
             },
             {
               type: 'bar', label: 'Criação de valor (R$ bi)',
               data: [3.5, 5.3, 8.2, 4.4, 8.2, 9.2, 12.8, 2.6, 9.3, 10.2, 12.3, 16.6, 18.5, 4.3, 5.4],
               backgroundColor: accentDim, borderColor: accent,
-              borderWidth: 1.5, stack: 'rev', yAxisID: 'y', order: 2
+              borderWidth: 1.5, borderRadius: 0, stack: 'rev', yAxisID: 'y', order: 2
             },
             {
               type: 'line', label: 'ROE (%)',
               data: [20.9, 24.1, 23.9, 20.3, 21.8, 21.9, 23.7, 14.5, 19.3, 20.3, 21.0, 22.2, 23.4, 22.5, 24.8],
               borderColor: accent, backgroundColor: 'transparent',
-              borderWidth: 2.5, tension: 0.3,
+              borderWidth: 2.5, tension: 0,   /* série financeira oficial: sem suavização */
               pointRadius: 4, pointHoverRadius: 6, pointBackgroundColor: accent,
               yAxisID: 'y2', order: 1
             },
@@ -1890,7 +1960,7 @@
               type: 'line', label: 'Custo de capital médio (%)',
               data: [14.8, 16.0, 16.3, 17.0, 14.6, 14.0, 13.0, 12.9, 13.2, 14.3, 14.4, 13.9, 15.0, 14.8, 14.8],
               borderColor: fgMuted, backgroundColor: 'transparent',
-              borderWidth: 2, borderDash: [4, 4], tension: 0.3,
+              borderWidth: 2, borderDash: [4, 4], tension: 0,
               pointRadius: 3, pointHoverRadius: 5, pointBackgroundColor: fgMuted,
               yAxisID: 'y2', order: 1
             }
@@ -1898,6 +1968,7 @@
         },
         options: {
           responsive: true, maintainAspectRatio: false,
+          animation: false,
           interaction: { mode: 'index', intersect: false },
           plugins: {
             legend: { position: 'top', align: 'end', labels: { color: fgMuted, font: { size: 11 }, padding: 10, boxWidth: 14, usePointStyle: true } },
@@ -1905,8 +1976,8 @@
               callbacks: {
                 label: ctx => {
                   const v = ctx.parsed.y;
-                  if (ctx.dataset.yAxisID === 'y') return ctx.dataset.label + ': R$ ' + v + ' bi';
-                  return ctx.dataset.label + ': ' + v + '%';
+                  if (ctx.dataset.yAxisID === 'y') return ctx.dataset.label + ': ' + fmtBRL(v, 'bi');
+                  return ctx.dataset.label + ': ' + fmtBR(v, 1) + '%';
                 }
               }
             }
@@ -1915,16 +1986,16 @@
             x: { stacked: true, grid: { display: false }, ticks: { color: fgMuted, font: { size: 10 } } },
             y: {
               type: 'linear', position: 'left', stacked: true,
-              min: 0, max: 50,
+              min: 0, max: 50,               /* magnitude: escala SEMPRE começa em 0 */
               grid: { color: border },
-              ticks: { color: fgMuted, callback: v => 'R$ ' + v + ' bi', font: { size: 10 } },
+              ticks: { color: fgMuted, callback: v => fmtBRL(v, 'bi'), font: { size: 10 } },
               title: { display: true, text: 'Resultado recorrente gerencial (R$ bi)', color: fgMuted, font: { size: 11 } }
             },
             y2: {
               type: 'linear', position: 'right',
               min: 0, max: 30,
               grid: { drawOnChartArea: false },
-              ticks: { color: fgMuted, callback: v => v + '%', font: { size: 10 } },
+              ticks: { color: fgMuted, callback: v => fmtBR(v) + '%', font: { size: 10 } },
               title: { display: true, text: 'ROE / Custo de capital (%)', color: fgMuted, font: { size: 11 } }
             }
           }

@@ -28,7 +28,7 @@ Você foi invocado para destilar um documento slideless longo.
    - Tabelas grandes (resumir em prosa).
 4. Adicionar callout `info` no topo:
    > Versão resumida. Para o documento completo, ver: [link]
-5. Salvar como `/mnt/user-data/outputs/<nome>-resumo.html` (não sobrescrever original).
+5. Salvar como `outputs/<nome>-resumo.html` (não sobrescrever original).
 6. Validar.
 
 ## Tamanho-alvo

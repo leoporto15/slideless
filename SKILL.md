@@ -41,10 +41,12 @@ Skill para gerar **documentos web interativos** em HTML single-file. NÃO é "PP
 5. **Tipografia editorial fora de `deck`.** H1 ~2.5rem, h2 ~1.75rem, body 1rem. NUNCA `clamp(vw)` gigante exceto no `deck`. Anti-pattern: "PPT estilizado em HTML". Ver [references/anti-patterns.md](references/anti-patterns.md).
 6. **WCAG AA.** Foco visível, ARIA correto, keyboard nav, `prefers-reduced-motion` respeitado.
 7. **Fidelidade de dados.** Gráficos completos (todos os pontos da fonte, escala Y começa em 0 para magnitudes, unidades nos ticks, composição preservada — bar+line junto = 1 chart misto). Tabelas com TODAS as linhas (≥4 linhas ou ≥3 colunas → `<table>`, nunca bullets).
+8. **Nenhum HTML antes do parti.** Todo documento nasce do bloco `<!-- slideless:parti -->` no `<head>` — 7 decisões derivadas do CONTEÚDO (registro, kit tipográfico, capa, superfície+luz, motion, **ambição**, momento assinatura) + 3 renúncias (`nao-vai-ter`). Capa, kit e superfície nunca repetem o exemplo canônico do modelo. Mecanismo completo: [references/direcao-de-arte.md](references/direcao-de-arte.md).
+9. **Ambição cutting-edge derivada do conteúdo.** A 7ª decisão `ambicao` (A1-contido / A2-elevado / A3-extraordinário) é ortogonal ao registro: default **A2-elevado** para deck/scrollytelling/hub/site/handbook (materialidade de assinatura, springs, scroll-driven, tipografia cinética, ≥1 momento-wow data-bound) e **A1-contido** para report/regulatório. A2/A3 exige ≥1 momento-wow (W1-W9) ligado ao dado-tese, cada gesto com `@supports`+fallback e branch reduced-motion. A ambição respeita o registro como teto de exuberância. Vocabulário e receitas: [references/ambicao.md](references/ambicao.md).
 
 ---
 
-## Comandos (30)
+## Comandos (31)
 
 ### Criação (1 wizard + 1 pré-geração + 6 modelos)
 | Comando | Função |
@@ -97,12 +99,13 @@ Composição típica: `bolder` + `animate` (executivo) · `quieter` + `delight` 
 
 ## Workflow
 
-Resumo: **Think → Structure → Style → Deliver**. Passo-a-passo completo em [references/workflow.md](references/workflow.md).
+Resumo: **Think → Parti → Structure → Style → Deliver**. Passo-a-passo completo em [references/workflow.md](references/workflow.md).
 
-1. **Think.** Quem lê? Que tipo de conteúdo? Qual estética (warm signal / blueprint / editorial / terminal mono)? **Proibido:** neon dashboard (cyan+magenta+purple), Inter+violet/indigo+gradient text, emoji como ícones.
-2. **Structure.** Use o template correto em `assets/templates/template-<modelo>.html`. Inventariar elementos discretos (mandatório para deck) — nada pode ficar sem destino.
-3. **Style.** Hierarquia via escala+peso+cor (não cores flashy). Depth tiers (hero/default/recessed). Backgrounds atmosféricos (glow radial, dot grid, gradient mesh — nunca fundo flat). Animações ganham seu lugar (stagger, heroIn, counters). Nunca Inter sozinho — usar font pairing distinto.
-4. **Deliver.** Salvar no diretório indicado, abrir no browser (testar ambos os temas, redimensionar), reportar path + o que foi gerado.
+1. **Think.** Quem lê? Que tipo de conteúdo? O que o ASSUNTO pede visualmente? **Proibido:** neon dashboard (cyan+magenta+purple), Inter+violet/indigo+gradient text, emoji como ícones.
+2. **Parti (obrigatório, antes de qualquer HTML).** Abrir [references/direcao-de-arte.md](references/direcao-de-arte.md), preencher o bloco `<!-- slideless:parti -->` — 7 decisões derivadas do conteúdo (incl. `ambicao` — ver [references/ambicao.md](references/ambicao.md)), cada uma citando a fonte — e colá-lo no `<head>`. Ler o parti do exemplo canônico do modelo e do último documento da pasta (não repetir capa/kit/superfície). Se `ambicao` A2/A3, declarar o(s) `momento-wow`.
+3. **Structure.** Use o template correto em `assets/templates/template-<modelo>.html`. Inventariar elementos discretos (mandatório para deck) — nada pode ficar sem destino.
+4. **Style.** Compor a camada de direção conforme o parti: kit no slot `SLIDELESS:TYPE-KIT`, superfície do cardápio (flat é legítimo; glow nunca é obrigatório), perfil de motion colado como bloco aditivo. Hierarquia via escala+peso+cor. Nunca Inter sozinho — kit de [references/type-kits.md](references/type-kits.md).
+5. **Deliver.** Salvar no diretório indicado, abrir no browser (testar ambos os temas, redimensionar), conferir o checklist de saída do [direcao-de-arte.md](references/direcao-de-arte.md), reportar path + o que foi gerado.
 
 ---
 
@@ -138,7 +141,10 @@ Referência completa: [references/slide-patterns.md](references/slide-patterns.m
 
 ## References (consultar conforme necessário)
 
-- [anti-patterns.md](references/anti-patterns.md) — PPT-isms proibidos (LER PRIMEIRO)
+- [anti-patterns.md](references/anti-patterns.md) — PPT-isms e AI-tells proibidos (LER PRIMEIRO)
+- [direcao-de-arte.md](references/direcao-de-arte.md) — o Parti: 7 decisões por documento (LER ANTES DE GERAR)
+- [ambicao.md](references/ambicao.md) — o teto cutting-edge: eixo A1/A2/A3 + momentos-wow W1-W9 + régua de craft (LER para A2/A3)
+- [type-kits.md](references/type-kits.md) — pool de kits tipográficos + fontes (cinéticas) + banidas
 - [design-system.md](references/design-system.md) — tokens, dark mode, boot script
 - [componentes.md](references/componentes.md) — biblioteca de componentes
 - [css-patterns.md](references/css-patterns.md) — gráficos, tabelas, depth tiers, Mermaid

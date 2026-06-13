@@ -27,10 +27,44 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- SLIDELESS:TYPE-KIT — colar aqui o <link> do kit tipográfico escolhido em
+       references/type-kits.md (decisão do parti — references/direcao-de-arte.md).
+       PROIBIDO entregar com este slot vazio ou com Inter como fonte display. -->
+  <!-- SLIDELESS:TYPE-KIT-END -->
 
   <style>
     /* SLIDELESS:THEME — substituir por conteúdo de assets/temas/itau.css ou neutro.css */
+
+    /* ─── Motion de reveal (perfil do parti, colado como bloco aditivo) ──
+       v5: o tema não define mais [data-reveal]{opacity:0} (era o fingerprint
+       de motion da casa). Sem este bloco, o data-reveal/IO abaixo não anima.
+       Receita = css-patterns §13.3 (scroll-driven nativo + IO de fallback):
+       — BASE é o estado FINAL visível: num Chrome travado nada some;
+       — scroll-driven (animation-timeline: view()) onde houver suporte;
+       — IO (.is-visible) só onde NÃO há scroll-driven, gated por @supports;
+       — reduced-motion: tudo visível, sem movimento.
+       Se o parti for estático, REMOVER este bloco (reveal vira no-op visível). */
+    [data-reveal] { opacity: 1; }   /* estado final = base */
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        [data-reveal] {
+          animation: reveal-up linear both;
+          animation-timeline: view();
+          animation-range: entry 0% cover 35%;
+        }
+        @keyframes reveal-up { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+      }
+    }
+    @supports not (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        [data-reveal] {
+          opacity: 0; transform: translateY(20px);
+          transition: opacity var(--duration-fade, 700ms) var(--ease-out),
+                      transform var(--duration-fade, 700ms) var(--ease-out);
+        }
+        [data-reveal].is-visible { opacity: 1; transform: none; }
+      }
+    }
 
     /* ─── Específico do handbook ───────────────────────────────────── */
     .topbar {
@@ -46,7 +80,11 @@
     }
     [data-theme="dark"] .topbar { background: rgba(20,17,13,0.85); }
     .topbar__brand { display: flex; align-items: center; gap: var(--space-3); font-weight: 600; font-size: 0.9375rem; text-decoration: none; color: var(--color-fg); }
-    .topbar__logo { width: 28px; height: 28px; border-radius: 6px; flex-shrink: 0; background: var(--color-accent); }
+    /* Wordmark tipográfico (não quadrado-placeholder laranja). No tema itau,
+       embarcar a logo via <img> base64 (assets/logos/wordmark-black.png /
+       wordmark-white.png) é a 1ª opção; este wordmark é o fallback digno.
+       NUNCA emoji nem caixa de cor sólida como marca. */
+    .topbar__wordmark { font-family: var(--font-display); font-weight: 800; font-size: 1.0625rem; letter-spacing: -0.02em; color: var(--color-accent); flex-shrink: 0; line-height: 1; }
     .topbar__divider { width: 1px; height: 20px; background: var(--color-border); }
     .topbar__breadcrumb { display: flex; align-items: center; gap: var(--space-2); font-size: var(--size-small); color: var(--color-fg-muted); }
     .topbar__breadcrumb a { color: inherit; text-decoration: none; }
@@ -99,8 +137,8 @@
 <body>
   <header class="topbar">
     <a href="#" class="topbar__brand">
-      <span class="topbar__logo" aria-hidden="true"></span>
-      <span>BRAND · Handbook</span>
+      <span class="topbar__wordmark">itaú</span>
+      <span>Handbook</span>
     </a>
     <span class="topbar__divider"></span>
     <nav class="topbar__breadcrumb" aria-label="Localização">

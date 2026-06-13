@@ -6,7 +6,9 @@ Tokens, dark mode, boot script. **Ler antes de gerar qualquer HTML.**
 
 ## Filosofia
 
-Estética **Notion/GitLab handbook** — densa, editorial, legível. Não é deck (exceção: modelo `deck`). Toda decisão visual subordina-se à pergunta: *"isso aqui pareceria um slide de PPT?"* Se sim, recuar.
+Este arquivo define a **engenharia** do sistema: tokens, contratos, dark mode, boot script, a11y. A **estética** de cada documento NÃO mora aqui — ela é decidida por documento no bloco `<!-- slideless:parti -->` ([direcao-de-arte.md](direcao-de-arte.md)), com tipografia de [type-kits.md](type-kits.md). Dois testes que todo documento precisa passar: *"isso pareceria um slide de PPT?"* (se sim, recuar) e *"isso é distinguível do exemplo canônico cobrindo o logo?"* (se não, falhou a direção de arte).
+
+**Fonte de verdade dos tokens: [assets/temas/itau.css](../assets/temas/itau.css) e [assets/temas/neutro.css](../assets/temas/neutro.css)** (v4, duas camadas: `[MARCA]`/`[BASE]` inviolável + `[DIREÇÃO]` composta conforme o parti). Os blocos abaixo são resumo de referência — em divergência, o tema vence.
 
 ---
 
@@ -25,15 +27,15 @@ Toda cor, tamanho, espaço e duração mora em `:root` e ganha override em `[dat
   --itau-blue-3:    #3B85FA;
   --itau-yellow:    #FBC305;
 
-  /* Light */
-  --color-bg:           #ffffff;
-  --color-bg-elevated:  #faf8f5;   /* warm off-white */
+  /* Light (v4 — sincronizado com itau.css) */
+  --color-bg:           #faf7f5;   /* cream warm — não branco puro */
+  --color-bg-elevated:  #ffffff;
   --color-bg-sunken:    #f4f1ec;
-  --color-fg:           #1a1a1a;
-  --color-fg-muted:     #525252;
-  --color-fg-subtle:    #8a8a8a;
-  --color-border:       #e8e4dd;
-  --color-border-strong:#d4cec3;
+  --color-fg:           #292017;   /* warm dark — não preto puro */
+  --color-fg-muted:     #6b5d50;
+  --color-fg-subtle:    #8a7e72;
+  --color-border:       rgba(41, 32, 23, 0.10);
+  --color-border-strong:rgba(41, 32, 23, 0.18);
   --color-accent:       var(--itau-orange);
   --color-accent-hover: var(--itau-orange-2);
   --color-accent-fg:    #ffffff;
@@ -43,52 +45,46 @@ Toda cor, tamanho, espaço e duração mora em `:root` e ganha override em `[dat
   --color-bg:           #14110d;   /* preto quente (não puro) */
   --color-bg-elevated:  #1c1814;
   --color-bg-sunken:    #221d18;
-  --color-fg:           #e8eaed;
-  --color-fg-muted:     #a8a39a;
-  --color-fg-subtle:    #6e6a62;
-  --color-border:       #2f2a23;
-  --color-border-strong:#403a32;
-  --color-accent:       var(--itau-orange-3);   /* mais luminoso no escuro */
+  --color-fg:           #ede5dd;
+  --color-fg-muted:     #b8aa9a;
+  --color-fg-subtle:    #786e62;
+  --color-border:       rgba(237, 229, 221, 0.10);
+  --color-border-strong:rgba(237, 229, 221, 0.20);
+  --color-accent:       var(--itau-orange-3);   /* +20% luminosity no escuro */
   --color-accent-hover: var(--itau-orange-2);
   --color-accent-fg:    #14110d;
 }
 ```
 
-### Callouts
+### Paleta semântica (tema itau)
 
-```css
-:root {
-  --color-info-bg:    rgba(5, 32, 183, 0.06);
-  --color-info-border:var(--itau-blue-3);
-  --color-tip-bg:     #f0fdf4;
-  --color-tip-border: #22c55e;
-  --color-warn-bg:    rgba(251, 195, 5, 0.12);
-  --color-warn-border:var(--itau-yellow);
-  --color-danger-bg:  #fef2f2;
-  --color-danger-border:#ef4444;
-}
-```
+Cada cor tem `--color-*` (contorno/texto) + `--color-*-dim` (fundo tingido): `accent` (brand), `info` (dado/macro), `success` (resultado positivo — `sage` é alias fundido), `teal` (técnico/analítico), `plum` (crítico/atenção), `warn`, `danger`. Em browsers modernos a paleta é redefinida em **OKLCH** (bloco `@supports` no fim do itau.css) — perceptualmente uniforme, derivada do matiz do laranja.
+
+**Cor é informação, não decoração:** o regime cromático (bicromático / duotone / polícromo mapeado) é decisão do parti; distribuir as cores em sequência decorativa é o anti-pattern C10/C14.
+
+Callouts usam o mesmo sistema: `.callout--info { background: var(--color-info-dim); border-color: var(--color-info); }` (tema neutro usa o par `--color-*-bg`/`--color-*-border`).
 
 ### Tipografia
 
+A voz tipográfica vem do **kit do documento** ([type-kits.md](type-kits.md)) via slots `--kit-*`, definidos ANTES do bloco do tema:
+
 ```css
 :root {
-  --font-text:    'Itau Text', 'Inter', -apple-system, system-ui, sans-serif;
-  --font-display: 'Itau Display', 'Inter', -apple-system, system-ui, sans-serif;
-  --font-mono:    'JetBrains Mono', 'SF Mono', Consolas, monospace;
+  /* o kit define: --kit-display, --kit-text, --kit-ui, --kit-mono */
+  /* itau.css consome: */
+  --font-text:    'Itau Text', var(--kit-text, 'Inter'), -apple-system, system-ui, sans-serif;
+  --font-display: 'Itau Display', var(--kit-display, Georgia), serif;
+  --font-mono:    var(--kit-mono, 'IBM Plex Mono'), 'SF Mono', Consolas, monospace;
 
-  /* Escala editorial — handbook/hub/scrollytelling/site */
-  --size-h1:    2.5rem;
-  --size-h2:    1.75rem;
-  --size-h3:    1.25rem;
-  --size-h4:    1.0625rem;
-  --size-lead:  1.1875rem;
-  --size-body:  1rem;
-  --size-small: 0.9375rem;
-  --size-xs:    0.8125rem;
-  --size-code:  0.875rem;
+  /* Escala fluida (v2+) — clamp em todos os modelos; valores em itau.css */
+  --size-body: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+  --size-h2:   clamp(1.6rem, 1.3rem + 1.2vw, 2.25rem);
+  --size-h1:   clamp(2.25rem, 1.8rem + 2vw, 3.5rem);
+  /* + --size-xs/small/lead/h4/h3 e, deck-only, --size-display/mega/giga */
 }
 ```
+
+**Inter como `--font-display` é PROIBIDO** em qualquer tema (tell nº 1 de tipografia de IA). Lista completa de fontes banidas em [type-kits.md](type-kits.md).
 
 **No modelo `deck`** usar `clamp()` para tipografia fluida (porque é viewport-cheio):
 ```css
@@ -111,26 +107,24 @@ Toda cor, tamanho, espaço e duração mora em `:root` e ganha override em `[dat
   --toc-w:       220px;
   --header-h:    56px;
 
+  /* [DIREÇÃO] Radius (itau: 4/10/16/24 · neutro: 4/8/12) — máx 2 valores
+     DISTINTOS por documento; radius idêntico em card+tabela+code+callout
+     é fingerprint. Sombras: 5 níveis no itau (xs→xl) + insets; o REGIME
+     DE LUZ (flat/key-light/hard-print/glow-spot) é decisão do parti —
+     registro impresso usa fio, não sombra. */
   --radius-sm: 4px;
-  --radius:    8px;
-  --radius-lg: 12px;
+  --radius:    10px;
+  --radius-lg: 16px;
 
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
-  --shadow:    0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
-  --shadow-lg: 0 4px 6px rgba(0,0,0,0.05), 0 10px 24px rgba(0,0,0,0.08);
-
-  --ease:      cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-out:  cubic-bezier(0, 0, 0.2, 1);
+  /* [DIREÇÃO] Easing — vocabulário com PAPEL, nunca curva única (C7) */
+  --ease-out:  cubic-bezier(0.22, 1, 0.36, 1);  /* papel: entrada    */
+  --ease-snap: cubic-bezier(0.2, 0, 0, 1);      /* papel: micro      */
   --duration-fast: 150ms;
   --duration:      250ms;
 }
-
-[data-theme="dark"] {
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
-  --shadow:    0 1px 3px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.3);
-  --shadow-lg: 0 4px 6px rgba(0,0,0,0.4), 0 10px 24px rgba(0,0,0,0.5);
-}
 ```
+
+Valores completos (sombras light/dark, insets, durações de deck): [assets/temas/itau.css](../assets/temas/itau.css). **`transition: all` é proibido** — transições sempre property-scoped.
 
 ---
 
@@ -165,49 +159,54 @@ O validador `scripts/validar.py` falha se este snippet (ou equivalente) não est
 ```
 ```js
 document.querySelector('.theme-toggle')?.addEventListener('click', () => {
-  const cur = document.documentElement.getAttribute('data-theme');
-  const next = cur === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
+  const h = document.documentElement;
+  const next = h.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  // .no-transitions: impede a página inteira de "respirar" no switch (régua de craft, ambicao.md)
+  h.classList.add('no-transitions');
+  h.setAttribute('data-theme', next);
   try { localStorage.setItem('theme', next); } catch {}
+  requestAnimationFrame(() => requestAnimationFrame(() => h.classList.remove('no-transitions')));
 });
 ```
-
----
-
-## Fontes Itaú e pairings externos
-
-Itaú Display e Itaú Text são proprietárias (disponíveis via CDN interno). Fora da rede, fallback para Inter — mas para demos externos e documentos de qualidade visual-explainer, usar um dos pairings abaixo para evitar o "AI slop" de Inter + visual genérico.
-
-**Regra:** Nunca usar Inter sozinho como única fonte display.
-
-### Pairings curados (Google Fonts)
-
-| Pairing | Caráter | Link completo |
-|---|---|---|
-| **Fraunces + JetBrains Mono** | Quente, editorial. Padrão Itaú fora da rede. | `family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,800&family=JetBrains+Mono:wght@400;500;600` |
-| **DM Sans + Fira Code** | Técnico, preciso | `family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Fira+Code:wght@400;500` |
-| **Instrument Serif + JetBrains Mono** | Editorial refinado | `family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600` |
-| **IBM Plex Sans + IBM Plex Mono** | Corporativo confiável | `family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500` |
-| **Bricolage Grotesque + Fragment Mono** | Bold, characterful | `family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Fragment+Mono` |
-
-```html
-<!-- Exemplo: Fraunces + JetBrains Mono (padrão fora da rede Itaú) -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+```css
+/* par do snippet acima — incluir no tema */
+.no-transitions, .no-transitions *, .no-transitions *::before, .no-transitions *::after { transition: none !important; }
 ```
 
-O tema `itau.css` já define `--font-display: 'Itau Display', 'Fraunces', 'Inter', Georgia, serif` — Fraunces é o fallback de qualidade para uso externo.
+---
+
+## Fontes — kits, não pairings
+
+> v4: a tabela de pairings que vivia aqui está REVOGADA — incluía Instrument Serif (fonte-assinatura de IA de 2ª geração, banida) e consagrava Fraunces como "padrão", o que fez 100% dos documentos saírem Fraunces (slop de 2ª geração da casa). A escolha tipográfica agora é a **decisão nº 2 do parti**: 1 kit completo de **[type-kits.md](type-kits.md)** — 6 kits com `<link>` de eixos limitados, tokens `--kit-*`, tabela de tracking por corpo, features OpenType e fallback de sistema desenhado. Fraunces sobrevive só no Kit 06, com quota 1/3 e eixos SOFT/WONK obrigatórios.
+
+Itau Display e Itau Text são proprietárias (CDN interno) e têm precedência dentro da rede — o kit é o fallback desenhado fora dela. **Nunca Inter como display; nunca "fallback automático para Inter".**
 
 ---
 
-## Tema `neutro` — variação azul
+## Microtipografia — obrigatória em todo documento
 
-Mesmo sistema, com:
-- `--color-accent: #2563eb` (azul) substituindo `--itau-orange` no light
-- `--color-accent: #60a5fa` no dark
-- Sem fontes Itaú: `--font-text: 'Inter'`, `--font-display: 'Inter'`
-- Fundos neutros frios (não warm): `--color-bg-elevated: #f8fafc`, dark `#0f172a`
+A assinatura invisível de estúdio (nenhum gerador de IA aplica por default; tudo degrada graciosamente):
+
+| Item | Regra |
+|---|---|
+| Números de dados | `font-variant-numeric: tabular-nums lining-nums` em toda célula de tabela, KPI, metric e tick de gráfico |
+| Aspas | Curvas pt-BR (`“ ” ‘ ’`); apóstrofo `’`; retas só em código |
+| Valor + unidade | NBSP entre eles: `R$ 1,2 bi` · `82 ms` · `14 p.p.` |
+| Headings | `text-wrap: balance` |
+| Parágrafos | `text-wrap: pretty` |
+| Formatação numérica | pt-BR consistente em texto, tabela E Chart.js (`toLocaleString('pt-BR')` — css-patterns.md §5.0) |
+| Tracking | Por corpo, ≥3 valores com sinais distintos — nunca um letter-spacing global |
+| Total de tabela financeira | Fio duplo: `border-top: 3px double var(--color-fg)` |
+| Variable font | Se a display tiver eixo além de wght (opsz/SOFT/WONK), usar ≥1 ou justificar a renúncia no parti |
+
+---
+
+## Tema `neutro` — papel e tinta (v4)
+
+Refeito na v4 (o v2 era o AI-slop canônico: Inter solo + blue-600 + slate). Agora:
+- Accent **azul-tinta próprio** `#1c4d8d` (OKLCH em browsers modernos) — não é o azul do Tailwind
+- Neutros papel/tinta desenhados (`#fbfbf9` / `#1d2126`), não slate
+- **Nenhuma fonte própria**: a voz tipográfica vem 100% do kit (`--kit-*`); sem kit, degrada para Georgia/Segoe — nunca para Inter
 - Sem `--itau-*` tokens
 
 Ver [temas/neutro.md](temas/neutro.md) e `assets/temas/neutro.css`.
@@ -219,6 +218,9 @@ Ver [temas/neutro.md](temas/neutro.md) e `assets/temas/neutro.css`.
 1. Boot script no `<head>` antes do CSS.
 2. Toda cor via `var(--color-*)`. Nunca hex hardcoded no corpo do CSS (exceto dentro de `:root` ou `[data-theme]`).
 3. `[data-theme="dark"]` override completo de todos os tokens semânticos.
-4. Tipografia editorial nos 4 modelos não-deck. Tipografia gigante via `clamp()` só no deck.
+4. Tipografia editorial nos modelos não-deck. Tipografia gigante via `clamp()` só no deck.
 5. `prefers-reduced-motion: reduce` desabilita transições e animações.
 6. Foco visível: `:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }`.
+7. Nenhum HTML antes do bloco `<!-- slideless:parti -->` ([direcao-de-arte.md](direcao-de-arte.md)).
+8. Inter como display, `transition: all` e as fontes banidas de type-kits.md: proibidos.
+9. Microtipografia da tabela acima em todo documento.

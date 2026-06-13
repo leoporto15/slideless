@@ -29,93 +29,24 @@
     })();
   </script>
 
-  <!-- Fontes: Fraunces (display) + Inter (texto) + JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- SLIDELESS:TYPE-KIT — colar aqui o <link> do kit tipográfico escolhido em
+       references/type-kits.md (decisão do parti — references/direcao-de-arte.md).
+       PROIBIDO entregar com este slot vazio ou com Inter como fonte display. -->
+  <!-- SLIDELESS:TYPE-KIT-END -->
 
   <!-- Chart.js (CDN) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 
   <style>
-    /* SLIDELESS:THEME — substituir por conteúdo de assets/temas/itau.css ou neutro.css */
+    /* SLIDELESS:THEME — substituir por conteúdo de assets/temas/itau.css ou neutro.css.
+       O TEMA (cores, fontes via slots --kit-*, dark mode, OKLCH, a11y) vem 100% daqui.
+       NÃO redeclarar :root de cores/fontes neste template — duplicaria o tema. */
 
-    /* ─── Tokens do sistema (inline fallback) ─────────────────────── */
+    /* ─── Tokens ESPECÍFICOS do report (somam-se ao tema, não o substituem) ─
+       Só layout editorial do report. Nada de cor/fonte/dark — isso é do tema. */
     :root {
-      --itau-orange:     #FF6200;
-      --itau-orange-2:   #F88104;
-      --itau-orange-3:   #FA9F09;
-      --itau-blue-3:     #3B85FA;
-      --itau-yellow:     #FBC305;
-      --itau-warm-black: #14110d;
-
-      --color-accent:        var(--itau-orange);
-      --color-accent-dim:    rgba(255,98,0,0.08);
-      --color-accent-fg:     #ffffff;
-      --color-info:          var(--itau-blue-3);
-      --color-info-dim:      rgba(59,133,250,0.08);
-      --color-success:       #4d7c0f;
-      --color-success-dim:   rgba(77,124,15,0.08);
-      --color-sage:          #65a30d;
-      --color-sage-dim:      rgba(101,163,13,0.08);
-      --color-teal:          #0f766e;
-      --color-teal-dim:      rgba(15,118,110,0.08);
-      --color-plum:          #9f1239;
-      --color-plum-dim:      rgba(159,18,57,0.08);
-      --color-warn:          var(--itau-yellow);
-      --color-warn-dim:      rgba(251,195,5,0.12);
-      --color-danger:        #b91c1c;
-      --color-danger-dim:    rgba(185,28,28,0.08);
-
-      --color-bg:            #faf7f5;
-      --color-bg-elevated:   #ffffff;
-      --color-bg-sunken:     #f4f1ec;
-      --color-fg:            #292017;
-      --color-fg-muted:      #6b5d50;
-      --color-fg-subtle:     #8a7e72;
-      --color-border:        rgba(41,32,23,0.10);
-      --color-border-strong: rgba(41,32,23,0.18);
-      --color-accent-hover:  var(--itau-orange-2);
-
-      --glow-warm: radial-gradient(ellipse 80% 60% at 80% 0%,rgba(255,98,0,0.10) 0%,transparent 55%);
-      --glow-cool: radial-gradient(ellipse 70% 50% at 20% 100%,rgba(59,133,250,0.08) 0%,transparent 55%);
-
-      --font-display: 'Fraunces', Georgia, serif;
-      --font-text:    'Inter', -apple-system, system-ui, sans-serif;
-      --font-mono:    'JetBrains Mono', 'IBM Plex Mono', Consolas, monospace;
-
-      --size-xs:    clamp(0.75rem, 0.7rem + 0.2vw, 0.875rem);
-      --size-small: clamp(0.875rem, 0.85rem + 0.15vw, 1rem);
-      --size-body:  clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
-      --size-lead:  clamp(1.15rem, 1.05rem + 0.5vw, 1.4rem);
-      --size-h3:    clamp(1.2rem, 1.1rem + 0.5vw, 1.5rem);
-      --size-h2:    clamp(1.6rem, 1.3rem + 1.2vw, 2.25rem);
-      --size-h1:    clamp(2.25rem, 1.8rem + 2vw, 3.5rem);
-
-      --space-1:  0.25rem;  --space-2:  0.5rem;   --space-3:  0.75rem;
-      --space-4:  1rem;     --space-5:  1.5rem;   --space-6:  2rem;
-      --space-7:  2.5rem;   --space-8:  3rem;     --space-10: 4rem;
-      --space-12: 5rem;     --space-16: 7rem;
-
-      --radius-sm: 4px;
-      --radius:    10px;
-      --radius-lg: 16px;
-
-      --shadow-xs: 0 1px 2px rgba(41,32,23,0.04);
-      --shadow-sm: 0 2px 4px rgba(41,32,23,0.06), 0 1px 2px rgba(41,32,23,0.04);
-      --shadow:    0 4px 12px rgba(41,32,23,0.08), 0 1px 3px rgba(41,32,23,0.05);
-      --shadow-lg: 0 12px 32px rgba(41,32,23,0.12), 0 4px 12px rgba(41,32,23,0.06);
-      --inset-sm:  inset 0 1px 3px rgba(41,32,23,0.06);
-
-      --ease-out:       cubic-bezier(0.22, 1, 0.36, 1);
-      --ease-in-out:    cubic-bezier(0.65, 0, 0.35, 1);
-      --ease-emphatic:  cubic-bezier(0.16, 1, 0.3, 1);
-      --duration-fast:  150ms;
-      --duration:       250ms;
-      --duration-slow:  400ms;
-      --duration-hero:  900ms;
-
-      /* ─── Tokens específicos do report ───────────────────────────── */
       --report-max:       800px;
       --report-gutter:    var(--space-8);
       --report-lead:      1.75rem;
@@ -124,70 +55,17 @@
       --report-header-h:  80px;
     }
 
-    [data-theme="dark"] {
-      --color-bg:            #14110d;
-      --color-bg-elevated:   #1c1814;
-      --color-bg-sunken:     #221d18;
-      --color-fg:            #ede5dd;
-      --color-fg-muted:      #b8aa9a;
-      --color-fg-subtle:     #786e62;
-      --color-border:        rgba(237,229,221,0.10);
-      --color-border-strong: rgba(237,229,221,0.20);
-      --color-accent:        var(--itau-orange-3);
-      --color-accent-hover:  var(--itau-orange-2);
-      --color-accent-fg:     #14110d;
-      --color-accent-dim:    rgba(250,159,9,0.10);
-      --color-info-dim:      rgba(59,133,250,0.12);
-      --color-success:       #a3e635;
-      --color-success-dim:   rgba(163,230,53,0.10);
-      --color-sage:          #bef264;
-      --color-sage-dim:      rgba(190,242,100,0.10);
-      --color-teal:          #5eead4;
-      --color-teal-dim:      rgba(94,234,212,0.10);
-      --color-plum:          #fb7185;
-      --color-plum-dim:      rgba(251,113,133,0.10);
-      --color-warn-dim:      rgba(251,195,5,0.12);
-      --color-danger:        #f87171;
-      --color-danger-dim:    rgba(248,113,113,0.10);
-      --shadow-sm: 0 2px 4px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
-      --shadow-lg: 0 12px 32px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.3);
-      --inset-sm:  inset 0 1px 3px rgba(0,0,0,0.4);
-      --glow-warm: radial-gradient(ellipse 80% 60% at 80% 0%,rgba(250,159,9,0.18) 0%,transparent 55%);
-      --glow-cool: radial-gradient(ellipse 70% 50% at 20% 100%,rgba(59,133,250,0.14) 0%,transparent 55%);
-    }
-
-    /* ─── Reset base ──────────────────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    /* ─── Overrides do report sobre a base do tema ───────────────────
+       O tema já traz reset, body, :focus-visible, h1–h4, p, a, strong.
+       Aqui ficam SÓ os ajustes editoriais do report: corpo mais denso e
+       fundo FLAT (report é flat por princípio — vai para impressão/PDF;
+       glow é decisão de direção, não default). */
     body {
-      margin: 0;
-      font-family: var(--font-text);
       font-size: var(--report-body-size);
       line-height: var(--report-lead);
-      color: var(--color-fg);
-      background: var(--color-bg);
-      background-image: var(--glow-warm), var(--glow-cool);
-      background-attachment: fixed;
-      -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
-      transition: background var(--duration-fast), color var(--duration-fast);
+      background: var(--color-bg);   /* flat — sem glow-wallpaper (anti-pattern C8) */
     }
-    :focus-visible {
-      outline: 2px solid var(--color-accent);
-      outline-offset: 3px;
-      border-radius: var(--radius-sm);
-    }
-    h1, h2, h3, h4 {
-      font-family: var(--font-display);
-      color: var(--color-fg);
-      line-height: 1.1;
-      letter-spacing: -0.022em;
-      font-weight: 700;
-    }
-    p { margin: 0 0 var(--space-4); color: var(--color-fg-muted); max-width: 70ch; }
-    a { color: var(--color-accent); text-decoration: none; }
-    a:hover { color: var(--color-accent-hover); text-decoration: underline; text-underline-offset: 3px; }
-    strong { font-weight: 700; color: var(--color-fg); }
+    .report-body p { color: var(--color-fg-muted); max-width: 70ch; }
 
     /* ─── Header institucional ────────────────────────────────────── */
     .report-header {
@@ -218,7 +96,7 @@
       left: 0;
       right: 0;
       height: 2px;
-      background: linear-gradient(90deg, var(--color-accent) 0%, var(--itau-orange-3) 50%, transparent 100%);
+      background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-accent-hover) 50%, transparent 100%);
       opacity: 0.6;
     }
     .report-header__brand {
@@ -717,15 +595,15 @@
       white-space: nowrap;
     }
 
-    /* ─── Reveal on scroll ────────────────────────────────────────── */
-    [data-reveal] {
-      opacity: 0;
-      transform: translateY(20px);
-      transition:
-        opacity var(--duration-hero) var(--ease-out),
-        transform var(--duration-hero) var(--ease-out);
-    }
-    [data-reveal].is-visible { opacity: 1; transform: none; }
+    /* ─── Reveal ──────────────────────────────────────────────────────
+       v5: o report é registro estático (A1-contido — ambicao.md). O fade-up
+       universal v2 (opacity:0 + translateY) foi REMOVIDO: era o fingerprint
+       de motion da casa e não cabe em documento de impressão/PDF. Estado
+       base = final visível; o data-reveal/IO permanece no HTML como gancho
+       opcional, mas NÃO esconde conteúdo. Se o parti pedir motion editorial,
+       colar o bloco scroll-driven de css-patterns §13.3 (com @supports +
+       branch reduced-motion), não reintroduzir o fade-up incondicional. */
+    [data-reveal] { opacity: 1; transform: none; }
 
     /* ─── Utilities ───────────────────────────────────────────────── */
     .section-divider {
@@ -1042,16 +920,29 @@
       }
     }
 
+    // ── Chart.js defaults — OBRIGATÓRIO antes do 1º new Chart() (css-patterns §5.0)
+    //    Fonte e cor saem dos TOKENS do tema (kit tipográfico), nunca o default
+    //    Helvetica da lib nem 'Inter'. Formatação numérica em pt-BR. ───────────
+    if (window.Chart) {
+      Chart.defaults.font.family = cssVar('--font-ui') || cssVar('--font-text');
+      Chart.defaults.font.size = 12;
+      Chart.defaults.color = cssVar('--color-fg-muted');
+      Chart.defaults.plugins.tooltip.backgroundColor = cssVar('--color-bg-elevated');
+      Chart.defaults.plugins.tooltip.titleColor = cssVar('--color-fg');
+      Chart.defaults.plugins.tooltip.bodyColor = cssVar('--color-fg-muted');
+      Chart.defaults.plugins.tooltip.borderColor = cssVar('--color-border-strong');
+      Chart.defaults.plugins.tooltip.borderWidth = 1;
+    }
+    const fmtBR = (v, dec = 0) => v.toLocaleString('pt-BR', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+
     // ── Gráfico de exemplo (substituir conforme dados reais) ─────────
     window._reportCharts = [];
     (function() {
       const ctx = document.getElementById('chartExemplo');
       if (!ctx) return;
-      const fg = cssVar('--color-fg');
       const fgMuted = cssVar('--color-fg-muted');
       const border = cssVar('--color-border');
       const accent = cssVar('--color-accent');
-      const info = cssVar('--color-info');
 
       const chart = new Chart(ctx, {
         type: 'bar',
@@ -1061,20 +952,20 @@
             label: '{{DATASET_LABEL}}',
             data: [10, 25, 18, 32, 22],
             backgroundColor: accent,
-            borderRadius: 4,
+            borderRadius: 0, // radius em barra é decisão declarada, não default
           }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: { labels: { color: fgMuted, font: { family: 'Inter' } } }
+            legend: { labels: { color: fgMuted } }  // fonte herda Chart.defaults (tokens), não 'Inter'
           },
           scales: {
             x: { ticks: { color: fgMuted }, grid: { color: border } },
             y: {
-              beginAtZero: true,
-              ticks: { color: fgMuted },
+              beginAtZero: true,                                  // magnitude → eixo em 0
+              ticks: { color: fgMuted, callback: v => fmtBR(v) }, // pt-BR; trocar por unidade real ('R$ '+fmtBR(v)+' bi')
               grid: { color: border },
             }
           }

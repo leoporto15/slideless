@@ -31,7 +31,7 @@
 
 ---
 
-## Comandos (30)
+## Comandos (31)
 
 > ### 🧭 Não sabe por onde começar? Siga por aqui.
 >
@@ -96,11 +96,11 @@
 
 | Comando | O que faz |
 |---|---|
-| `/slideless-bolder` | **Amplifica designs tímidos** — tipografia hero +30%, glow atmosférico reforçado, números-âncora circulados, whitespace generoso. Para quando o doc gerado ficou medíocre. |
-| `/slideless-quieter` | **Reduz designs ruidosos** — tipografia -15%, cores muted, transições mais lentas, fallback serif editorial. Para quando o doc tá gritando demais. |
-| `/slideless-animate` | **Movimento intencional** — heroIn, Auto-Animate FLIP entre slides, counters animados, stagger reveals. Sempre respeita `prefers-reduced-motion`. |
-| `/slideless-delight` | **Micro-interações sem cafonice** — hover lifts em cards, cursor-aware spotlight no hero, shimmer na progress bar, parallax sutil. Sem confetti, sem easter eggs. |
-| `/slideless-overdrive` | **Tecnicamente extraordinário** — WebGL/Canvas generative no hero, custom Chart.js plugins, variable font animation, cinematic transitions. Comando interativo: pergunta quais efeitos aplicar (A-F, multi-seleção). Showpiece técnico (até 5 MB). |
+| `/slideless-bolder` | **Amplifica designs tímidos** — tipografia +30%, contraste de peso ampliado, whitespace generoso. Lê o `parti` do documento e reforça as decisões dele (não instala um kit fixo). |
+| `/slideless-quieter` | **Reduz designs ruidosos** — tipografia -15%, extremos de peso suavizados, motion calma. Opera dentro do kit e do nível de ambição declarados. |
+| `/slideless-animate` | **Movimento intencional** — coreografa apenas o momento-wow declarado e a gramática por papel, no perfil de motion do documento. Em registro estático, avisa e para. Respeita `prefers-reduced-motion`. |
+| `/slideless-delight` | **Micro-interações por papel** — hover por affordance, feedback no local do gatilho, micro-interações de leitura. Sem confetti, sem hover-lift universal; coerente com o nível de ambição. |
+| `/slideless-overdrive` | **Nível A3-extraordinário** — WebGL/minigl no hero, springs `linear()`, View Transitions, variable font animada, cursor-proximity. Interativo: pergunta quais efeitos (A-H, multi-seleção), com fallback gracioso. Showpiece técnico (até 5 MB). |
 
 **Composição típica:**
 - `/slideless-bolder` + `/slideless-animate` → executivo com peso e movimento
@@ -133,7 +133,7 @@ Documentação técnica completa de cada comando em [commands/](commands/).
 | Modelo | Quando usar | Referência |
 |---|---|---|
 | [`handbook`](references/modelos/handbook.md) | manual longo, onboarding, política, runbook | GitLab Handbook |
-| [`hub`](references/modelos/hub.md) | portal de recursos com cards categorizáveis | Notion Workspace |
+| [`hub`](references/modelos/hub.md) | portal de recursos com cards categorizáveis | Apple Developer hub, Vercel guides index |
 | [`scrollytelling`](references/modelos/scrollytelling.md) | narrativa única com reveal + sticky chart | NYT Upshot |
 | [`site`](references/modelos/site.md) | microsite SPA com 2-5 views | Linear, Vercel guides |
 | [`deck`](references/modelos/deck.md) | pitch ao vivo, all-hands (único onde tipografia gigante é OK) | Apple keynote |
@@ -149,13 +149,18 @@ Decisão entre modelos: [references/decisao-modelo.md](references/decisao-modelo
 slideless/
 ├── SKILL.md                       ← entry point para o agente
 ├── README.md                      ← este arquivo
-├── .claude-plugin/plugin.json     ← manifest da skill
-├── commands/                      ← 30 slash commands (1 arquivo cada)
+├── CLAUDE.md                      ← instruções para Claude Code
+├── .claude-plugin/plugin.json     ← manifest do plugin
+├── .github/copilot-instructions.md ← instruções para GitHub Copilot Chat
+├── commands/                      ← 31 slash commands (1 arquivo cada)
 ├── references/
-│   ├── anti-patterns.md           ← PPT-isms proibidos
+│   ├── direcao-de-arte.md         ← o Parti: 7 decisões por documento (LER ANTES DE GERAR)
+│   ├── ambicao.md                 ← teto cutting-edge: eixo A1/A2/A3 + momentos-wow
+│   ├── type-kits.md               ← pool de kits tipográficos + fontes banidas
+│   ├── anti-patterns.md           ← PPT-isms e AI-tells proibidos
 │   ├── design-system.md           ← tokens, dark mode, boot script
 │   ├── componentes.md             ← biblioteca de componentes
-│   ├── css-patterns.md            ← gráficos, tabelas, depth tiers
+│   ├── css-patterns.md            ← gráficos, tabelas, materialidade, scroll-driven
 │   ├── slide-patterns.md          ← layouts, engine v3, fragmentos
 │   ├── decisao-modelo.md          ← decision tree dos 6 modelos
 │   ├── protocolo-sem-conteudo.md  ← o que fazer sem conteúdo real
@@ -165,30 +170,40 @@ slideless/
 │   ├── modelos/{handbook,hub,scrollytelling,site,deck,report}.md
 │   └── temas/{neutro,itau}.md
 ├── assets/
-│   ├── temas/{itau,neutro}.css    ← tokens light+dark
-│   ├── logos/itau.png
-│   ├── exemplos/                  ← showcases preenchidos (fictícios)
+│   ├── temas/{itau,neutro}.css    ← tokens light+dark, duas camadas (marca/direção)
+│   ├── logos/{wordmark-black,wordmark-white}.png
+│   ├── exemplos/                  ← showcases canônicos (1 por modelo)
 │   └── templates/                 ← esqueletos vazios para popular
 ├── scripts/
 │   ├── validar.py                 ← validador determinístico (stdlib)
 │   └── exportar_pdf.py            ← PDF/PNG via Playwright
-└── demos/                         ← input → output reais pareados
+└── demos/                         ← 3 famílias × 7 documentos (6 modelos + deck-overdrive), pareados
 ```
 
 ---
 
 ## Instalação
 
-### Claude Code
+### Claude Code — via marketplace interno
 
-Clone este repositório dentro da pasta de skills do seu Claude Code, ou use o plugin via marketplace (se publicado):
+O plugin é distribuído pelo marketplace interno do time/banco. Com esse catálogo já registrado no seu Claude Code:
 
-```bash
-cd ~/.claude/skills/
-git clone <url-repo>/slideless.git
+```
+/plugin install slideless@<marketplace-interno>
 ```
 
-Recarregue o Claude Code. A skill aparece automaticamente; os comandos viram `/slideless-handbook`, `/auditar` etc.
+O nome do `<marketplace-interno>` é fornecido por quem administra o catálogo. Se ainda não estiver registrado, adicione-o primeiro com `/plugin marketplace add <repo-ou-url-do-catálogo>` (esse repo do catálogo lista o `slideless` via `source` apontando para este repositório). A instalação traz a skill `slideless` (auto-invocável quando você pede um manual, deck, relatório etc.) e os 31 comandos, namespaced sob o plugin: `/slideless:criar`, `/slideless:slideless-handbook`, `/slideless:auditar`, etc. Para atualizar depois: `/plugin marketplace update <marketplace-interno>`.
+
+### Claude Code — manual (desenvolvimento / teste)
+
+Carregar o checkout local sem instalar, com `--plugin-dir`:
+
+```bash
+git clone https://github.com/leoporto15/slideless.git
+claude --plugin-dir ./slideless
+```
+
+Use `/reload-plugins` para recarregar após editar. Alternativamente, clonar dentro de `~/.claude/skills/slideless/` faz o Claude Code carregar como plugin de skills-dir automaticamente (mesma namespace `/slideless:…`).
 
 ### Devin
 
@@ -196,7 +211,7 @@ Configurar a skill como ferramenta interna no espaço do time, apontando para es
 
 ### Cursor / OpenCode / outros
 
-O formato `commands/*.md` + `references/*.md` + `SKILL.md` é portátil. Adapte conforme o harness.
+O formato `SKILL.md` + `commands/*.md` + `references/*.md` é portátil. Adapte conforme o harness.
 
 ---
 
@@ -214,6 +229,7 @@ Flags:
 - `--quick` — apenas identifica modelo/tema
 - `--strict` — warnings viram erros
 - `--json` — saída JSON para integração
+- `--stats <pasta>` — telemetria do pool: varre os `.html` da pasta e tabula a distribuição das decisões do parti (registro, kit, capa, superfície, motion, ambição). Útil para detectar pasteurização (um eixo dominando >40% dos documentos).
 
 Exit code: `0` se sem erros, `1` se houver pelo menos um.
 

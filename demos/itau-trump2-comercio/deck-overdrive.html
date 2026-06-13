@@ -5,6 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Brasil x Trump 2 — Comércio Exterior · OVERDRIVE · Pesquisa Macro Itaú</title>
 
+  <!-- slideless:parti
+  conteudo: Trump 2 e comércio exterior do Brasil (overdrive) — tese: balanço de riscos assimétrico para o lado negativo. Ganho positivo limitado (~70% das importações chinesas de soja já são brasileiras); risco negativo crescente (tarifa universal 10% / equiparação: Brasil tarifa 11,2% × EUA 1,5%).
+  registro: condensado-noticioso (tensão geopolítica; urgência de manchete; fonte tem cronologia de choques — guerra comercial 2018-20, eleição 2024, TPU em pico)
+  kit: 05-poster (Archivo wdth Black + Source Serif 4) — tema de manchete pede grotesk condensada/expandida em choque com serif calma
+  capa: banda-de-cor (banda ink full-bleed com "~70%" / termo-choque em knockout; o canvas WebGL é a TEXTURA deste hero, confinado ao slide 1 — não wallpaper)
+  superficie: pauta-de-linhas (despacho/telegrama) + luz hard-print (sombra offset dura 4px 4px 0)
+  motion: cinematico (físico permitido no overdrive — hero settle + springs linear() com fallback; WebGL particle field é assinatura do hero)
+  ambicao: A3-extraordinario (showcase ao vivo — o hero WebGL já existe; soma manchete cinética e anotação viva). data-overdrive no canvas é opt-in deliberado (P10 reconhece).
+  momento-wow: W9 hero material (WebGL particle field já presente, data-overdrive; fallback aurora CSS sem WebGL) + W3 manchete cinética (Archivo wdth/wght se constrói na entrada do slide 01, overflow:clip) + W8 anotação viva na banda do gráfico-tese (slide 09: sweep na entrada + crosshair de leitura no hover)
+  assinatura: M2 — a linha do gráfico-tese (origem das importações chinesas de soja, slide 09) se desenha até o dado real; banda de evento "guerra comercial 2018-20" acende anotada e viva (eventBand §5.0b)
+  nao-vai-ter: kicker-dot; em-italico-accent; badge-pill
+  serie: familia itau-trump2 (noticiosa-condensada — distinta das 2 famílias serif do repo)
+  -->
+
   <script>
     (function() {
       try {
@@ -16,14 +30,26 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800;9..144,900&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- SLIDELESS:TYPE-KIT — Kit 05 Poster (Archivo wdth + Source Serif 4 + IBM Plex Mono) -->
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,400;0,62..125,700;0,62..125,900&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   <script src="https://cdn.jsdelivr.net/npm/rough-notation@0.6.1/lib/rough-notation.iife.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 
   <style>
     /* ════════════════════════════════════════════════════════════════
-       TEMA ITAU (de assets/temas/itau.css)
+       KIT 05 — POSTER  (slots do kit, ANTES do tema — type-kits.md)
+       Archivo (eixo wdth) display/ui · Source Serif 4 corpo · IBM Plex Mono
+       ════════════════════════════════════════════════════════════════ */
+    :root {
+      --kit-display: 'Archivo';
+      --kit-text:    'Source Serif 4';
+      --kit-ui:      'Archivo';
+      --kit-mono:    'IBM Plex Mono';
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       TEMA ITAU v4 — camada MARCA (copiada) + DIREÇÃO (composta no parti)
        ════════════════════════════════════════════════════════════════ */
     :root {
       --itau-orange:     #FF6200;
@@ -40,11 +66,10 @@
       --color-info:          var(--itau-blue-3);
       --color-info-dim:      rgba(59, 133, 250, 0.08);
 
-      --color-success:       #4d7c0f;
-      --color-success-dim:   rgba(77, 124, 15, 0.08);
-
-      --color-sage:          #65a30d;
-      --color-sage-dim:      rgba(101, 163, 13, 0.08);
+      --color-success:       #3f6f1f;
+      --color-success-dim:   rgba(63, 111, 31, 0.08);
+      --color-sage:          var(--color-success);
+      --color-sage-dim:      var(--color-success-dim);
 
       --color-teal:          #0f766e;
       --color-teal-dim:      rgba(15, 118, 110, 0.08);
@@ -67,14 +92,20 @@
       --color-border-strong: rgba(41, 32, 23, 0.18);
       --color-accent-hover:  var(--itau-orange-2);
 
-      --glow-warm:    radial-gradient(ellipse 80% 60% at 80% 0%, rgba(255, 98, 0, 0.10) 0%, transparent 55%);
-      --glow-cool:    radial-gradient(ellipse 70% 50% at 20% 100%, rgba(59, 133, 250, 0.08) 0%, transparent 55%);
-      --glow-hero:    radial-gradient(ellipse 90% 70% at 50% 0%, rgba(255, 98, 0, 0.14) 0%, transparent 50%);
-      --vignette:     radial-gradient(ellipse 120% 80% at 50% 50%, transparent 50%, rgba(41, 32, 23, 0.04) 100%);
+      /* ink — banda de cor da capa (tom escuro quente, não preto puro) */
+      --color-ink:           #1a140d;
+      --color-ink-fg:        #f7f1ea;
 
-      --font-text:    'Inter', 'Itau Text', -apple-system, system-ui, sans-serif;
-      --font-display: 'Fraunces', 'Itau Display', 'Inter', Georgia, serif;
-      --font-mono:    'JetBrains Mono', 'IBM Plex Mono', 'SF Mono', Consolas, monospace;
+      /* [DIREÇÃO] Fontes via slots do kit — Itau Display/Text prevalecem na rede,
+         Kit 05 é o fallback desenhado fora dela. */
+      --font-text:    'Itau Text', var(--kit-text, Georgia), Georgia, serif;
+      --font-display: 'Itau Display', var(--kit-display, 'Arial Black'), 'Arial Black', 'Segoe UI', sans-serif;
+      --font-ui:      var(--kit-ui, 'Segoe UI'), 'Segoe UI', Arial, sans-serif;
+      --font-mono:    var(--kit-mono, 'IBM Plex Mono'), 'SF Mono', Consolas, monospace;
+
+      /* eixos wdth Archivo — o contraste É o dispositivo do Kit 05 */
+      --wide:    'wght' 900, 'wdth' 118;  /* display de impacto  */
+      --cond:    'wght' 700, 'wdth' 66;   /* labels condensados  */
 
       --size-xs:      clamp(0.75rem, 0.7rem + 0.2vw, 0.875rem);
       --size-small:   clamp(0.875rem, 0.85rem + 0.15vw, 1rem);
@@ -84,7 +115,6 @@
       --size-h2:      clamp(1.6rem, 1.3rem + 1.2vw, 2.25rem);
       --size-h1:      clamp(2.25rem, 1.8rem + 2vw, 3.5rem);
 
-      /* Deck-only — fluido em VW e VH (do tema itau.css v2) */
       --size-display: clamp(2.25rem, 1.4rem + 1.8vw + 1.5vh, 4.25rem);
       --size-mega:    clamp(2.75rem, 1.6rem + 2.4vw + 2vh, 5.5rem);
       --size-giga:    clamp(3.5rem, 2rem + 3vw + 3vh, 9rem);
@@ -97,18 +127,24 @@
       --content-max: 720px;
       --header-h:    56px;
 
-      --radius-sm: 4px;
-      --radius:    10px;
-      --radius-lg: 16px;
-      --radius-xl: 24px;
+      /* máx 2 valores de radius por documento (direcao-de-arte §4) */
+      --radius-sm: 3px;
+      --radius:    3px;
+      --radius-lg: 3px;
+      --radius-xl: 3px;
 
-      --shadow-xs: 0 1px 2px rgba(41, 32, 23, 0.04);
-      --shadow-sm: 0 2px 4px rgba(41, 32, 23, 0.06), 0 1px 2px rgba(41, 32, 23, 0.04);
-      --shadow:    0 4px 12px rgba(41, 32, 23, 0.08), 0 1px 3px rgba(41, 32, 23, 0.05);
-      --shadow-lg: 0 12px 32px rgba(41, 32, 23, 0.12), 0 4px 12px rgba(41, 32, 23, 0.06);
+      /* luz hard-print — sombra offset dura, registro impresso */
+      --hard:      4px 4px 0 var(--color-fg);
+      --hard-2:    6px 6px 0 var(--color-ink);
+      --shadow-xs: 2px 2px 0 var(--color-border-strong);
+      --shadow-sm: 3px 3px 0 var(--color-border-strong);
+      --shadow:    4px 4px 0 var(--color-border-strong);
+      --shadow-lg: var(--hard);
 
-      --ease-out:       cubic-bezier(0.22, 1, 0.36, 1);
-      --ease-emphatic:  cubic-bezier(0.16, 1, 0.3, 1);
+      /* 3 easings COM PAPEL (cinemático) — nunca a mesma p/ tudo */
+      --ease-emphatic:  cubic-bezier(0.16, 1, 0.3, 1);   /* hero / divider  */
+      --ease-out:       cubic-bezier(0.2, 0.6, 0.2, 1);  /* dado / figura   */
+      --ease-snap:      cubic-bezier(0.2, 0, 0, 1);       /* fragment / micro*/
 
       --duration-fast:    150ms;
       --duration:         250ms;
@@ -125,35 +161,36 @@
       --color-fg-muted:      #b8aa9a;
       --color-fg-subtle:     #786e62;
       --color-border:        rgba(237, 229, 221, 0.10);
-      --color-border-strong: rgba(237, 229, 221, 0.20);
+      --color-border-strong: rgba(237, 229, 221, 0.22);
 
       --color-accent:        var(--itau-orange-3);
       --color-accent-hover:  var(--itau-orange-2);
       --color-accent-fg:     #14110d;
       --color-accent-dim:    rgba(250, 159, 9, 0.10);
 
+      --color-ink:           #0d0a06;
+      --color-ink-fg:        #f3ece3;
+
       --color-info-dim:      rgba(59, 133, 250, 0.12);
-      --color-success:       #a3e635;
-      --color-success-dim:   rgba(163, 230, 53, 0.10);
-      --color-sage:          #bef264;
-      --color-sage-dim:      rgba(190, 242, 100, 0.10);
-      --color-teal:          #5eead4;
-      --color-teal-dim:      rgba(94, 234, 212, 0.10);
-      --color-plum:          #fb7185;
-      --color-plum-dim:      rgba(251, 113, 133, 0.10);
+      --color-success:       #8fcc5a;
+      --color-success-dim:   rgba(143, 204, 90, 0.10);
+      --color-sage:          var(--color-success);
+      --color-sage-dim:      var(--color-success-dim);
+      --color-teal:          #6fd0c0;
+      --color-teal-dim:      rgba(111, 208, 192, 0.10);
+      --color-plum:          #e8889c;
+      --color-plum-dim:      rgba(232, 136, 156, 0.10);
 
       --color-warn-dim:      rgba(251, 195, 5, 0.12);
       --color-danger:        #f87171;
       --color-danger-dim:    rgba(248, 113, 113, 0.10);
 
-      --glow-warm:    radial-gradient(ellipse 80% 60% at 80% 0%, rgba(250, 159, 9, 0.18) 0%, transparent 55%);
-      --glow-cool:    radial-gradient(ellipse 70% 50% at 20% 100%, rgba(59, 133, 250, 0.14) 0%, transparent 55%);
-      --glow-hero:    radial-gradient(ellipse 90% 70% at 50% 0%, rgba(250, 159, 9, 0.22) 0%, transparent 50%);
-
-      --shadow-xs: 0 1px 2px rgba(0,0,0,0.4);
-      --shadow-sm: 0 2px 4px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
-      --shadow:    0 4px 12px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.3);
-      --shadow-lg: 0 12px 32px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.3);
+      --hard:      4px 4px 0 rgba(0,0,0,0.55);
+      --hard-2:    6px 6px 0 #000;
+      --shadow-xs: 2px 2px 0 rgba(0,0,0,0.5);
+      --shadow-sm: 3px 3px 0 rgba(0,0,0,0.5);
+      --shadow:    4px 4px 0 rgba(0,0,0,0.5);
+      --shadow-lg: var(--hard);
     }
 
     *, *::before, *::after { box-sizing: border-box; }
@@ -162,14 +199,23 @@
       margin: 0;
       font-family: var(--font-text);
       font-size: var(--size-body);
-      line-height: 1.65;
+      line-height: 1.6;
       color: var(--color-fg);
       background: var(--color-bg);
       -webkit-font-smoothing: antialiased;
-      transition: background var(--duration-fast), color var(--duration-fast);
+      transition: background-color var(--duration-fast), color var(--duration-fast);
     }
     :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; border-radius: var(--radius-sm); }
-    h1, h2, h3, h4 { font-family: var(--font-display); color: var(--color-fg); line-height: 1.1; letter-spacing: -0.022em; font-weight: 700; }
+
+    /* Headings — Archivo expandida (eixo wdth), o tell do Kit 05 */
+    h1, h2, h3, h4 {
+      font-family: var(--font-display);
+      color: var(--color-fg);
+      line-height: 1.04;
+      letter-spacing: -0.02em;
+      font-weight: 900;
+      font-variation-settings: var(--wide);
+    }
     p { margin: 0 0 var(--space-4); max-width: 65ch; color: var(--color-fg); }
     strong { font-weight: 700; color: var(--color-fg); }
 
@@ -197,6 +243,7 @@
     .callout--danger .callout__icon { background: var(--color-danger); }
     .callout__content { flex: 1; min-width: 0; }
     .callout__content p { margin: 0; font-size: var(--size-small); line-height: 1.5; }
+    .callout__content strong { font-weight: 700; }
 
     .theme-toggle {
       width: 36px; height: 36px;
@@ -206,7 +253,7 @@
       border-radius: 999px; cursor: pointer;
       color: var(--color-fg);
       font-size: 14px;
-      transition: all var(--duration-fast);
+      transition: background-color var(--duration-fast) var(--ease-snap), border-color var(--duration-fast) var(--ease-snap);
     }
 
     /* ════════════════════════════════════════════════════════════════
@@ -215,17 +262,16 @@
     html, body { height: 100%; overflow: hidden; }
     body { overscroll-behavior: none; }
 
+    /* SUPERFÍCIE — pauta de linhas (despacho/telegrama). Substitui o glow
+       radial incondicional do body::before/after (nao-vai-ter: glow-radial). */
     .deck { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
-
     body::before {
       content: ''; position: fixed; inset: 0;
-      background: var(--glow-hero);
-      pointer-events: none; z-index: 0; opacity: 0.7;
-    }
-    body::after {
-      content: ''; position: fixed; inset: 0;
-      background: var(--glow-cool);
-      pointer-events: none; z-index: 0; opacity: 0.5;
+      background-image: repeating-linear-gradient(to bottom,
+        transparent, transparent 31px,
+        var(--color-border) 31px, var(--color-border) 32px);
+      opacity: 0.6;
+      pointer-events: none; z-index: 0;
     }
 
     .slide {
@@ -246,30 +292,30 @@
 
     .slide [data-anim] {
       opacity: 0;
-      transform: translateY(28px);
-      transition: opacity 800ms var(--ease-out), transform 800ms var(--ease-out);
+      transform: translateY(20px);
+      transition: opacity 500ms var(--ease-out), transform 500ms var(--ease-out);
     }
     .slide.is-active [data-anim] {
       opacity: 1; transform: translateY(0);
-      transition-delay: calc(var(--i, 0) * 70ms + 250ms);
+      transition-delay: calc(var(--i, 0) * 60ms + 200ms);
     }
     .slide.is-active [data-anim="hero"] {
       animation: heroIn var(--duration-hero) var(--ease-emphatic) 100ms both;
     }
+    /* hero cinemático: 1 gesto — settle (sem blur empilhado) */
     @keyframes heroIn {
-      from { opacity: 0; filter: blur(16px); transform: translateY(28px) scale(0.96); }
-      to   { opacity: 1; filter: blur(0);    transform: translateY(0) scale(1); }
+      from { opacity: 0; transform: translateY(24px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     /* Fragments base — só tipos que começam invisíveis */
     .slide [data-fragment]:not([data-fragment="highlight-current"]):not([data-fragment="strike"]) {
       opacity: 0;
-      transform: translateY(14px);
-      transition: opacity 500ms var(--ease-out), transform 500ms var(--ease-out);
+      transform: translateY(12px);
+      transition: opacity 450ms var(--ease-snap), transform 450ms var(--ease-snap);
     }
     .slide [data-fragment].is-visible { opacity: 1; transform: translateY(0); }
 
-    /* Tabelas com highlight-current começam visíveis */
     .slide table [data-fragment="highlight-current"] td,
     .slide table [data-fragment="highlight-current"] th {
       opacity: 1; transform: none;
@@ -301,86 +347,108 @@
       hyphens: auto;
     }
 
-    /* Tipografia deck */
+    /* ════════════════════════════════════════════════════════════════
+       Tipografia deck — Kit 05
+       Label: numeral/fio condensado (Archivo wdth 66), SEM dot
+       (cardápio de labels §7; nao-vai-ter: kicker-dot)
+       ════════════════════════════════════════════════════════════════ */
     .kicker {
-      display: inline-flex; align-items: center; gap: 14px;
-      font-family: var(--font-mono);
+      display: inline-flex; align-items: baseline; gap: 12px;
+      font-family: var(--font-ui);
       font-size: clamp(0.78rem, 0.7rem + 0.25vw, 0.95rem);
-      font-weight: 600; letter-spacing: 0.18em;
+      font-variation-settings: var(--cond);
+      letter-spacing: 0.16em;
       text-transform: uppercase;
       color: var(--color-fg-muted);
       margin: 0 0 var(--space-5);
+      padding-left: 14px;
+      border-left: 2px solid var(--color-border-strong);
     }
-    .kicker__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--color-fg-subtle); }
-    .kicker--accent { color: var(--color-accent); }
-    .kicker--accent .kicker__dot { background: var(--color-accent); box-shadow: 0 0 16px var(--color-accent); }
+    .kicker--accent { color: var(--color-accent); border-left-color: var(--color-accent); }
 
     .title-xl, .title-mega {
       font-family: var(--font-display);
-      font-weight: 800;
-      line-height: 1.0;
+      font-variation-settings: var(--wide);
+      font-weight: 900;
+      line-height: 0.98;
       letter-spacing: -0.035em;
       margin: 0 0 var(--space-5);
       color: var(--color-fg);
+      text-wrap: balance;
     }
     .title-xl   { font-size: var(--size-mega); max-width: 18ch; }
-    .title-mega { font-size: var(--size-giga); max-width: 12ch; line-height: 0.95; }
-    .title-xl em, .title-mega em {
-      color: var(--color-accent); font-style: italic; font-weight: 800;
+    .title-mega { font-size: var(--size-giga); max-width: 12ch; line-height: 0.92; }
+    /* ênfase por PESO/EIXO — não cor itálica (nao-vai-ter: em-italico-accent) */
+    .title-xl b, .title-mega b {
+      font-weight: 900;
+      font-variation-settings: 'wght' 900, 'wdth' 125;
+      letter-spacing: -0.04em;
     }
 
     .title-lg {
       font-family: var(--font-display);
+      font-variation-settings: var(--wide);
       font-size: var(--size-display);
-      line-height: 1.05;
-      font-weight: 700;
-      letter-spacing: -0.028em;
+      line-height: 1.02;
+      font-weight: 900;
+      letter-spacing: -0.03em;
       margin: 0 0 var(--space-4);
       max-width: 24ch;
       color: var(--color-fg);
+      text-wrap: balance;
     }
-    .title-lg em { color: var(--color-accent); font-style: italic; }
+    .title-lg b { font-variation-settings: 'wght' 900, 'wdth' 125; letter-spacing: -0.035em; }
 
     .title-md {
       font-family: var(--font-display);
+      font-variation-settings: 'wght' 850, 'wdth' 100;
       font-size: clamp(1.5rem, 1.2rem + 1.5vw, 2.5rem);
-      line-height: 1.1; font-weight: 700;
-      letter-spacing: -0.022em;
+      line-height: 1.06; font-weight: 850;
+      letter-spacing: -0.018em;
       margin: 0 0 var(--space-3);
-      max-width: 32ch;
+      max-width: 34ch;
       color: var(--color-fg);
+      text-wrap: balance;
     }
-    .title-md em { color: var(--color-accent); font-style: italic; }
+    .title-md b { font-variation-settings: 'wght' 900, 'wdth' 120; }
 
+    /* lead em Source Serif 4 — contraponto calmo à grotesk (o contraste do kit) */
     .lead-deck {
+      font-family: var(--font-text);
       font-size: clamp(1.05rem, 0.95rem + 0.6vw, 1.4rem);
       line-height: 1.45;
       color: var(--color-fg-muted);
-      max-width: 65ch;
+      max-width: 64ch;
       margin: 0 0 var(--space-5);
       font-weight: 400;
     }
+    .lead-deck strong { color: var(--color-fg); font-weight: 600; }
 
     .footnote {
       font-family: var(--font-mono);
       font-size: clamp(0.65rem, 0.62rem + 0.12vw, 0.75rem);
       color: var(--color-fg-subtle);
-      letter-spacing: 0.02em;
+      letter-spacing: 0.01em;
       margin: var(--space-5) 0 0;
       max-width: 100ch;
       line-height: 1.55;
     }
+    .footnote strong { color: var(--color-fg-muted); font-weight: 600; }
 
     .layout-hero { display: flex; flex-direction: column; justify-content: center; min-height: 100%; gap: var(--space-3); }
     .layout-hero .meta {
       display: flex; gap: var(--space-7); flex-wrap: wrap;
       margin-top: var(--space-7);
-      font-size: 0.875rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
       color: var(--color-fg-subtle);
+      letter-spacing: 0.01em;
     }
     .layout-hero .meta strong {
       display: block; color: var(--color-fg); font-weight: 700;
-      font-family: var(--font-display); margin-bottom: 4px;
+      font-family: var(--font-ui); font-variation-settings: var(--cond);
+      text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.72rem;
+      margin-bottom: 4px;
     }
 
     .layout-fact {
@@ -389,6 +457,7 @@
     }
     .layout-fact .fact-val {
       font-family: var(--font-display);
+      font-variation-settings: 'wght' 900, 'wdth' 125;
       font-size: clamp(5rem, 18vw, 14rem);
       font-weight: 900;
       letter-spacing: -0.05em;
@@ -396,6 +465,7 @@
       color: var(--color-accent);
     }
     .layout-fact .fact-label {
+      font-family: var(--font-text);
       font-size: clamp(1rem, 1.5vw, 1.35rem);
       color: var(--color-fg-muted);
       margin-top: var(--space-5);
@@ -403,8 +473,12 @@
       text-align: center;
       line-height: 1.5;
     }
+    .layout-fact .fact-label strong { color: var(--color-fg); font-weight: 600; }
 
-    /* Cards color-coded (verticais — uma commodity por card) */
+    /* ════════════════════════════════════════════════════════════════
+       Cards de commodity — fio lateral 2px (despacho), luz hard-print.
+       Cor é INFORMAÇÃO (uma commodity por linha), não sequência decorativa.
+       ════════════════════════════════════════════════════════════════ */
     .card-list {
       display: flex; flex-direction: column;
       gap: var(--space-3);
@@ -413,15 +487,14 @@
     }
     .card-row {
       display: grid;
-      grid-template-columns: 130px 1fr;
+      grid-template-columns: 150px 1fr;
       gap: var(--space-5);
       align-items: center;
       padding: var(--space-3) var(--space-5);
       background: var(--color-bg-elevated);
       border: 1px solid var(--color-border);
-      border-left: 4px solid;
+      border-left: 2px solid;
       border-radius: var(--radius);
-      box-shadow: var(--shadow-xs);
     }
     .card-row--accent  { border-left-color: var(--color-accent); }
     .card-row--info    { border-left-color: var(--color-info); }
@@ -430,17 +503,12 @@
     .card-row--plum    { border-left-color: var(--color-plum); }
     .card-row--success { border-left-color: var(--color-success); }
     .card-row__label {
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
+      font-family: var(--font-ui);
+      font-variation-settings: var(--cond);
+      font-size: 0.92rem;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
-      color: var(--color-fg-muted);
-      display: flex; align-items: center; gap: 8px;
-    }
-    .card-row__label::before {
-      content: ''; width: 8px; height: 8px;
-      border-radius: 50%; background: currentColor;
+      color: var(--color-fg);
     }
     .card-row--accent  .card-row__label { color: var(--color-accent); }
     .card-row--info    .card-row__label { color: var(--color-info); }
@@ -449,13 +517,14 @@
     .card-row--plum    .card-row__label { color: var(--color-plum); }
     .card-row--success .card-row__label { color: var(--color-success); }
     .card-row__body {
+      font-family: var(--font-text);
       font-size: clamp(0.85rem, 0.8rem + 0.25vw, 0.98rem);
       color: var(--color-fg);
       line-height: 1.45;
     }
-    .card-row__body strong { color: var(--color-fg); }
+    .card-row__body strong { color: var(--color-fg); font-weight: 600; }
 
-    /* Numbered list */
+    /* Numbered list — numeral condensado quadrado (despacho), sem círculo */
     .num-list { display: flex; flex-direction: column; gap: var(--space-3); margin-top: var(--space-4); }
     .num-list__item {
       display: grid; grid-template-columns: 40px 1fr;
@@ -466,21 +535,23 @@
       border-radius: var(--radius);
     }
     .num-list__num {
-      width: 32px; height: 32px;
+      width: 34px; height: 34px;
       display: grid; place-items: center;
-      border-radius: 50%;
+      border-radius: var(--radius-sm);
       background: var(--color-accent);
       color: var(--color-accent-fg);
-      font-family: var(--font-mono);
-      font-size: 0.8rem;
-      font-weight: 700;
+      font-family: var(--font-ui);
+      font-variation-settings: 'wght' 900, 'wdth' 90;
+      font-size: 1rem;
       margin-top: 2px;
     }
     .num-list__body {
+      font-family: var(--font-text);
       font-size: clamp(0.88rem, 0.82rem + 0.3vw, 1rem);
       color: var(--color-fg);
       line-height: 1.45;
     }
+    .num-list__body strong { font-weight: 600; }
 
     /* Split */
     .split {
@@ -493,32 +564,35 @@
     }
     .split > * { min-width: 0; }
     .split-panel__title {
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      letter-spacing: 0.14em;
+      font-family: var(--font-ui);
+      font-variation-settings: var(--cond);
+      font-size: 0.82rem;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--color-fg-muted);
       margin: 0 0 var(--space-2);
-      font-weight: 700;
     }
 
-    /* Chart container */
+    /* Chart container — fio + luz hard-print */
     .chart-box {
       position: relative;
       width: 100%;
       height: clamp(280px, 42vh, 460px);
       background: var(--color-bg-elevated);
-      border: 1px solid var(--color-border);
+      border: 1px solid var(--color-border-strong);
       border-radius: var(--radius);
       padding: var(--space-3) var(--space-4);
       box-shadow: var(--shadow-xs);
     }
     .chart-box canvas { max-width: 100%; }
 
-    /* Tabela */
+    /* ════════════════════════════════════════════════════════════════
+       Tabela broadsheet — fio, tabular-nums, fio duplo no total (M0-ish
+       dispositivo compositivo). Sem zebra de fundo: registro de jornal.
+       ════════════════════════════════════════════════════════════════ */
     .table-wrap {
       overflow-x: auto;
-      border: 1px solid var(--color-border);
+      border: 1px solid var(--color-border-strong);
       border-radius: var(--radius);
       background: var(--color-bg-elevated);
       box-shadow: var(--shadow-xs);
@@ -530,60 +604,61 @@
       font-size: clamp(0.82rem, 0.78rem + 0.25vw, 0.95rem);
     }
     .data-table thead th {
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
+      font-family: var(--font-ui);
+      font-variation-settings: var(--cond);
+      font-size: 0.74rem;
+      letter-spacing: 0.07em;
       text-transform: uppercase;
       color: var(--color-fg-muted);
       background: var(--color-bg-sunken);
       padding: 11px 14px;
       text-align: left;
-      border-bottom: 2px solid var(--color-border-strong);
+      border-bottom: 2px solid var(--color-fg);
       white-space: nowrap;
     }
     .data-table tbody td {
-      padding: 10px 14px;
+      font-family: var(--font-text);
+      padding: 9px 14px;
       border-bottom: 1px solid var(--color-border);
       color: var(--color-fg);
       line-height: 1.35;
     }
-    .data-table tbody tr:nth-child(even) td { background: var(--color-bg-sunken); }
     .data-table td.num, .data-table th.num {
       text-align: right;
       font-family: var(--font-mono);
-      font-variant-numeric: tabular-nums;
+      font-variant-numeric: tabular-nums lining-nums;
+      font-feature-settings: 'tnum', 'lnum';
     }
     .data-table td strong { font-weight: 700; color: var(--color-fg); }
+    /* fio duplo contábil — linha de total (primeira linha "Mundo"/destaque) */
+    .data-table tbody tr.is-total td {
+      border-top: 1px solid var(--color-fg);
+      border-bottom: 3px double var(--color-fg);
+      font-weight: 600;
+    }
 
     /* ════════════════════════════════════════════════════════════════
-       FEATURE 10: HOVER APRESENTADOR EM TABELAS
-       O apresentador passa o mouse sobre uma linha durante a apresentação
-       e ela ganha destaque (background accent + bold); as demais ficam
-       muted. Mais flexível que percorrer linha-a-linha via fragmentos.
+       HOVER APRESENTADOR EM TABELAS (mantido — affordance de leitura ao vivo)
        ════════════════════════════════════════════════════════════════ */
     .slide .data-table tbody tr {
-      transition: opacity 200ms var(--ease-out),
-                  background 200ms var(--ease-out),
-                  color 200ms var(--ease-out);
+      transition: opacity 200ms var(--ease-snap),
+                  background-color 200ms var(--ease-snap),
+                  color 200ms var(--ease-snap);
     }
-    .slide .data-table tbody:hover tr { opacity: 0.4; }
+    .slide .data-table tbody:hover tr { opacity: 0.42; }
     .slide .data-table tbody:hover tr:hover {
       opacity: 1;
       background: var(--color-accent-dim) !important;
     }
-    .slide .data-table tbody:hover tr:hover td {
-      color: var(--color-accent);
-      font-weight: 700;
-    }
-    .slide .data-table tbody:hover tr:hover td strong {
-      color: var(--color-accent);
-    }
+    .slide .data-table tbody:hover tr:hover td { color: var(--color-accent); font-weight: 700; }
+    .slide .data-table tbody:hover tr:hover td strong { color: var(--color-accent); }
     @media (prefers-reduced-motion: reduce) {
       .slide .data-table tbody tr { transition: none; }
     }
 
-    /* Closing (slide 17) */
+    /* ════════════════════════════════════════════════════════════════
+       Closing (slide 17) — cabeçalho condensado de despacho, sem filete colorido
+       ════════════════════════════════════════════════════════════════ */
     .closing {
       display: flex; flex-direction: column;
       justify-content: center; align-items: stretch;
@@ -598,33 +673,35 @@
     .closing-card {
       padding: var(--space-5);
       background: var(--color-bg-elevated);
-      border: 1px solid var(--color-border);
+      border: 1px solid var(--color-border-strong);
       border-radius: var(--radius);
-      border-top: 3px solid var(--color-accent);
+      box-shadow: var(--shadow-xs);
     }
     .closing-card__num {
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
-      letter-spacing: 0.14em;
+      font-family: var(--font-ui);
+      font-variation-settings: var(--cond);
+      font-size: 0.74rem;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--color-accent);
-      font-weight: 700;
       margin: 0 0 var(--space-2);
     }
     .closing-card__title {
       font-family: var(--font-display);
+      font-variation-settings: 'wght' 850, 'wdth' 105;
       font-size: clamp(1rem, 0.92rem + 0.5vw, 1.25rem);
-      font-weight: 700;
-      letter-spacing: -0.018em;
+      letter-spacing: -0.015em;
       margin: 0 0 var(--space-2);
       color: var(--color-fg);
     }
     .closing-card__desc {
+      font-family: var(--font-text);
       font-size: clamp(0.82rem, 0.78rem + 0.2vw, 0.92rem);
       color: var(--color-fg-muted);
       line-height: 1.5;
       margin: 0;
     }
+    .closing-card__desc strong { color: var(--color-fg); font-weight: 600; }
     .closing-footer {
       display: grid;
       grid-template-columns: 2fr 1fr;
@@ -632,28 +709,30 @@
       align-items: end;
       margin-top: var(--space-5);
       padding-top: var(--space-4);
-      border-top: 1px solid var(--color-border);
+      border-top: 2px solid var(--color-fg);
     }
     .closing-footer__contact {
       font-family: var(--font-mono);
       font-size: 0.72rem;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.02em;
       color: var(--color-fg-muted);
       line-height: 1.7;
     }
     .closing-footer__contact strong {
       display: block;
       color: var(--color-fg);
-      font-size: 0.85rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
+      font-family: var(--font-ui);
+      font-variation-settings: var(--cond);
+      font-size: 0.84rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
       margin-bottom: 4px;
     }
     .closing-footer__authors {
       font-family: var(--font-mono);
       font-size: 0.7rem;
       color: var(--color-fg-subtle);
-      letter-spacing: 0.06em;
+      letter-spacing: 0.04em;
       text-transform: uppercase;
       text-align: right;
       line-height: 1.7;
@@ -668,8 +747,7 @@
     }
     .deck-progress__bar {
       height: 100%;
-      background: linear-gradient(to right, var(--color-accent), var(--color-accent-hover));
-      box-shadow: 0 0 12px var(--color-accent);
+      background: var(--color-accent);
       width: 0%;
       transition: width var(--duration) var(--ease-out);
     }
@@ -684,70 +762,65 @@
       width: 38px; height: 38px;
       display: grid; place-items: center;
       background: var(--color-bg-elevated);
-      border: 1px solid var(--color-border);
+      border: 1px solid var(--color-border-strong);
       border-radius: 999px; cursor: pointer; color: var(--color-fg);
-      transition: all var(--duration-fast) var(--ease-out);
+      transition: background-color var(--duration-fast) var(--ease-snap), border-color var(--duration-fast) var(--ease-snap), color var(--duration-fast) var(--ease-snap);
       font: inherit;
-      box-shadow: var(--shadow-sm);
     }
     .hud__btn:hover, .hud__fs:hover, .theme-toggle:hover {
       border-color: var(--color-accent);
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-lg);
+      color: var(--color-accent);
+      background: var(--color-bg-sunken);
     }
     .hud__counter {
       font-family: var(--font-mono);
       font-size: 0.875rem;
       color: var(--color-fg-muted);
-      min-width: 64px; text-align: center; font-weight: 600;
+      min-width: 64px; text-align: center; font-weight: 500;
+      font-variant-numeric: tabular-nums;
     }
-    .hud__counter span { color: var(--color-fg); font-weight: 700; }
+    .hud__counter span { color: var(--color-fg); font-weight: 600; }
 
     .brand-mark {
       position: fixed;
       top: 24px; right: 28px;
       display: flex; align-items: center; gap: 10px;
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
-      font-weight: 600; letter-spacing: 0.14em;
+      font-family: var(--font-ui);
+      font-variation-settings: var(--cond);
+      font-size: 0.74rem;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--color-fg-subtle);
       z-index: 40;
     }
-    .brand-mark__dot {
-      width: 10px; height: 10px;
-      border-radius: 50%;
+    .brand-mark__bar {
+      width: 18px; height: 3px;
       background: var(--color-accent);
-      box-shadow: 0 0 12px var(--color-accent);
     }
 
-    /* Slide number bottom-right */
+    /* Slide number bottom-right — tabular mono */
     .slide-num {
       position: absolute;
       bottom: 18px; right: 28px;
-      font: 600 0.6875rem/1 var(--font-mono);
-      letter-spacing: 0.12em;
+      font: 500 0.6875rem/1 var(--font-mono);
+      letter-spacing: 0.1em;
       color: var(--color-fg-muted);
-      opacity: 0.55;
+      opacity: 0.6;
       z-index: 30;
       white-space: nowrap;
       pointer-events: none;
       user-select: none;
+      font-variant-numeric: tabular-nums;
     }
-    .slide-num span { color: var(--color-accent); opacity: 0.9; font-weight: 700; }
-    .slide[data-background-color="#000000"] .slide-num,
-    .slide[data-background-color="#000"] .slide-num {
-      color: rgba(255,255,255,0.75);
-    }
-    .slide[data-background-color="#000000"] .slide-num span,
-    .slide[data-background-color="#000"] .slide-num span {
-      color: var(--itau-orange-3);
-    }
+    .slide-num span { color: var(--color-accent); opacity: 0.95; font-weight: 700; }
+    /* slide 1 = banda ink: número em knockout claro */
+    .slide[data-background-color="var(--color-ink)"] .slide-num { color: rgba(247,241,234,0.7); }
+    .slide[data-background-color="var(--color-ink)"] .slide-num span { color: var(--itau-orange-3); }
 
     /* Print */
     @media print {
       @page { size: A4 landscape; margin: 0; }
-      body::before, body::after { display: none; }
+      body::before { display: none; }
       .hud, .deck-progress { display: none; }
       .deck { width: auto; height: auto; overflow: visible; }
       .slide {
@@ -762,7 +835,7 @@
     }
 
     /* ════════════════════════════════════════════════════════════════
-       OVERVIEW MODE — usa html.is-overview para liberar overflow
+       OVERVIEW MODE
        ════════════════════════════════════════════════════════════════ */
     :root { --ov-scale: 0.22; --slide-w: 100vw; --slide-h: 100vh; }
     html.is-overview,
@@ -789,8 +862,8 @@
       width: var(--slide-w) !important; height: var(--slide-h) !important;
       opacity: 1 !important; pointer-events: auto;
       cursor: pointer;
-      border: 2px solid var(--color-border);
-      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-border-strong);
+      border-radius: var(--radius);
       overflow: hidden;
       transform: scale(var(--ov-scale)) !important;
       transform-origin: top left;
@@ -801,9 +874,9 @@
     }
     body.is-overview .slide.is-active {
       border-color: var(--color-accent);
-      box-shadow: 0 0 0 4px var(--color-accent);
+      box-shadow: 0 0 0 3px var(--color-accent);
     }
-    body.is-overview .slide:hover { border-color: var(--color-accent); box-shadow: var(--shadow-lg); }
+    body.is-overview .slide:hover { border-color: var(--color-accent); }
     body.is-overview .hud, body.is-overview .deck-progress, body.is-overview .brand-mark { display: none !important; }
     body.is-overview .slide [data-fragment], body.is-overview .slide [data-anim] {
       opacity: 1 !important; transform: none !important; filter: none !important; animation: none !important;
@@ -811,24 +884,24 @@
 
     /* Fragment variants */
     [data-fragment="current-visible"] {
-      opacity: 0; transform: translateY(14px);
-      transition: opacity 400ms var(--ease-out), transform 400ms var(--ease-out);
+      opacity: 0; transform: translateY(12px);
+      transition: opacity 400ms var(--ease-snap), transform 400ms var(--ease-snap);
     }
     [data-fragment="current-visible"].is-visible { opacity: 1; transform: none; }
     [data-fragment="current-visible"].was-visible { opacity: 0.3; transform: none; }
 
-    [data-fragment="highlight-current"] { transition: background 300ms, color 300ms; }
+    [data-fragment="highlight-current"] { transition: background-color 300ms, color 300ms; }
 
     [data-fragment="grow"] {
       opacity: 0; transform: scale(0.7);
-      transition: opacity 400ms var(--ease-out), transform 400ms var(--ease-out);
+      transition: opacity 400ms var(--ease-snap), transform 400ms var(--ease-snap);
     }
     [data-fragment="grow"].is-visible { opacity: 1; transform: scale(1); }
 
     [data-mark] { position: relative; }
     [data-fit-text] { white-space: nowrap; display: block; }
 
-    /* Slide-bg + overdrive canvas — camada 0, não conta como conteúdo de layout */
+    /* Slide-bg + overdrive canvas — camada 0 */
     .slide-bg,
     .slide > [data-overdrive] {
       position: absolute !important;
@@ -840,7 +913,6 @@
       transition: opacity var(--duration) var(--ease-out);
     }
     .slide > :not(.slide-bg):not([data-overdrive]) { position: relative; z-index: 1; }
-    /* Transições snappy do deck (sobrescreve duration-fade/slide globais do tema) */
     .deck { --duration-slide: 280ms; --duration-fade: 250ms; }
 
     /* Shortcuts overlay */
@@ -854,15 +926,16 @@
     .shortcuts-overlay.is-open { display: flex; }
     .shortcuts-panel {
       background: var(--color-bg-elevated);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-border-strong);
+      border-radius: var(--radius);
       padding: 2rem; min-width: 340px;
-      box-shadow: 0 32px 64px rgba(0,0,0,0.5);
+      box-shadow: var(--hard-2);
     }
     .shortcuts-panel h3 {
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      letter-spacing: 0.18em;
+      font-family: var(--font-ui);
+      font-variation-settings: var(--cond);
+      font-size: 0.8rem;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
       color: var(--color-fg-muted);
       margin: 0 0 1.25rem;
@@ -875,7 +948,7 @@
       font-family: var(--font-mono); font-size: 0.8rem;
       background: var(--color-bg-sunken);
       border: 1px solid var(--color-border);
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       padding: 2px 8px;
       color: var(--color-accent);
       white-space: nowrap; align-self: center;
@@ -887,11 +960,11 @@
     .shortcuts-close {
       display: block; margin-top: 1.5rem; width: 100%;
       padding: 0.5rem; background: none;
-      border: 1px solid var(--color-border);
-      border-radius: 6px;
+      border: 1px solid var(--color-border-strong);
+      border-radius: var(--radius-sm);
       color: var(--color-fg-muted);
       font-family: var(--font-mono); font-size: 0.8rem;
-      cursor: pointer; letter-spacing: 0.1em; text-transform: uppercase;
+      cursor: pointer; letter-spacing: 0.08em; text-transform: uppercase;
     }
     .shortcuts-close:hover { border-color: var(--color-accent); color: var(--color-accent); }
 
@@ -903,14 +976,9 @@
       body.is-overview .slide { transition: none !important; }
     }
 
-    /* Hero overrides for slide 1 (dark bg) */
-    .slide[data-background-color="#000000"] .layout-hero .meta { color: rgba(255,255,255,0.7); }
-    .slide[data-background-color="#000000"] .layout-hero .meta strong { color: #fff; }
-    .slide[data-background-color="#000000"] .brand-mark { color: #fff; }
-
     /* ════════════════════════════════════════════════════════════════
-       OVERDRIVE A — WebGL hero canvas (generative particle field)
-       Pausa quando slide não-ativo (visibilitychange + IO).
+       CAPA banda-de-cor — slide 1 (banda ink full-bleed, knockout)
+       O WebGL é a TEXTURA desta banda, confinado ao hero.
        ════════════════════════════════════════════════════════════════ */
     .hero-webgl {
       position: absolute; inset: 0;
@@ -920,20 +988,89 @@
       transition: opacity 800ms var(--ease-out);
     }
     .slide.is-active .hero-webgl { opacity: 0.85; }
+
+    /* ── W9 fallback — sem WebGL, o hero vira MATERIAL CSS (aurora quente +
+          grain), mesmas cores do particle field (#FF6200 / #FBC305).
+          Invariante: detecta WebGL; sem ele → material CSS. O JS adiciona
+          .is-fallback quando getContext('webgl') falha; a aurora é, ela
+          própria, o estado-base seguro (Chrome travado mostra a banda viva). */
+    .hero-webgl.is-fallback {
+      opacity: 0;
+      background:
+        radial-gradient(38% 48% at 22% 32%, rgba(255,98,0,0.55), transparent 70%),
+        radial-gradient(42% 52% at 78% 28%, rgba(251,195,5,0.34), transparent 72%),
+        radial-gradient(48% 58% at 60% 82%, rgba(248,129,4,0.30), transparent 74%);
+      background-size: 180% 180%, 200% 200%, 220% 220%;
+      background-position: 0% 0%, 100% 0%, 50% 100%;
+    }
+    .slide.is-active .hero-webgl.is-fallback { opacity: 0.92; }
+    @media (prefers-reduced-motion: no-preference) {
+      .slide.is-active .hero-webgl.is-fallback { animation: heroAuroraDrift 26s ease-in-out infinite alternate; }
+    }
+    @keyframes heroAuroraDrift {
+      0%   { background-position: 0% 0%,   100% 0%,  50% 100%; }
+      100% { background-position: 100% 50%, 0% 80%,  30% 0%; }
+    }
     .slide[data-slide="1"] .layout-hero { position: relative; z-index: 2; }
-    /* Vignette suave para garantir contraste */
+    .slide[data-slide="1"] .title-xl,
+    .slide[data-slide="1"] .lead-deck,
+    .slide[data-slide="1"] .kicker { color: var(--color-ink-fg); }
+    .slide[data-slide="1"] .lead-deck { color: rgba(247,241,234,0.82); }
+    .slide[data-slide="1"] .kicker { border-left-color: var(--itau-orange-3); color: var(--itau-orange-3); }
+    .slide[data-slide="1"] .title-xl b { color: var(--itau-orange-3); }
+    /* vignette para contraste sobre o particle field */
     .slide[data-slide="1"]::after {
       content: '';
       position: absolute; inset: 0;
-      background: radial-gradient(ellipse 100% 70% at 50% 50%, transparent 0%, rgba(0,0,0,0.35) 100%);
+      background: radial-gradient(ellipse 100% 70% at 50% 50%, transparent 0%, rgba(0,0,0,0.40) 100%);
       pointer-events: none;
       z-index: 1;
     }
+    .slide[data-slide="1"] .meta { color: rgba(247,241,234,0.7); }
+    .slide[data-slide="1"] .meta strong { color: var(--color-ink-fg); }
+    .slide[data-slide="1"] .brand-mark { color: var(--color-ink-fg); }
 
     /* ════════════════════════════════════════════════════════════════
-       OVERDRIVE B — Chart pulse-on-active
-       Quando o slide entra, o chart-box pulsa um glow accent sutil.
-       Combina com os Chart.js custom plugins (glow no traço + ponto pulse).
+       W3 — MANCHETE CINÉTICA (eixo wdth/wght da Archivo se constrói na
+       entrada). Num deck a timeline é o estado is-active, não o scroll:
+       a manchete-tese "abre" de condensada-leve para expandida-black
+       conforme o slide 1 entra. Colhe os eixos que o Kit 05 já paga.
+       Invariantes: (1) overflow:clip — nunca hidden; (2) estado FINAL como
+       base (legível num Chrome travado); (3) só roda em no-preference.
+       ════════════════════════════════════════════════════════════════ */
+    .slide[data-slide="1"] .title-xl.kinetic-h {
+      overflow: clip;            /* clip do swing de largura — nunca hidden */
+      overflow-clip-margin: 0.18em;
+      /* BASE = estado final desenhado: expandida e legível sem animação */
+      font-variation-settings: 'wght' 900, 'wdth' 118;
+    }
+    .slide[data-slide="1"] .title-xl.kinetic-h b {
+      font-variation-settings: 'wght' 900, 'wdth' 125;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      /* compõe o settle cinemático (heroIn — transform) COM o eixo da fonte
+         (heroTypeflex — wght/wdth+opacity): um gesto, duas dimensões. */
+      .slide[data-slide="1"].is-active .title-xl.kinetic-h {
+        animation: heroIn var(--duration-hero) var(--ease-emphatic) 100ms both,
+                   heroTypeflex var(--duration-hero) var(--ease-emphatic) 120ms both;
+      }
+      .slide[data-slide="1"].is-active .title-xl.kinetic-h b {
+        animation: heroTypeflexBold var(--duration-hero) var(--ease-emphatic) 120ms both;
+      }
+    }
+    /* o eixo da fonte É o gesto: condensada-leve → expandida-black */
+    @keyframes heroTypeflex {
+      from { font-variation-settings: 'wght' 280, 'wdth' 78;  letter-spacing: 0.02em; opacity: 0; }
+      60%  { opacity: 1; }
+      to   { font-variation-settings: 'wght' 900, 'wdth' 118; letter-spacing: -0.035em; opacity: 1; }
+    }
+    @keyframes heroTypeflexBold {
+      from { font-variation-settings: 'wght' 320, 'wdth' 82; }
+      to   { font-variation-settings: 'wght' 900, 'wdth' 125; }
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       OVERDRIVE B — Chart pulse-on-active (mantido; cores do parti)
        ════════════════════════════════════════════════════════════════ */
     .slide .chart-box {
       transition: box-shadow 600ms var(--ease-out),
@@ -943,17 +1080,17 @@
       animation: chartPulseIn 1400ms var(--ease-out) 350ms both;
     }
     @keyframes chartPulseIn {
-      0%   { box-shadow: var(--shadow-xs), 0 0 0 0 rgba(255,98,0,0.0); border-color: var(--color-border); }
-      40%  { box-shadow: var(--shadow-xs), 0 0 48px 4px rgba(255,98,0,0.18); border-color: rgba(255,98,0,0.45); }
-      100% { box-shadow: var(--shadow-xs), 0 0 16px 0px rgba(255,98,0,0.06); border-color: var(--color-border); }
+      0%   { box-shadow: var(--shadow-xs); border-color: var(--color-border-strong); }
+      40%  { box-shadow: var(--shadow-xs), 0 0 0 2px rgba(255,98,0,0.35); border-color: var(--color-accent); }
+      100% { box-shadow: var(--shadow-xs); border-color: var(--color-border-strong); }
     }
     [data-theme="dark"] .slide.is-active .chart-box {
       animation: chartPulseInDark 1400ms var(--ease-out) 350ms both;
     }
     @keyframes chartPulseInDark {
-      0%   { box-shadow: var(--shadow-xs), 0 0 0 0 rgba(250,159,9,0.0); border-color: var(--color-border); }
-      40%  { box-shadow: var(--shadow-xs), 0 0 56px 6px rgba(250,159,9,0.22); border-color: rgba(250,159,9,0.5); }
-      100% { box-shadow: var(--shadow-xs), 0 0 24px 0px rgba(250,159,9,0.08); border-color: var(--color-border); }
+      0%   { box-shadow: var(--shadow-xs); border-color: var(--color-border-strong); }
+      40%  { box-shadow: var(--shadow-xs), 0 0 0 2px rgba(250,159,9,0.45); border-color: var(--color-accent); }
+      100% { box-shadow: var(--shadow-xs); border-color: var(--color-border-strong); }
     }
     @media (prefers-reduced-motion: reduce) {
       .slide.is-active .chart-box,
@@ -967,24 +1104,24 @@
 <body>
 
   <div class="brand-mark" aria-hidden="true">
-    <span class="brand-mark__dot"></span>
+    <span class="brand-mark__bar"></span>
     <span>ITAÚ · PESQUISA MACRO</span>
   </div>
 
   <div class="deck">
 
-    <!-- ═══════════════ Slide 01 — HERO + OVERDRIVE WebGL ═══════════════ -->
-    <section class="slide is-active" data-slide="1" data-background-color="#000000">
+    <!-- ═══════════════ Slide 01 — HERO banda-de-cor + OVERDRIVE WebGL ═══════════════ -->
+    <section class="slide is-active" data-slide="1" data-background-color="var(--color-ink)">
       <span class="slide-num"><span>01</span> · 17</span>
       <canvas class="hero-webgl" id="hero-webgl" data-overdrive aria-hidden="true"></canvas>
       <div class="layout-hero">
-        <p class="kicker kicker--accent" data-anim style="--i:0; color:var(--itau-orange-3)"><span class="kicker__dot"></span>MACRO INSIGHTS</p>
-        <h1 class="title-xl" data-anim="hero" style="color:#fff">Brasil: <em style="color:var(--itau-orange-3); font-style:italic">comércio exterior</em> no governo Trump 2</h1>
-        <p class="lead-deck" data-anim style="--i:2; color:rgba(255,255,255,0.78); max-width:60ch">Tese de pesquisa: balanço de riscos assimétrico para o lado negativo. Ganhos limitados pela alta participação brasileira nas importações chinesas; riscos crescentes via tarifas universais ou equiparação.</p>
+        <p class="kicker kicker--accent" data-anim style="--i:0">MACRO INSIGHTS</p>
+        <h1 class="title-xl kinetic-h" data-anim="hero">Brasil: <b>comércio exterior</b> no governo Trump&nbsp;2</h1>
+        <p class="lead-deck" data-anim style="--i:2; max-width:60ch">Tese de pesquisa: balanço de riscos assimétrico para o lado negativo. Ganhos limitados pela alta participação brasileira nas importações chinesas; riscos crescentes via tarifas universais ou equiparação.</p>
         <div class="meta" data-anim style="--i:3">
           <span><strong>Autores</strong>Igor Barreto Rose · Julia Marasca</span>
-          <span><strong>Data</strong>Janeiro 2025</span>
-          <span><strong>Departamento</strong>Pesquisa Macroeconômica · Itaú Unibanco</span>
+          <span><strong>Data</strong>Janeiro&nbsp;2025</span>
+          <span><strong>Departamento</strong>Pesquisa Macroeconômica · Itaú&nbsp;Unibanco</span>
         </div>
       </div>
     </section>
@@ -993,7 +1130,7 @@
     <section class="slide" data-slide="2">
       <span class="slide-num"><span>02</span> · 17</span>
       <div class="layout-fact">
-        <p class="kicker kicker--accent" data-anim style="--i:0"><span class="kicker__dot"></span>O NÚMERO-CHAVE</p>
+        <p class="kicker kicker--accent" data-anim style="--i:0">O NÚMERO-CHAVE</p>
         <p class="fact-val" data-anim style="--i:1"><span data-mark="circle" data-mark-color="#FF6200">~70%</span></p>
         <p class="fact-label" data-anim style="--i:2">das importações chinesas de <strong>soja</strong> já têm origem brasileira. O espaço para novos ganhos numa eventual segunda guerra comercial é <strong data-mark="underline">limitado</strong>.</p>
         <p class="footnote" data-anim style="--i:3">Fonte: USDA, GACC, Comex Stat · Pesquisa Macro Itaú</p>
@@ -1003,8 +1140,8 @@
     <!-- ═══════════════ Slide 03 — Por que ganhos serão limitados ═══════════════ -->
     <section class="slide" data-slide="3">
       <span class="slide-num"><span>03</span> · 17</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>IMPACTOS POSITIVOS</p>
-      <h2 class="title-lg" data-anim style="--i:1">Potenciais impactos <em>positivos</em> mais limitados do que em 2018</h2>
+      <p class="kicker" data-anim style="--i:0">IMPACTOS POSITIVOS</p>
+      <h2 class="title-lg" data-anim style="--i:1">Potenciais impactos <b>positivos</b> mais limitados do que em 2018</h2>
       <div class="card-list" data-anim style="--i:2">
         <div class="card-row card-row--accent" data-fragment="current-visible">
           <div class="card-row__label">Soja</div>
@@ -1033,16 +1170,16 @@
     <!-- ═══════════════ Slide 04 — Impactos negativos podem ser maiores ═══════════════ -->
     <section class="slide" data-slide="4">
       <span class="slide-num"><span>04</span> · 17</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>IMPACTOS NEGATIVOS</p>
-      <h2 class="title-lg" data-anim style="--i:1">...mas os impactos <em>negativos</em>, desta vez, podem ser maiores</h2>
+      <p class="kicker" data-anim style="--i:0">IMPACTOS NEGATIVOS</p>
+      <h2 class="title-lg" data-anim style="--i:1">...mas os impactos <b>negativos</b>, desta vez, podem ser maiores</h2>
       <div class="num-list" data-anim style="--i:2">
         <div class="num-list__item">
           <div class="num-list__num">1</div>
-          <div class="num-list__body"><strong>Tarifas dos EUA sobre produtos brasileiros estão na mesa.</strong> Trump já acusou o Brasil em 2019 de manipulação cambial — naquele momento, BRL/USD estava em R$ 4,00.</div>
+          <div class="num-list__body"><strong>Tarifas dos EUA sobre produtos brasileiros estão na mesa.</strong> Trump já acusou o Brasil em 2019 de manipulação cambial — naquele momento, BRL/USD estava em R$&nbsp;4,00.</div>
         </div>
         <div class="num-list__item">
           <div class="num-list__num">2</div>
-          <div class="num-list__body">Eventual <strong>tarifa "universal" de 10%</strong> ou um <strong>Reciprocal Tariff Act</strong> (defendido por Kevin Hassett): Brasil tarifa em média 11,2% produtos dos EUA, enquanto EUA tarifam apenas 1,5% itens brasileiros.</div>
+          <div class="num-list__body">Eventual <strong>tarifa “universal” de 10%</strong> ou um <strong>Reciprocal Tariff Act</strong> (defendido por Kevin Hassett): Brasil tarifa em média 11,2% produtos dos EUA, enquanto EUA tarifam apenas 1,5% itens brasileiros.</div>
         </div>
         <div class="num-list__item">
           <div class="num-list__num">3</div>
@@ -1066,8 +1203,8 @@
     <!-- ═══════════════ Slide 05 — Tabela mercado chinês 2022 ═══════════════ -->
     <section class="slide" data-slide="5">
       <span class="slide-num"><span>05</span> · 17</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>BASE DE MERCADO</p>
-      <h2 class="title-lg" data-anim style="--i:1">Tamanho do mercado <em>chinês</em> em 2022</h2>
+      <p class="kicker" data-anim style="--i:0">BASE DE MERCADO</p>
+      <h2 class="title-lg" data-anim style="--i:1">Tamanho do mercado <b>chinês</b> em 2022</h2>
       <p class="lead-deck" data-anim style="--i:2">Importações chinesas de commodities — Brasil é forte fornecedor em soja, minério de ferro e petróleo.</p>
       <div class="table-wrap" data-anim style="--i:3">
         <table class="data-table">
@@ -1095,8 +1232,8 @@
     <!-- ═══════════════ Slide 06 — Pauta comercial brasileira ═══════════════ -->
     <section class="slide" data-slide="6">
       <span class="slide-num"><span>06</span> · 17</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>PAUTA BRASIL</p>
-      <h2 class="title-md" data-anim style="--i:1">Pauta comercial brasileira — <em>visão geral</em></h2>
+      <p class="kicker" data-anim style="--i:0">PAUTA BRASIL</p>
+      <h2 class="title-md" data-anim style="--i:1">Pauta comercial brasileira — <b>visão geral</b></h2>
       <div class="split" data-anim style="--i:2">
         <div>
           <p class="split-panel__title">Top 10 produtos exportados (% da pauta)</p>
@@ -1113,8 +1250,8 @@
     <!-- ═══════════════ Slide 07 — Pauta Brasil–EUA ═══════════════ -->
     <section class="slide" data-slide="7">
       <span class="slide-num"><span>07</span> · 17</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>BRASIL ↔ EUA</p>
-      <h2 class="title-md" data-anim style="--i:1">Pauta comercial Brasil ↔ <em>Estados Unidos</em></h2>
+      <p class="kicker" data-anim style="--i:0">BRASIL ↔ EUA</p>
+      <h2 class="title-md" data-anim style="--i:1">Pauta comercial Brasil ↔ <b>Estados Unidos</b></h2>
       <div class="split" data-anim style="--i:2">
         <div>
           <p class="split-panel__title">Top 8 produtos exportados para os EUA</p>
@@ -1131,8 +1268,8 @@
     <!-- ═══════════════ Slide 08 — Eleições americanas e incerteza ═══════════════ -->
     <section class="slide" data-slide="8">
       <span class="slide-num"><span>08</span> · 17</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>CONTEXTO GLOBAL</p>
-      <h2 class="title-md" data-anim style="--i:1">Eleições americanas e o <em>impacto</em> no comércio internacional</h2>
+      <p class="kicker" data-anim style="--i:0">CONTEXTO GLOBAL</p>
+      <h2 class="title-md" data-anim style="--i:1">Eleições americanas e o <b>impacto</b> no comércio internacional</h2>
       <div class="split" data-anim style="--i:2">
         <div>
           <p class="split-panel__title">Fluxo de comércio (% PIB) — Brasil vs Global, 2000-2023</p>
@@ -1146,11 +1283,11 @@
       <p class="footnote" data-anim style="--i:3">Fonte: World Bank (% PIB), Trade Policy Uncertainty Index (Federal Reserve Board / Caldara et al.). Pico recente em 2024 reflete antecipação ao 2º mandato Trump.</p>
     </section>
 
-    <!-- ═══════════════ Slide 09 — SOJA ═══════════════ -->
+    <!-- ═══════════════ Slide 09 — SOJA (gráfico-tese · assinatura M2) ═══════════════ -->
     <section class="slide" data-slide="9">
       <span class="slide-num"><span>09</span> · 17</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>SOJA</p>
-      <h2 class="title-md" data-anim style="--i:1"><em>Soja</em>: maior parte das exportações brasileiras já vai para a China</h2>
+      <p class="kicker" data-anim style="--i:0">SOJA</p>
+      <h2 class="title-md" data-anim style="--i:1"><b>Soja</b>: maior parte das exportações brasileiras já vai para a China</h2>
       <p class="lead-deck" data-anim style="--i:2; font-size: 1rem">Substituição relevante em 2018-20: Brasil cresceu e EUA caíram na mesma magnitude. Espaço de avanço adicional é limitado.</p>
       <div class="split" data-anim style="--i:3">
         <div>
@@ -1163,7 +1300,7 @@
             <table class="data-table">
               <thead><tr><th>País</th><th class="num">Est. inicial</th><th class="num">Produção</th><th class="num">Import.</th><th class="num">Cons.</th><th class="num">Export.</th><th class="num">Est. final</th></tr></thead>
               <tbody>
-                <tr><td><strong>Mundo</strong></td><td class="num">112</td><td class="num">424</td><td class="num">179</td><td class="num">406</td><td class="num">182</td><td class="num">128</td></tr>
+                <tr class="is-total"><td><strong>Mundo</strong></td><td class="num">112</td><td class="num">424</td><td class="num">179</td><td class="num">406</td><td class="num">182</td><td class="num">128</td></tr>
                 <tr><td>Brasil</td><td class="num">28</td><td class="num">169</td><td class="num">0</td><td class="num">59</td><td class="num">106</td><td class="num">33</td></tr>
                 <tr><td>EUA</td><td class="num">9</td><td class="num">119</td><td class="num">1</td><td class="num">69</td><td class="num">50</td><td class="num">10</td></tr>
                 <tr><td>Argentina</td><td class="num">24</td><td class="num">52</td><td class="num">6</td><td class="num">49</td><td class="num">5</td><td class="num">29</td></tr>
@@ -1182,8 +1319,8 @@
     <!-- ═══════════════ Slide 10 — MILHO ═══════════════ -->
     <section class="slide" data-slide="10">
       <span class="slide-num"><span>10</span> · 17</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>MILHO</p>
-      <h2 class="title-md" data-anim style="--i:1"><em>Milho</em>: avanço limitado por produção e estoque elevados na China</h2>
+      <p class="kicker" data-anim style="--i:0">MILHO</p>
+      <h2 class="title-md" data-anim style="--i:1"><b>Milho</b>: avanço limitado por produção e estoque elevados na China</h2>
       <div class="split" data-anim style="--i:2">
         <div>
           <p class="split-panel__title">Origem das importações chinesas — Brasil vs EUA (%)</p>
@@ -1200,8 +1337,8 @@
     <!-- ═══════════════ Slide 11 — AÇO ═══════════════ -->
     <section class="slide" data-slide="11">
       <span class="slide-num"><span>11</span> · 17</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>AÇO</p>
-      <h2 class="title-md" data-anim style="--i:1"><em>Aço</em>: espaço para expansão limitado</h2>
+      <p class="kicker" data-anim style="--i:0">AÇO</p>
+      <h2 class="title-md" data-anim style="--i:1"><b>Aço</b>: espaço para expansão limitado</h2>
       <p class="lead-deck" data-anim style="--i:2; font-size: 1rem">EUA já são <strong>~54% das exportações brasileiras de aço</strong> — Brasil não tem como ganhar muito mais participação.</p>
       <div class="split" data-anim style="--i:3">
         <div>
@@ -1235,8 +1372,8 @@
     <!-- ═══════════════ Slide 12 — PETRÓLEO ═══════════════ -->
     <section class="slide" data-slide="12">
       <span class="slide-num"><span>12</span> · 17</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>PETRÓLEO</p>
-      <h2 class="title-md" data-anim style="--i:1"><em>Petróleo</em>: dinâmica menos exposta à guerra comercial</h2>
+      <p class="kicker" data-anim style="--i:0">PETRÓLEO</p>
+      <h2 class="title-md" data-anim style="--i:1"><b>Petróleo</b>: dinâmica menos exposta à guerra comercial</h2>
       <div class="split" data-anim style="--i:2">
         <div>
           <p class="split-panel__title">Origem das importações chinesas — 5 regiões (%)</p>
@@ -1267,8 +1404,8 @@
     <!-- ═══════════════ Slide 13 — MINÉRIO DE FERRO ═══════════════ -->
     <section class="slide" data-slide="13">
       <span class="slide-num"><span>13</span> · 17</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>MINÉRIO DE FERRO</p>
-      <h2 class="title-md" data-anim style="--i:1"><em>Minério de ferro</em>: dinâmica apartada da questão EUA-China</h2>
+      <p class="kicker" data-anim style="--i:0">MINÉRIO DE FERRO</p>
+      <h2 class="title-md" data-anim style="--i:1"><b>Minério de ferro</b>: dinâmica apartada da questão EUA-China</h2>
       <div class="split" data-anim style="--i:2">
         <div>
           <p class="split-panel__title">Origem das importações chinesas (%)</p>
@@ -1304,8 +1441,8 @@
     <!-- ═══════════════ Slide 14 — TARIFAS HISTÓRICAS ═══════════════ -->
     <section class="slide" data-slide="14">
       <span class="slide-num"><span>14</span> · 17</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>TARIFAS · CENÁRIO 1</p>
-      <h2 class="title-md" data-anim style="--i:1">Tarifas — quais setores foram mais <em>afetados</em>?</h2>
+      <p class="kicker" data-anim style="--i:0">TARIFAS · CENÁRIO 1</p>
+      <h2 class="title-md" data-anim style="--i:1">Tarifas — quais setores foram mais <b>afetados</b>?</h2>
       <p class="lead-deck" data-anim style="--i:2; font-size: 1rem">Média ponderada por exportações, % das tarifas aplicadas pelos EUA em produtos brasileiros — comparativo entre início do 1º mandato (2016), fim (2020) e situação atual.</p>
       <div class="chart-box" data-anim style="--i:3; height: clamp(300px, 48vh, 480px)">
         <canvas id="c-tarifas-hist"></canvas>
@@ -1316,8 +1453,8 @@
     <!-- ═══════════════ Slide 15 — TARIFAS SIMÉTRICA ═══════════════ -->
     <section class="slide" data-slide="15">
       <span class="slide-num"><span>15</span> · 17</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>TARIFAS · CENÁRIO 2</p>
-      <h2 class="title-md" data-anim style="--i:1">Se Trump <em>equiparar</em> tarifas...</h2>
+      <p class="kicker" data-anim style="--i:0">TARIFAS · CENÁRIO 2</p>
+      <h2 class="title-md" data-anim style="--i:1">Se Trump <b>equiparar</b> tarifas...</h2>
       <p class="lead-deck" data-anim style="--i:2; font-size: 1rem">Cenário hipotético: tarifas dos EUA sobem para o nível brasileiro. Tarifa universal de 10% (linha pontilhada) atinge a maioria das categorias.</p>
       <div class="chart-box" data-anim style="--i:3; height: clamp(300px, 48vh, 480px)">
         <canvas id="c-tarifas-simetrica"></canvas>
@@ -1331,9 +1468,9 @@
     <!-- ═══════════════ Slide 16 — CONTRAPONTO ═══════════════ -->
     <section class="slide" data-slide="16">
       <span class="slide-num"><span>16</span> · 17</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>CONTRAPONTO</p>
-      <h2 class="title-md" data-anim style="--i:1">Contraponto: <em>superávit</em> dos EUA com o Brasil</h2>
-      <p class="lead-deck" data-anim style="--i:2; font-size: 1rem">Brasil tem perfil diferente dos "alvos primários" das tarifas (México, Vietnã, China). Pauta brasileira é mais focada em produtos básicos.</p>
+      <p class="kicker" data-anim style="--i:0">CONTRAPONTO</p>
+      <h2 class="title-md" data-anim style="--i:1">Contraponto: <b>superávit</b> dos EUA com o Brasil</h2>
+      <p class="lead-deck" data-anim style="--i:2; font-size: 1rem">Brasil tem perfil diferente dos “alvos primários” das tarifas (México, Vietnã, China). Pauta brasileira é mais focada em produtos básicos.</p>
       <div class="split" data-anim style="--i:3">
         <div>
           <p class="split-panel__title">Balança comercial dos EUA com top 16 parceiros (USD bi, 2023)</p>
@@ -1354,8 +1491,8 @@
     <section class="slide" data-slide="17" data-background-color="var(--color-bg-sunken)">
       <span class="slide-num"><span>17</span> · 17</span>
       <div class="closing">
-        <p class="kicker kicker--accent" data-anim style="--i:0"><span class="kicker__dot"></span>CONCLUSÃO</p>
-        <h2 class="title-lg" data-anim style="--i:1; margin-bottom: var(--space-2)">Em suma, balanço <em>assimétrico</em> de riscos</h2>
+        <p class="kicker kicker--accent" data-anim style="--i:0">CONCLUSÃO</p>
+        <h2 class="title-lg" data-anim style="--i:1; margin-bottom: var(--space-2)">Em suma, balanço <b>assimétrico</b> de riscos</h2>
         <p class="lead-deck" data-anim style="--i:2; font-size: 1.1rem">Riscos positivos limitados vs riscos negativos crescentes para o Brasil.</p>
         <div class="closing-cards" data-anim style="--i:3">
           <div class="closing-card">
@@ -1421,7 +1558,7 @@
 
   <script>
     /* ════════════════════════════════════════════════════════════════
-       DECK ENGINE v3 — features atualizadas
+       DECK ENGINE v3 — INTOCADO
        ════════════════════════════════════════════════════════════════ */
 
     /* Relative fragment indexes */
@@ -1562,7 +1699,6 @@
       const targets = slide.querySelectorAll(
         '.title-mega, .title-xl, .title-lg, .fact-val, .statement-text, .quote-text, .big-num__val'
       );
-      // Reset prior inline reductions
       targets.forEach(t => t.style.removeProperty('font-size'));
       requestAnimationFrame(() => {
         const overflows = () => slide.scrollHeight > slide.clientHeight + 1
@@ -1719,9 +1855,36 @@
 
     /* ════════════════════════════════════════════════════════════════
        CHARTS — Chart.js
+       §5.0 defaults (fonte/cor do documento + fmtBR pt-BR + tooltip tematizado)
        ════════════════════════════════════════════════════════════════ */
     const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
     const chartInstances = {};
+
+    /* §5.0 — bloco de defaults OBRIGATÓRIO antes do primeiro new Chart() */
+    if (typeof Chart !== 'undefined') {
+      Chart.defaults.font.family = css('--font-ui') || css('--font-text');
+      Chart.defaults.font.size = 12;
+      Chart.defaults.color = css('--color-fg-muted');
+      Chart.defaults.plugins.tooltip.backgroundColor = css('--color-bg-elevated');
+      Chart.defaults.plugins.tooltip.titleColor = css('--color-fg');
+      Chart.defaults.plugins.tooltip.bodyColor = css('--color-fg-muted');
+      Chart.defaults.plugins.tooltip.borderColor = css('--color-border-strong');
+      Chart.defaults.plugins.tooltip.borderWidth = 1;
+    }
+
+    /* Formatação numérica pt-BR — consistente com o texto ("22,3%" não "22.3%") */
+    const fmtBR  = (v, dec = 0) => Number(v).toLocaleString('pt-BR', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+    const fmtPct = (v, dec = 0) => fmtBR(v, dec) + '%';
+
+    function refreshChartDefaults() {
+      if (typeof Chart === 'undefined') return;
+      Chart.defaults.font.family = css('--font-ui') || css('--font-text');
+      Chart.defaults.color = css('--color-fg-muted');
+      Chart.defaults.plugins.tooltip.backgroundColor = css('--color-bg-elevated');
+      Chart.defaults.plugins.tooltip.titleColor = css('--color-fg');
+      Chart.defaults.plugins.tooltip.bodyColor = css('--color-fg-muted');
+      Chart.defaults.plugins.tooltip.borderColor = css('--color-border-strong');
+    }
 
     function chartCommonOptions(opts = {}) {
       return {
@@ -1732,6 +1895,75 @@
       };
     }
 
+    /* §5.0b — banda de evento VIVA (W8 — anotação do gráfico-tese).
+       Lê um objeto `anno` mutável: a banda VARRE da esquerda (anno.reveal 0→1)
+       quando o slide entra, e um crosshair de leitura acende no hover
+       (anno.hover = índice) desenhando linha vertical + valores no ponto que
+       o texto narra. Fallback: sem animação, a banda já aparece (reveal=1). */
+    const eventBand = (fromLabel, toLabel, text, anno) => ({
+      id: 'eventBand',
+      beforeDatasetsDraw(chart) {
+        const { ctx, chartArea, scales: { x } } = chart;
+        if (!x) return;
+        const x1 = x.getPixelForValue(fromLabel), x2 = x.getPixelForValue(toLabel);
+        const reveal = anno ? anno.reveal : 1;
+        const w = (x2 - x1) * Math.max(0, Math.min(1, reveal));
+        ctx.save();
+        ctx.fillStyle = css('--color-warn-dim') || 'rgba(0,0,0,0.05)';
+        ctx.fillRect(x1, chartArea.top, w, chartArea.bottom - chartArea.top);
+        /* fios verticais nas bordas da banda — registro de despacho */
+        ctx.strokeStyle = css('--color-warn') || css('--color-accent');
+        ctx.globalAlpha = 0.45 * reveal;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(x1 + 0.5, chartArea.top); ctx.lineTo(x1 + 0.5, chartArea.bottom);
+        if (reveal >= 0.999) { ctx.moveTo(x2 - 0.5, chartArea.top); ctx.lineTo(x2 - 0.5, chartArea.bottom); }
+        ctx.stroke();
+        ctx.globalAlpha = reveal;
+        ctx.font = '600 11px ' + (css('--font-mono') || 'monospace');
+        ctx.fillStyle = css('--color-fg-muted');
+        ctx.fillText(text, x1 + 6, chartArea.top + 14);
+        ctx.restore();
+      },
+      /* crosshair de leitura ao vivo — desenha por cima das séries */
+      afterDatasetsDraw(chart) {
+        if (!anno || anno.hover == null) return;
+        const { ctx, chartArea, scales: { x, y } } = chart;
+        if (!x || !y) return;
+        const px = x.getPixelForValue(anno.hover);
+        if (px == null || isNaN(px)) return;
+        ctx.save();
+        ctx.strokeStyle = css('--color-fg-muted');
+        ctx.globalAlpha = 0.55;
+        ctx.setLineDash([3, 3]);
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(px, chartArea.top); ctx.lineTo(px, chartArea.bottom);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        /* marca + valor de cada série no índice narrado */
+        ctx.font = '600 11px ' + (css('--font-mono') || 'monospace');
+        chart.data.datasets.forEach((ds, i) => {
+          const v = ds.data[anno.hover];
+          if (v == null) return;
+          const py = y.getPixelForValue(v);
+          ctx.globalAlpha = 1;
+          ctx.fillStyle = ds.borderColor;
+          ctx.beginPath(); ctx.arc(px, py, 3.5, 0, Math.PI * 2); ctx.fill();
+          const lbl = ds.label + ' ' + fmtPct(v);
+          const tw = ctx.measureText(lbl).width;
+          const lx = Math.min(px + 8, chartArea.right - tw - 4);
+          ctx.fillStyle = css('--color-bg-elevated');
+          ctx.globalAlpha = 0.9;
+          ctx.fillRect(lx - 3, py - 8, tw + 6, 16);
+          ctx.globalAlpha = 1;
+          ctx.fillStyle = ds.borderColor;
+          ctx.fillText(lbl, lx, py + 4);
+        });
+        ctx.restore();
+      }
+    });
+
     function destroyAllCharts() {
       Object.keys(chartInstances).forEach(k => {
         try { chartInstances[k].destroy(); } catch (e) {}
@@ -1740,6 +1972,7 @@
     }
 
     function renderAllCharts() {
+      refreshChartDefaults();
       destroyAllCharts();
       renderPautaProdutos();
       renderPautaDestinos();
@@ -1770,17 +2003,17 @@
             data: [13.3, 12.7, 8.9, 5.5, 3.4, 3.1, 2.5, 2.3, 2.1, 1.9],
             backgroundColor: css('--color-accent-dim'),
             borderColor: css('--color-accent'),
-            borderWidth: 2, borderRadius: 4
+            borderWidth: 2, borderRadius: 0
           }]
         },
         options: chartCommonOptions({
           indexAxis: 'y',
           plugins: {
             legend: { display: false },
-            tooltip: { callbacks: { label: ctx => ctx.parsed.x + '%' } }
+            tooltip: { callbacks: { label: ctx => fmtPct(ctx.parsed.x, 1) } }
           },
           scales: {
-            x: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => v + '%' } },
+            x: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => fmtPct(v) } },
             y: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 10 } } }
           }
         })
@@ -1798,17 +2031,17 @@
             data: [28.0, 12.0, 4.1, 3.5, 2.9, 2.3, 2.3, 1.9, 1.7, 1.7, 1.3, 1.3],
             backgroundColor: ['rgba(15,118,110,0.30)','rgba(255,98,0,0.30)','rgba(107,93,80,0.25)','rgba(107,93,80,0.25)','rgba(107,93,80,0.25)','rgba(107,93,80,0.25)','rgba(107,93,80,0.25)','rgba(107,93,80,0.25)','rgba(107,93,80,0.25)','rgba(107,93,80,0.25)','rgba(107,93,80,0.25)','rgba(107,93,80,0.25)'],
             borderColor: [css('--color-teal'), css('--color-accent'), css('--color-fg-muted'), css('--color-fg-muted'), css('--color-fg-muted'), css('--color-fg-muted'), css('--color-fg-muted'), css('--color-fg-muted'), css('--color-fg-muted'), css('--color-fg-muted'), css('--color-fg-muted'), css('--color-fg-muted')],
-            borderWidth: 2, borderRadius: 4
+            borderWidth: 2, borderRadius: 0
           }]
         },
         options: chartCommonOptions({
           indexAxis: 'y',
           plugins: {
             legend: { display: false },
-            tooltip: { callbacks: { label: ctx => ctx.parsed.x + '%' } }
+            tooltip: { callbacks: { label: ctx => fmtPct(ctx.parsed.x, 1) } }
           },
           scales: {
-            x: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => v + '%' } },
+            x: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => fmtPct(v) } },
             y: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 10 } } }
           }
         })
@@ -1826,14 +2059,14 @@
             data: [14.3, 8.8, 4.7, 4.2, 2.5, 2.2, 2.0, 1.5],
             backgroundColor: css('--color-accent-dim'),
             borderColor: css('--color-accent'),
-            borderWidth: 2, borderRadius: 4
+            borderWidth: 2, borderRadius: 0
           }]
         },
         options: chartCommonOptions({
           indexAxis: 'y',
-          plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.parsed.x + '%' } } },
+          plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => fmtPct(ctx.parsed.x, 1) } } },
           scales: {
-            x: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => v + '%' } },
+            x: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => fmtPct(v) } },
             y: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 10 } } }
           }
         })
@@ -1851,14 +2084,14 @@
             data: [15.2, 9.7, 4.7, 4.1, 2.5, 2.0, 1.8, 1.5],
             backgroundColor: css('--color-info-dim'),
             borderColor: css('--color-info'),
-            borderWidth: 2, borderRadius: 4
+            borderWidth: 2, borderRadius: 0
           }]
         },
         options: chartCommonOptions({
           indexAxis: 'y',
-          plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.parsed.x + '%' } } },
+          plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => fmtPct(ctx.parsed.x, 1) } } },
           scales: {
-            x: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => v + '%' } },
+            x: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => fmtPct(v) } },
             y: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 10 } } }
           }
         })
@@ -1878,25 +2111,25 @@
               data: [37,38,37,38,42,46,48,50,52,42,47,50,49,49,48,46,44,45,46,46,42,49,50,46],
               borderColor: css('--color-accent'),
               backgroundColor: css('--color-accent-dim'),
-              fill: true, tension: 0.35, pointRadius: 0, borderWidth: 2.5
+              fill: true, tension: 0, pointRadius: 0, borderWidth: 2.5
             },
             {
               label: 'Brasil (Export.+Import. % PIB)',
               data: [16,17,21,23,24,22,22,21,22,17,18,19,21,22,21,20,18,20,22,22,23,30,32,27],
               borderColor: css('--color-fg'),
               backgroundColor: 'transparent',
-              fill: false, tension: 0.35, pointRadius: 0, borderWidth: 2.5, borderDash: [5,3]
+              fill: false, tension: 0, pointRadius: 0, borderWidth: 2.5, borderDash: [5,3]
             }
           ]
         },
         options: chartCommonOptions({
           plugins: {
             legend: { position: 'top', labels: { color: css('--color-fg-muted'), font: { size: 10 }, boxWidth: 14 } },
-            tooltip: { mode: 'index', intersect: false, callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y + '%' } }
+            tooltip: { mode: 'index', intersect: false, callbacks: { label: ctx => ctx.dataset.label + ': ' + fmtPct(ctx.parsed.y) } }
           },
           scales: {
             x: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), maxTicksLimit: 8, font: { size: 10 } } },
-            y: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => v + '%' } }
+            y: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => fmtPct(v) } }
           }
         })
       });
@@ -1914,41 +2147,65 @@
             data: [40, 50, 80, 170, 260, 170, 90, 45, 50, 55, 375],
             borderColor: css('--color-plum'),
             backgroundColor: css('--color-plum-dim'),
-            fill: true, tension: 0.3, pointRadius: 3, pointHoverRadius: 5, borderWidth: 2.5
+            fill: true, tension: 0, pointRadius: 3, pointHoverRadius: 5, borderWidth: 2.5
           }]
         },
         options: chartCommonOptions({
-          plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => 'TPU: ' + ctx.parsed.y } } },
+          plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => 'TPU: ' + fmtBR(ctx.parsed.y) } } },
           scales: {
             x: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 10 } } },
-            y: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted') } }
+            y: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => fmtBR(v) } }
           }
         })
       });
     }
 
+    /* ── GRÁFICO-TESE (assinatura M2): a linha do Brasil se desenha por ponto
+          e a banda "guerra comercial 2018-20" acende anotada (eventBand §5.0b) ── */
+    /* objeto de anotação VIVA do gráfico-tese (W8) — mutado por entrada/hover */
+    const sojaAnno = { reveal: 1, hover: null };
     function renderSojaOrigem() {
       const el = document.getElementById('c-soja-origem');
       if (!el) return;
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const slide9Active = document.querySelector('.slide[data-slide="9"]')?.classList.contains('is-active');
+      sojaAnno.hover = null;
+      /* base segura = 1; só zera p/ varrer se o slide ainda NÃO está ativo
+         (re-render por toggle de tema com o slide aberto mantém a banda acesa) */
+      sojaAnno.reveal = (reduce || slide9Active) ? 1 : 0;
       chartInstances.so = new Chart(el, {
         type: 'line',
         data: {
           labels: ['2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023'],
           datasets: [
-            { label: 'Brasil', data: [40,45,50,45,50,47,55,75,67,60,62,60,70], borderColor: css('--color-accent'), backgroundColor: css('--color-accent-dim'), fill: false, tension: 0.3, pointRadius: 3, borderWidth: 2.5 },
-            { label: 'EUA', data: [40,40,35,35,40,40,35,18,22,30,30,30,25], borderColor: css('--color-info'), backgroundColor: 'transparent', fill: false, tension: 0.3, pointRadius: 3, borderWidth: 2.5, borderDash: [5,3] }
+            { label: 'Brasil', data: [40,45,50,45,50,47,55,75,67,60,62,60,70], borderColor: css('--color-accent'), backgroundColor: css('--color-accent-dim'), fill: false, tension: 0, pointRadius: 3, borderWidth: 2.5 },
+            { label: 'EUA', data: [40,40,35,35,40,40,35,18,22,30,30,30,25], borderColor: css('--color-info'), backgroundColor: 'transparent', fill: false, tension: 0, pointRadius: 3, borderWidth: 2.5, borderDash: [5,3] }
           ]
         },
         options: chartCommonOptions({
+          /* M2 — animação progressiva por ponto até o dado real */
+          animation: reduce ? false : { duration: 1600, easing: 'easeOutCubic',
+            x: { type: 'number', easing: 'linear', duration: 90, from: NaN, delay: ctx => ctx.type === 'data' && ctx.mode === 'default' ? ctx.index * 90 : 0 } },
+          /* crosshair vivo: o índice sob o cursor alimenta a anotação */
+          onHover(evt, els, chart) {
+            const pts = chart.getElementsAtEventForMode(evt, 'index', { intersect: false }, false);
+            const next = pts.length ? pts[0].index : null;
+            if (next !== sojaAnno.hover) { sojaAnno.hover = next; chart.draw(); }
+          },
           plugins: {
             legend: { position: 'top', labels: { color: css('--color-fg-muted'), boxWidth: 14, font: { size: 10 } } },
-            tooltip: { mode: 'index', intersect: false, callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y + '%' } }
+            tooltip: { mode: 'index', intersect: false, callbacks: { label: ctx => ctx.dataset.label + ': ' + fmtPct(ctx.parsed.y) } }
           },
           scales: {
             x: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 10 } } },
-            y: { min: 0, max: 100, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => v + '%' } }
+            y: { min: 0, max: 100, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => fmtPct(v) } }
           }
-        })
+        }),
+        plugins: [ eventBand('2018', '2020', 'guerra comercial 2018-20', sojaAnno) ]
+      });
+      /* limpa o crosshair quando o cursor sai do gráfico */
+      el.addEventListener('mouseleave', () => {
+        if (sojaAnno.hover !== null) { sojaAnno.hover = null; try { chartInstances.so.draw(); } catch (e) {} }
       });
     }
 
@@ -1960,18 +2217,18 @@
         data: {
           labels: ['2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023'],
           datasets: [
-            { label: 'EUA', data: [97,98,70,50,11,8,25,8,7,11,70,73,28], borderColor: css('--color-info'), backgroundColor: css('--color-info-dim'), fill: false, tension: 0.3, pointRadius: 3, borderWidth: 2.5, borderDash: [5,3] },
-            { label: 'Brasil', data: [0,0,0,0,0,0,0,0,0,0,0,0,45], borderColor: css('--color-accent'), backgroundColor: css('--color-accent-dim'), fill: false, tension: 0.3, pointRadius: 3, borderWidth: 2.5 }
+            { label: 'EUA', data: [97,98,70,50,11,8,25,8,7,11,70,73,28], borderColor: css('--color-info'), backgroundColor: css('--color-info-dim'), fill: false, tension: 0, pointRadius: 3, borderWidth: 2.5, borderDash: [5,3] },
+            { label: 'Brasil', data: [0,0,0,0,0,0,0,0,0,0,0,0,45], borderColor: css('--color-accent'), backgroundColor: css('--color-accent-dim'), fill: false, tension: 0, pointRadius: 3, borderWidth: 2.5 }
           ]
         },
         options: chartCommonOptions({
           plugins: {
             legend: { position: 'top', labels: { color: css('--color-fg-muted'), boxWidth: 14, font: { size: 10 } } },
-            tooltip: { mode: 'index', intersect: false, callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y + '%' } }
+            tooltip: { mode: 'index', intersect: false, callbacks: { label: ctx => ctx.dataset.label + ': ' + fmtPct(ctx.parsed.y) } }
           },
           scales: {
             x: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 10 } } },
-            y: { min: 0, max: 100, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => v + '%' } }
+            y: { min: 0, max: 100, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => fmtPct(v) } }
           }
         })
       });
@@ -1985,19 +2242,19 @@
         data: {
           labels: ['2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023','2024','2025'],
           datasets: [
-            { label: 'Produção interna', data: [200,210,225,240,250,265,260,260,260,260,265,275,280,290,295], borderColor: css('--color-success'), fill: false, tension: 0.3, pointRadius: 2, borderWidth: 2.5 },
-            { label: 'Estoque final', data: [50,60,90,130,175,210,225,215,195,200,200,200,205,210,205], borderColor: css('--color-teal'), backgroundColor: css('--color-teal-dim'), fill: true, tension: 0.3, pointRadius: 2, borderWidth: 2.5 },
-            { label: 'Importações', data: [5,3,3,3,7,3,3,5,7,29,28,22,18,15,8], borderColor: css('--color-accent'), fill: false, tension: 0.3, pointRadius: 2, borderWidth: 2.5 }
+            { label: 'Produção interna', data: [200,210,225,240,250,265,260,260,260,260,265,275,280,290,295], borderColor: css('--color-success'), fill: false, tension: 0, pointRadius: 2, borderWidth: 2.5 },
+            { label: 'Estoque final', data: [50,60,90,130,175,210,225,215,195,200,200,200,205,210,205], borderColor: css('--color-teal'), backgroundColor: css('--color-teal-dim'), fill: true, tension: 0, pointRadius: 2, borderWidth: 2.5 },
+            { label: 'Importações', data: [5,3,3,3,7,3,3,5,7,29,28,22,18,15,8], borderColor: css('--color-accent'), fill: false, tension: 0, pointRadius: 2, borderWidth: 2.5 }
           ]
         },
         options: chartCommonOptions({
           plugins: {
             legend: { position: 'top', labels: { color: css('--color-fg-muted'), boxWidth: 14, font: { size: 10 } } },
-            tooltip: { mode: 'index', intersect: false, callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y + ' mm ton' } }
+            tooltip: { mode: 'index', intersect: false, callbacks: { label: ctx => ctx.dataset.label + ': ' + fmtBR(ctx.parsed.y) + ' mm ton' } }
           },
           scales: {
             x: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 10 } } },
-            y: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => v + ' mm ton' } }
+            y: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => fmtBR(v) + ' mm ton' } }
           }
         })
       });
@@ -2011,21 +2268,21 @@
         data: {
           labels: ['2015','2016','2017','2018','2019','2020','2021','2022','2023','2024'],
           datasets: [
-            { label: 'Canadá', data: [14,15,17,17,18,17,22,27,25,23], borderColor: css('--color-info'), fill: false, tension: 0.3, pointRadius: 2, borderWidth: 2 },
-            { label: 'EU', data: [20,22,22,20,18,18,19,21,22,21], borderColor: css('--color-teal'), fill: false, tension: 0.3, pointRadius: 2, borderWidth: 2 },
-            { label: 'México', data: [7,8,8,9,10,11,13,16,14,11], borderColor: css('--color-sage'), fill: false, tension: 0.3, pointRadius: 2, borderWidth: 2 },
-            { label: 'Brasil', data: [7,8,9,9,8,7,8,9,9,10], borderColor: css('--color-accent'), backgroundColor: css('--color-accent-dim'), fill: true, tension: 0.3, pointRadius: 3, borderWidth: 2.5 },
-            { label: 'China', data: [7,5,4,3,3,3,3,2.5,2.5,2.5], borderColor: css('--color-plum'), fill: false, tension: 0.3, pointRadius: 2, borderWidth: 2 }
+            { label: 'Canadá', data: [14,15,17,17,18,17,22,27,25,23], borderColor: css('--color-info'), fill: false, tension: 0, pointRadius: 2, borderWidth: 2 },
+            { label: 'EU', data: [20,22,22,20,18,18,19,21,22,21], borderColor: css('--color-teal'), fill: false, tension: 0, pointRadius: 2, borderWidth: 2 },
+            { label: 'México', data: [7,8,8,9,10,11,13,16,14,11], borderColor: css('--color-sage'), fill: false, tension: 0, pointRadius: 2, borderWidth: 2 },
+            { label: 'Brasil', data: [7,8,9,9,8,7,8,9,9,10], borderColor: css('--color-accent'), backgroundColor: css('--color-accent-dim'), fill: true, tension: 0, pointRadius: 3, borderWidth: 2.5 },
+            { label: 'China', data: [7,5,4,3,3,3,3,2.5,2.5,2.5], borderColor: css('--color-plum'), fill: false, tension: 0, pointRadius: 2, borderWidth: 2 }
           ]
         },
         options: chartCommonOptions({
           plugins: {
             legend: { position: 'top', labels: { color: css('--color-fg-muted'), boxWidth: 12, font: { size: 10 } } },
-            tooltip: { mode: 'index', intersect: false, callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y + '%' } }
+            tooltip: { mode: 'index', intersect: false, callbacks: { label: ctx => ctx.dataset.label + ': ' + fmtPct(ctx.parsed.y) } }
           },
           scales: {
             x: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 10 } } },
-            y: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => v + '%' } }
+            y: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => fmtPct(v) } }
           }
         })
       });
@@ -2039,21 +2296,21 @@
         data: {
           labels: ['2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023'],
           datasets: [
-            { label: 'Oriente Médio', data: [42,43,40,42,42,40,38,36,36,38,36], borderColor: css('--color-teal'), backgroundColor: css('--color-teal-dim'), fill: true, tension: 0.3, pointRadius: 2, borderWidth: 2.5 },
-            { label: 'Rússia', data: [9,11,13,14,16,17,16,15,14,17,18], borderColor: css('--color-plum'), fill: false, tension: 0.3, pointRadius: 2, borderWidth: 2 },
-            { label: 'África', data: [22,21,18,15,16,18,18,16,12,10,8], borderColor: css('--color-sage'), fill: false, tension: 0.3, pointRadius: 2, borderWidth: 2 },
-            { label: 'Brasil', data: [1,3,4,4,4,7,7,7,6,5,7], borderColor: css('--color-accent'), fill: false, tension: 0.3, pointRadius: 3, borderWidth: 2.5 },
-            { label: 'EUA', data: [0,1,1,3,3,8,5,5,4,3,5], borderColor: css('--color-info'), fill: false, tension: 0.3, pointRadius: 2, borderWidth: 2, borderDash: [5,3] }
+            { label: 'Oriente Médio', data: [42,43,40,42,42,40,38,36,36,38,36], borderColor: css('--color-teal'), backgroundColor: css('--color-teal-dim'), fill: true, tension: 0, pointRadius: 2, borderWidth: 2.5 },
+            { label: 'Rússia', data: [9,11,13,14,16,17,16,15,14,17,18], borderColor: css('--color-plum'), fill: false, tension: 0, pointRadius: 2, borderWidth: 2 },
+            { label: 'África', data: [22,21,18,15,16,18,18,16,12,10,8], borderColor: css('--color-sage'), fill: false, tension: 0, pointRadius: 2, borderWidth: 2 },
+            { label: 'Brasil', data: [1,3,4,4,4,7,7,7,6,5,7], borderColor: css('--color-accent'), fill: false, tension: 0, pointRadius: 3, borderWidth: 2.5 },
+            { label: 'EUA', data: [0,1,1,3,3,8,5,5,4,3,5], borderColor: css('--color-info'), fill: false, tension: 0, pointRadius: 2, borderWidth: 2, borderDash: [5,3] }
           ]
         },
         options: chartCommonOptions({
           plugins: {
             legend: { position: 'top', labels: { color: css('--color-fg-muted'), boxWidth: 12, font: { size: 10 } } },
-            tooltip: { mode: 'index', intersect: false, callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y + '%' } }
+            tooltip: { mode: 'index', intersect: false, callbacks: { label: ctx => ctx.dataset.label + ': ' + fmtPct(ctx.parsed.y) } }
           },
           scales: {
             x: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 10 } } },
-            y: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => v + '%' } }
+            y: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => fmtPct(v) } }
           }
         })
       });
@@ -2067,19 +2324,19 @@
         data: {
           labels: ['2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023'],
           datasets: [
-            { label: 'Austrália', data: [44,47,52,58,62,61,60,60,61,59,61,65,63], borderColor: css('--color-teal'), backgroundColor: css('--color-teal-dim'), fill: true, tension: 0.3, pointRadius: 2, borderWidth: 2.5 },
-            { label: 'Brasil', data: [23,24,21,19,21,22,23,24,22,21,21,20,21], borderColor: css('--color-accent'), fill: false, tension: 0.3, pointRadius: 3, borderWidth: 2.5 },
-            { label: 'EUA', data: [0,0,0,0,0,0,0,0,0,0,0,0,0], borderColor: css('--color-info'), fill: false, tension: 0.3, pointRadius: 2, borderWidth: 2, borderDash: [5,3] }
+            { label: 'Austrália', data: [44,47,52,58,62,61,60,60,61,59,61,65,63], borderColor: css('--color-teal'), backgroundColor: css('--color-teal-dim'), fill: true, tension: 0, pointRadius: 2, borderWidth: 2.5 },
+            { label: 'Brasil', data: [23,24,21,19,21,22,23,24,22,21,21,20,21], borderColor: css('--color-accent'), fill: false, tension: 0, pointRadius: 3, borderWidth: 2.5 },
+            { label: 'EUA', data: [0,0,0,0,0,0,0,0,0,0,0,0,0], borderColor: css('--color-info'), fill: false, tension: 0, pointRadius: 2, borderWidth: 2, borderDash: [5,3] }
           ]
         },
         options: chartCommonOptions({
           plugins: {
             legend: { position: 'top', labels: { color: css('--color-fg-muted'), boxWidth: 12, font: { size: 10 } } },
-            tooltip: { mode: 'index', intersect: false, callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y + '%' } }
+            tooltip: { mode: 'index', intersect: false, callbacks: { label: ctx => ctx.dataset.label + ': ' + fmtPct(ctx.parsed.y) } }
           },
           scales: {
             x: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 10 } } },
-            y: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => v + '%' } }
+            y: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => fmtPct(v) } }
           }
         })
       });
@@ -2093,19 +2350,19 @@
         data: {
           labels: ['Alimentos','Comm. não-comestíveis','Combust. minerais','Prod. químicos','Manufaturados','Máq. e transportes','Diversos'],
           datasets: [
-            { label: 'Início 1º mandato Trump (2016)', data: [3.5, 0.5, 1.0, 0.8, 2.1, 0.3, 4.7], backgroundColor: css('--color-info-dim'), borderColor: css('--color-info'), borderWidth: 2, borderRadius: 3 },
-            { label: 'Fim 1º mandato Trump (2020)',    data: [5.3, 0.6, 0.3, 3.2, 3.6, 1.3, 6.2], backgroundColor: css('--color-accent-dim'), borderColor: css('--color-accent'), borderWidth: 2, borderRadius: 3 },
-            { label: 'Atual',                           data: [3.2, 0.1, 0.3, 1.0, 0.2, 0.1, 2.7], backgroundColor: 'rgba(107,93,80,0.20)', borderColor: css('--color-fg-muted'), borderWidth: 2, borderRadius: 3 }
+            { label: 'Início 1º mandato Trump (2016)', data: [3.5, 0.5, 1.0, 0.8, 2.1, 0.3, 4.7], backgroundColor: css('--color-info-dim'), borderColor: css('--color-info'), borderWidth: 2, borderRadius: 0 },
+            { label: 'Fim 1º mandato Trump (2020)',    data: [5.3, 0.6, 0.3, 3.2, 3.6, 1.3, 6.2], backgroundColor: css('--color-accent-dim'), borderColor: css('--color-accent'), borderWidth: 2, borderRadius: 0 },
+            { label: 'Atual',                           data: [3.2, 0.1, 0.3, 1.0, 0.2, 0.1, 2.7], backgroundColor: 'rgba(107,93,80,0.20)', borderColor: css('--color-fg-muted'), borderWidth: 2, borderRadius: 0 }
           ]
         },
         options: chartCommonOptions({
           plugins: {
             legend: { position: 'top', labels: { color: css('--color-fg-muted'), font: { size: 11 }, boxWidth: 14 } },
-            tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y + '%' } }
+            tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + fmtPct(ctx.parsed.y, 1) } }
           },
           scales: {
             x: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 10 } } },
-            y: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => v + '%' } }
+            y: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => fmtPct(v) } }
           }
         })
       });
@@ -2139,19 +2396,19 @@
         data: {
           labels: ['Alimentos','Comm. não-comestíveis','Combust. minerais','Prod. químicos','Manufaturados','Máq. e transportes','Diversos'],
           datasets: [
-            { label: 'Tarifa média Brasil em produtos EUA',    data: [5.5, 2.8, 0, 5.7, 10.5, 6.1, 9.6], backgroundColor: css('--color-accent-dim'), borderColor: css('--color-accent'), borderWidth: 2, borderRadius: 3 },
-            { label: 'Tarifa média EUA em produtos Brasil',    data: [3.2, 0.1, 0, 1.1, 0.1, 0.1, 2.7], backgroundColor: 'rgba(107,93,80,0.20)', borderColor: css('--color-fg-muted'), borderWidth: 2, borderRadius: 3 },
-            { label: 'Potencial aumento se equiparar',         data: [2.3, 2.7, 0, 4.6, 10.4, 6.0, 6.9], backgroundColor: css('--color-plum-dim'), borderColor: css('--color-plum'), borderWidth: 2, borderRadius: 3 }
+            { label: 'Tarifa média Brasil em produtos EUA',    data: [5.5, 2.8, 0, 5.7, 10.5, 6.1, 9.6], backgroundColor: css('--color-accent-dim'), borderColor: css('--color-accent'), borderWidth: 2, borderRadius: 0 },
+            { label: 'Tarifa média EUA em produtos Brasil',    data: [3.2, 0.1, 0, 1.1, 0.1, 0.1, 2.7], backgroundColor: 'rgba(107,93,80,0.20)', borderColor: css('--color-fg-muted'), borderWidth: 2, borderRadius: 0 },
+            { label: 'Potencial aumento se equiparar',         data: [2.3, 2.7, 0, 4.6, 10.4, 6.0, 6.9], backgroundColor: css('--color-plum-dim'), borderColor: css('--color-plum'), borderWidth: 2, borderRadius: 0 }
           ]
         },
         options: chartCommonOptions({
           plugins: {
             legend: { position: 'top', labels: { color: css('--color-fg-muted'), font: { size: 11 }, boxWidth: 14 } },
-            tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y + '%' } }
+            tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + fmtPct(ctx.parsed.y, 1) } }
           },
           scales: {
             x: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 10 } } },
-            y: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => v + '%' } }
+            y: { min: 0, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => fmtPct(v) } }
           }
         }),
         plugins: [universalLine10]
@@ -2179,17 +2436,17 @@
             data: data,
             backgroundColor: bgcolors,
             borderColor: colors,
-            borderWidth: 2, borderRadius: 3
+            borderWidth: 2, borderRadius: 0
           }]
         },
         options: chartCommonOptions({
           indexAxis: 'y',
           plugins: {
             legend: { display: false },
-            tooltip: { callbacks: { label: ctx => 'USD ' + ctx.parsed.x + ' bi' } }
+            tooltip: { callbacks: { label: ctx => 'USD ' + fmtBR(ctx.parsed.x) + ' bi' } }
           },
           scales: {
-            x: { grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => 'USD ' + v + 'bi' } },
+            x: { grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => 'USD ' + fmtBR(v) + 'bi' } },
             y: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 10 } } }
           }
         })
@@ -2208,14 +2465,14 @@
             data: [-5,-10,-10,-5,3,10,5,5,5,5,13,1],
             borderColor: css('--color-accent'),
             backgroundColor: css('--color-accent-dim'),
-            fill: true, tension: 0.3, pointRadius: 4, pointHoverRadius: 6, borderWidth: 2.5
+            fill: true, tension: 0, pointRadius: 4, pointHoverRadius: 6, borderWidth: 2.5
           }]
         },
         options: chartCommonOptions({
-          plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => 'USD ' + ctx.parsed.y + ' bi' } } },
+          plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => 'USD ' + fmtBR(ctx.parsed.y) + ' bi' } } },
           scales: {
             x: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 10 } } },
-            y: { grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => 'USD ' + v + 'bi' } }
+            y: { grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => 'USD ' + fmtBR(v) + 'bi' } }
           }
         })
       });
@@ -2224,9 +2481,7 @@
     /* ════════════════════════════════════════════════════════════════
        OVERDRIVE B — Chart.js plugin global: glow accent no traço
                                             + pulse no último ponto
-       Detecta cor accent automaticamente via getComputedStyle.
-       Aplica em todos os datasets de tipo 'line' e 'bar'.
-       Pulse só anima quando o slide do chart está ativo.
+       INTOCADO (overdrive preservado)
        ════════════════════════════════════════════════════════════════ */
     if (typeof Chart !== 'undefined') {
       const overdriveAccentGlow = {
@@ -2235,10 +2490,8 @@
           const ds = chart.data.datasets[args.index];
           const meta = chart.getDatasetMeta(args.index);
           if (!meta) return;
-          // Glow só nos datasets cuja borderColor é a accent (--color-accent)
           const accent = css('--color-accent');
           const borderC = ds.borderColor;
-          // accent pode chegar como #FF6200 ou 'rgb(...)'; comparação case-insensitive
           const isAccent = (typeof borderC === 'string') &&
                            borderC.replace(/\s/g,'').toUpperCase() === accent.replace(/\s/g,'').toUpperCase();
           if (!isAccent) return;
@@ -2252,17 +2505,14 @@
         afterDatasetDraw(chart) { chart.ctx.restore(); }
       };
 
-      // Pulse animado no último ponto de cada line dataset accent
       const overdrivePulseLastPoint = {
         id: 'overdrivePulseLastPoint',
         afterDatasetsDraw(chart) {
-          // só pulsa se canvas está num slide ativo
           const sl = chart.canvas?.closest('.slide');
           if (!sl || !sl.classList.contains('is-active')) return;
           const accent = css('--color-accent');
           chart.data.datasets.forEach((ds, i) => {
             if (ds.type === 'bar' || chart.config.type === 'bar' && !ds.type) {
-              // skip bars
               return;
             }
             const borderC = ds.borderColor;
@@ -2292,7 +2542,6 @@
 
       Chart.register(overdriveAccentGlow, overdrivePulseLastPoint);
 
-      // Re-render pulse a cada frame quando slide ativo
       let pulseRAF = null;
       function pulseLoop() {
         const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -2313,18 +2562,51 @@
     else window.addEventListener('load', () => { if (typeof Chart !== 'undefined') renderAllCharts(); });
 
     /* ════════════════════════════════════════════════════════════════
+       W8 — sweep da banda de evento do gráfico-tese (slide 09).
+       Quando o slide entra, anno.reveal anima 0→1: a banda "guerra
+       comercial 2018-20" ACENDE varrendo da esquerda, sincronizada com a
+       linha M2 que se desenha. Invariantes: reduced-motion → reveal=1
+       instantâneo (estado-base já é 1); só roda com o slide ativo.
+       ════════════════════════════════════════════════════════════════ */
+    (function initSojaBandSweep() {
+      const slide9 = document.querySelector('.slide[data-slide="9"]');
+      if (!slide9) return;
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let raf = null;
+      function sweep() {
+        if (reduce) { sojaAnno.reveal = 1; try { chartInstances.so?.draw(); } catch (e) {} return; }
+        if (raf) cancelAnimationFrame(raf);
+        sojaAnno.reveal = 0;
+        const t0 = performance.now();
+        const DUR = 900, DELAY = 500;   /* começa após a linha já ter avançado */
+        function step(now) {
+          const p = Math.max(0, Math.min(1, (now - t0 - DELAY) / DUR));
+          /* easeOutCubic — coerente com a linha M2 */
+          sojaAnno.reveal = 1 - Math.pow(1 - p, 3);
+          try { chartInstances.so?.draw(); } catch (e) {}
+          if (p < 1) raf = requestAnimationFrame(step);
+        }
+        raf = requestAnimationFrame(step);
+      }
+      const check = () => { if (slide9.classList.contains('is-active')) sweep(); };
+      new MutationObserver(check).observe(slide9, { attributes: true, attributeFilter: ['class'] });
+      check();   /* caso o deck abra direto no #s9 */
+    })();
+
+    /* ════════════════════════════════════════════════════════════════
        OVERDRIVE A — WebGL Particle Field no Slide 1
-       Vertex+fragment shaders em GLSL ES1.
-       Partículas orbitam um centro em campo gravitacional fraco;
-       cor accent + glow aditivo. Pausa quando slide não-ativo ou tab oculta.
+       INTOCADO (overdrive preservado) — textura confinada ao hero
        ════════════════════════════════════════════════════════════════ */
     (function initWebGLHero() {
       const canvas = document.getElementById('hero-webgl');
       if (!canvas) return;
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      /* W9 invariante: sem WebGL (ou GL falhando em qualquer etapa) → material
+         CSS com as mesmas cores. A classe liga a aurora .is-fallback do CSS. */
+      const useFallback = () => canvas.classList.add('is-fallback');
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { useFallback(); return; }
       const gl = canvas.getContext('webgl', { antialias: true, premultipliedAlpha: false, alpha: true });
       if (!gl) {
-        // Fallback: leave canvas empty (CSS bg already provides dark)
+        useFallback();
         return;
       }
 
@@ -2374,13 +2656,14 @@
       }
       const vs = compile(gl.VERTEX_SHADER, VSRC);
       const fs = compile(gl.FRAGMENT_SHADER, FSRC);
-      if (!vs || !fs) return;
+      if (!vs || !fs) { useFallback(); return; }
       const prog = gl.createProgram();
       gl.attachShader(prog, vs);
       gl.attachShader(prog, fs);
       gl.linkProgram(prog);
       if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
         console.warn('[webgl link]', gl.getProgramInfoLog(prog));
+        useFallback();
         return;
       }
       gl.useProgram(prog);
@@ -2403,7 +2686,6 @@
       const uAccent = gl.getUniformLocation(prog, 'u_accent');
       const uWarm   = gl.getUniformLocation(prog, 'u_warm');
 
-      // Itaú orange + warm yellow
       gl.uniform3f(uAccent, 1.0, 0.384, 0.0);    // #FF6200
       gl.uniform3f(uWarm,   0.984, 0.764, 0.020); // #FBC305
 
@@ -2448,13 +2730,11 @@
       }
       function stop() { running = false; if (raf) { cancelAnimationFrame(raf); raf = null; } }
 
-      // IO: pause when slide 1 not in view (not active)
       const slide1 = canvas.closest('.slide');
       const checkActive = () => {
         if (slide1?.classList.contains('is-active')) start();
         else stop();
       };
-      // Observa mudança da classe is-active no slide
       const mo = new MutationObserver(checkActive);
       mo.observe(slide1, { attributes: true, attributeFilter: ['class'] });
 
@@ -2463,7 +2743,6 @@
         else stop();
       });
       window.addEventListener('resize', size);
-      // Inicial
       checkActive();
     })();
   </script>

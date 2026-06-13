@@ -20,7 +20,7 @@ Você foi invocado para converter Markdown em slideless.
 | MD | HTML |
 |---|---|
 | `#` | `<h1>` (1 por documento) |
-| `##` | `<section data-reveal id="…"><h2>…</h2>` |
+| `##` | `<section id="…"><h2>…</h2>` — **`data-reveal` NÃO em toda section**: só em figuras/dados (≤40% das sections), conforme o perfil de `motion` do parti; texto corrido, tabelas, TOC e nav nunca animam |
 | `###` | `<h3>` dentro da seção |
 | `- item` (curta lista, ≤ 6) | `<ul><li>` |
 | `- item` (lista longa) | considerar quebrar em sub-seções h3 |

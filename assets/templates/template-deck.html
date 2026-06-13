@@ -1,22 +1,29 @@
 <!DOCTYPE html>
 <!--
-  Template: slideless deck v3 (visual-explainer-grade)
+  Template: slideless deck v5 (engine de slides + parti)
+  Decisões obrigatórias do parti antes de gerar (ver references/direcao-de-arte.md):
+    - Kit tipográfico: colar o <link> no slot SLIDELESS:TYPE-KIT (references/type-kits.md).
+      PROIBIDO Inter como display, e Fraunces fora do Kit 06 / Instrument Serif.
+    - Ambição (A1/A2/A3 — references/ambicao.md): A2 é o default de deck. O perfil de
+      motion declarado é colado como bloco aditivo; ≥1 momento-wow (W#) ligado ao dado-tese.
+    - Superfície: glow é OPT-IN (flat é default sóbrio); materialidade em css-patterns §13.
   Como usar:
-    1. Substituir o marker /* SLIDELESS:THEME */ pelo conteúdo de assets/temas/{itau,neutro}.css
+    1. Substituir o marker /* SLIDELESS:THEME */ pelo conteúdo de assets/temas/{itau,neutro}.css.
+       O TEMA traz cores, fontes (via slots --kit-*), dark mode e a11y — não redeclarar :root.
     2. Cada <section class="slide"> = um slide. PRESERVAR 100% do conteúdo da fonte.
     3. Variar layouts (hero, big-num, metrics, list, two-col, split, table, diagram, quote,
        full-bleed, encerramento) — não repetir o mesmo template dois slides seguidos.
     4. data-anim com style="--i: N" para stagger; data-fragment para reveal por click.
 
-  Padrões novos:
-    - Hero com filter:blur(16px)→0 (heroIn)
-    - Stagger universal via --i CSS variable
-    - Glow radial atmosférico via ::before do .slide
+  Engine (recursos disponíveis — usar conforme o parti, não empilhar por enfeite):
+    - Hero com filter:blur(16px)→0 (heroIn) — escolher 1 gesto de entrada, não acumular
+    - Stagger via --i (bloco do perfil de motion do parti)
+    - Glow radial OPT-IN (decisão de superfície do parti — comentado por padrão)
     - Depth tiers (tier-hero, tier-default, tier-recessed)
     - Color variants (var-accent, var-info, var-success, var-sage, var-teal, var-plum)
     - Overview mode (tecla O) — grade miniaturizada de slides
     - Auto-Animate FLIP (data-auto-animate + data-id)
-    - Novos tipos de fragmento (current-visible, highlight-current, grow, shrink, etc)
+    - Tipos de fragmento (current-visible, highlight-current, grow, shrink, etc)
     - Rough Notation (data-mark)
     - AutoFitText (data-fit-text)
     - Posicionamento relativo de fragmentos (data-fragment-index="+1")
@@ -42,7 +49,10 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800;9..144,900&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- SLIDELESS:TYPE-KIT — colar aqui o <link> do kit tipográfico escolhido em
+       references/type-kits.md (decisão do parti — references/direcao-de-arte.md).
+       PROIBIDO entregar com este slot vazio ou com Inter como fonte display. -->
+  <!-- SLIDELESS:TYPE-KIT-END -->
 
   <!-- Feature 7: Rough Notation CDN -->
   <script src="https://cdn.jsdelivr.net/npm/rough-notation@0.6.1/lib/rough-notation.iife.js"></script>
@@ -50,13 +60,17 @@
   <style>
     /* SLIDELESS:THEME — substituir por assets/temas/itau.css ou neutro.css */
 
-    /* ─── Específico do deck v2 ──────────────────────────────────── */
+    /* ─── Específico do deck (engine de slides) ──────────────────── */
     html, body { height: 100%; overflow: hidden; }
     body { overscroll-behavior: none; }
 
     .deck { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
 
-    /* Glow radial atmosférico no body (vive atrás dos slides) */
+    /* Glow radial de fundo — OPT-IN: decisão do parti (superfície glow-localizado).
+       v5: glow NÃO é mais wallpaper incondicional em body::before — isso era o
+       anti-pattern C8 (o fingerprint de superfície da casa). Flat é legítimo e é
+       o default do deck sóbrio. DESCOMENTAR só se o parti escolher glow — e de
+       preferência atrás de UM elemento-herói (ver css-patterns §1b), não fullscreen.
     body::before {
       content: '';
       position: fixed; inset: 0;
@@ -73,6 +87,7 @@
       z-index: 0;
       opacity: 0.5;
     }
+    */
 
     /* Override local — transições mais rápidas que o token global do tema
        para garantir resposta snappy a cliques/teclas. Tema usa 650/750ms
@@ -106,7 +121,13 @@
       pointer-events: none;
     }
 
-    /* Stagger universal via --i */
+    /* Stagger via --i — BLOCO DO PERFIL DE MOTION (parti: cinemático/editorial).
+       v5: motion não mora no tema; este bloco é o perfil declarado pelo parti,
+       colado como aditivo (ver ambicao.md / direcao-de-arte.md §5). O deck é o
+       único modelo onde a entrada por slide ativo é natural — não confundir com
+       o fade-up universal por <section> que foi banido nos outros modelos. Se o
+       parti for estático, remover este bloco (o slide entra seco). Stagger só em
+       grupo homogêneo do slide; reduced-motion já é tratado abaixo. */
     .slide [data-anim] {
       opacity: 0;
       transform: translateY(28px);

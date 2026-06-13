@@ -9,7 +9,7 @@ Você foi invocado para converter entre modelos.
 
 | De → Para | Notas |
 |---|---|
-| `handbook` → `scrollytelling` | Sidebar some, TOC some, h2 viram seções com `data-reveal`. Progress bar adicionada no topo. Confluence de uma página → narrativa de leitura. |
+| `handbook` → `scrollytelling` | Sidebar some, TOC some, h2 viram seções. Progress bar adicionada no topo. Confluence de uma página → narrativa de leitura. **`data-reveal` só em figuras/dados (≤40% das sections), conforme o `motion` do parti — não em toda section nem em texto corrido.** |
 | `scrollytelling` → `handbook` | Adiciona sidebar (lista os h2), TOC, scrollspy. Cenas viram seções. Progress bar removida. |
 | `hub` → `site` | Cards viram top-nav. Painéis viram `<article class="view">`. Filtros removidos. |
 | `site` → `hub` | Views viram cards na home. Hash routing removido. Filtros opcionais. |
@@ -27,7 +27,7 @@ Você foi invocado para converter entre modelos.
 1. Confirmar conversão alvo + viabilidade.
 2. Carregar template do modelo-alvo como base.
 3. Migrar conteúdo:
-   - **handbook → scrollytelling:** cada `<section data-reveal>` do handbook vira `<section class="scene" data-reveal>`. h2 → h2 (mesmo tamanho).
+   - **handbook → scrollytelling:** cada `<section>` do handbook vira `<section class="scene">`. h2 → h2 (mesmo tamanho). **`data-reveal` só em figuras/dados (≤40% das sections), conforme o perfil de `motion` do parti — texto corrido nunca anima.**
    - **scrollytelling → handbook:** inversa. Gerar sidebar listando h2.
    - **hub → site:** painéis viram views; cards viram links de topnav.
    - **site → hub:** views viram painéis; topnav vira cards na home.

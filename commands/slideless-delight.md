@@ -1,5 +1,5 @@
 ---
-description: Micro-interações sem cafonice — hover lifts, cursor-aware spotlight no hero, shimmer na progress bar, parallax sutil. Combina com /slideless-quieter para refinamento editorial.
+description: Micro-interações sem cafonice, dentro do parti — lê o registro e o nao-vai-ter e escolhe 2-3 gestos coerentes (hover por papel, materialidade por superfície). Spotlight/parallax bloqueados quando o parti veda glow-radial ou pede sobriedade. Combina com /slideless-quieter.
 argument-hint: <arquivo.html opcional>
 ---
 
@@ -8,8 +8,8 @@ Você é um designer sênior pareado com um engenheiro sênior elevando um docum
 ## Workflow
 
 1. Identificar o arquivo HTML alvo. Se o usuário não indicou, perguntar.
-2. Ler o arquivo completo.
-3. Aplicar a transformação **delight** (detalhada abaixo).
+2. Ler o arquivo completo. **Extrair o bloco `<!-- slideless:parti -->`**: delight opera dentro do registro e do `nao-vai-ter` — não é kit fixo. `motion: estatico` (report) → delight = só micro-interações de leitura (highlight de footnote ao navegar, hover de fio em tabela) — NUNCA shimmer/parallax/spotlight. **BLOQUEIO DURO:** se o parti declara `nao-vai-ter: glow-radial` (ou `glow-wallpaper`) **ou** registro sóbrio (`institucional-impresso`/`relatorio-de-bancada`), o **cursor-spotlight** (radial-gradient no hero) e o **parallax em `body::before/::after`** estão PROIBIDOS — recaem nos tells `glow-radial`/`glow-wallpaper` e falham o validador (P7). Nunca adicionar recurso do `nao-vai-ter` (`hover-lift` declarado = zero translateY).
+3. Escolher 2-3 micro-interações coerentes com o registro. A camada premium deve vir de **materialidade por papel** (superfície declarada — fio, grain, specular, borda de luz) conforme [../references/ambicao.md](../references/ambicao.md) §Materialidade, não de glow incondicional. O CSS abaixo é **exemplo de referência, adaptar**, nunca colar o kit inteiro.
 4. **Preservar 100% do conteúdo** — texto, números, dados, estrutura nunca mudam. Só visual/comportamento.
 5. Validar: dark mode continua funcionando, `prefers-reduced-motion: reduce` é respeitado, console sem erros.
 6. Sobrescrever o arquivo original (ou criar `<nome>-delight.html` se o usuário pedir).
@@ -24,15 +24,11 @@ Você é um designer sênior pareado com um engenheiro sênior elevando um docum
 **CSS a adicionar:**
 
 ```css
-/* Hover lift em cards */
-.card, .metric-d, .kpi-card, .pillar-card {
-  transition: transform 200ms var(--ease-out), box-shadow 200ms, border-color 200ms;
-}
-.card:hover, .metric-d:hover, .kpi-card:hover, .pillar-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-lg);
-  border-color: var(--color-accent);
-}
+/* Hover POR PAPEL — lift SÓ em card CLICÁVEL e SÓ no perfil cinemático.
+   Card informativo: mudança de contraste, nunca transform. */
+.card[href]:hover, a.card:hover { border-color: var(--color-border-strong); }
+/* perfil cinemático + card clicável, quando o parti permite: */
+/* .card[href]:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); } */
 
 /* Smooth scroll */
 html { scroll-behavior: smooth; }
@@ -62,7 +58,10 @@ a:not(.card):not(.topnav__link):hover::after { transform: scaleX(1); }
   to   { background-position: -200% 0; }
 }
 
-/* Cursor-aware spotlight no hero (usado via JS) */
+/* Cursor-aware spotlight no hero (usado via JS).
+   ⚠ BLOQUEADO se o parti veda glow-radial/glow-wallpaper ou pede registro sóbrio —
+   radial-gradient atrás do hero É o tell glow-radial (falha P7). Só usar quando o parti
+   o permite e em UM hero pontual, nunca em body::before incondicional. */
 .slide--hero, .slide.is-active .layout-hero {
   --mx: 50%;
   --my: 50%;
@@ -89,7 +88,10 @@ document.querySelectorAll('.slide--hero, .layout-hero').forEach(el => {
   });
 });
 
-/* Subtle parallax no body::before/after (scroll-linked) */
+/* Subtle parallax no body::before/after (scroll-linked).
+   ⚠ BLOQUEADO se o parti veda glow-radial/glow-wallpaper ou pede registro sóbrio —
+   camadas decorativas full-bleed em body::before/::after são o tell glow-wallpaper.
+   Só usar quando o parti tem superfície expressiva que o autorize. */
 let lastY = 0;
 addEventListener('scroll', () => {
   const y = scrollY * 0.15;
@@ -100,7 +102,7 @@ addEventListener('scroll', () => {
 }, { passive: true });
 ```
 
-E adicionar no CSS para usar `--parallax-y`:
+E adicionar no CSS para usar `--parallax-y` (sob a mesma ressalva — só se o parti autorizar a superfície):
 ```css
 body::before { transform: translateY(calc(var(--parallax-y, 0) * -0.3)); }
 body::after  { transform: translateY(calc(var(--parallax-y, 0) * -0.6)); }

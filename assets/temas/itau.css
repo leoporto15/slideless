@@ -1,24 +1,32 @@
 /*
- * slideless — tema itau v2 (visual-explainer-grade)
+ * slideless — tema itau v4 (duas camadas)
  *
- * Mudanças vs v1:
- *  - Paleta semântica 6 cores (accent/sage/teal/plum + info/warn/danger) para
- *    color-coding multi-dimensional, não monocromia em accent.
- *  - Tokens de glow radial atmosférico (warm-glow, cool-glow, vignette).
- *  - Escalas tipográficas via clamp() em mais lugares (não só deck).
- *  - Easing cinematográfico cubic-bezier(0.22, 1, 0.36, 1) + duração granular.
- *  - Depth tiers (.section--hero, .section--recessed) com sombra/inset
- *    formalizados.
- *  - Letter-spacing negativo (-0.035em) em display gigante.
- *  - Dark mode com luminosity shift +20% no accent (não simples invert).
+ * O tema é dividido em DUAS CAMADAS, marcadas grupo a grupo:
  *
- * Como usar: copiar inteiro para o <style> do HTML single-file. Componentes
- * específicos do modelo (deck/handbook/hub/scrollytelling/site) vêm depois
- * deste bloco.
+ *  [MARCA — INVIOLÁVEL]  laranja #FF6200, paleta semântica com papéis, bg/fg
+ *                        warm, dark mode, a11y (focus, reduced-motion).
+ *                        Copiar SEMPRE, nunca alterar.
+ *
+ *  [DIREÇÃO — compor conforme o parti]  fontes (slots --kit-*), glows,
+ *                        radius, sombras, easings, affordances de componente.
+ *                        São DEFAULTS NEUTROS — o parti do documento
+ *                        (references/direcao-de-arte.md) decide o que entra,
+ *                        substitui ou renuncia. Motion NÃO mora aqui: vem do
+ *                        perfil declarado, colado como bloco aditivo.
+ *
+ *  [SISTEMA]             escala fluida, espaço, layout — engenharia de
+ *                        viewport/char-limits. Mexer só com razão técnica.
+ *
+ * Mandato v4: "copiar a camada marca; compor a camada direção" —
+ * NUNCA mais "copiar inteiro e pronto". Dois documentos itau compartilham
+ * marca, nunca fingerprint.
+ *
+ * Paleta secundária: hex fallback abaixo + redefinição OKLCH (derivada do
+ * matiz do laranja) no bloco @supports ao final do arquivo.
  */
 
 :root {
-  /* ─── Cores da marca Itaú (fixas nos dois temas) ─────────────────── */
+  /* ─── [MARCA] Cores da marca Itaú (fixas nos dois temas) ─────────── */
   --itau-orange:     #FF6200;
   --itau-orange-2:   #F88104;
   --itau-orange-3:   #FA9F09;
@@ -26,8 +34,11 @@
   --itau-yellow:     #FBC305;
   --itau-warm-black: #14110d;
 
-  /* ─── Paleta semântica multi-dimensional (light) ─────────────────── */
-  /* Cada uma com `--*` (foreground/contorno) + `--*-dim` (fundo tingido)  */
+  /* ─── [MARCA] Paleta semântica multi-dimensional (light) ─────────── */
+  /* Cada uma com `--*` (foreground/contorno) + `--*-dim` (fundo tingido).
+     Cor é INFORMAÇÃO, não decoração (anti-pattern C14): cada cor só entra
+     com papel declarado no documento. Regime cromático (bicromático /
+     duotone / polícromo mapeado) é decisão do parti.                     */
   --color-accent:        var(--itau-orange);    /* 1. brand accent       */
   --color-accent-dim:    rgba(255, 98, 0, 0.08);
   --color-accent-fg:     #ffffff;
@@ -35,11 +46,14 @@
   --color-info:          var(--itau-blue-3);    /* 2. info/dados         */
   --color-info-dim:      rgba(59, 133, 250, 0.08);
 
-  --color-success:       #4d7c0f;               /* 3. sucesso/positivo   */
-  --color-success-dim:   rgba(77, 124, 15, 0.08);
+  --color-success:       #3f6f1f;               /* 3. sucesso/positivo   */
+  --color-success-dim:   rgba(63, 111, 31, 0.08);
 
-  --color-sage:          #65a30d;               /* 4. neutro vivo        */
-  --color-sage-dim:      rgba(101, 163, 13, 0.08);
+  /* v4: --color-sage FUNDIDO com --color-success — eram o mesmo lime do
+     Tailwind (lime-600 vs lime-700), duas cores fingindo ser duas dimensões.
+     Alias mantido por compatibilidade com .var-sage em documentos antigos. */
+  --color-sage:          var(--color-success);
+  --color-sage-dim:      var(--color-success-dim);
 
   --color-teal:          #0f766e;               /* 5. técnico/analítico  */
   --color-teal-dim:      rgba(15, 118, 110, 0.08);
@@ -52,7 +66,7 @@
   --color-danger:        #b91c1c;
   --color-danger-dim:    rgba(185, 28, 28, 0.08);
 
-  /* ─── Background + foreground (light) ────────────────────────────── */
+  /* ─── [MARCA] Background + foreground (light) ────────────────────── */
   --color-bg:            #faf7f5;   /* cream warm (não branco puro)    */
   --color-bg-elevated:   #ffffff;
   --color-bg-sunken:     #f4f1ec;
@@ -63,24 +77,31 @@
   --color-border-strong: rgba(41, 32, 23, 0.18);
   --color-accent-hover:  var(--itau-orange-2);
 
-  /* ─── Glow radial atmosférico (light) ────────────────────────────── */
+  /* ─── [DIREÇÃO] Glow radial — OPÇÃO do cardápio de superfície ──────
+     v4: glow NUNCA é obrigatório (flat é legítimo). Usar SÓ se o parti
+     escolher `glow-localizado`: máx 1 por documento, atrás de UM elemento,
+     nunca wallpaper incondicional em body::before (anti-pattern C8).      */
   --glow-warm:    radial-gradient(ellipse 80% 60% at 80% 0%, rgba(255, 98, 0, 0.10) 0%, transparent 55%);
   --glow-cool:    radial-gradient(ellipse 70% 50% at 20% 100%, rgba(59, 133, 250, 0.08) 0%, transparent 55%);
   --glow-hero:    radial-gradient(ellipse 90% 70% at 50% 0%, rgba(255, 98, 0, 0.14) 0%, transparent 50%);
   --vignette:     radial-gradient(ellipse 120% 80% at 50% 50%, transparent 50%, rgba(41, 32, 23, 0.04) 100%);
 
-  /* ─── Syntax highlight (light) ───────────────────────────────────── */
+  /* ─── [MARCA] Syntax highlight (light) ───────────────────────────── */
   --syntax-string:   #16a34a;
   --syntax-keyword:  var(--itau-orange);
   --syntax-function: var(--itau-blue-3);
   --syntax-comment:  var(--color-fg-subtle);
 
-  /* ─── Tipografia ──────────────────────────────────────────────────── */
-  --font-text:    'Itau Text', 'Inter', -apple-system, system-ui, sans-serif;
-  --font-display: 'Itau Display', 'Fraunces', 'Inter', Georgia, serif;
-  --font-mono:    'JetBrains Mono', 'IBM Plex Mono', 'SF Mono', Consolas, monospace;
+  /* ─── [DIREÇÃO] Tipografia — slots do kit (type-kits.md) ──────────── */
+  /* v4: o kit tipográfico do documento (references/type-kits.md) define
+     --kit-display/--kit-text/--kit-mono ANTES deste bloco. Itau Display/Text
+     prevalecem dentro da rede; o kit é o fallback desenhado fora dela.
+     Fraunces não é mais o default universal — era o slop de 2ª geração da casa. */
+  --font-text:    'Itau Text', var(--kit-text, 'Inter'), -apple-system, system-ui, sans-serif;
+  --font-display: 'Itau Display', var(--kit-display, Georgia), serif;
+  --font-mono:    var(--kit-mono, 'IBM Plex Mono'), 'SF Mono', Consolas, monospace;
 
-  /* Escala fluida (clamp) — vale para TODOS os modelos */
+  /* ─── [SISTEMA] Escala fluida (clamp) — vale para TODOS os modelos ── */
   --size-xs:      clamp(0.75rem, 0.7rem + 0.2vw, 0.875rem);
   --size-small:   clamp(0.875rem, 0.85rem + 0.15vw, 1rem);
   --size-body:    clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
@@ -97,19 +118,22 @@
   --size-mega:    clamp(2.75rem, 1.6rem + 2.4vw + 2vh, 5.5rem);
   --size-giga:    clamp(3.5rem, 2rem + 3vw + 3vh, 9rem);
 
-  /* ─── Espaço ──────────────────────────────────────────────────────── */
+  /* ─── [SISTEMA] Espaço ───────────────────────────────────────────── */
   --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem;
   --space-4: 1rem;    --space-5: 1.5rem; --space-6: 2rem;
   --space-7: 2.5rem;  --space-8: 3rem;   --space-10: 4rem;
   --space-12: 5rem;   --space-16: 7rem;
 
-  /* ─── Layout ──────────────────────────────────────────────────────── */
+  /* ─── [SISTEMA] Layout ───────────────────────────────────────────── */
   --content-max: 720px;
   --sidebar-w:   268px;
   --toc-w:       220px;
   --header-h:    56px;
 
-  /* ─── Radius, sombra ─────────────────────────────────────────────── */
+  /* ─── [DIREÇÃO] Radius, sombra ───────────────────────────────────────
+     Defaults neutros. Regra v4: máx 2 valores de radius distintos por
+     documento; regime de luz (flat/key-light/hard-print/glow-spot) é
+     decisão do parti — registro impresso usa fio, não sombra.            */
   --radius-sm: 4px;
   --radius:    10px;
   --radius-lg: 16px;
@@ -129,9 +153,13 @@
   --glow-accent-sm: 0 0 0 3px rgba(255, 98, 0, 0.14);
   --glow-accent:    0 8px 32px rgba(255, 98, 0, 0.22);
 
-  /* ─── Easing (cinemático) ────────────────────────────────────────── */
+  /* ─── [DIREÇÃO] Easing — vocabulário, não receita ────────────────────
+     v4: o documento usa 2-3 curvas COM PAPEL COMENTADO (entrada / micro /
+     assinatura), definidas pelo perfil de motion do parti. PROIBIDO usar a
+     mesma curva para tudo (anti-pattern C7) e `transition: all`.          */
   --ease-out:       cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in-out:    cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-snap:      cubic-bezier(0.2, 0, 0, 1);          /* micro-interação */
   --ease-spring:    cubic-bezier(0.34, 1.56, 0.64, 1);   /* overshoot */
   --ease-emphatic:  cubic-bezier(0.16, 1, 0.3, 1);       /* slow start */
 
@@ -162,14 +190,15 @@
   --color-accent-dim:    rgba(250, 159, 9, 0.10);
 
   --color-info-dim:      rgba(59, 133, 250, 0.12);
-  --color-success:       #a3e635;
-  --color-success-dim:   rgba(163, 230, 53, 0.10);
-  --color-sage:          #bef264;
-  --color-sage-dim:      rgba(190, 242, 100, 0.10);
-  --color-teal:          #5eead4;
-  --color-teal-dim:      rgba(94, 234, 212, 0.10);
-  --color-plum:          #fb7185;
-  --color-plum-dim:      rgba(251, 113, 133, 0.10);
+  --color-success:       #8fcc5a;
+  --color-success-dim:   rgba(143, 204, 90, 0.10);
+  /* sage fundido com success (ver :root) */
+  --color-sage:          var(--color-success);
+  --color-sage-dim:      var(--color-success-dim);
+  --color-teal:          #6fd0c0;
+  --color-teal-dim:      rgba(111, 208, 192, 0.10);
+  --color-plum:          #e8889c;
+  --color-plum-dim:      rgba(232, 136, 156, 0.10);
 
   --color-warn-dim:      rgba(251, 195, 5, 0.12);
   --color-danger:        #f87171;
@@ -347,7 +376,7 @@ li::marker { color: var(--color-fg-subtle); }
   background: var(--color-bg); border: 1px solid var(--color-border);
   border-radius: var(--radius-sm); cursor: pointer;
   color: var(--color-fg-muted); font: inherit;
-  transition: all var(--duration-fast);
+  transition: color var(--duration-fast) var(--ease-snap), border-color var(--duration-fast) var(--ease-snap);
 }
 .code__copy:hover { color: var(--color-fg); border-color: var(--color-border-strong); }
 .code__copy.is-copied { color: var(--color-accent); border-color: var(--color-accent); }
@@ -396,19 +425,16 @@ li::marker { color: var(--color-fg-subtle); }
   border-radius: 999px; cursor: pointer;
   color: var(--color-fg);
   font-size: 14px;
-  transition: all var(--duration-fast);
+  transition: background-color var(--duration-fast) var(--ease-snap), border-color var(--duration-fast) var(--ease-snap);
 }
-.theme-toggle:hover { background: var(--color-bg-sunken); border-color: var(--color-border-strong); transform: translateY(-1px); }
+.theme-toggle:hover { background: var(--color-bg-sunken); border-color: var(--color-border-strong); }
 
-/* ─── Stagger reveal (universal via --i) ─────────────────────────── */
-[data-reveal] {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity var(--duration-hero) var(--ease-out),
-              transform var(--duration-hero) var(--ease-out);
-  transition-delay: calc(var(--i, 0) * 60ms);
-}
-[data-reveal].is-visible { opacity: 1; transform: none; }
+/* ─── Motion: NÃO mora no tema ───────────────────────────────────────
+   v4: o reveal universal fade-up foi removido daqui de propósito — era o
+   fingerprint nº 1 da casa. Motion é decisão do perfil declarado no bloco
+   <!-- slideless:parti --> (ver references/direcao-de-arte.md): o perfil
+   escolhido (estático/editorial/cinemático) é COLADO como bloco aditivo.
+   Documento sem perfil de motion = documento sem animação de entrada (válido). */
 
 /* ─── Tabs ───────────────────────────────────────────────────────── */
 .tabs { display: flex; gap: var(--space-1); border-bottom: 1px solid var(--color-border); margin-bottom: var(--space-5); }
@@ -419,7 +445,7 @@ li::marker { color: var(--color-fg-subtle); }
   color: var(--color-fg-muted); cursor: pointer;
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
-  transition: all var(--duration-fast);
+  transition: color var(--duration-fast) var(--ease-snap), border-color var(--duration-fast) var(--ease-snap);
 }
 .tab:hover { color: var(--color-fg); }
 .tab.is-active { color: var(--color-accent); border-bottom-color: var(--color-accent); }
@@ -435,14 +461,13 @@ li::marker { color: var(--color-fg-subtle); }
   border-radius: var(--radius-lg);
   text-decoration: none;
   color: inherit;
-  transition: all var(--duration-fast) var(--ease-out);
+  transition: border-color var(--duration-fast) var(--ease-out);
   box-shadow: var(--shadow-xs);
 }
-.card:hover {
-  transform: translateY(-3px);
-  border-color: var(--color-accent);
-  box-shadow: var(--shadow-lg);
-}
+/* v4: hover-lift (translateY) removido — era o tell nº 1 de UI gerada por IA.
+   Affordance de hover é decisão do parti, POR PAPEL: lift só em card clicável
+   E só no perfil cinemático; alternativas: border-draw, mudança de contraste. */
+.card:hover { border-color: var(--color-border-strong); }
 .card__icon { font-size: 28px; margin-bottom: var(--space-3); color: var(--color-accent); }
 .card__title { font-family: var(--font-display); font-size: var(--size-h3); margin: 0 0 var(--space-2); letter-spacing: -0.015em; }
 .card__desc { font-size: var(--size-small); color: var(--color-fg-muted); margin: 0 0 var(--space-3); max-width: 38ch; line-height: 1.5; }
@@ -455,7 +480,10 @@ li::marker { color: var(--color-fg-subtle); }
 .metric__val span { color: var(--color-accent); }
 .metric__label { font-size: var(--size-small); color: var(--color-fg-muted); margin: 0; max-width: 22ch; line-height: 1.4; }
 
-/* ─── Timeline vertical ──────────────────────────────────────────── */
+/* ─── [DIREÇÃO] Timeline vertical — DEFAULT TRIBUTADO ─────────────────
+   v4: a timeline-com-dot é um tell catalogado ("timeline-dot" no vocabulário
+   nao-vai-ter). Usá-la exige justificativa no parti; alternativas em
+   componentes.md (lista com fio, tabela cronológica, numeral de marco).   */
 .timeline { list-style: none; padding: 0; margin: var(--space-5) 0; position: relative; }
 .timeline::before {
   content: '';
@@ -477,7 +505,7 @@ li::marker { color: var(--color-fg-subtle); }
 .timeline__title { font-family: var(--font-display); font-size: 1.0625rem; margin: 0 0 var(--space-1); font-weight: 700; }
 .timeline__desc { font-size: var(--size-small); color: var(--color-fg-muted); margin: 0; line-height: 1.5; }
 
-/* ─── Reduced motion ─────────────────────────────────────────────── */
+/* ─── [MARCA] Reduced motion ─────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -485,5 +513,36 @@ li::marker { color: var(--color-fg-subtle); }
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+  /* para reveals colados pelo perfil de motion do parti — o tema não define
+     mais [data-reveal]{opacity:0}; esta linha é defensiva: garante que QUALQUER
+     reveal colado fique visível e sem transform sob reduced-motion. */
   [data-reveal] { opacity: 1; transform: none; transition-delay: 0s; }
+}
+
+/* ─── [MARCA] Paleta secundária em OKLCH ─────────────────────────────
+   Redefinição perceptualmente uniforme, derivada do matiz do laranja Itaú
+   (#FF6200 ≈ oklch(68% 0.21 41)): mesma Lightness percebida entre as cores
+   de um mesmo papel, chroma controlado — mata o vocabulário Tailwind.
+   Os hex acima permanecem como fallback para browsers sem OKLCH.          */
+@supports (color: oklch(60% 0.1 50)) {
+  :root {
+    --color-success:     oklch(52% 0.11 140);
+    --color-success-dim: oklch(52% 0.11 140 / 0.08);
+    --color-teal:        oklch(52% 0.08 200);
+    --color-teal-dim:    oklch(52% 0.08 200 / 0.08);
+    --color-plum:        oklch(46% 0.12 355);
+    --color-plum-dim:    oklch(46% 0.12 355 / 0.08);
+    --color-danger:      oklch(50% 0.16 27);
+    --color-danger-dim:  oklch(50% 0.16 27 / 0.08);
+  }
+  [data-theme="dark"] {
+    --color-success:     oklch(76% 0.13 140);
+    --color-success-dim: oklch(76% 0.13 140 / 0.10);
+    --color-teal:        oklch(78% 0.09 195);
+    --color-teal-dim:    oklch(78% 0.09 195 / 0.10);
+    --color-plum:        oklch(74% 0.11 0);
+    --color-plum-dim:    oklch(74% 0.11 0 / 0.10);
+    --color-danger:      oklch(70% 0.15 25);
+    --color-danger-dim:  oklch(70% 0.15 25 / 0.10);
+  }
 }

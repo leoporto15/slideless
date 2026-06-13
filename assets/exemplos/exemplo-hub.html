@@ -3,29 +3,56 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Plataforma de Dados Itaú — Hub</title>
+  <title>Central de Benefícios — Pessoas &amp; Cultura</title>
+
+  <!-- slideless:parti
+  conteudo: central de benefícios RH — tese: "todo benefício a 2 cliques, com valores e elegibilidade na cara"
+  registro: revista-interna (pessoas & cultura — quente, humano, títulos expressivos)
+  kit: 04-revista (Bricolage Grotesque display + Lora corpo — calor editorial sem gritar IA)
+  capa: capa-indice (o sumário É a capa — índice editorial estilo revista, com os benefícios mais usados em corpo maior)
+  superficie: grain (feTurbulence data-URI, opacity 0.06 — tato de papel) + luz key-light suave
+  motion: editorial (reveal só nos painéis ao abrir; 1 gesto)
+  assinatura: M0 — a tabela-mestra de benefícios (full-bleed, broadsheet, filtrável) é o protagonista compositivo da página
+  ambicao: A2-elevado (central de benefícios — abrir um benefício deve ter continuidade, não corte seco; registro revista-interna libera A2 cheio)
+  momento-wow: W5 transição contínua (View Transitions ao abrir painel: o card/linha vira o header do painel — morph por view-transition-name compartilhado) + W7 glass nos painéis (backdrop-filter + @supports not sólido) + materialidade de assinatura (aurora mesh sutil, cor do tema, atrás da zona de painéis) — derivação: o gesto-tese É "abrir o dossiê", então a continuidade do clique→painel é o dado que justifica o nível
+  nao-vai-ter: kicker-dot; hover-lift; timeline-dot
+  -->
 
   <script>
     (function() {
       try {
-        var t = localStorage.getItem('theme') ||
-                (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        var t = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         document.documentElement.setAttribute('data-theme', t);
-      } catch (e) {
-        document.documentElement.setAttribute('data-theme', 'light');
-      }
+      } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }
     })();
+    // craft: troca de tema não dispara as transitions da página inteira (sem "respiro" no dark/light)
+    function setTheme(t) {
+      var h = document.documentElement;
+      h.classList.add('no-transitions');
+      h.setAttribute('data-theme', t);
+      try { localStorage.setItem('theme', t); } catch (e) {}
+      requestAnimationFrame(function () { requestAnimationFrame(function () { h.classList.remove('no-transitions'); }); });
+    }
   </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js" defer></script>
+  <!-- SLIDELESS:TYPE-KIT — Kit 04 Revista -->
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Lora:ital,wght@0,400;0,600;1,400&family=Sometype+Mono:wght@400&display=swap" rel="stylesheet">
+  <!-- SLIDELESS:TYPE-KIT-END -->
 
   <style>
-    /* ─── Tokens — tema itau ────────────────────────────────────────── */
+    /* ═══ KIT 04 — Revista (antes do tema, contrato type-kits.md) ═══ */
     :root {
+      --kit-display: 'Bricolage Grotesque';
+      --kit-text:    'Lora';
+      --kit-ui:      'Bricolage Grotesque';
+      --kit-mono:    'Sometype Mono';
+    }
+
+    /* ═══ TEMA ITAU v4 — camada [MARCA] copiada; camada [DIREÇÃO] composta pelo parti ═══ */
+    :root {
+      /* [MARCA] cores da marca */
       --itau-orange:     #FF6200;
       --itau-orange-2:   #F88104;
       --itau-orange-3:   #FA9F09;
@@ -33,22 +60,24 @@
       --itau-yellow:     #FBC305;
       --itau-warm-black: #14110d;
 
+      /* [MARCA] paleta semântica (light) */
       --color-accent:        var(--itau-orange);
       --color-accent-dim:    rgba(255, 98, 0, 0.08);
       --color-accent-fg:     #ffffff;
       --color-info:          var(--itau-blue-3);
-      --color-info-dim:      rgba(59, 133, 250, 0.10);
-      --color-success:       #4d7c0f;
-      --color-success-dim:   rgba(77, 124, 15, 0.10);
+      --color-info-dim:      rgba(59, 133, 250, 0.08);
+      --color-success:       #3f6f1f;
+      --color-success-dim:   rgba(63, 111, 31, 0.08);
       --color-teal:          #0f766e;
-      --color-teal-dim:      rgba(15, 118, 110, 0.10);
+      --color-teal-dim:      rgba(15, 118, 110, 0.08);
       --color-plum:          #9f1239;
-      --color-plum-dim:      rgba(159, 18, 57, 0.10);
+      --color-plum-dim:      rgba(159, 18, 57, 0.08);
       --color-warn:          var(--itau-yellow);
       --color-warn-dim:      rgba(251, 195, 5, 0.12);
       --color-danger:        #b91c1c;
-      --color-danger-dim:    rgba(185, 28, 28, 0.10);
+      --color-danger-dim:    rgba(185, 28, 28, 0.08);
 
+      /* [MARCA] bg + fg warm (light) */
       --color-bg:            #faf7f5;
       --color-bg-elevated:   #ffffff;
       --color-bg-sunken:     #f4f1ec;
@@ -59,45 +88,55 @@
       --color-border-strong: rgba(41, 32, 23, 0.18);
       --color-accent-hover:  var(--itau-orange-2);
 
-      --glow-warm:    radial-gradient(ellipse 80% 60% at 80% 0%, rgba(255, 98, 0, 0.10) 0%, transparent 55%);
-      --glow-cool:    radial-gradient(ellipse 70% 50% at 20% 100%, rgba(59, 133, 250, 0.08) 0%, transparent 55%);
+      /* [DIREÇÃO] tipografia — slots do kit */
+      --font-text:    'Itau Text', var(--kit-text, Georgia), Georgia, serif;
+      --font-display: 'Itau Display', var(--kit-display, 'Segoe UI'), 'Trebuchet MS', sans-serif;
+      --font-mono:    var(--kit-mono, Consolas), Consolas, monospace;
 
-      --font-text:    'Itau Text', 'Inter', -apple-system, system-ui, sans-serif;
-      --font-display: 'Itau Display', 'Fraunces', 'Inter', Georgia, serif;
-      --font-mono:    'JetBrains Mono', 'IBM Plex Mono', 'SF Mono', Consolas, monospace;
+      /* [SISTEMA] escala fluida */
+      --size-xs:    clamp(0.75rem, 0.7rem + 0.2vw, 0.875rem);
+      --size-small: clamp(0.875rem, 0.85rem + 0.15vw, 1rem);
+      --size-body:  clamp(1.0625rem, 1rem + 0.2vw, 1.125rem);
+      --size-lead:  clamp(1.15rem, 1.05rem + 0.5vw, 1.4rem);
+      --size-h4:    clamp(1rem, 0.95rem + 0.25vw, 1.15rem);
+      --size-h3:    clamp(1.2rem, 1.1rem + 0.5vw, 1.5rem);
+      --size-h2:    clamp(1.6rem, 1.3rem + 1.2vw, 2.25rem);
+      --size-h1:    clamp(2.25rem, 1.8rem + 2vw, 3.5rem);
 
-      --size-xs:      clamp(0.75rem, 0.7rem + 0.2vw, 0.875rem);
-      --size-small:   clamp(0.875rem, 0.85rem + 0.15vw, 1rem);
-      --size-body:    clamp(1rem, 0.95rem + 0.2vw, 1.0625rem);
-      --size-lead:    clamp(1.1rem, 1.02rem + 0.4vw, 1.3rem);
-      --size-h4:      clamp(1rem, 0.95rem + 0.25vw, 1.15rem);
-      --size-h3:      clamp(1.1rem, 1.02rem + 0.4vw, 1.35rem);
-      --size-h2:      clamp(1.5rem, 1.3rem + 0.9vw, 2rem);
-      --size-h1:      clamp(2rem, 1.6rem + 1.6vw, 2.85rem);
-
+      /* [SISTEMA] espaço + layout */
       --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem;
       --space-4: 1rem;    --space-5: 1.5rem; --space-6: 2rem;
       --space-7: 2.5rem;  --space-8: 3rem;   --space-10: 4rem;
-      --space-12: 5rem;   --space-16: 7rem;
+      --space-12: 5rem;
+      --header-h: 56px;
 
-      --content-max: 1200px;
-      --header-h:    60px;
-
+      /* [DIREÇÃO — parti] cantos: exatamente 2 valores no documento inteiro */
       --radius-sm: 4px;
-      --radius:    10px;
-      --radius-lg: 16px;
-      --radius-xl: 24px;
+      --radius-lg: 12px;
 
-      --shadow-xs: 0 1px 2px rgba(41, 32, 23, 0.04);
-      --shadow-sm: 0 2px 4px rgba(41, 32, 23, 0.06), 0 1px 2px rgba(41, 32, 23, 0.04);
-      --shadow:    0 4px 12px rgba(41, 32, 23, 0.08), 0 1px 3px rgba(41, 32, 23, 0.05);
-      --shadow-lg: 0 12px 32px rgba(41, 32, 23, 0.12), 0 4px 12px rgba(41, 32, 23, 0.06);
+      /* [DIREÇÃO — parti] luz key-light suave: sombra 3 camadas SÓ no que eleva (painéis) */
+      --shadow-key: 0 1px 2px rgba(41, 32, 23, 0.05), 0 6px 18px rgba(41, 32, 23, 0.07), 0 18px 48px rgba(41, 32, 23, 0.06);
 
-      --ease-out:       cubic-bezier(0.22, 1, 0.36, 1);
-      --duration-fast:    150ms;
-      --duration:         250ms;
-      --duration-hero:    900ms;
+      /* [DIREÇÃO — parti] superfície: grain feTurbulence (data-URI, custo zero de rede) */
+      --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+      /* [DIREÇÃO — parti] motion editorial: 2 easings com papel */
+      --ease-painel: cubic-bezier(0.2, 0.6, 0.2, 1); /* papel: entrada de painel ao abrir */
+      --ease-snap:   cubic-bezier(0.2, 0, 0, 1);     /* papel: micro-interação (filtros, hover, toggle) */
+      --duration-fast: 150ms;
+
+      /* [AMBIÇÃO A2] régua de craft — curvas nomeadas para o morph do painel (ambicao.md §13.1) */
+      --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);   /* entrada/saída do painel */
+      --ease-io-strong:  cubic-bezier(0.77, 0, 0.175, 1);  /* morph card→header (View Transition) */
+      --spring:          cubic-bezier(0.34, 1.56, 0.64, 1); /* fallback com overshoot leve */
+      --dur-ui: 220ms; --dur-modal: 320ms;                 /* teto ~320ms p/ o gesto de abrir */
     }
+    /* spring real onde linear() existe — degrada para o cubic-bezier acima */
+    @supports (animation-timing-function: linear(0,1)) {
+      :root { --spring: linear(0, 0.006, 0.025, 0.101, 0.539, 0.826, 0.949, 1.01, 1.036, 1.022, 1, 0.994, 1); }
+    }
+    /* craft: o toggle de tema não faz a página inteira "respirar" (ambicao.md — régua de craft) */
+    .no-transitions *, .no-transitions *::before, .no-transitions *::after { transition: none !important; }
 
     [data-theme="dark"] {
       --color-bg:            #14110d;
@@ -112,54 +151,65 @@
       --color-accent:        var(--itau-orange-3);
       --color-accent-hover:  var(--itau-orange-2);
       --color-accent-fg:     #14110d;
-      --color-accent-dim:    rgba(250, 159, 9, 0.12);
-      --color-info-dim:      rgba(59, 133, 250, 0.14);
-      --color-success:       #a3e635;
-      --color-success-dim:   rgba(163, 230, 53, 0.12);
-      --color-teal:          #5eead4;
-      --color-teal-dim:      rgba(94, 234, 212, 0.12);
-      --color-plum:          #fb7185;
-      --color-plum-dim:      rgba(251, 113, 133, 0.12);
-      --color-warn-dim:      rgba(251, 195, 5, 0.14);
+      --color-accent-dim:    rgba(250, 159, 9, 0.10);
+      --color-info-dim:      rgba(59, 133, 250, 0.12);
+      --color-success:       #8fcc5a;
+      --color-success-dim:   rgba(143, 204, 90, 0.10);
+      --color-teal:          #6fd0c0;
+      --color-teal-dim:      rgba(111, 208, 192, 0.10);
+      --color-plum:          #e8889c;
+      --color-plum-dim:      rgba(232, 136, 156, 0.10);
+      --color-warn-dim:      rgba(251, 195, 5, 0.12);
       --color-danger:        #f87171;
+      --color-danger-dim:    rgba(248, 113, 113, 0.10);
 
-      --glow-warm:    radial-gradient(ellipse 80% 60% at 80% 0%, rgba(250, 159, 9, 0.18) 0%, transparent 55%);
-      --glow-cool:    radial-gradient(ellipse 70% 50% at 20% 100%, rgba(59, 133, 250, 0.14) 0%, transparent 55%);
-
-      --shadow-xs: 0 1px 2px rgba(0,0,0,0.4);
-      --shadow-sm: 0 2px 4px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
-      --shadow:    0 4px 12px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.3);
-      --shadow-lg: 0 12px 32px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.3);
+      --shadow-key: 0 1px 2px rgba(0,0,0,0.4), 0 6px 18px rgba(0,0,0,0.35), 0 18px 48px rgba(0,0,0,0.3);
     }
 
-    /* ─── Reset ─────────────────────────────────────────────────────── */
+    @supports (color: oklch(60% 0.1 50)) {
+      :root {
+        --color-success:     oklch(52% 0.11 140);
+        --color-success-dim: oklch(52% 0.11 140 / 0.08);
+        --color-teal:        oklch(52% 0.08 200);
+        --color-teal-dim:    oklch(52% 0.08 200 / 0.08);
+        --color-plum:        oklch(46% 0.12 355);
+        --color-plum-dim:    oklch(46% 0.12 355 / 0.08);
+        --color-danger:      oklch(50% 0.16 27);
+        --color-danger-dim:  oklch(50% 0.16 27 / 0.08);
+      }
+      [data-theme="dark"] {
+        --color-success:     oklch(76% 0.13 140);
+        --color-success-dim: oklch(76% 0.13 140 / 0.10);
+        --color-teal:        oklch(78% 0.09 195);
+        --color-teal-dim:    oklch(78% 0.09 195 / 0.10);
+        --color-plum:        oklch(74% 0.11 0);
+        --color-plum-dim:    oklch(74% 0.11 0 / 0.10);
+        --color-danger:      oklch(70% 0.15 25);
+        --color-danger-dim:  oklch(70% 0.15 25 / 0.10);
+      }
+    }
+
+    /* ═══ Base ═══ */
     *, *::before, *::after { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
       margin: 0;
       font-family: var(--font-text);
       font-size: var(--size-body);
-      line-height: 1.65;
+      line-height: 1.7;
       color: var(--color-fg);
       background: var(--color-bg);
-      background-image: var(--glow-warm), var(--glow-cool);
-      background-attachment: fixed;
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
-      transition: background-color var(--duration-fast), color var(--duration-fast);
-      overflow-wrap: break-word;
+      transition: background-color var(--duration-fast) var(--ease-snap), color var(--duration-fast) var(--ease-snap);
     }
 
-    a { color: var(--color-accent); text-decoration: none; }
-    a:hover { color: var(--color-accent-hover); text-decoration: underline; text-underline-offset: 3px; }
-    strong { font-weight: 700; color: var(--color-fg); }
-
-    code:not(pre code) {
-      font-family: var(--font-mono); font-size: 0.875em;
-      background: var(--color-bg-sunken);
-      padding: 0.12em 0.4em;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--color-border);
+    /* superfície: grain por cima de tudo, tato de papel — zerado no print */
+    body::after {
+      content: ''; position: fixed; inset: 0;
+      background: var(--grain);
+      opacity: .06; mix-blend-mode: soft-light;
+      pointer-events: none; z-index: 9999;
     }
 
     :focus-visible {
@@ -168,1538 +218,911 @@
       border-radius: var(--radius-sm);
     }
 
-    /* ─── Topbar ────────────────────────────────────────────────────── */
+    h1, h2, h3, h4 {
+      font-family: var(--font-display);
+      font-optical-sizing: auto;
+      color: var(--color-fg);
+      line-height: 1.08;
+      text-wrap: balance;
+      margin: 0;
+    }
+    h1 { font-size: var(--size-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: var(--space-4); }
+    h2 { font-size: var(--size-h2); font-weight: 600; letter-spacing: -0.015em; margin-bottom: var(--space-4); scroll-margin-top: calc(var(--header-h) + var(--space-4)); }
+    h3 { font-size: var(--size-h3); font-weight: 600; letter-spacing: -0.01em; margin: var(--space-6) 0 var(--space-3); }
+    h4 { font-size: var(--size-h4); font-weight: 600; margin: var(--space-5) 0 var(--space-2); }
+
+    p { margin: 0 0 var(--space-4); max-width: 65ch; }
+    .lead {
+      font-size: var(--size-lead); line-height: 1.55;
+      color: var(--color-fg-muted); font-style: italic; /* itálico verdadeiro da Lora */
+      margin-bottom: var(--space-6); max-width: 56ch;
+    }
+    a { color: var(--color-accent); text-decoration: none; }
+    a:hover { color: var(--color-accent-hover); text-decoration: underline; text-underline-offset: 3px; }
+    strong { font-weight: 600; }
+    em { font-style: italic; }
+    ol, ul { padding-left: var(--space-5); margin: 0 0 var(--space-4); }
+    li { margin-bottom: var(--space-2); max-width: 62ch; }
+
+    /* números sempre tabulares e alinhados onde há comparação */
+    .num, td.num, .indice__valor, .mini__valor {
+      font-variant-numeric: tabular-nums lining-nums;
+    }
+
+    /* label editorial: fio lateral 2px + peso 600 (cardápio §7, opção 4 — sem caixa alta) */
+    .rotulo {
+      display: inline-block;
+      border-left: 2px solid var(--color-accent);
+      padding-left: var(--space-3);
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: var(--size-small);
+      color: var(--color-fg-muted);
+      margin: 0 0 var(--space-3);
+    }
+
+    /* tag de categoria: small-caps com tracking (papel distinto do rótulo de seção) */
+    .tag {
+      font-family: var(--font-display);
+      font-variant-caps: all-small-caps;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--color-fg-subtle);
+      white-space: nowrap;
+    }
+    .tag--saude      { color: var(--color-teal); }
+    .tag--financeiro { color: var(--color-success); }
+    .tag--desenvolv  { color: var(--color-info); }
+
+    /* ═══ Topbar ═══ */
     .topbar {
       position: sticky; top: 0; z-index: 100;
       height: var(--header-h);
-      background: color-mix(in srgb, var(--color-bg) 82%, transparent);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      background: rgba(250, 247, 245, 0.88);
+      backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--color-border);
       display: flex; align-items: center;
-      padding: 0 clamp(var(--space-4), 3vw, var(--space-7));
-      gap: var(--space-5);
+      padding: 0 var(--space-5); gap: var(--space-4);
     }
+    [data-theme="dark"] .topbar { background: rgba(20, 17, 13, 0.88); }
     .topbar__brand {
-      display: flex; align-items: center; gap: var(--space-3);
-      font-weight: 600; font-size: 0.9375rem;
-      text-decoration: none; color: var(--color-fg);
+      font-family: var(--font-display); font-weight: 800;
+      font-size: 1rem; letter-spacing: -0.01em;
+      color: var(--color-fg); text-decoration: none;
     }
-    .topbar__logo {
-      width: 28px; height: 28px;
-      display: grid; place-items: center;
-      background: var(--color-accent); color: var(--color-accent-fg);
-      border-radius: 6px;
-      font-family: var(--font-display);
-      font-weight: 800; font-size: 0.875rem;
-      letter-spacing: -0.04em;
+    .topbar__brand:hover { color: var(--color-fg); text-decoration: none; }
+    .topbar__brand span { color: var(--color-accent); }
+    .topbar__edicao {
+      font-family: var(--font-text); font-style: italic;
+      font-size: var(--size-xs); color: var(--color-fg-subtle);
     }
-    .topbar__kicker {
-      font-family: var(--font-mono); font-size: var(--size-xs);
-      color: var(--color-fg-subtle); letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding-left: var(--space-3);
-      border-left: 1px solid var(--color-border);
-      margin-left: var(--space-1);
-      display: none;
-    }
-    @media (min-width: 720px) { .topbar__kicker { display: inline; } }
     .topbar__spacer { flex: 1; }
-    .topbar__search {
-      width: 220px; max-width: 30vw;
-      padding: 7px 12px;
-      background: var(--color-bg-elevated);
-      border: 1px solid var(--color-border);
-      border-radius: 999px;
-      font: inherit; font-size: var(--size-small);
-      color: var(--color-fg);
-      transition: border-color var(--duration-fast);
-    }
-    .topbar__search:focus { outline: none; border-color: var(--color-accent); box-shadow: 0 0 0 3px var(--color-accent-dim); }
-    .topbar__search::placeholder { color: var(--color-fg-subtle); }
-    @media (max-width: 600px) { .topbar__search { display: none; } }
     .theme-toggle {
-      width: 36px; height: 36px;
-      display: grid; place-items: center;
-      background: var(--color-bg-elevated);
-      border: 1px solid var(--color-border);
-      border-radius: 999px; cursor: pointer;
-      color: var(--color-fg); font-size: 14px;
-      transition: all var(--duration-fast);
-    }
-    .theme-toggle:hover { background: var(--color-bg-sunken); border-color: var(--color-border-strong); transform: translateY(-1px); }
-
-    /* ─── Page ──────────────────────────────────────────────────────── */
-    .page {
-      max-width: var(--content-max);
-      margin: 0 auto;
-      padding: var(--space-10) clamp(var(--space-4), 3vw, var(--space-7)) var(--space-16);
-    }
-
-    /* ─── Hero ──────────────────────────────────────────────────────── */
-    .hero { margin-bottom: var(--space-10); position: relative; }
-    .hero__kicker {
-      display: inline-flex; align-items: center; gap: var(--space-2);
-      font-family: var(--font-mono); font-size: var(--size-xs);
-      color: var(--color-fg-muted); letter-spacing: 0.12em;
-      text-transform: uppercase; font-weight: 600;
-      margin-bottom: var(--space-4);
-    }
-    .hero__kicker::before {
-      content: ''; width: 7px; height: 7px; border-radius: 50%;
-      background: var(--color-accent);
-    }
-    .hero__title {
-      font-family: var(--font-display);
-      font-size: var(--size-h1);
-      font-weight: 700;
-      line-height: 1.05; letter-spacing: -0.030em;
-      margin: 0 0 var(--space-4); max-width: 22ch;
-      color: var(--color-fg);
-    }
-    .hero__title em {
-      font-style: italic; color: var(--color-accent);
-      font-family: 'Fraunces', 'Itau Display', Georgia, serif;
-    }
-    .hero__lead {
-      font-size: var(--size-lead);
-      line-height: 1.55; color: var(--color-fg-muted);
-      margin: 0; max-width: 58ch; font-weight: 400;
-    }
-    .hero__meta {
-      display: flex; flex-wrap: wrap; gap: clamp(var(--space-4), 3vw, var(--space-6));
-      margin-top: var(--space-6);
-      font-size: var(--size-small); color: var(--color-fg-muted);
-    }
-    .hero__meta span { display: inline-flex; align-items: baseline; gap: var(--space-2); }
-    .hero__meta strong {
-      color: var(--color-fg); font-weight: 700;
-      font-family: var(--font-display); font-size: 1.15em;
-      font-variant-numeric: tabular-nums;
-    }
-
-    /* ─── Filtros ────────────────────────────────────────────────────── */
-    .filters {
-      display: flex; flex-wrap: wrap; gap: var(--space-2);
-      margin: var(--space-7) 0 var(--space-2);
-      padding: var(--space-2) 0;
-    }
-    .filter {
-      display: inline-flex; align-items: center; gap: var(--space-2);
-      padding: 8px 14px;
-      background: var(--color-bg-elevated);
-      border: 1px solid var(--color-border);
-      border-radius: 999px;
-      font: inherit; font-size: var(--size-small); font-weight: 500;
-      color: var(--color-fg-muted); cursor: pointer;
-      transition: all var(--duration-fast) var(--ease-out);
-    }
-    .filter::before {
-      content: ''; width: 7px; height: 7px; border-radius: 50%;
-      background: currentColor; opacity: 0.65;
-    }
-    .filter:hover { color: var(--color-fg); border-color: var(--color-border-strong); transform: translateY(-1px); }
-    .filter.is-active {
-      background: var(--color-fg); color: var(--color-bg);
-      border-color: var(--color-fg);
-    }
-    .filter.is-active::before { background: var(--color-accent); opacity: 1; }
-    .filter[data-filter="catalogo"]    { color: var(--color-accent); }
-    .filter[data-filter="pipelines"]   { color: var(--color-info); }
-    .filter[data-filter="qualidade"]   { color: var(--color-teal); }
-    .filter[data-filter="self-service"]{ color: var(--color-success); }
-    .filter[data-filter="governanca"]  { color: var(--color-plum); }
-    .filter.is-active[data-filter] { color: var(--color-bg); }
-    .filter__count {
-      font-family: var(--font-mono); font-size: 0.6875rem;
-      font-weight: 600;
-      opacity: 0.55;
-    }
-
-    .filters-meta {
-      font-family: var(--font-mono); font-size: var(--size-xs);
-      color: var(--color-fg-subtle); letter-spacing: 0.04em;
-      margin: 0 0 var(--space-5);
-    }
-    .filters-meta strong { color: var(--color-fg-muted); font-weight: 600; }
-
-    /* ─── Grid ──────────────────────────────────────────────────────── */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: var(--space-4);
-      margin-bottom: var(--space-12);
-    }
-    .grid > * { min-width: 0; }
-
-    .card {
-      display: flex; flex-direction: column;
-      padding: var(--space-5);
-      background: var(--color-bg-elevated);
-      border: 1px solid var(--color-border);
-      border-top: 3px solid var(--card-color, var(--color-accent));
-      border-radius: var(--radius-lg);
-      text-decoration: none; color: inherit;
-      cursor: pointer;
-      position: relative;
-      box-shadow: var(--shadow-xs);
-      transition: transform var(--duration) var(--ease-out),
-                  border-color var(--duration-fast) var(--ease-out),
-                  box-shadow var(--duration) var(--ease-out);
-    }
-    .card:hover {
-      transform: translateY(-3px);
-      border-color: var(--color-border-strong);
-      border-top-color: var(--card-color, var(--color-accent));
-      box-shadow: var(--shadow-lg);
-    }
-    .card.is-hidden { display: none; }
-
-    .card__head {
-      display: flex; align-items: center; justify-content: space-between;
-      gap: var(--space-3);
-      margin-bottom: var(--space-3);
-    }
-    .card__cat {
-      font-family: var(--font-mono); font-size: var(--size-xs);
-      color: var(--card-color, var(--color-accent));
-      letter-spacing: 0.08em; text-transform: uppercase;
-      font-weight: 600;
-    }
-    .card__num {
-      font-family: var(--font-mono); font-size: 0.6875rem;
-      color: var(--color-fg-subtle); font-weight: 500;
-    }
-    .card__title {
-      font-family: var(--font-display);
-      font-size: 1.0625rem; font-weight: 700;
-      margin: 0 0 var(--space-2);
-      color: var(--color-fg); line-height: 1.25;
-      letter-spacing: -0.012em;
-    }
-    .card__desc {
-      font-size: var(--size-small);
-      color: var(--color-fg-muted);
-      margin: 0 0 var(--space-4); flex: 1;
-      line-height: 1.55;
-    }
-    .card__foot {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-top: auto;
-      padding-top: var(--space-3);
-      border-top: 1px solid var(--color-border);
-      font-size: var(--size-xs);
-    }
-    .card__tag {
-      font-family: var(--font-mono);
-      color: var(--color-fg-subtle);
-    }
-    .card__arrow {
-      color: var(--card-color, var(--color-accent));
-      font-weight: 700;
-      transition: transform var(--duration) var(--ease-out);
-    }
-    .card:hover .card__arrow { transform: translateX(4px); }
-
-    /* Categoria → cor accent via custom property */
-    .card[data-category="catalogo"]     { --card-color: var(--color-accent); }
-    .card[data-category="pipelines"]    { --card-color: var(--color-info); }
-    .card[data-category="qualidade"]    { --card-color: var(--color-teal); }
-    .card[data-category="self-service"] { --card-color: var(--color-success); }
-    .card[data-category="governanca"]   { --card-color: var(--color-plum); }
-
-    .empty-state {
-      padding: var(--space-12) var(--space-6);
-      text-align: center; color: var(--color-fg-muted);
-      font-size: var(--size-small);
-      background: var(--color-bg-elevated);
-      border: 1px dashed var(--color-border);
-      border-radius: var(--radius-lg);
-      display: none;
-    }
-    .empty-state.is-visible { display: block; }
-
-    /* ─── Painel ativo ──────────────────────────────────────────────── */
-    .panels { display: contents; }
-    .panel {
-      display: none;
-      margin: var(--space-8) 0 var(--space-10);
-      padding: clamp(var(--space-6), 3vw, var(--space-8));
-      background: var(--color-bg-elevated);
-      border: 1px solid var(--color-border);
-      border-left: 4px solid var(--panel-color, var(--color-accent));
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow);
-      scroll-margin-top: calc(var(--header-h) + var(--space-4));
-      animation: panelIn 350ms var(--ease-out);
-    }
-    .panel.is-open { display: block; }
-    @keyframes panelIn {
-      from { opacity: 0; transform: translateY(12px); }
-      to   { opacity: 1; transform: none; }
-    }
-    .panel[data-category="catalogo"]     { --panel-color: var(--color-accent); }
-    .panel[data-category="pipelines"]    { --panel-color: var(--color-info); }
-    .panel[data-category="qualidade"]    { --panel-color: var(--color-teal); }
-    .panel[data-category="self-service"] { --panel-color: var(--color-success); }
-    .panel[data-category="governanca"]   { --panel-color: var(--color-plum); }
-
-    .panel__head {
-      display: flex; align-items: flex-start; gap: var(--space-4);
-      padding-bottom: var(--space-5);
-      margin-bottom: var(--space-6);
-      border-bottom: 1px solid var(--color-border);
-    }
-    .panel__head > div:first-child { flex: 1; min-width: 0; }
-    .panel__cat {
-      font-family: var(--font-mono); font-size: var(--size-xs);
-      color: var(--panel-color, var(--color-accent));
-      letter-spacing: 0.08em; text-transform: uppercase;
-      font-weight: 700; margin: 0 0 var(--space-2);
-    }
-    .panel__title {
-      font-family: var(--font-display);
-      font-size: var(--size-h2); font-weight: 700;
-      margin: 0; line-height: 1.15;
-      letter-spacing: -0.020em;
-    }
-    .panel__close {
-      flex-shrink: 0;
       width: 34px; height: 34px;
       display: grid; place-items: center;
-      background: transparent; border: 1px solid var(--color-border);
-      border-radius: 999px; cursor: pointer;
-      font: inherit; font-size: 0.875rem;
-      color: var(--color-fg-muted);
-      transition: all var(--duration-fast);
-    }
-    .panel__close:hover {
-      color: var(--color-fg); border-color: var(--color-border-strong);
-      background: var(--color-bg-sunken);
-    }
-    .panel__lead {
-      font-size: var(--size-lead); line-height: 1.55;
-      color: var(--color-fg-muted); margin: 0 0 var(--space-6);
-      max-width: 60ch;
-    }
-    .panel p {
-      margin: 0 0 var(--space-4); max-width: 65ch;
-      color: var(--color-fg);
-    }
-    .panel ul, .panel ol { padding-left: var(--space-5); margin: 0 0 var(--space-5); }
-    .panel li { margin-bottom: var(--space-2); max-width: 65ch; }
-    .panel li::marker { color: var(--color-fg-subtle); }
-
-    .panel__body {
-      display: grid; gap: var(--space-7);
-      grid-template-columns: 1fr;
-    }
-    @media (min-width: 880px) {
-      .panel__body.has-aside { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
-    }
-    .panel__body > * { min-width: 0; }
-
-    .panel__metrics {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: var(--space-3); margin: 0 0 var(--space-6);
-    }
-    .metric {
-      padding: var(--space-4) var(--space-4);
-      background: var(--color-bg-sunken);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius);
-      border-top: 2px solid var(--panel-color, var(--color-accent));
-    }
-    .metric__label {
-      font-family: var(--font-mono); font-size: var(--size-xs);
-      color: var(--color-fg-subtle);
-      letter-spacing: 0.06em; text-transform: uppercase;
-      margin: 0 0 var(--space-2); font-weight: 600;
-    }
-    .metric__value {
-      font-family: var(--font-display);
-      font-size: 1.6rem; font-weight: 800;
-      margin: 0; letter-spacing: -0.030em;
-      line-height: 1; color: var(--color-fg);
-    }
-    .metric__value span { color: var(--panel-color, var(--color-accent)); }
-    .metric__trend {
-      font-family: var(--font-mono); font-size: 0.6875rem;
-      color: var(--color-fg-subtle); margin: var(--space-2) 0 0;
-    }
-
-    /* ─── Tabela ────────────────────────────────────────────────────── */
-    .table-wrap {
-      width: 100%;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius);
-      background: var(--color-bg-sunken);
-    }
-    .data-table {
-      width: 100%; border-collapse: collapse;
-      font-size: var(--size-small);
-    }
-    .data-table th {
-      background: var(--color-bg-sunken);
-      font-family: var(--font-mono);
-      font-size: 0.6875rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      padding: 10px 14px;
-      text-align: left;
-      border-bottom: 2px solid var(--color-border-strong);
-      color: var(--color-fg-muted);
-      white-space: nowrap;
-    }
-    .data-table td {
-      padding: 11px 14px;
-      border-bottom: 1px solid var(--color-border);
-      vertical-align: middle;
-      color: var(--color-fg);
-      line-height: 1.4;
-      background: var(--color-bg-elevated);
-    }
-    .data-table tbody tr:last-child td { border-bottom: none; }
-    .data-table td.num, .data-table th.num {
-      text-align: right;
-      font-family: var(--font-mono);
-      font-variant-numeric: tabular-nums;
-    }
-    .data-table td:first-child { font-weight: 600; }
-    .badge {
-      display: inline-flex; align-items: center; gap: 5px;
-      font-family: var(--font-mono);
-      font-size: 0.6875rem; font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 6px;
-      white-space: nowrap;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-    .badge::before {
-      content: ''; width: 5px; height: 5px;
-      border-radius: 50%; background: currentColor;
-      flex-shrink: 0;
-    }
-    .badge--success { background: var(--color-success-dim); color: var(--color-success); }
-    .badge--info    { background: var(--color-info-dim);    color: var(--color-info); }
-    .badge--warn    { background: var(--color-warn-dim);    color: var(--itau-warm-black); }
-    [data-theme="dark"] .badge--warn { color: var(--color-warn); }
-    .badge--danger  { background: var(--color-danger-dim);  color: var(--color-danger); }
-    .badge--accent  { background: var(--color-accent-dim);  color: var(--color-accent); }
-
-    /* ─── Chart ─────────────────────────────────────────────────────── */
-    .chart-wrap {
-      padding: var(--space-4);
-      background: var(--color-bg-sunken);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius);
-      position: relative;
-    }
-    .chart-wrap__title {
-      font-family: var(--font-mono); font-size: var(--size-xs);
-      color: var(--color-fg-muted); letter-spacing: 0.08em;
-      text-transform: uppercase; font-weight: 600;
-      margin: 0 0 var(--space-3);
-    }
-    .chart-wrap canvas { max-width: 100%; height: auto !important; }
-
-    /* ─── Lista de links ────────────────────────────────────────────── */
-    .panel__links { display: flex; flex-direction: column; gap: var(--space-2); margin-top: var(--space-2); }
-    .panel__link {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 10px 14px;
-      background: var(--color-bg-sunken);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius);
-      color: var(--color-fg); text-decoration: none;
-      font-size: var(--size-small);
-      transition: all var(--duration-fast);
-    }
-    .panel__link:hover {
-      border-color: var(--panel-color, var(--color-accent));
-      color: var(--panel-color, var(--color-accent));
-      transform: translateX(2px);
-      text-decoration: none;
-    }
-    .panel__link span:last-child { color: var(--color-fg-subtle); }
-    .panel__link:hover span:last-child { color: inherit; }
-
-    /* ─── Empty (sem painel aberto) ─────────────────────────────────── */
-    .panel-empty {
-      padding: var(--space-7); margin: var(--space-8) 0 0;
-      text-align: center;
-      border: 1px dashed var(--color-border);
-      border-radius: var(--radius-lg);
-      color: var(--color-fg-subtle);
-      font-size: var(--size-small);
-      font-family: var(--font-mono);
-      letter-spacing: 0.04em;
       background: transparent;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      cursor: pointer; color: var(--color-fg); font-size: 14px;
+      transition: background-color var(--duration-fast) var(--ease-snap), border-color var(--duration-fast) var(--ease-snap);
+    }
+    .theme-toggle:hover { background: var(--color-bg-sunken); border-color: var(--color-border-strong); }
+
+    /* ═══ Página ═══ */
+    .page { max-width: 1280px; margin: 0 auto; padding: var(--space-10) var(--space-6) var(--space-12); }
+
+    /* ═══ CAPA-ÍNDICE — o sumário é a capa ═══ */
+    .capa { max-width: 960px; margin-bottom: var(--space-10); }
+    .capa__dateline {
+      display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4);
+      align-items: baseline;
+      border-top: 2px solid var(--color-fg);
+      padding-top: var(--space-3);
+      margin: 0 0 var(--space-6);
+      font-family: var(--font-text); font-style: italic;
+      font-size: var(--size-small); color: var(--color-fg-muted);
+      max-width: none;
+    }
+    .capa__dateline strong {
+      font-family: var(--font-display); font-style: normal; font-weight: 600;
+      color: var(--color-fg);
+    }
+    .capa h1 {
+      font-variation-settings: 'opsz' 96; /* opsz alto da Bricolage no display da capa */
+      max-width: 16ch;
+    }
+    .capa .lead em { color: var(--color-fg); }
+
+    /* índice destaque — os 3 mais usados, em corpo de manchete */
+    .indice { list-style: none; padding: 0; margin: var(--space-8) 0 0; }
+    .indice__item { border-top: 1px solid var(--color-border-strong); }
+    .indice__item:last-child { border-bottom: 1px solid var(--color-border-strong); }
+    .indice__link {
+      display: grid;
+      grid-template-columns: 3.2rem 1fr auto;
+      grid-template-areas: "num titulo valor" "num desc valor";
+      align-items: baseline;
+      column-gap: var(--space-5);
+      padding: var(--space-5) var(--space-3);
+      color: inherit; text-decoration: none;
+      cursor: pointer;
+      transition: background-color var(--duration-fast) var(--ease-snap); /* affordance: contraste, não lift */
+    }
+    .indice__link:hover { background: var(--color-bg-sunken); color: inherit; text-decoration: none; }
+    .indice__num {
+      grid-area: num;
+      font-family: var(--font-display); font-weight: 800;
+      font-size: clamp(1.6rem, 1.2rem + 1.2vw, 2.4rem);
+      line-height: 1; color: var(--color-accent);
+      font-variant-numeric: tabular-nums lining-nums;
+      align-self: start;
+    }
+    .indice__titulo {
+      grid-area: titulo;
+      font-family: var(--font-display); font-weight: 800;
+      font-optical-sizing: auto;
+      font-size: clamp(1.4rem, 1.1rem + 1.1vw, 2.1rem);
+      letter-spacing: -0.02em; line-height: 1.12;
+      margin: 0;
+    }
+    .indice__desc {
+      grid-area: desc;
+      font-size: var(--size-small); color: var(--color-fg-muted);
+      margin: var(--space-2) 0 0; max-width: 52ch;
+    }
+    .indice__meta { grid-area: valor; text-align: right; }
+    .indice__valor {
+      display: block;
+      font-family: var(--font-display); font-weight: 600;
+      font-size: clamp(1rem, 0.9rem + 0.5vw, 1.3rem);
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+    }
+    .indice__meta .tag { display: block; margin-top: var(--space-1); }
+
+    /* índice secundário — os outros 9, em duas colunas com leader pontilhado */
+    .capa__mais { margin-top: var(--space-8); }
+    .minis {
+      list-style: none; padding: 0;
+      margin: var(--space-4) 0 0;
+      display: grid; grid-template-columns: 1fr 1fr;
+      column-gap: var(--space-8); row-gap: 0;
+    }
+    .mini { border-bottom: 1px solid var(--color-border); margin: 0; max-width: none; }
+    .mini__link {
+      display: flex; align-items: baseline; gap: var(--space-3);
+      padding: var(--space-3) var(--space-1);
+      color: inherit; text-decoration: none; cursor: pointer;
+      transition: background-color var(--duration-fast) var(--ease-snap);
+    }
+    .mini__link:hover { background: var(--color-bg-sunken); color: inherit; text-decoration: none; }
+    .mini__nome { font-family: var(--font-display); font-weight: 600; font-size: 1.02rem; letter-spacing: -0.005em; white-space: nowrap; }
+    .mini__leader { flex: 1; border-bottom: 2px dotted var(--color-border-strong); transform: translateY(-4px); min-width: var(--space-5); }
+    .mini__valor { font-size: var(--size-small); color: var(--color-fg-muted); white-space: nowrap; }
+
+    /* ═══ Filtros (funcionais — filtram índice E tabela) ═══ */
+    .filters {
+      position: sticky; top: var(--header-h); z-index: 90;
+      display: flex; flex-wrap: wrap; align-items: baseline;
+      gap: var(--space-2) var(--space-5);
+      padding: var(--space-3) 0;
+      margin: 0 0 var(--space-6);
+      background: var(--color-bg);
+      border-top: 2px solid var(--color-fg);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .filters__rotulo {
+      font-family: var(--font-text); font-style: italic;
+      font-size: var(--size-small); color: var(--color-fg-subtle);
+    }
+    .filter {
+      padding: var(--space-1) 0;
+      background: transparent; border: 0;
+      border-bottom: 2px solid transparent;
+      font-family: var(--font-display); font-weight: 600;
+      font-size: var(--size-small);
+      color: var(--color-fg-muted); cursor: pointer;
+      transition: color var(--duration-fast) var(--ease-snap), border-color var(--duration-fast) var(--ease-snap);
+    }
+    .filter:hover { color: var(--color-fg); }
+    .filter.is-active { color: var(--color-accent); border-bottom-color: var(--color-accent); }
+    .filters__estado {
+      margin-left: auto;
+      font-family: var(--font-text); font-style: italic;
+      font-size: var(--size-xs); color: var(--color-fg-subtle);
     }
 
-    /* ─── Footer ────────────────────────────────────────────────────── */
-    .footer {
-      margin-top: var(--space-16);
-      padding: var(--space-6) 0;
-      border-top: 1px solid var(--color-border);
-      font-size: var(--size-xs);
-      color: var(--color-fg-subtle);
-      display: flex; flex-wrap: wrap; gap: var(--space-4);
-      justify-content: space-between;
-      font-family: var(--font-mono);
-      letter-spacing: 0.04em;
+    /* ═══ TABELA-MESTRA — assinatura M0: broadsheet em largura total, sem card ═══ */
+    .mestra { margin: var(--space-10) 0; }
+    .mestra h2 { max-width: 32ch; }
+    .mestra__nota { font-size: var(--size-small); color: var(--color-fg-muted); font-style: italic; max-width: 70ch; }
+
+    .mestra__scroll { overflow-x: auto; margin-top: var(--space-6); }
+    table.mestra__tabela {
+      width: 100%; min-width: 920px;
+      border-collapse: collapse;
+      border-top: 2px solid var(--color-fg);
+    }
+    .mestra__tabela caption {
+      caption-side: bottom; text-align: left;
+      padding: var(--space-3) 0;
+      font-size: var(--size-xs); font-style: italic; color: var(--color-fg-subtle);
+    }
+    .mestra__tabela thead th {
+      font-family: var(--font-display); font-weight: 600;
+      font-size: var(--size-small); text-align: left;
+      padding: var(--space-3) var(--space-4) var(--space-2) var(--space-3);
+      border-bottom: 3px double var(--color-fg); /* fio duplo contábil — motivo do documento */
+      white-space: nowrap;
+    }
+    .mestra__tabela th.col-valor { text-align: right; }
+    .grupo__titulo th {
+      font-family: var(--font-display); font-weight: 600;
+      font-size: var(--size-small); text-align: left;
+      border-left: 2px solid var(--color-accent);
+      padding: var(--space-4) var(--space-3) var(--space-2);
+      color: var(--color-fg-muted);
+    }
+    .grupo--saude .grupo__titulo th { border-left-color: var(--color-teal); }
+    .grupo--financeiro .grupo__titulo th { border-left-color: var(--color-success); }
+    .grupo--desenvolv .grupo__titulo th { border-left-color: var(--color-info); }
+    .mestra__tabela tbody td {
+      padding: var(--space-3);
+      border-bottom: 1px solid var(--color-border);
+      vertical-align: baseline;
+      font-size: var(--size-small);
+      line-height: 1.5;
+    }
+    .mestra__tabela td.nome {
+      font-family: var(--font-display); font-weight: 600;
+      font-size: 1rem; letter-spacing: -0.005em;
+      white-space: nowrap;
+    }
+    .mestra__tabela td.num { text-align: right; white-space: nowrap; font-weight: 600; }
+    .mestra__tabela td.eleg, .mestra__tabela td.acao { color: var(--color-fg-muted); max-width: 30ch; }
+    .mestra__tabela td.abre {
+      font-family: var(--font-display); font-weight: 600;
+      font-size: var(--size-xs); color: var(--color-accent);
+      white-space: nowrap; text-align: right;
     }
 
-    /* ─── Print ─────────────────────────────────────────────────────── */
-    @media print {
-      .topbar, .filters, .theme-toggle, .card__arrow, .panel__close { display: none; }
-      .panel { display: block !important; page-break-inside: avoid; margin-bottom: var(--space-6); }
-      .grid { display: block; }
-      .card { break-inside: avoid; margin-bottom: var(--space-4); }
-      body { background: white; }
+    /* linhas com painel: clicáveis — affordance de contraste */
+    tr.row-link { cursor: pointer; transition: background-color var(--duration-fast) var(--ease-snap); }
+    tr.row-link:hover { background: var(--color-bg-sunken); }
+    tr.row-link:focus-visible { outline: 2px solid var(--color-accent); outline-offset: -2px; }
+    tr[id] { scroll-margin-top: calc(var(--header-h) + 6rem); }
+    tr:target td { background: var(--color-accent-dim); }
+
+    /* ═══ Painéis in-page ═══ */
+    /* zona de painéis: relativa, para a aurora de assinatura (W7) ficar atrás — só aqui, não no body (anti-pattern C8) */
+    .paineis { max-width: 960px; position: relative; }
+
+    /* W7 — aurora mesh sutil de assinatura: cores do tema, atrás da zona de painéis (ambicao.md §13.2) */
+    .paineis__aurora {
+      position: absolute; inset: -8% -6% -4%;
+      z-index: 0; pointer-events: none; opacity: 0;
+      border-radius: var(--radius-lg);
+      background:
+        radial-gradient(42% 48% at 22% 26%, color-mix(in srgb, var(--color-accent) 16%, transparent), transparent 72%),
+        radial-gradient(46% 52% at 82% 30%, color-mix(in srgb, var(--color-teal)   13%, transparent), transparent 72%),
+        radial-gradient(50% 58% at 64% 84%, color-mix(in srgb, var(--color-info)   11%, transparent), transparent 72%);
+      background-size: 200% 200%, 200% 200%, 200% 200%;
+      transition: opacity var(--dur-modal) var(--ease-out-strong);
+    }
+    /* a aurora só acende quando há um dossiê aberto — calor que acompanha o gesto, não decoração permanente */
+    .paineis.has-open .paineis__aurora { opacity: 1; }
+    @media (prefers-reduced-motion: no-preference) {
+      .paineis.has-open .paineis__aurora { animation: auroraDrift 30s ease-in-out infinite alternate; }
+    }
+    @keyframes auroraDrift {
+      0%   { background-position: 0% 0%, 100% 0%, 50% 100%; }
+      100% { background-position: 100% 50%, 0% 80%, 30% 0%; }
     }
 
+    .panel {
+      display: none;
+      position: relative; z-index: 1; /* acima da aurora */
+      margin-top: var(--space-8);
+      padding: var(--space-7);
+      /* W7 — glass: vidro translúcido sobre a aurora; @supports not → sólido (ambicao.md §13.2) */
+      background: color-mix(in srgb, var(--color-bg-elevated) 78%, transparent);
+      backdrop-filter: blur(20px) saturate(1.5);
+      -webkit-backdrop-filter: blur(20px) saturate(1.5);
+      border: 1px solid var(--color-border);
+      border-top: 2px solid var(--color-accent);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-key); /* key-light: só o painel eleva */
+      scroll-margin-top: calc(var(--header-h) + var(--space-5));
+    }
+    /* fallback sólido onde não há backdrop-filter (invariante P9): nada de vidro fantasma */
+    @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+      .panel { background: var(--color-bg-elevated); }
+    }
+    /* @starting-style: entrada do painel com origem espacial (escala de ~card, sobe um toque) — sem JS de classe extra */
+    .panel.is-open {
+      display: block;
+      opacity: 1; transform: none; /* BASE = estado final: Chrome travado nunca esconde o dossiê (P9) */
+      transition: opacity var(--dur-modal) var(--ease-out-strong),
+                  transform var(--dur-modal) var(--ease-out-strong);
+      transform-origin: top center; /* origem espacial: escala a partir de onde o card estava (ambicao.md — régua de craft) */
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      @starting-style { .panel.is-open { opacity: 0; transform: translateY(10px) scale(0.985); } }
+    }
+    /* sem View Transitions, o painel ainda entra suave via @starting-style; o morph é o bônus de W5 abaixo */
+    /* W5 — header do painel: alvo do morph. O nome é atribuído por JS (único por snapshot). */
+    .panel__hero { position: relative; }
+
+    /* W5 — View Transitions: o card/linha vira o header do painel (morph). Nomes setados em JS. */
+    @media (prefers-reduced-motion: no-preference) {
+      /* SÓ o par nomeado anima — curva de morph nomeada, duração com teto de UI */
+      ::view-transition-group(beneficio-morph) {
+        animation-duration: var(--dur-modal);
+        animation-timing-function: var(--ease-io-strong);
+      }
+      ::view-transition-image-pair(beneficio-morph) { isolation: auto; }
+      /* o resto da página (root) troca instantânea — nada de full-page flash durante o scroll (invariante: só compositado em área pequena) */
+      ::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+    }
+    /* invariante (P8): reduced-motion desliga todo o morph — troca seca, conteúdo intacto */
+    @media (prefers-reduced-motion: reduce) {
+      ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+    }
+
+    .panel__close {
+      float: right; margin-left: var(--space-4);
+      padding: var(--space-2) var(--space-3);
+      background: transparent;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      cursor: pointer; font-family: var(--font-display); font-weight: 600;
+      font-size: var(--size-xs); color: var(--color-fg-muted);
+      transition: color var(--duration-fast) var(--ease-snap), border-color var(--duration-fast) var(--ease-snap);
+    }
+    .panel__close:hover { color: var(--color-fg); border-color: var(--color-border-strong); }
+    .panel h2 { max-width: 26ch; }
+    .panel .lead { margin-bottom: var(--space-5); }
+    .panel h3 { font-size: var(--size-h4); margin-top: var(--space-6); }
+
+    table.panel__tabela {
+      width: 100%; max-width: 640px;
+      border-collapse: collapse;
+      border-top: 2px solid var(--color-fg);
+      margin: var(--space-3) 0 var(--space-5);
+    }
+    .panel__tabela th {
+      font-family: var(--font-display); font-weight: 600;
+      font-size: var(--size-small); text-align: left;
+      padding: var(--space-2) var(--space-3);
+      border-bottom: 3px double var(--color-fg);
+      white-space: nowrap;
+    }
+    .panel__tabela th.col-valor { text-align: right; }
+    .panel__tabela td {
+      padding: var(--space-2) var(--space-3);
+      border-bottom: 1px solid var(--color-border);
+      font-size: var(--size-small);
+    }
+    .panel__tabela td.num { text-align: right; white-space: nowrap; font-weight: 600; }
+    .panel__tabela tr.total td { border-top: 3px double var(--color-fg); border-bottom: 0; font-weight: 600; }
+    .panel__tabela tr.total td.nome-linha { font-family: var(--font-display); }
+
+    .panel ol { counter-reset: passo; list-style: none; padding-left: 0; max-width: 62ch; }
+    .panel ol li { counter-increment: passo; position: relative; padding-left: var(--space-7); margin-bottom: var(--space-3); }
+    .panel ol li::before {
+      content: counter(passo);
+      position: absolute; left: 0; top: 0.05em;
+      font-family: var(--font-display); font-weight: 800;
+      font-size: 1.1rem; color: var(--color-accent);
+      font-variant-numeric: lining-nums;
+    }
+
+    /* ═══ Rodapé ═══ */
+    .rodape {
+      max-width: 960px;
+      margin-top: var(--space-12);
+      border-top: 2px solid var(--color-fg);
+      padding-top: var(--space-4);
+      font-size: var(--size-small); color: var(--color-fg-muted);
+    }
+    .rodape p { margin-bottom: var(--space-2); }
+    .rodape em { color: var(--color-fg-subtle); }
+
+    .visually-hidden {
+      position: absolute; width: 1px; height: 1px;
+      margin: -1px; padding: 0; overflow: hidden;
+      clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+    }
+
+    /* ═══ Responsivo ═══ */
+    @media (max-width: 880px) {
+      .minis { grid-template-columns: 1fr; }
+      .indice__link {
+        grid-template-columns: 2.4rem 1fr;
+        grid-template-areas: "num titulo" "num desc" "num valor";
+      }
+      .indice__meta { text-align: left; margin-top: var(--space-2); }
+      .indice__valor { white-space: normal; }
+      .filters { position: static; }
+      .topbar__edicao { display: none; }
+    }
+
+    /* ═══ Reduced motion ═══ */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
       }
-      .panel { animation: none; }
+      /* painel aparece pronto (sem morph, sem slide); aurora estática mas presente (glass continua sólido/vidro) */
+      .panel.is-open { opacity: 1; transform: none; }
+      .paineis__aurora { animation: none; }
     }
 
-    @media (max-width: 720px) {
-      .page { padding: var(--space-6) var(--space-4) var(--space-12); }
-      .panel__head { flex-direction: column; gap: var(--space-3); }
+    /* ═══ Print — grain e aurora zerados, glass vira sólido, painéis abertos, filtros fora ═══ */
+    @media print {
+      body::after { display: none; }
+      .paineis__aurora { display: none; } /* materialidade de tela fora do papel */
+      .filters, .theme-toggle, .panel__close, .mestra__tabela td.abre { display: none; }
+      .topbar { position: static; background: none; }
+      .panel {
+        display: block !important;
+        background: var(--color-bg-elevated); /* sem vidro no papel: fundo sólido legível */
+        backdrop-filter: none; -webkit-backdrop-filter: none;
+        box-shadow: none; page-break-before: always; animation: none;
+      }
+      .mestra__scroll { overflow: visible; }
+      table.mestra__tabela { min-width: 0; }
+      tr.row-link { cursor: auto; }
     }
   </style>
 </head>
 <body>
-
   <header class="topbar">
-    <a href="#" class="topbar__brand" aria-label="Plataforma de Dados Itaú">
-      <span class="topbar__logo" aria-hidden="true">i</span>
-      Plataforma de Dados
-      <span class="topbar__kicker">Hub interno · v2.4</span>
-    </a>
+    <a href="#" class="topbar__brand">Itaú <span>·</span> Pessoas &amp; Cultura</a>
+    <span class="topbar__edicao">Central de Benefícios — vigência 2026</span>
     <span class="topbar__spacer"></span>
-    <input class="topbar__search" type="search" placeholder="Buscar recurso…" aria-label="Buscar recurso" data-search>
-    <button class="theme-toggle" data-theme-toggle aria-label="Alternar tema claro/escuro">
-      <span data-theme-icon aria-hidden="true">☾</span>
-    </button>
+    <button class="theme-toggle" type="button" aria-label="Alternar tema claro/escuro"><span aria-hidden="true">◐</span></button>
   </header>
 
   <main class="page">
 
-    <section class="hero">
-      <p class="hero__kicker">Central de recursos · DataOS</p>
-      <h1 class="hero__title">
-        Tudo que o time precisa <em>num lugar só</em>.
-      </h1>
-      <p class="hero__lead">
-        Catálogo, pipelines, qualidade, self-service e governança da Plataforma de Dados Itaú.
-        Cards apontam para o ponto exato — guia, console, runbook ou política — sem precisar
-        adivinhar por onde começar.
-      </p>
-      <div class="hero__meta">
-        <span><strong>15</strong> recursos</span>
-        <span><strong>5</strong> categorias</span>
-        <span><strong>2.412</strong> tabelas catalogadas</span>
-        <span>Atualizado em <strong>17 mai 2026</strong></span>
+    <!-- ═══ CAPA-ÍNDICE: o sumário é a capa ═══ -->
+    <section class="capa" aria-label="Índice de benefícios">
+      <p class="capa__dateline"><strong>Central de Benefícios</strong> edição contínua · atualizada em junho de 2026 · doze benefícios em três categorias</p>
+      <h1>Todo benefício a dois cliques.</h1>
+      <p class="lead">Sem PDF de 40 páginas, sem “consulte o RH”: o valor, a elegibilidade e o caminho para acionar <em>cada</em> benefício estão nesta página — os três mais usados logo abaixo, os outros nove na tabela-mestra.</p>
+
+      <ul class="indice">
+        <li class="indice__item" data-category="saude">
+          <a class="indice__link" href="#painel-saude" data-target="painel-saude">
+            <span class="indice__num" aria-hidden="true">01</span>
+            <span class="indice__titulo">Plano de saúde</span>
+            <span class="indice__desc">Rede nacional, sem carência na admissão, coparticipação com teto de R$&nbsp;58 por evento.</span>
+            <span class="indice__meta">
+              <span class="indice__valor">desde R$&nbsp;87/mês</span>
+              <span class="tag tag--saude">Saúde</span>
+            </span>
+          </a>
+        </li>
+        <li class="indice__item" data-category="financeiro">
+          <a class="indice__link" href="#painel-vrva" data-target="painel-vrva">
+            <span class="indice__num" aria-hidden="true">02</span>
+            <span class="indice__titulo">Vale-refeição e alimentação</span>
+            <span class="indice__desc">Crédito automático no dia 25, cartão flex com proporção ajustável entre restaurante e mercado.</span>
+            <span class="indice__meta">
+              <span class="indice__valor">R$&nbsp;1.820/mês</span>
+              <span class="tag tag--financeiro">Financeiro</span>
+            </span>
+          </a>
+        </li>
+        <li class="indice__item" data-category="financeiro">
+          <a class="indice__link" href="#painel-previdencia" data-target="painel-previdencia">
+            <span class="indice__num" aria-hidden="true">03</span>
+            <span class="indice__titulo">Previdência privada</span>
+            <span class="indice__desc">O banco acompanha seu aporte real por real — contrapartida de 100% até 6% do salário.</span>
+            <span class="indice__meta">
+              <span class="indice__valor">match até 6%</span>
+              <span class="tag tag--financeiro">Financeiro</span>
+            </span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="capa__mais">
+        <p class="rotulo">E mais nove — direto na linha de cada um</p>
+        <ul class="minis">
+          <li class="mini" data-category="saude">
+            <a class="mini__link" href="#linha-odonto"><span class="mini__nome">Plano odontológico</span><span class="mini__leader" aria-hidden="true"></span><span class="mini__valor">titular sem custo</span></a>
+          </li>
+          <li class="mini" data-category="saude">
+            <a class="mini__link" href="#linha-wellhub"><span class="mini__nome">Wellhub (academias)</span><span class="mini__leader" aria-hidden="true"></span><span class="mini__valor">desde R$&nbsp;54,90/mês</span></a>
+          </li>
+          <li class="mini" data-category="saude">
+            <a class="mini__link" href="#linha-apoio"><span class="mini__nome">Apoio emocional 24h</span><span class="mini__leader" aria-hidden="true"></span><span class="mini__valor">gratuito e sigiloso</span></a>
+          </li>
+          <li class="mini" data-category="financeiro">
+            <a class="mini__link" href="#linha-seguro"><span class="mini__nome">Seguro de vida</span><span class="mini__leader" aria-hidden="true"></span><span class="mini__valor">capital de 24× o salário</span></a>
+          </li>
+          <li class="mini" data-category="financeiro">
+            <a class="mini__link" href="#linha-creche"><span class="mini__nome">Auxílio-creche</span><span class="mini__leader" aria-hidden="true"></span><span class="mini__valor">R$&nbsp;780/mês por filho</span></a>
+          </li>
+          <li class="mini" data-category="desenvolv">
+            <a class="mini__link" href="#painel-bolsa" data-target="painel-bolsa"><span class="mini__nome">Bolsa de estudos</span><span class="mini__leader" aria-hidden="true"></span><span class="mini__valor">70% da mensalidade</span></a>
+          </li>
+          <li class="mini" data-category="desenvolv">
+            <a class="mini__link" href="#linha-idiomas"><span class="mini__nome">Idiomas</span><span class="mini__leader" aria-hidden="true"></span><span class="mini__valor">50%, teto R$&nbsp;350/mês</span></a>
+          </li>
+          <li class="mini" data-category="desenvolv">
+            <a class="mini__link" href="#linha-parental"><span class="mini__nome">Licença parental estendida</span><span class="mini__leader" aria-hidden="true"></span><span class="mini__valor">180 dias (mãe) · 40 (pai)</span></a>
+          </li>
+          <li class="mini" data-category="desenvolv">
+            <a class="mini__link" href="#linha-dayoff"><span class="mini__nome">Day-off de aniversário</span><span class="mini__leader" aria-hidden="true"></span><span class="mini__valor">1 dia útil no mês</span></a>
+          </li>
+        </ul>
       </div>
     </section>
 
-    <nav class="filters" role="tablist" aria-label="Filtros de categoria" data-filters>
-      <button class="filter is-active" type="button" data-filter="all" role="tab" aria-selected="true">
-        Tudo <span class="filter__count">15</span>
-      </button>
-      <button class="filter" type="button" data-filter="catalogo" role="tab" aria-selected="false">
-        Catálogo <span class="filter__count">3</span>
-      </button>
-      <button class="filter" type="button" data-filter="pipelines" role="tab" aria-selected="false">
-        Pipelines <span class="filter__count">3</span>
-      </button>
-      <button class="filter" type="button" data-filter="qualidade" role="tab" aria-selected="false">
-        Qualidade <span class="filter__count">3</span>
-      </button>
-      <button class="filter" type="button" data-filter="self-service" role="tab" aria-selected="false">
-        Self-service <span class="filter__count">3</span>
-      </button>
-      <button class="filter" type="button" data-filter="governanca" role="tab" aria-selected="false">
-        Governança <span class="filter__count">3</span>
-      </button>
+    <!-- ═══ Filtros — filtram o índice E a tabela-mestra ═══ -->
+    <nav class="filters" aria-label="Filtrar benefícios por categoria">
+      <span class="filters__rotulo">Mostrar</span>
+      <button class="filter is-active" type="button" data-filter="all" aria-pressed="true">Tudo</button>
+      <button class="filter" type="button" data-filter="saude" aria-pressed="false">Saúde</button>
+      <button class="filter" type="button" data-filter="financeiro" aria-pressed="false">Financeiro</button>
+      <button class="filter" type="button" data-filter="desenvolv" aria-pressed="false">Desenvolvimento</button>
+      <span class="filters__estado" aria-live="polite" data-contador>12 benefícios</span>
     </nav>
-    <p class="filters-meta"><strong id="visible-count">15</strong> de 15 recursos visíveis · click num card abre o painel</p>
 
-    <section class="grid" id="grid" aria-label="Recursos da plataforma">
+    <!-- ═══ TABELA-MESTRA — assinatura M0: protagonista compositivo da página ═══ -->
+    <section class="mestra" id="tabela-mestra" aria-label="Tabela-mestra de benefícios">
+      <p class="rotulo">A tabela-mestra</p>
+      <h2>Doze benefícios, uma linha cada — valor, elegibilidade e o caminho.</h2>
+      <p class="mestra__nota">Linhas com “ver detalhe” abrem o dossiê completo do benefício mais abaixo, nesta mesma página. Valores vigentes para 2026.</p>
 
-      <!-- ─── CATÁLOGO ─────────────────────────────────────── -->
-      <a class="card" href="#painel-catalogo-busca" data-category="catalogo" data-panel="painel-catalogo-busca">
-        <div class="card__head">
-          <span class="card__cat">Catálogo</span>
-          <span class="card__num">01 / 15</span>
-        </div>
-        <h3 class="card__title">Busca no catálogo</h3>
-        <p class="card__desc">2.412 tabelas com schema, owner, linhagem e estatísticas de uso. Filtra por domínio, classificação e sensibilidade.</p>
-        <div class="card__foot">
-          <span class="card__tag">catalog.dataos.itau</span>
-          <span class="card__arrow">→</span>
-        </div>
-      </a>
-
-      <a class="card" href="#painel-catalogo-linhagem" data-category="catalogo" data-panel="painel-catalogo-linhagem">
-        <div class="card__head">
-          <span class="card__cat">Catálogo</span>
-          <span class="card__num">02 / 15</span>
-        </div>
-        <h3 class="card__title">Linhagem ponta-a-ponta</h3>
-        <p class="card__desc">Cadeia completa de origem-transformação-consumo: do CDC do Oracle ao dashboard de risco no Power BI.</p>
-        <div class="card__foot">
-          <span class="card__tag">/lineage</span>
-          <span class="card__arrow">→</span>
-        </div>
-      </a>
-
-      <a class="card" href="#painel-catalogo-glossario" data-category="catalogo" data-panel="painel-catalogo-glossario">
-        <div class="card__head">
-          <span class="card__cat">Catálogo</span>
-          <span class="card__num">03 / 15</span>
-        </div>
-        <h3 class="card__title">Glossário de negócio</h3>
-        <p class="card__desc">487 termos curados por domínio (Crédito, Investimentos, PIX, Cartões). Vincula termo → tabela → métrica.</p>
-        <div class="card__foot">
-          <span class="card__tag">/glossary</span>
-          <span class="card__arrow">→</span>
-        </div>
-      </a>
-
-      <!-- ─── PIPELINES ────────────────────────────────────── -->
-      <a class="card" href="#painel-pipelines-orchestrator" data-category="pipelines" data-panel="painel-pipelines-orchestrator">
-        <div class="card__head">
-          <span class="card__cat">Pipelines</span>
-          <span class="card__num">04 / 15</span>
-        </div>
-        <h3 class="card__title">Orchestrator (Airflow)</h3>
-        <p class="card__desc">1.847 DAGs em produção. SLA tracking, retry policy padronizada e alertas no Squad Channel automático.</p>
-        <div class="card__foot">
-          <span class="card__tag">airflow.dataos</span>
-          <span class="card__arrow">→</span>
-        </div>
-      </a>
-
-      <a class="card" href="#painel-pipelines-streaming" data-category="pipelines" data-panel="painel-pipelines-streaming">
-        <div class="card__head">
-          <span class="card__cat">Pipelines</span>
-          <span class="card__num">05 / 15</span>
-        </div>
-        <h3 class="card__title">Streaming (Kafka + Flink)</h3>
-        <p class="card__desc">340 tópicos, schema registry compartilhado, replay de até 14 dias. Throughput agregado de 1,2M msg/s.</p>
-        <div class="card__foot">
-          <span class="card__tag">/streaming</span>
-          <span class="card__arrow">→</span>
-        </div>
-      </a>
-
-      <a class="card" href="#painel-pipelines-templates" data-category="pipelines" data-panel="painel-pipelines-templates">
-        <div class="card__head">
-          <span class="card__cat">Pipelines</span>
-          <span class="card__num">06 / 15</span>
-        </div>
-        <h3 class="card__title">Templates dbt</h3>
-        <p class="card__desc">Esqueletos prontos para staging, marts e snapshots. Garantem nomenclatura, testes mínimos e tagueamento de PII.</p>
-        <div class="card__foot">
-          <span class="card__tag">dbt-templates@2.1</span>
-          <span class="card__arrow">→</span>
-        </div>
-      </a>
-
-      <!-- ─── QUALIDADE ────────────────────────────────────── -->
-      <a class="card" href="#painel-qualidade-rules" data-category="qualidade" data-panel="painel-qualidade-rules">
-        <div class="card__head">
-          <span class="card__cat">Qualidade</span>
-          <span class="card__num">07 / 15</span>
-        </div>
-        <h3 class="card__title">Regras de qualidade</h3>
-        <p class="card__desc">Catálogo de 38 regras reutilizáveis: not-null, range, referential integrity, drift, freshness. Aplicáveis via YAML.</p>
-        <div class="card__foot">
-          <span class="card__tag">/quality/rules</span>
-          <span class="card__arrow">→</span>
-        </div>
-      </a>
-
-      <a class="card" href="#painel-qualidade-scorecards" data-category="qualidade" data-panel="painel-qualidade-scorecards">
-        <div class="card__head">
-          <span class="card__cat">Qualidade</span>
-          <span class="card__num">08 / 15</span>
-        </div>
-        <h3 class="card__title">Scorecards por domínio</h3>
-        <p class="card__desc">Score consolidado por tabela e domínio. Tendência mensal, gaps em destaque, plano de ação priorizado.</p>
-        <div class="card__foot">
-          <span class="card__tag">/quality/scorecards</span>
-          <span class="card__arrow">→</span>
-        </div>
-      </a>
-
-      <a class="card" href="#painel-qualidade-incidentes" data-category="qualidade" data-panel="painel-qualidade-incidentes">
-        <div class="card__head">
-          <span class="card__cat">Qualidade</span>
-          <span class="card__num">09 / 15</span>
-        </div>
-        <h3 class="card__title">Gestão de incidentes</h3>
-        <p class="card__desc">Workflow padrão: detecção → triagem → owner → RCA → fix. Integrado com Jira e Slack do time afetado.</p>
-        <div class="card__foot">
-          <span class="card__tag">/quality/incidents</span>
-          <span class="card__arrow">→</span>
-        </div>
-      </a>
-
-      <!-- ─── SELF-SERVICE ─────────────────────────────────── -->
-      <a class="card" href="#painel-self-notebook" data-category="self-service" data-panel="painel-self-notebook">
-        <div class="card__head">
-          <span class="card__cat">Self-service</span>
-          <span class="card__num">10 / 15</span>
-        </div>
-        <h3 class="card__title">Notebooks gerenciados</h3>
-        <p class="card__desc">JupyterLab pré-configurado com acesso ao lakehouse, libs auditadas, secret manager e quota de compute por área.</p>
-        <div class="card__foot">
-          <span class="card__tag">notebooks.dataos</span>
-          <span class="card__arrow">→</span>
-        </div>
-      </a>
-
-      <a class="card" href="#painel-self-sql" data-category="self-service" data-panel="painel-self-sql">
-        <div class="card__head">
-          <span class="card__cat">Self-service</span>
-          <span class="card__num">11 / 15</span>
-        </div>
-        <h3 class="card__title">SQL Workbench</h3>
-        <p class="card__desc">Editor SQL com autocomplete sobre o catálogo, histórico compartilhado por squad e exportação direta para Power BI.</p>
-        <div class="card__foot">
-          <span class="card__tag">sql.dataos</span>
-          <span class="card__arrow">→</span>
-        </div>
-      </a>
-
-      <a class="card" href="#painel-self-marketplace" data-category="self-service" data-panel="painel-self-marketplace">
-        <div class="card__head">
-          <span class="card__cat">Self-service</span>
-          <span class="card__num">12 / 15</span>
-        </div>
-        <h3 class="card__title">Marketplace de Data Products</h3>
-        <p class="card__desc">126 produtos publicados pelos domínios. Solicitar acesso, conferir contrato de SLO e ver consumidores atuais.</p>
-        <div class="card__foot">
-          <span class="card__tag">marketplace.dataos</span>
-          <span class="card__arrow">→</span>
-        </div>
-      </a>
-
-      <!-- ─── GOVERNANÇA ───────────────────────────────────── -->
-      <a class="card" href="#painel-gov-classificacao" data-category="governanca" data-panel="painel-gov-classificacao">
-        <div class="card__head">
-          <span class="card__cat">Governança</span>
-          <span class="card__num">13 / 15</span>
-        </div>
-        <h3 class="card__title">Classificação de dados</h3>
-        <p class="card__desc">Política oficial de 4 níveis (Público, Interno, Restrito, Sensível). Auto-detecção de PII via pattern matching.</p>
-        <div class="card__foot">
-          <span class="card__tag">/policy/classification</span>
-          <span class="card__arrow">→</span>
-        </div>
-      </a>
-
-      <a class="card" href="#painel-gov-acesso" data-category="governanca" data-panel="painel-gov-acesso">
-        <div class="card__head">
-          <span class="card__cat">Governança</span>
-          <span class="card__num">14 / 15</span>
-        </div>
-        <h3 class="card__title">Controle de acesso</h3>
-        <p class="card__desc">Solicitação via portal, aprovação pelo data owner, expiração obrigatória. Trilha de auditoria por 5 anos.</p>
-        <div class="card__foot">
-          <span class="card__tag">access.dataos</span>
-          <span class="card__arrow">→</span>
-        </div>
-      </a>
-
-      <a class="card" href="#painel-gov-lgpd" data-category="governanca" data-panel="painel-gov-lgpd">
-        <div class="card__head">
-          <span class="card__cat">Governança</span>
-          <span class="card__num">15 / 15</span>
-        </div>
-        <h3 class="card__title">LGPD &amp; retenção</h3>
-        <p class="card__desc">Mapa de tratamento, base legal por tabela e enforcement automatizado de TTL. Right-to-be-forgotten em até 30 dias.</p>
-        <div class="card__foot">
-          <span class="card__tag">/policy/lgpd</span>
-          <span class="card__arrow">→</span>
-        </div>
-      </a>
-
+      <div class="mestra__scroll">
+        <table class="mestra__tabela">
+          <caption>Valores de demonstração da skill slideless — não representam a política real do banco.</caption>
+          <thead>
+            <tr>
+              <th scope="col">Benefício</th>
+              <th scope="col" class="col-valor">Valor ou cobertura</th>
+              <th scope="col">Quem tem direito</th>
+              <th scope="col">Como acionar</th>
+              <th scope="col"><span class="visually-hidden">Detalhe</span></th>
+            </tr>
+          </thead>
+          <tbody class="grupo grupo--saude" data-category="saude">
+            <tr class="grupo__titulo"><th colspan="5" scope="colgroup">Saúde</th></tr>
+            <tr class="row-link" id="linha-saude" data-target="painel-saude" tabindex="0" aria-label="Plano de saúde — abrir detalhe">
+              <td class="nome">Plano de saúde</td>
+              <td class="num">desde R$&nbsp;87/mês</td>
+              <td class="eleg">Todos, desde a admissão, sem carência</td>
+              <td class="acao">App Pessoas → Benefícios → Saúde</td>
+              <td class="abre">ver detalhe ↓</td>
+            </tr>
+            <tr id="linha-odonto">
+              <td class="nome">Plano odontológico</td>
+              <td class="num">R$&nbsp;0 titular · R$&nbsp;19/mês por dependente</td>
+              <td class="eleg">Todos, desde a admissão</td>
+              <td class="acao">Adesão no app, carteirinha imediata</td>
+              <td class="abre"></td>
+            </tr>
+            <tr id="linha-wellhub">
+              <td class="nome">Wellhub (academias)</td>
+              <td class="num">desde R$&nbsp;54,90/mês</td>
+              <td class="eleg">Todos + até 3 dependentes</td>
+              <td class="acao">Cadastro no parceiro com e-mail corporativo</td>
+              <td class="abre"></td>
+            </tr>
+            <tr id="linha-apoio">
+              <td class="nome">Apoio emocional 24h</td>
+              <td class="num">gratuito, uso ilimitado</td>
+              <td class="eleg">Colaboradores e dependentes</td>
+              <td class="acao">0800&nbsp;727&nbsp;0009 ou chat no app, sigiloso</td>
+              <td class="abre"></td>
+            </tr>
+          </tbody>
+          <tbody class="grupo grupo--financeiro" data-category="financeiro">
+            <tr class="grupo__titulo"><th colspan="5" scope="colgroup">Financeiro</th></tr>
+            <tr class="row-link" id="linha-vrva" data-target="painel-vrva" tabindex="0" aria-label="Vale-refeição e alimentação — abrir detalhe">
+              <td class="nome">Vale-refeição + alimentação</td>
+              <td class="num">R$&nbsp;1.820/mês</td>
+              <td class="eleg">Todos CLT, desde o 1º dia</td>
+              <td class="acao">Crédito automático no dia 25</td>
+              <td class="abre">ver detalhe ↓</td>
+            </tr>
+            <tr class="row-link" id="linha-previdencia" data-target="painel-previdencia" tabindex="0" aria-label="Previdência privada — abrir detalhe">
+              <td class="nome">Previdência privada</td>
+              <td class="num">match de 100% até 6% do salário</td>
+              <td class="eleg">Adesão livre desde a admissão</td>
+              <td class="acao">App Pessoas → Benefícios → Previdência</td>
+              <td class="abre">ver detalhe ↓</td>
+            </tr>
+            <tr id="linha-seguro">
+              <td class="nome">Seguro de vida</td>
+              <td class="num">capital de 24× o salário, sem custo</td>
+              <td class="eleg">Todos CLT, apólice automática</td>
+              <td class="acao">Indicar beneficiários no app</td>
+              <td class="abre"></td>
+            </tr>
+            <tr id="linha-creche">
+              <td class="nome">Auxílio-creche</td>
+              <td class="num">R$&nbsp;780/mês por filho</td>
+              <td class="eleg">Filhos até 5 anos e 11 meses</td>
+              <td class="acao">Reembolso com nota fiscal até o dia 5</td>
+              <td class="abre"></td>
+            </tr>
+          </tbody>
+          <tbody class="grupo grupo--desenvolv" data-category="desenvolv">
+            <tr class="grupo__titulo"><th colspan="5" scope="colgroup">Desenvolvimento e tempo</th></tr>
+            <tr class="row-link" id="linha-bolsa" data-target="painel-bolsa" tabindex="0" aria-label="Bolsa de estudos — abrir detalhe">
+              <td class="nome">Bolsa de estudos</td>
+              <td class="num">70% da mensalidade, teto R$&nbsp;9.000/sem.</td>
+              <td class="eleg">12 meses de casa + avaliação em dia</td>
+              <td class="acao">Janelas em março e agosto, no app</td>
+              <td class="abre">ver detalhe ↓</td>
+            </tr>
+            <tr id="linha-idiomas">
+              <td class="nome">Idiomas</td>
+              <td class="num">50% do curso, teto R$&nbsp;350/mês</td>
+              <td class="eleg">A partir de 6 meses de casa</td>
+              <td class="acao">Escolas parceiras listadas no portal</td>
+              <td class="abre"></td>
+            </tr>
+            <tr id="linha-parental">
+              <td class="nome">Licença parental estendida</td>
+              <td class="num">180 dias (mãe) · 40 dias (pai)</td>
+              <td class="eleg">Todos, inclusive adoção</td>
+              <td class="acao">Registrar no app com 60 dias de antecedência</td>
+              <td class="abre"></td>
+            </tr>
+            <tr id="linha-dayoff">
+              <td class="nome">Day-off de aniversário</td>
+              <td class="num">1 dia útil no mês do aniversário</td>
+              <td class="eleg">Todos, desde a admissão</td>
+              <td class="acao">Combinar a data com o gestor, no app</td>
+              <td class="abre"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
 
-    <div class="empty-state" id="empty-state">Nenhum recurso encontrado para essa categoria.</div>
+    <!-- ═══ Painéis in-page — dossiês dos 4 principais ═══ -->
+    <div class="paineis">
+      <!-- W7 — aurora de assinatura: acende (.has-open) só com um dossiê aberto -->
+      <div class="paineis__aurora" aria-hidden="true"></div>
 
-    <p class="panel-empty" id="panel-empty">Clique num card para abrir o painel com detalhes ↑</p>
-
-    <section class="panels" aria-live="polite">
-
-      <!-- ─── CATÁLOGO panels ──────────────────────────────── -->
-      <article class="panel" id="painel-catalogo-busca" data-category="catalogo">
-        <header class="panel__head">
-          <div>
-            <p class="panel__cat">Catálogo · 01</p>
-            <h2 class="panel__title">Busca no catálogo</h2>
-          </div>
-          <button class="panel__close" type="button" data-close aria-label="Fechar painel">✕</button>
-        </header>
-        <p class="panel__lead">
-          O ponto de partida para qualquer análise: encontre a tabela certa em segundos,
-          com schema, owner, classificação e consumo já visíveis na primeira tela.
-        </p>
-        <div class="panel__body has-aside">
-          <div>
-            <div class="panel__metrics">
-              <div class="metric">
-                <p class="metric__label">Tabelas</p>
-                <p class="metric__value"><span>2.412</span></p>
-                <p class="metric__trend">+187 nos últimos 90 dias</p>
-              </div>
-              <div class="metric">
-                <p class="metric__label">Cobertura de owner</p>
-                <p class="metric__value"><span>98%</span></p>
-                <p class="metric__trend">meta 95% — superada</p>
-              </div>
-              <div class="metric">
-                <p class="metric__label">Buscas/dia</p>
-                <p class="metric__value"><span>4,3k</span></p>
-                <p class="metric__trend">+22% em 12 meses</p>
-              </div>
-            </div>
-            <p>O catálogo é alimentado por crawler automático sobre o lakehouse (Iceberg + Delta) e por contribuição direta dos data owners. Cada entrada traz:</p>
-            <ul>
-              <li>Schema completo com tipos, descrições e exemplos de valores</li>
-              <li>Owner técnico + owner de negócio (sempre dois pares)</li>
-              <li>Classificação de sensibilidade e base legal LGPD</li>
-              <li>Estatísticas de consumo: leituras/dia, top consumidores, frequência de atualização</li>
-              <li>Linhagem clicável até a origem e até os consumidores</li>
-            </ul>
-            <div class="panel__links">
-              <a href="#" class="panel__link"><span>Abrir o catálogo (catalog.dataos.itau)</span><span>↗</span></a>
-              <a href="#" class="panel__link"><span>Como cadastrar uma tabela nova</span><span>→</span></a>
-              <a href="#" class="panel__link"><span>API REST do catálogo (OpenAPI 3.1)</span><span>→</span></a>
-            </div>
-          </div>
-          <aside>
-            <div class="chart-wrap">
-              <p class="chart-wrap__title">Tabelas catalogadas — últimos 12 meses</p>
-              <canvas id="chart-catalog-growth" aria-label="Evolução de tabelas catalogadas" height="220"></canvas>
-            </div>
-          </aside>
+      <section class="panel" id="painel-saude" aria-label="Detalhe: plano de saúde">
+        <button class="panel__close" type="button">✕ Fechar</button>
+        <div class="panel__hero">
+          <p class="rotulo">Saúde · benefício 01</p>
+          <h2>Plano de saúde: rede nacional com coparticipação de teto baixo.</h2>
         </div>
-      </article>
+        <p class="lead">Cobre titular e dependentes desde o primeiro dia de trabalho — a admissão não tem carência, e a carteirinha digital sai em até 48&nbsp;horas úteis.</p>
 
-      <article class="panel" id="painel-catalogo-linhagem" data-category="catalogo">
-        <header class="panel__head">
-          <div>
-            <p class="panel__cat">Catálogo · 02</p>
-            <h2 class="panel__title">Linhagem ponta-a-ponta</h2>
-          </div>
-          <button class="panel__close" type="button" data-close aria-label="Fechar painel">✕</button>
-        </header>
-        <p class="panel__lead">
-          Veja exatamente de onde vem cada coluna e quem consome cada tabela. Indispensável
-          antes de mudar qualquer schema em produção.
-        </p>
-        <div class="panel__body">
-          <div>
-            <p>A linhagem é capturada em 3 camadas que se complementam:</p>
-            <ul>
-              <li><strong>Sistema origem → bronze:</strong> via CDC do Oracle/Postgres e Kafka Connect</li>
-              <li><strong>Bronze → silver/gold:</strong> via parsing automático dos modelos dbt e jobs Spark</li>
-              <li><strong>Gold → consumo:</strong> via integração com Power BI, Tableau e notebooks gerenciados</li>
-            </ul>
-            <div class="table-wrap">
-              <table class="data-table">
-                <thead>
-                  <tr><th>Camada</th><th class="num">Datasets</th><th class="num">Edges</th><th>Latência</th><th>Cobertura</th></tr>
-                </thead>
-                <tbody>
-                  <tr><td>Origem → Bronze</td><td class="num">312</td><td class="num">312</td><td>real-time</td><td><span class="badge badge--success">100%</span></td></tr>
-                  <tr><td>Bronze → Silver</td><td class="num">878</td><td class="num">1.244</td><td>hora</td><td><span class="badge badge--success">98%</span></td></tr>
-                  <tr><td>Silver → Gold</td><td class="num">1.018</td><td class="num">2.106</td><td>hora</td><td><span class="badge badge--success">96%</span></td></tr>
-                  <tr><td>Gold → Consumo</td><td class="num">204</td><td class="num">3.487</td><td>daily snapshot</td><td><span class="badge badge--warn">81%</span></td></tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="panel__links">
-              <a href="#" class="panel__link"><span>Visualizador interativo de linhagem</span><span>↗</span></a>
-              <a href="#" class="panel__link"><span>Como instrumentar um job custom</span><span>→</span></a>
-            </div>
-          </div>
+        <h3>Quem tem direito</h3>
+        <p>Todos os colaboradores CLT, desde a admissão. Dependentes elegíveis: cônjuge ou companheiro(a) e filhos até 21 anos — até 24 se universitários. Inclusão de dependente em até 30 dias do evento (admissão, nascimento ou casamento) entra sem carência.</p>
+
+        <h3>Quanto custa</h3>
+        <table class="panel__tabela">
+          <thead>
+            <tr><th scope="col">Acomodação</th><th scope="col" class="col-valor">Titular</th><th scope="col" class="col-valor">Por dependente</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Enfermaria</td><td class="num">R$&nbsp;87/mês</td><td class="num">R$&nbsp;64/mês</td></tr>
+            <tr><td>Apartamento</td><td class="num">R$&nbsp;164/mês</td><td class="num">R$&nbsp;118/mês</td></tr>
+            <tr><td>Executivo</td><td class="num">R$&nbsp;312/mês</td><td class="num">R$&nbsp;226/mês</td></tr>
+          </tbody>
+        </table>
+        <p>Coparticipação de 20% em consultas e exames simples, com <strong>teto de R$&nbsp;58 por evento</strong>. Internações, terapias seriadas e pré-natal não têm coparticipação. Consulta fora da rede tem reembolso de até R$&nbsp;110, creditado em folha no mês seguinte.</p>
+
+        <h3>Como acionar</h3>
+        <ol>
+          <li>No app Pessoas, abra <em>Benefícios → Saúde → Minha carteirinha</em> — a versão digital vale em toda a rede credenciada.</li>
+          <li>Para trocar de acomodação ou incluir dependente, use o mesmo caminho; a mudança vigora no 1º dia do mês seguinte.</li>
+          <li>Urgência e orientação médica por telefone: central 24h no 0800&nbsp;727&nbsp;0001.</li>
+        </ol>
+      </section>
+
+      <section class="panel" id="painel-vrva" aria-label="Detalhe: vale-refeição e alimentação">
+        <button class="panel__close" type="button">✕ Fechar</button>
+        <div class="panel__hero">
+          <p class="rotulo">Financeiro · benefício 02</p>
+          <h2>VR e VA: R$&nbsp;1.820 por mês, no cartão flex.</h2>
         </div>
-      </article>
+        <p class="lead">O crédito cai sozinho no dia 25 — você só decide a proporção entre refeição e mercado, e pode mudar de ideia todo mês.</p>
 
-      <article class="panel" id="painel-catalogo-glossario" data-category="catalogo">
-        <header class="panel__head">
-          <div>
-            <p class="panel__cat">Catálogo · 03</p>
-            <h2 class="panel__title">Glossário de negócio</h2>
-          </div>
-          <button class="panel__close" type="button" data-close aria-label="Fechar painel">✕</button>
-        </header>
-        <p class="panel__lead">
-          Vocabulário compartilhado entre negócio e dados. Mesma palavra, mesmo significado,
-          do briefing à query SQL.
-        </p>
-        <div class="panel__body">
-          <div>
-            <div class="panel__metrics">
-              <div class="metric"><p class="metric__label">Termos curados</p><p class="metric__value"><span>487</span></p></div>
-              <div class="metric"><p class="metric__label">Domínios</p><p class="metric__value"><span>11</span></p></div>
-              <div class="metric"><p class="metric__label">Vínculos a tabelas</p><p class="metric__value"><span>1.836</span></p></div>
-            </div>
-            <p>Cada termo do glossário tem definição oficial aprovada pelo data steward do domínio, alternativas comuns (sinônimos a evitar), regras de cálculo quando aplicável e links para as tabelas/colunas que materializam o conceito.</p>
-            <ul>
-              <li><strong>Crédito:</strong> 89 termos — incluindo PD, LGD, EAD, score interno, vintage</li>
-              <li><strong>Investimentos:</strong> 76 termos — AuM, NPS, suitability, perfil, custódia</li>
-              <li><strong>PIX &amp; Pagamentos:</strong> 54 termos — TPV, MED, chave, conciliação</li>
-              <li><strong>Cartões:</strong> 62 termos — limite, fatura, MCC, chargeback, fraude</li>
-              <li>Outros 7 domínios cobertos parcialmente — meta 100% até Q4/2026</li>
-            </ul>
-          </div>
+        <h3>Quem tem direito</h3>
+        <p>Todos os colaboradores CLT, desde o primeiro dia. Quem é admitido depois do dia 15 recebe o valor proporcional aos dias trabalhados no mês de entrada.</p>
+
+        <h3>Quanto é</h3>
+        <table class="panel__tabela">
+          <thead>
+            <tr><th scope="col">Parcela</th><th scope="col" class="col-valor">Valor mensal</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Vale-refeição (restaurantes)</td><td class="num">R$&nbsp;1.200</td></tr>
+            <tr><td>Vale-alimentação (mercado)</td><td class="num">R$&nbsp;620</td></tr>
+            <tr class="total"><td class="nome-linha">Total no cartão flex</td><td class="num">R$&nbsp;1.820</td></tr>
+          </tbody>
+        </table>
+        <p>O cartão é flex: dá para unificar o saldo num bolso só ou redistribuir entre VR e VA — a troca passa a valer no crédito seguinte.</p>
+
+        <h3>Como acionar</h3>
+        <ol>
+          <li>Nada a fazer na adesão — o crédito é automático a partir da admissão.</li>
+          <li>Para ajustar a proporção VR/VA, altere no app Pessoas até o dia 10 do mês.</li>
+          <li>Segunda via do cartão e bloqueio por perda: portal do emissor, com link dentro do app.</li>
+        </ol>
+      </section>
+
+      <section class="panel" id="painel-previdencia" aria-label="Detalhe: previdência privada">
+        <button class="panel__close" type="button">✕ Fechar</button>
+        <div class="panel__hero">
+          <p class="rotulo">Financeiro · benefício 03</p>
+          <h2>Previdência: o banco acompanha seu aporte até 6% do salário.</h2>
         </div>
-      </article>
+        <p class="lead">Cada real que você contribui, até o limite de 6%, o banco coloca outro — é o benefício com maior retorno garantido do pacote.</p>
 
-      <!-- ─── PIPELINES panels ─────────────────────────────── -->
-      <article class="panel" id="painel-pipelines-orchestrator" data-category="pipelines">
-        <header class="panel__head">
-          <div>
-            <p class="panel__cat">Pipelines · 04</p>
-            <h2 class="panel__title">Orchestrator (Airflow)</h2>
-          </div>
-          <button class="panel__close" type="button" data-close aria-label="Fechar painel">✕</button>
-        </header>
-        <p class="panel__lead">
-          Airflow gerenciado com observabilidade, alertas padronizados e política de retry
-          comum a todas as áreas. Zero setup para um time novo.
-        </p>
-        <div class="panel__body has-aside">
-          <div>
-            <div class="panel__metrics">
-              <div class="metric"><p class="metric__label">DAGs ativas</p><p class="metric__value"><span>1.847</span></p></div>
-              <div class="metric"><p class="metric__label">Sucesso 30d</p><p class="metric__value"><span>99,2%</span></p></div>
-              <div class="metric"><p class="metric__label">SLA breaches</p><p class="metric__value"><span>0,8%</span></p></div>
-            </div>
-            <p>A política padrão de retry é 3 tentativas com backoff exponencial. SLAs são definidos no próprio DAG e qualquer breach gera notificação automática no Slack do squad dono.</p>
-            <p>Times com DAGs críticas (camada Gold, modelos regulatórios) participam de revisão trimestral de SLA + plano de ação.</p>
-            <div class="panel__links">
-              <a href="#" class="panel__link"><span>Console (airflow.dataos)</span><span>↗</span></a>
-              <a href="#" class="panel__link"><span>Template oficial de DAG em Python</span><span>→</span></a>
-              <a href="#" class="panel__link"><span>Política de SLA e escalation</span><span>→</span></a>
-            </div>
-          </div>
-          <aside>
-            <div class="chart-wrap">
-              <p class="chart-wrap__title">Execuções por dia (últimos 7 dias)</p>
-              <canvas id="chart-airflow" aria-label="Execuções de DAG por dia" height="220"></canvas>
-            </div>
-          </aside>
+        <h3>Quem tem direito</h3>
+        <p>Adesão livre a partir da admissão, nas modalidades PGBL ou VGBL. Os aportes do banco têm carência de 3 anos (<em>vesting</em>): quem sai antes leva os próprios aportes corrigidos, e a contrapartida integral fica para quem cumpre o prazo.</p>
+
+        <h3>Quanto rende a contrapartida</h3>
+        <table class="panel__tabela">
+          <thead>
+            <tr><th scope="col">Exemplo — salário de R$&nbsp;10.000</th><th scope="col" class="col-valor">Mensal</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Sua contribuição (6%)</td><td class="num">R$&nbsp;600</td></tr>
+            <tr><td>Contrapartida do banco (100%)</td><td class="num">R$&nbsp;600</td></tr>
+            <tr class="total"><td class="nome-linha">Aporte total no plano</td><td class="num">R$&nbsp;1.200</td></tr>
+          </tbody>
+        </table>
+        <p>Contribuição básica entre 2% e 7% do salário, com aportes extras livres. Taxa de administração de 0,4%&nbsp;a.a. e carregamento zero — abaixo do varejo de previdência.</p>
+
+        <h3>Como acionar</h3>
+        <ol>
+          <li>Adesão e mudança de percentual a qualquer momento, no app Pessoas → <em>Benefícios → Previdência</em>.</li>
+          <li>Troca de modalidade PGBL↔VGBL na janela anual de novembro.</li>
+          <li>Portabilidade de planos externos: formulário no portal, conclusão em até 45 dias.</li>
+        </ol>
+      </section>
+
+      <section class="panel" id="painel-bolsa" aria-label="Detalhe: bolsa de estudos">
+        <button class="panel__close" type="button">✕ Fechar</button>
+        <div class="panel__hero">
+          <p class="rotulo">Desenvolvimento · benefício 09</p>
+          <h2>Bolsa de estudos: até 70% da mensalidade de volta.</h2>
         </div>
-      </article>
+        <p class="lead">Graduação, pós e MBA com curso correlato à sua carreira — o reembolso cai em folha, mês a mês, mediante comprovante.</p>
 
-      <article class="panel" id="painel-pipelines-streaming" data-category="pipelines">
-        <header class="panel__head">
-          <div>
-            <p class="panel__cat">Pipelines · 05</p>
-            <h2 class="panel__title">Streaming (Kafka + Flink)</h2>
-          </div>
-          <button class="panel__close" type="button" data-close aria-label="Fechar painel">✕</button>
-        </header>
-        <p class="panel__lead">
-          Plataforma de eventos para casos em que latência importa. 340 tópicos compartilhados,
-          schema registry oficial e retenção de 14 dias para replay.
-        </p>
-        <div class="panel__body">
-          <div>
-            <div class="panel__metrics">
-              <div class="metric"><p class="metric__label">Tópicos</p><p class="metric__value"><span>340</span></p></div>
-              <div class="metric"><p class="metric__label">Throughput pico</p><p class="metric__value"><span>1,2M</span></p><p class="metric__trend">mensagens / segundo</p></div>
-              <div class="metric"><p class="metric__label">Lag p95</p><p class="metric__value"><span>320ms</span></p></div>
-              <div class="metric"><p class="metric__label">Replay window</p><p class="metric__value"><span>14d</span></p></div>
-            </div>
-            <p>Os schemas são versionados em Avro no registry compartilhado. Compatibilidade backward é obrigatória — mudanças breaking exigem novo tópico (v2) e período de coexistência de 90 dias.</p>
-            <div class="table-wrap">
-              <table class="data-table">
-                <thead><tr><th>Domínio</th><th class="num">Tópicos</th><th class="num">Throughput</th><th>Maturidade</th></tr></thead>
-                <tbody>
-                  <tr><td>PIX</td><td class="num">28</td><td class="num">680k msg/s</td><td><span class="badge badge--success">Produção</span></td></tr>
-                  <tr><td>Cartões</td><td class="num">52</td><td class="num">240k msg/s</td><td><span class="badge badge--success">Produção</span></td></tr>
-                  <tr><td>Crédito</td><td class="num">76</td><td class="num">112k msg/s</td><td><span class="badge badge--success">Produção</span></td></tr>
-                  <tr><td>Investimentos</td><td class="num">41</td><td class="num">88k msg/s</td><td><span class="badge badge--success">Produção</span></td></tr>
-                  <tr><td>Antifraude</td><td class="num">34</td><td class="num">62k msg/s</td><td><span class="badge badge--success">Produção</span></td></tr>
-                  <tr><td>Open Finance</td><td class="num">18</td><td class="num">14k msg/s</td><td><span class="badge badge--info">Piloto</span></td></tr>
-                  <tr><td>Outros (5 domínios)</td><td class="num">91</td><td class="num">≈ 24k msg/s</td><td><span class="badge badge--info">Misto</span></td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </article>
+        <h3>Quem tem direito</h3>
+        <p>Colaboradores com 12 meses ou mais de casa e última avaliação de desempenho “atende plenamente” ou superior. O curso precisa ser correlato à trilha de carreira atual ou pretendida, com aval do gestor. Há compromisso de permanência de 12 meses após a conclusão — desligamento voluntário antes disso devolve o subsídio do último ano.</p>
 
-      <article class="panel" id="painel-pipelines-templates" data-category="pipelines">
-        <header class="panel__head">
-          <div>
-            <p class="panel__cat">Pipelines · 06</p>
-            <h2 class="panel__title">Templates dbt</h2>
-          </div>
-          <button class="panel__close" type="button" data-close aria-label="Fechar painel">✕</button>
-        </header>
-        <p class="panel__lead">
-          Esqueletos prontos para modelos staging, intermediate e marts. Garantem padrão
-          de nomenclatura, testes mínimos e tagueamento automático de PII.
-        </p>
-        <div class="panel__body">
-          <div>
-            <p>Os templates eliminam decisões repetitivas e padronizam o que precisa ser igual entre times: convenções de nome, testes obrigatórios (unique, not_null, accepted_values), tagueamento de classificação de dados e documentação YAML.</p>
-            <ul>
-              <li><strong>stg_*</strong> — colunas renomeadas para snake_case, cast de tipos, sem joins</li>
-              <li><strong>int_*</strong> — joins e transformações de negócio, sem agregação final</li>
-              <li><strong>mart_*</strong> — modelo dimensional, consumido por dashboards e APIs</li>
-              <li><strong>snapshot_*</strong> — captura de mudanças SCD2 com chave natural e hash</li>
-            </ul>
-            <div class="panel__links">
-              <a href="#" class="panel__link"><span>Repositório dbt-templates (Bitbucket)</span><span>↗</span></a>
-              <a href="#" class="panel__link"><span>Guia de naming convention</span><span>→</span></a>
-              <a href="#" class="panel__link"><span>CI: como o template é validado em PR</span><span>→</span></a>
-            </div>
-          </div>
-        </div>
-      </article>
+        <h3>Quanto cobre</h3>
+        <table class="panel__tabela">
+          <thead>
+            <tr><th scope="col">Nível</th><th scope="col" class="col-valor">Subsídio</th><th scope="col" class="col-valor">Teto semestral</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Graduação</td><td class="num">70%</td><td class="num">R$&nbsp;9.000</td></tr>
+            <tr><td>Pós-graduação e MBA</td><td class="num">70%</td><td class="num">R$&nbsp;9.000</td></tr>
+          </tbody>
+        </table>
 
-      <!-- ─── QUALIDADE panels ─────────────────────────────── -->
-      <article class="panel" id="painel-qualidade-rules" data-category="qualidade">
-        <header class="panel__head">
-          <div>
-            <p class="panel__cat">Qualidade · 07</p>
-            <h2 class="panel__title">Regras de qualidade</h2>
-          </div>
-          <button class="panel__close" type="button" data-close aria-label="Fechar painel">✕</button>
-        </header>
-        <p class="panel__lead">
-          Catálogo de 38 regras testadas e mantidas pelo time de plataforma. Aplicar é
-          uma linha de YAML, sem código de teste customizado.
-        </p>
-        <div class="panel__body">
-          <div>
-            <div class="table-wrap">
-              <table class="data-table">
-                <thead><tr><th>Família</th><th class="num">Regras</th><th>Exemplos</th><th>Severidade default</th></tr></thead>
-                <tbody>
-                  <tr><td>Integridade</td><td class="num">9</td><td>not_null · unique · primary_key · foreign_key</td><td><span class="badge badge--danger">Bloqueia</span></td></tr>
-                  <tr><td>Domínio</td><td class="num">7</td><td>accepted_values · regex · range · cpf_format</td><td><span class="badge badge--warn">Alerta</span></td></tr>
-                  <tr><td>Volumetria</td><td class="num">6</td><td>row_count_anomaly · empty_table · sudden_drop</td><td><span class="badge badge--warn">Alerta</span></td></tr>
-                  <tr><td>Freshness</td><td class="num">5</td><td>max_age · update_frequency · sla_breach</td><td><span class="badge badge--danger">Bloqueia</span></td></tr>
-                  <tr><td>Drift</td><td class="num">7</td><td>schema_drift · distribution_drift · null_rate_drift</td><td><span class="badge badge--info">Info</span></td></tr>
-                  <tr><td>Negócio</td><td class="num">4</td><td>balance_check · reconcile_vs_source · custom_sql</td><td><span class="badge badge--warn">Alerta</span></td></tr>
-                </tbody>
-              </table>
-            </div>
-            <p>Regras de bloqueio interrompem a publicação na próxima camada e notificam o owner. Alertas vão para o canal do squad. Info entra no scorecard sem disparar comunicação.</p>
-          </div>
-        </div>
-      </article>
+        <h3>Como acionar</h3>
+        <ol>
+          <li>Inscreva-se nas janelas de março ou agosto, no app Pessoas, anexando o plano do curso.</li>
+          <li>O gestor valida a correlação com a carreira; o resultado sai em até 20 dias úteis.</li>
+          <li>Aprovado, envie o comprovante de pagamento todo mês — o reembolso entra na folha seguinte.</li>
+        </ol>
+      </section>
 
-      <article class="panel" id="painel-qualidade-scorecards" data-category="qualidade">
-        <header class="panel__head">
-          <div>
-            <p class="panel__cat">Qualidade · 08</p>
-            <h2 class="panel__title">Scorecards por domínio</h2>
-          </div>
-          <button class="panel__close" type="button" data-close aria-label="Fechar painel">✕</button>
-        </header>
-        <p class="panel__lead">
-          Score consolidado por tabela, time e domínio. Atualizado a cada hora. Tendência
-          mensal serve de input para o ritual trimestral de qualidade.
-        </p>
-        <div class="panel__body has-aside">
-          <div>
-            <p>O score (0-100) pondera cinco dimensões: integridade, freshness, completude, conformidade e documentação. O peso de cada dimensão é configurável por domínio — risco regulatório, por exemplo, peso maior em conformidade.</p>
-            <ul>
-              <li>Score mínimo aceitável para Gold: <strong>85</strong></li>
-              <li>Score abaixo de 70: tabela entra em plano de ação obrigatório</li>
-              <li>Score abaixo de 50: dataset suspenso até remediação</li>
-              <li>Trend mensal compartilhada com a liderança do domínio</li>
-            </ul>
-          </div>
-          <aside>
-            <div class="chart-wrap">
-              <p class="chart-wrap__title">Score médio — top 6 domínios</p>
-              <canvas id="chart-quality" aria-label="Score de qualidade por domínio" height="240"></canvas>
-            </div>
-          </aside>
-        </div>
-      </article>
+    </div>
 
-      <article class="panel" id="painel-qualidade-incidentes" data-category="qualidade">
-        <header class="panel__head">
-          <div>
-            <p class="panel__cat">Qualidade · 09</p>
-            <h2 class="panel__title">Gestão de incidentes</h2>
-          </div>
-          <button class="panel__close" type="button" data-close aria-label="Fechar painel">✕</button>
-        </header>
-        <p class="panel__lead">
-          Workflow padrão da detecção ao fix — integrado a Jira e Slack — para que nenhum
-          incidente fique órfão entre times de plataforma e de domínio.
-        </p>
-        <div class="panel__body">
-          <div>
-            <div class="panel__metrics">
-              <div class="metric"><p class="metric__label">Incidentes 90d</p><p class="metric__value"><span>184</span></p></div>
-              <div class="metric"><p class="metric__label">MTTR mediano</p><p class="metric__value"><span>3,2h</span></p></div>
-              <div class="metric"><p class="metric__label">Reabertura</p><p class="metric__value"><span>4%</span></p></div>
-            </div>
-            <ol>
-              <li><strong>Detecção</strong> — quebra de regra de qualidade abre incidente automaticamente</li>
-              <li><strong>Triagem</strong> — plataforma confirma origem (dados, pipeline, sistema fonte) em até 30min</li>
-              <li><strong>Owner</strong> — atribuição automática ao squad responsável pelo dataset</li>
-              <li><strong>RCA</strong> — análise de causa raiz registrada em template padrão</li>
-              <li><strong>Fix &amp; close</strong> — solução validada por novo run e PR de prevenção</li>
-            </ol>
-            <div class="panel__links">
-              <a href="#" class="panel__link"><span>Catálogo histórico de incidentes</span><span>→</span></a>
-              <a href="#" class="panel__link"><span>Template oficial de RCA</span><span>→</span></a>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- ─── SELF-SERVICE panels ──────────────────────────── -->
-      <article class="panel" id="painel-self-notebook" data-category="self-service">
-        <header class="panel__head">
-          <div>
-            <p class="panel__cat">Self-service · 10</p>
-            <h2 class="panel__title">Notebooks gerenciados</h2>
-          </div>
-          <button class="panel__close" type="button" data-close aria-label="Fechar painel">✕</button>
-        </header>
-        <p class="panel__lead">
-          JupyterLab pronto pra usar: integração com o lakehouse, libs auditadas, secret
-          manager e quota de compute por área de negócio.
-        </p>
-        <div class="panel__body">
-          <div>
-            <p>O ambiente roda em Kubernetes interno, isolado por namespace de área. O acesso aos dados é proxy pelo control plane — nenhum notebook precisa de credencial direta.</p>
-            <ul>
-              <li>Imagens base com Spark, dask, sklearn, xgboost, polars, pandas, plotly</li>
-              <li>Quota padrão: 4 vCPU + 16 GB. Quota expandida (32 vCPU + 128 GB) por solicitação</li>
-              <li>Acesso ao lakehouse via SQL e PySpark, com auditoria nativa</li>
-              <li>Persistência em volume pessoal (50 GB) + workspace compartilhado por squad</li>
-              <li>Compartilhamento de notebooks via Git ou link interno</li>
-            </ul>
-          </div>
-        </div>
-      </article>
-
-      <article class="panel" id="painel-self-sql" data-category="self-service">
-        <header class="panel__head">
-          <div>
-            <p class="panel__cat">Self-service · 11</p>
-            <h2 class="panel__title">SQL Workbench</h2>
-          </div>
-          <button class="panel__close" type="button" data-close aria-label="Fechar painel">✕</button>
-        </header>
-        <p class="panel__lead">
-          Editor SQL pensado para analistas: autocomplete sobre o catálogo, histórico
-          compartilhado, exportação para Power BI e queries salvas por squad.
-        </p>
-        <div class="panel__body">
-          <div>
-            <p>Conecta-se ao Trino + Snowflake. Queries são atribuídas a uma área para controle de custo, e há limite default de 10 GB scaneados por query (revisável por exceção).</p>
-            <div class="panel__metrics">
-              <div class="metric"><p class="metric__label">Usuários ativos / mês</p><p class="metric__value"><span>1.247</span></p></div>
-              <div class="metric"><p class="metric__label">Queries / dia</p><p class="metric__value"><span>18,4k</span></p></div>
-              <div class="metric"><p class="metric__label">Squads usando</p><p class="metric__value"><span>96</span></p></div>
-            </div>
-            <div class="panel__links">
-              <a href="#" class="panel__link"><span>Abrir SQL Workbench (sql.dataos)</span><span>↗</span></a>
-              <a href="#" class="panel__link"><span>Boas práticas de query (custo &amp; performance)</span><span>→</span></a>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="panel" id="painel-self-marketplace" data-category="self-service">
-        <header class="panel__head">
-          <div>
-            <p class="panel__cat">Self-service · 12</p>
-            <h2 class="panel__title">Marketplace de Data Products</h2>
-          </div>
-          <button class="panel__close" type="button" data-close aria-label="Fechar painel">✕</button>
-        </header>
-        <p class="panel__lead">
-          Os dados não são tabelas avulsas — são produtos, com SLO, owner e contrato.
-          O marketplace centraliza descoberta, solicitação de acesso e métricas de uso.
-        </p>
-        <div class="panel__body has-aside">
-          <div>
-            <p>Um data product agrupa um ou mais datasets sob uma proposta de valor clara. Inclui contrato de SLO (frescor, disponibilidade, schema estável), owner único e canal de suporte explícito.</p>
-            <ul>
-              <li><strong>126 produtos publicados</strong> em 11 domínios</li>
-              <li>SLO de freshness médio: 99,1% nos últimos 90 dias</li>
-              <li>Tempo médio de aprovação de acesso: 4h (meta: 8h)</li>
-              <li>Migração legado → product: 68% do AuM coberto, meta 90% até Q4/2026</li>
-            </ul>
-          </div>
-          <aside>
-            <div class="chart-wrap">
-              <p class="chart-wrap__title">Composição por domínio</p>
-              <canvas id="chart-marketplace" aria-label="Data products por domínio" height="240"></canvas>
-            </div>
-          </aside>
-        </div>
-      </article>
-
-      <!-- ─── GOVERNANÇA panels ────────────────────────────── -->
-      <article class="panel" id="painel-gov-classificacao" data-category="governanca">
-        <header class="panel__head">
-          <div>
-            <p class="panel__cat">Governança · 13</p>
-            <h2 class="panel__title">Classificação de dados</h2>
-          </div>
-          <button class="panel__close" type="button" data-close aria-label="Fechar painel">✕</button>
-        </header>
-        <p class="panel__lead">
-          Quatro níveis oficiais, aplicados em coluna e dataset. Auto-detecção de PII
-          via pattern matching reduz erro humano e cobre 100% dos novos datasets.
-        </p>
-        <div class="panel__body">
-          <div>
-            <div class="table-wrap">
-              <table class="data-table">
-                <thead><tr><th>Nível</th><th>Quem acessa</th><th>Exemplos</th><th class="num">% catálogo</th></tr></thead>
-                <tbody>
-                  <tr><td><span class="badge badge--success">Público</span></td><td>Qualquer colaborador</td><td>Tabela de feriados, dimensões geográficas</td><td class="num">8%</td></tr>
-                  <tr><td><span class="badge badge--info">Interno</span></td><td>Áreas de negócio + dados</td><td>Métricas agregadas, dashboards executivos</td><td class="num">54%</td></tr>
-                  <tr><td><span class="badge badge--warn">Restrito</span></td><td>Áreas específicas com necessidade</td><td>Operações de cliente, transações detalhadas</td><td class="num">31%</td></tr>
-                  <tr><td><span class="badge badge--danger">Sensível</span></td><td>Acesso nominal aprovado</td><td>Dados de saúde, biometria, score interno</td><td class="num">7%</td></tr>
-                </tbody>
-              </table>
-            </div>
-            <p>A classificação inicial é proposta pelo crawler ao detectar padrões (CPF, e-mail, telefone) e revisada pelo data owner em até 5 dias úteis. Datasets sem classificação confirmada ficam em "Restrito" como default seguro.</p>
-          </div>
-        </div>
-      </article>
-
-      <article class="panel" id="painel-gov-acesso" data-category="governanca">
-        <header class="panel__head">
-          <div>
-            <p class="panel__cat">Governança · 14</p>
-            <h2 class="panel__title">Controle de acesso</h2>
-          </div>
-          <button class="panel__close" type="button" data-close aria-label="Fechar painel">✕</button>
-        </header>
-        <p class="panel__lead">
-          Acesso a dado é privilégio, não default. Solicitação, aprovação e expiração
-          fazem parte do mesmo workflow — sempre auditável.
-        </p>
-        <div class="panel__body">
-          <div>
-            <div class="panel__metrics">
-              <div class="metric"><p class="metric__label">Solicitações / mês</p><p class="metric__value"><span>3.412</span></p></div>
-              <div class="metric"><p class="metric__label">Aprovação mediana</p><p class="metric__value"><span>4h</span></p></div>
-              <div class="metric"><p class="metric__label">Acessos expirados (auto)</p><p class="metric__value"><span>1.866 / mês</span></p></div>
-            </div>
-            <ul>
-              <li>Solicitação via portal (access.dataos) ou via CLI</li>
-              <li>Aprovação pelo data owner — escalonável após 24h</li>
-              <li>Expiração obrigatória: 90 dias (default) ou conforme caso de uso</li>
-              <li>Acessos sensíveis exigem segunda aprovação do data steward</li>
-              <li>Trilha de auditoria preservada por 5 anos (exigência regulatória)</li>
-            </ul>
-          </div>
-        </div>
-      </article>
-
-      <article class="panel" id="painel-gov-lgpd" data-category="governanca">
-        <header class="panel__head">
-          <div>
-            <p class="panel__cat">Governança · 15</p>
-            <h2 class="panel__title">LGPD &amp; retenção</h2>
-          </div>
-          <button class="panel__close" type="button" data-close aria-label="Fechar painel">✕</button>
-        </header>
-        <p class="panel__lead">
-          Mapa completo de tratamento, base legal por tabela e enforcement automatizado
-          de TTL. Right-to-be-forgotten executado em até 30 dias corridos.
-        </p>
-        <div class="panel__body">
-          <div>
-            <p>O mapa de tratamento é gerado automaticamente a partir das tags do catálogo e revisado pelo Encarregado de Dados a cada trimestre. Toda tabela com PII tem base legal explícita e prazo de retenção configurado em metadata.</p>
-            <ul>
-              <li><strong>Base legal:</strong> consentimento, execução de contrato, obrigação legal, legítimo interesse, proteção ao crédito</li>
-              <li><strong>Retenção:</strong> TTL configurado por dataset; jobs noturnos aplicam exclusão ou anonimização</li>
-              <li><strong>RTBF:</strong> solicitação do titular acionada via central; SLA de 30 dias com confirmação assinada</li>
-              <li><strong>Compartilhamento externo:</strong> requer DPA (Data Processing Agreement) assinado e registrado</li>
-              <li><strong>Incidentes:</strong> processo de comunicação à ANPD em 48h conforme art. 48</li>
-            </ul>
-            <div class="panel__links">
-              <a href="#" class="panel__link"><span>Política oficial LGPD (intranet)</span><span>↗</span></a>
-              <a href="#" class="panel__link"><span>Mapa de tratamento (atualização mensal)</span><span>→</span></a>
-              <a href="#" class="panel__link"><span>Solicitar revisão de classificação</span><span>→</span></a>
-            </div>
-          </div>
-        </div>
-      </article>
-
-    </section>
-
-    <footer class="footer">
-      <span>Plataforma de Dados Itaú · Hub interno</span>
-      <span>v2.4.0 — atualizado 17 mai 2026</span>
+    <footer class="rodape">
+      <p><strong>Ficou com dúvida?</strong> O time de Pessoas &amp; Cultura responde no app Pessoas, em <em>Benefícios → Fale com a gente</em>, em até 1 dia útil.</p>
+      <p><em>Documento de demonstração da skill slideless — valores e regras são fictícios e não representam a política real do banco.</em></p>
     </footer>
-
   </main>
 
   <script>
-    // ─── Theme toggle ───────────────────────────────────────────────
-    (function() {
-      const root = document.documentElement;
-      const updateIcon = () => {
-        const isDark = root.getAttribute('data-theme') === 'dark';
-        document.querySelectorAll('[data-theme-icon]').forEach(i => i.textContent = isDark ? '☀' : '☾');
-      };
-      updateIcon();
-      document.querySelectorAll('[data-theme-toggle]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-          root.setAttribute('data-theme', next);
-          try { localStorage.setItem('theme', next); } catch (e) {}
-          updateIcon();
-          // re-render charts to update colors
-          rerenderCharts();
-        });
+    // ── tema ──────────────────────────────────────────────────────────
+    // setTheme() vem do boot script: aplica .no-transitions para a página não "respirar" no switch
+    document.querySelector('.theme-toggle').addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme');
+      setTheme(cur === 'dark' ? 'light' : 'dark');
+    });
+
+    // ── filtros: filtram o índice (destaques + minis) E a tabela-mestra ──
+    const contador = document.querySelector('[data-contador]');
+    const NOMES = { all: 'Tudo', saude: 'Saúde', financeiro: 'Financeiro', desenvolv: 'Desenvolvimento' };
+    document.querySelectorAll('.filter').forEach(f => f.addEventListener('click', e => {
+      const cat = e.currentTarget.dataset.filter;
+      document.querySelectorAll('.filter').forEach(x => {
+        const ativo = x === e.currentTarget;
+        x.classList.toggle('is-active', ativo);
+        x.setAttribute('aria-pressed', String(ativo));
       });
-    })();
+      let visiveis = 0;
+      document.querySelectorAll('.indice__item, .mini').forEach(el => {
+        el.style.display = (cat === 'all' || el.dataset.category === cat) ? '' : 'none';
+      });
+      document.querySelectorAll('tbody.grupo').forEach(g => {
+        const mostra = cat === 'all' || g.dataset.category === cat;
+        g.style.display = mostra ? '' : 'none';
+        if (mostra) visiveis += g.querySelectorAll('tr[id]').length;
+      });
+      contador.textContent = cat === 'all' ? '12 benefícios' : visiveis + ' benefícios em ' + NOMES[cat];
+    }));
 
-    // ─── Filtros + busca ────────────────────────────────────────────
-    (function() {
-      const filters = document.querySelectorAll('[data-filters] .filter');
-      const cards = document.querySelectorAll('.card');
-      const empty = document.getElementById('empty-state');
-      const countEl = document.getElementById('visible-count');
-      const search = document.querySelector('[data-search]');
-      let currentFilter = 'all';
-      let currentQuery = '';
+    // ── painéis in-page: índice e linhas da tabela abrem o dossiê ─────
+    const paineis = document.querySelector('.paineis');
+    const MORPH = 'beneficio-morph';                 // nome único por snapshot (W5: dois iguais = erro)
+    const prefersReduce = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      function apply() {
-        let visible = 0;
-        cards.forEach(card => {
-          const matchCat = currentFilter === 'all' || card.dataset.category === currentFilter;
-          const text = (card.textContent || '').toLowerCase();
-          const matchQuery = !currentQuery || text.includes(currentQuery);
-          const ok = matchCat && matchQuery;
-          card.classList.toggle('is-hidden', !ok);
-          if (ok) visible++;
-        });
-        empty.classList.toggle('is-visible', visible === 0);
-        if (countEl) countEl.textContent = visible;
+    // W5 — GUARD obrigatório (ambicao.md §13.4): sem API ou reduced-motion → troca instantânea.
+    function navigate(updateDOM) {
+      if (!document.startViewTransition || prefersReduce()) { updateDOM(); return; }
+      return document.startViewTransition(updateDOM);
+    }
+
+    // limpa o nome de qualquer par antigo antes de marcar o novo — garante 1 par por snapshot
+    function limparMorph() {
+      document.querySelectorAll('[style*="view-transition-name"]').forEach(el => {
+        el.style.removeProperty('view-transition-name');
+      });
+    }
+
+    function abrirPainel(id, origem) {
+      const tgt = document.getElementById(id);
+      if (!tgt) return;
+      const podeMorph = !!document.startViewTransition && !prefersReduce();
+
+      // origem do morph: o card/linha que disparou vira o header do painel (mesmo view-transition-name)
+      limparMorph();
+      const hero = tgt.querySelector('.panel__hero');
+      if (podeMorph && origem && hero) {
+        origem.style.viewTransitionName = MORPH;       // estado OLD: o card
       }
 
-      filters.forEach(btn => btn.addEventListener('click', () => {
-        currentFilter = btn.dataset.filter;
-        filters.forEach(b => {
-          const active = b === btn;
-          b.classList.toggle('is-active', active);
-          b.setAttribute('aria-selected', active ? 'true' : 'false');
-        });
-        apply();
-      }));
-
-      if (search) search.addEventListener('input', e => {
-        currentQuery = (e.target.value || '').toLowerCase().trim();
-        apply();
-      });
-    })();
-
-    // ─── Card → painel ──────────────────────────────────────────────
-    (function() {
-      const panels = document.querySelectorAll('.panel');
-      const empty = document.getElementById('panel-empty');
-
-      function openPanel(id) {
-        let opened = null;
-        panels.forEach(p => {
-          const on = p.id === id;
-          p.classList.toggle('is-open', on);
-          if (on) opened = p;
-        });
-        if (empty) empty.style.display = opened ? 'none' : '';
-        if (opened) {
-          setTimeout(() => opened.scrollIntoView({ behavior: 'smooth', block: 'start' }), 30);
-          // re-render charts only inside opened panel
-          renderChartsIn(opened);
-        }
-      }
-
-      document.querySelectorAll('.card[data-panel]').forEach(card => {
-        card.addEventListener('click', e => {
-          e.preventDefault();
-          openPanel(card.dataset.panel);
-        });
+      const vt = navigate(() => {
+        document.querySelectorAll('.panel').forEach(p => p.classList.toggle('is-open', p === tgt));
+        paineis.classList.add('has-open');             // acende a aurora de assinatura
+        if (podeMorph && origem && hero) hero.style.viewTransitionName = MORPH; // estado NEW: o header
       });
 
-      document.querySelectorAll('[data-close]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const p = btn.closest('.panel');
-          if (p) p.classList.remove('is-open');
-          if (empty) empty.style.display = '';
-          document.querySelector('#grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        });
-      });
-    })();
+      // depois do morph, devolve os nomes (senão sobram dois iguais no próximo gesto)
+      if (vt && vt.finished) vt.finished.finally(limparMorph);
+      else limparMorph();
 
-    // ─── Charts (Chart.js) ──────────────────────────────────────────
-    const _chartInstances = {};
-    function css(v) {
-      return getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+      tgt.scrollIntoView({ behavior: prefersReduce() ? 'auto' : 'smooth', block: 'start' });
     }
 
-    const chartFactories = {
-      'chart-catalog-growth': (ctx) => new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: ['jun/25','jul','ago','set','out','nov','dez','jan/26','fev','mar','abr','mai'],
-          datasets: [{
-            label: 'Tabelas catalogadas',
-            data: [2080, 2118, 2155, 2189, 2218, 2244, 2271, 2298, 2329, 2358, 2386, 2412],
-            borderColor: css('--color-accent'),
-            backgroundColor: css('--color-accent-dim'),
-            tension: 0.35, fill: true,
-            pointRadius: 3, pointHoverRadius: 6,
-            borderWidth: 2,
-          }]
-        },
-        options: chartOpts({ unit: '' })
-      }),
-      'chart-airflow': (ctx) => new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
-          datasets: [{
-            label: 'Runs',
-            data: [14820, 15240, 15110, 15880, 14690, 9870, 9420],
-            backgroundColor: css('--color-info-dim'),
-            borderColor: css('--color-info'),
-            borderWidth: 2, borderRadius: 6,
-          }]
-        },
-        options: chartOpts({ unit: '' })
-      }),
-      'chart-quality': (ctx) => new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: ['PIX', 'Cartões', 'Crédito', 'Invest.', 'Antifrau.', 'Open Fin.'],
-          datasets: [{
-            label: 'Score',
-            data: [94, 91, 88, 90, 86, 78],
-            backgroundColor: css('--color-teal-dim'),
-            borderColor: css('--color-teal'),
-            borderWidth: 2, borderRadius: 6,
-          }]
-        },
-        options: Object.assign(chartOpts({ unit: '' }), {
-          indexAxis: 'y',
-          scales: {
-            x: { min: 0, max: 100, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted') } },
-            y: { grid: { display: false }, ticks: { color: css('--color-fg-muted') } }
-          }
-        })
-      }),
-      'chart-marketplace': (ctx) => new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          labels: ['Crédito', 'Cartões', 'PIX', 'Investim.', 'Antifrau.', 'Outros'],
-          datasets: [{
-            data: [32, 28, 22, 18, 14, 12],
-            backgroundColor: [
-              css('--color-accent'),
-              css('--color-info'),
-              css('--color-teal'),
-              css('--color-success'),
-              css('--color-plum'),
-              css('--color-fg-subtle')
-            ],
-            borderWidth: 2,
-            borderColor: css('--color-bg-elevated'),
-            hoverOffset: 6,
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          cutout: '62%',
-          plugins: {
-            legend: {
-              position: 'right',
-              labels: { color: css('--color-fg-muted'), font: { size: 11 }, padding: 10, boxWidth: 12 }
-            },
-            tooltip: { callbacks: { label: ctx => ctx.label + ': ' + ctx.parsed + ' produtos' } }
-          }
-        }
-      })
-    };
-
-    function chartOpts({ unit }) {
-      return {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            backgroundColor: css('--color-bg-elevated'),
-            titleColor: css('--color-fg'),
-            bodyColor: css('--color-fg-muted'),
-            borderColor: css('--color-border'),
-            borderWidth: 1,
-          }
-        },
-        scales: {
-          x: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 11 } } },
-          y: { grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), font: { size: 11 } } }
-        }
-      };
-    }
-
-    function renderChartsIn(panel) {
-      if (typeof Chart === 'undefined') {
-        // Chart.js ainda não carregou — espera
-        window.addEventListener('load', () => renderChartsIn(panel), { once: true });
-        return;
-      }
-      panel.querySelectorAll('canvas[id]').forEach(canvas => {
-        const id = canvas.id;
-        if (_chartInstances[id]) _chartInstances[id].destroy();
-        const factory = chartFactories[id];
-        if (factory) _chartInstances[id] = factory(canvas);
+    function fecharPainel(panel) {
+      navigate(() => {
+        panel.classList.remove('is-open');
+        if (!document.querySelector('.panel.is-open')) paineis.classList.remove('has-open');
       });
+      document.getElementById('tabela-mestra').scrollIntoView({ behavior: prefersReduce() ? 'auto' : 'smooth', block: 'start' });
     }
 
-    function rerenderCharts() {
-      // recarrega cores ao trocar tema (somente charts ativos)
-      Object.keys(_chartInstances).forEach(id => {
-        const inst = _chartInstances[id];
-        if (!inst) return;
-        const canvas = document.getElementById(id);
-        if (!canvas || !canvas.offsetParent) return;
-        inst.destroy();
-        const factory = chartFactories[id];
-        if (factory) _chartInstances[id] = factory(canvas);
+    document.querySelectorAll('a[data-target]').forEach(el => el.addEventListener('click', e => {
+      e.preventDefault();
+      abrirPainel(el.dataset.target, el);
+    }));
+    document.querySelectorAll('tr.row-link[data-target]').forEach(row => {
+      row.addEventListener('click', () => abrirPainel(row.dataset.target, row));
+      row.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); abrirPainel(row.dataset.target, row); }
       });
-    }
+    });
+    document.querySelectorAll('.panel__close').forEach(b => b.addEventListener('click', e => {
+      fecharPainel(e.currentTarget.closest('.panel'));
+    }));
   </script>
-
 </body>
 </html>

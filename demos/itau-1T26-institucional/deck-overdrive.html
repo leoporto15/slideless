@@ -5,6 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Itaú 1T26 — Apresentação Institucional · Overdrive</title>
 
+  <!-- slideless:parti
+  conteudo: Resultados 1T26 (overdrive) — tese: resultado recorrente recorde de R$ 12,3 bi (+10,4% a/a) com ROE de 24,8%, o maior banco da AL aos 101 anos
+  registro: relatorio-de-bancada (RI institucional; deck argumenta com números — 8 KPIs de capa, 6 tabelas/grids financeiros, 3 gráficos; números são protagonistas)
+  kit: 01-broadsheet (Newsreader + Archivo + IBM Plex Mono; número-manchete gigante pede serif de jornal com tnum; ênfase por contraste de peso 300↔800 e itálico verdadeiro)
+  capa: numero-protagonista (R$ 12,3 bi em corpo giga sangrando a margem; título "Apresentação Institucional" subordinado ao lado; o canvas WebGL é a TEXTURA de fundo DESTE hero, confinado ao slide 1)
+  superficie: flat + fio de coluna 1px (material de RI que vira PDF; profundidade por fio e contraste, nunca por sombra); luz flat
+  motion: cinematico (perfil físico permitido — é overdrive: springs via linear() com fallback @supports; hero seco por fade, divider por wipe clip-path, dado por fade discreto)
+  ambicao: A3-extraordinario (overdrive opt-in — showcase ao vivo de resultados; WebGL já presente, data-overdrive marca a escolha deliberada; registro relatorio-de-bancada permanece o teto de exuberância — A3 em registro sóbrio só por opt-in consciente, sem cromática saltitante)
+  momento-wow: W9 hero material (WebGL já presente, data-overdrive) + W2 número+barra (ROE 24,8% sincronizado — counter conta 0→24,8 enquanto a barra cresce, no slide 2) + W8 anotação viva no gráfico-tese (slide 26: banda+leader-line no ROE 24,8% que o callout narra, sweep na entrada sincronizado com a linha M2 + crosshair de leitura no hover)
+  assinatura: M2 — a linha ROE do gráfico-tese "Geração de valor" (slide 26, #chart-valor) se desenha progressivamente até o valor real 24,8% (1T26)
+  nao-vai-ter: kicker-dot; em-italico-accent; badge-pill
+  serie: familia itau-1T26
+  -->
+
   <script>
     (function() {
       try {
@@ -16,20 +30,33 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800;9..144,900&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Kit 01 — Broadsheet: Newsreader (display+texto, opsz/itálico real) · Archivo (ui/ticks) · IBM Plex Mono (.num) -->
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,500;0,6..72,800;1,6..72,400&family=Archivo:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-  <!-- Feature 7: Rough Notation CDN -->
+  <!-- OVERDRIVE Feature: Rough Notation CDN -->
   <script src="https://cdn.jsdelivr.net/npm/rough-notation@0.6.1/lib/rough-notation.iife.js"></script>
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 
   <style>
 /*
- * slideless — tema itau v2 (visual-explainer-grade)
+ * slideless — deck-overdrive itau-1T26 · reskin v4 anti-slop
+ * Kit 01 Broadsheet · superfície flat+fio · motion cinemático (overdrive)
+ *
+ * Ordem: [KIT :root] → [TEMA itau marca+sistema] → [CSS do modelo deck].
  */
 
+/* ═══ [KIT 01 Broadsheet] slots tipográficos — ANTES do tema ═══ */
 :root {
-  /* ─── Cores da marca Itaú ─── */
+  --kit-display: 'Newsreader';    /* capa: opsz alto, wght 300↔800; ênfase por itálico verdadeiro */
+  --kit-text:    'Newsreader';    /* corpo serif de jornal */
+  --kit-ui:      'Archivo';       /* th, labels, kickers, nav, ticks de gráfico */
+  --kit-mono:    'IBM Plex Mono'; /* SÓ números .num e metadados monoespaçados */
+  --font-ui:     'Archivo', 'Segoe UI', Arial, sans-serif;
+}
+
+:root {
+  /* ─── [MARCA — INVIOLÁVEL] Cores da marca Itaú ─── */
   --itau-orange:     #FF6200;
   --itau-orange-2:   #F88104;
   --itau-orange-3:   #FA9F09;
@@ -37,7 +64,7 @@
   --itau-yellow:     #FBC305;
   --itau-warm-black: #14110d;
 
-  /* Paleta semântica (light) */
+  /* Paleta semântica (light) — cor é informação, com papel declarado */
   --color-accent:        var(--itau-orange);
   --color-accent-dim:    rgba(255, 98, 0, 0.08);
   --color-accent-fg:     #ffffff;
@@ -45,11 +72,10 @@
   --color-info:          var(--itau-blue-3);
   --color-info-dim:      rgba(59, 133, 250, 0.08);
 
-  --color-success:       #4d7c0f;
-  --color-success-dim:   rgba(77, 124, 15, 0.08);
-
-  --color-sage:          #65a30d;
-  --color-sage-dim:      rgba(101, 163, 13, 0.08);
+  --color-success:       #3f6f1f;
+  --color-success-dim:   rgba(63, 111, 31, 0.08);
+  --color-sage:          var(--color-success);
+  --color-sage-dim:      var(--color-success-dim);
 
   --color-teal:          #0f766e;
   --color-teal-dim:      rgba(15, 118, 110, 0.08);
@@ -62,28 +88,23 @@
   --color-danger:        #b91c1c;
   --color-danger-dim:    rgba(185, 28, 28, 0.08);
 
-  /* Background + foreground (light) */
+  /* Background + foreground (light) — cream/warm, não branco puro */
   --color-bg:            #faf7f5;
   --color-bg-elevated:   #ffffff;
   --color-bg-sunken:     #f4f1ec;
   --color-fg:            #292017;
   --color-fg-muted:      #6b5d50;
   --color-fg-subtle:     #8a7e72;
-  --color-border:        rgba(41, 32, 23, 0.10);
-  --color-border-strong: rgba(41, 32, 23, 0.18);
+  --color-border:        rgba(41, 32, 23, 0.12);
+  --color-border-strong: rgba(41, 32, 23, 0.22);
   --color-accent-hover:  var(--itau-orange-2);
 
-  /* Glow radial atmosférico (light) */
-  --glow-warm:    radial-gradient(ellipse 80% 60% at 80% 0%, rgba(255, 98, 0, 0.10) 0%, transparent 55%);
-  --glow-cool:    radial-gradient(ellipse 70% 50% at 20% 100%, rgba(59, 133, 250, 0.08) 0%, transparent 55%);
-  --glow-hero:    radial-gradient(ellipse 90% 70% at 50% 0%, rgba(255, 98, 0, 0.14) 0%, transparent 50%);
-  --vignette:     radial-gradient(ellipse 120% 80% at 50% 50%, transparent 50%, rgba(41, 32, 23, 0.04) 100%);
+  /* ─── [DIREÇÃO] Tipografia — slots do kit prevalecem fora da rede ─── */
+  --font-text:    'Itau Text', var(--kit-text), Georgia, 'Times New Roman', serif;
+  --font-display: 'Itau Display', var(--kit-display), Georgia, serif;
+  --font-mono:    var(--kit-mono), 'SF Mono', Consolas, monospace;
 
-  /* Tipografia */
-  --font-text:    'Itau Text', 'Inter', -apple-system, system-ui, sans-serif;
-  --font-display: 'Itau Display', 'Fraunces', 'Inter', Georgia, serif;
-  --font-mono:    'JetBrains Mono', 'IBM Plex Mono', 'SF Mono', Consolas, monospace;
-
+  /* ─── [SISTEMA] Escala fluida ─── */
   --size-xs:      clamp(0.75rem, 0.7rem + 0.2vw, 0.875rem);
   --size-small:   clamp(0.875rem, 0.85rem + 0.15vw, 1rem);
   --size-body:    clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
@@ -93,7 +114,7 @@
   --size-h2:      clamp(1.6rem, 1.3rem + 1.2vw, 2.25rem);
   --size-h1:      clamp(2.25rem, 1.8rem + 2vw, 3.5rem);
 
-  /* Deck-only fluido em VW+VH — viewport baixo reduz tipo gigante e evita overflow */
+  /* Deck-only — fluido em VW+VH (viewport baixo reduz tipo gigante) */
   --size-display: clamp(2.25rem, 1.4rem + 1.8vw + 1.5vh, 4.25rem);
   --size-mega:    clamp(2.75rem, 1.6rem + 2.4vw + 2vh, 5.5rem);
   --size-giga:    clamp(3.5rem, 2rem + 3vw + 3vh, 9rem);
@@ -104,40 +125,42 @@
   --space-12: 5rem;   --space-16: 7rem;
 
   --content-max: 720px;
-  --sidebar-w:   268px;
-  --toc-w:       220px;
   --header-h:    56px;
 
-  --radius-sm: 4px;
-  --radius:    10px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
+  /* [DIREÇÃO] superfície flat: 1 radius (zero) + círculo de toggle/HUD; luz por fio */
+  --radius-sm: 0;
+  --radius:    0;
+  --radius-lg: 0;
+  --radius-xl: 0;
 
-  --shadow-xs: 0 1px 2px rgba(41, 32, 23, 0.04);
-  --shadow-sm: 0 2px 4px rgba(41, 32, 23, 0.06), 0 1px 2px rgba(41, 32, 23, 0.04);
-  --shadow:    0 4px 12px rgba(41, 32, 23, 0.08), 0 1px 3px rgba(41, 32, 23, 0.05);
-  --shadow-lg: 0 12px 32px rgba(41, 32, 23, 0.12), 0 4px 12px rgba(41, 32, 23, 0.06);
-  --shadow-xl: 0 24px 64px rgba(41, 32, 23, 0.16), 0 8px 24px rgba(41, 32, 23, 0.08);
+  /* ─── [DIREÇÃO] Easings com papel — perfil cinemático (overdrive) ───
+     físico permitido: springs via linear() (Chrome moderno), fallback
+     cubic-bezier no @supports abaixo. */
+  --ease-emphatic: cubic-bezier(0.16, 1, 0.3, 1);   /* papel: hero/divider   */
+  --ease-out:      cubic-bezier(0.2, 0.6, 0.2, 1);  /* papel: dado/figura    */
+  --ease-snap:     cubic-bezier(0.2, 0, 0, 1);       /* papel: fragment/micro */
+  --spring-soft:   var(--ease-emphatic);             /* fallback; vira linear() abaixo */
 
-  --inset-sm:  inset 0 1px 3px rgba(41, 32, 23, 0.06);
-  --inset:     inset 0 2px 8px rgba(41, 32, 23, 0.08);
-
-  --glow-accent-sm: 0 0 0 3px rgba(255, 98, 0, 0.14);
-  --glow-accent:    0 8px 32px rgba(255, 98, 0, 0.22);
-
-  --ease-out:       cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-in-out:    cubic-bezier(0.65, 0, 0.35, 1);
-  --ease-spring:    cubic-bezier(0.34, 1.56, 0.64, 1);
-  --ease-emphatic:  cubic-bezier(0.16, 1, 0.3, 1);
-
-  --duration-fast:    150ms;
-  --duration:         250ms;
-  --duration-slow:    400ms;
-  --duration-slide:   650ms;
-  --duration-fade:    750ms;
-  --duration-hero:    900ms;
+  --duration-fast:  150ms;
+  --duration:       250ms;
+  --duration-slide: 480ms;
+  --duration-fade:  420ms;
+  --duration-hero:  720ms;
 }
 
+/* Spring físico real onde houver suporte a linear() — caminho overdrive */
+@supports (transition-timing-function: linear(0, 1)) {
+  :root {
+    --spring-soft: linear(
+      0, 0.0039 1.1%, 0.0157 2.2%, 0.0625 4.5%, 0.1407 6.9%,
+      0.3439 11.4%, 0.5556 15.9%, 0.7363 20.5%, 0.8736 25.2%,
+      0.9554 29.9%, 0.9926 34.9%, 1.0431 43.3%, 1.0511 48.7%,
+      1.0444 54.4%, 1.0212 64.9%, 1.0029 79.4%, 1
+    );
+  }
+}
+
+/* ─── Dark theme override (marca) ─── */
 [data-theme="dark"] {
   --color-bg:            #14110d;
   --color-bg-elevated:   #1c1814;
@@ -145,8 +168,8 @@
   --color-fg:            #ede5dd;
   --color-fg-muted:      #b8aa9a;
   --color-fg-subtle:     #786e62;
-  --color-border:        rgba(237, 229, 221, 0.10);
-  --color-border-strong: rgba(237, 229, 221, 0.20);
+  --color-border:        rgba(237, 229, 221, 0.14);
+  --color-border-strong: rgba(237, 229, 221, 0.26);
 
   --color-accent:        var(--itau-orange-3);
   --color-accent-hover:  var(--itau-orange-2);
@@ -154,66 +177,78 @@
   --color-accent-dim:    rgba(250, 159, 9, 0.10);
 
   --color-info-dim:      rgba(59, 133, 250, 0.12);
-  --color-success:       #a3e635;
-  --color-success-dim:   rgba(163, 230, 53, 0.10);
-  --color-sage:          #bef264;
-  --color-sage-dim:      rgba(190, 242, 100, 0.10);
-  --color-teal:          #5eead4;
-  --color-teal-dim:      rgba(94, 234, 212, 0.10);
-  --color-plum:          #fb7185;
-  --color-plum-dim:      rgba(251, 113, 133, 0.10);
+  --color-success:       #8fcc5a;
+  --color-success-dim:   rgba(143, 204, 90, 0.10);
+  --color-sage:          var(--color-success);
+  --color-sage-dim:      var(--color-success-dim);
+  --color-teal:          #6fd0c0;
+  --color-teal-dim:      rgba(111, 208, 192, 0.10);
+  --color-plum:          #e8889c;
+  --color-plum-dim:      rgba(232, 136, 156, 0.10);
 
   --color-warn-dim:      rgba(251, 195, 5, 0.12);
   --color-danger:        #f87171;
   --color-danger-dim:    rgba(248, 113, 113, 0.10);
-
-  --glow-warm:    radial-gradient(ellipse 80% 60% at 80% 0%, rgba(250, 159, 9, 0.18) 0%, transparent 55%);
-  --glow-cool:    radial-gradient(ellipse 70% 50% at 20% 100%, rgba(59, 133, 250, 0.14) 0%, transparent 55%);
-  --glow-hero:    radial-gradient(ellipse 90% 70% at 50% 0%, rgba(250, 159, 9, 0.22) 0%, transparent 50%);
-  --vignette:     radial-gradient(ellipse 120% 80% at 50% 50%, transparent 50%, rgba(0, 0, 0, 0.30) 100%);
-
-  --shadow-xs: 0 1px 2px rgba(0,0,0,0.4);
-  --shadow-sm: 0 2px 4px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
-  --shadow:    0 4px 12px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.3);
-  --shadow-lg: 0 12px 32px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.3);
-  --shadow-xl: 0 24px 64px rgba(0,0,0,0.6), 0 8px 24px rgba(0,0,0,0.4);
-
-  --inset-sm:  inset 0 1px 3px rgba(0,0,0,0.4);
-  --inset:     inset 0 2px 8px rgba(0,0,0,0.5);
-
-  --glow-accent-sm: 0 0 0 3px rgba(250, 159, 9, 0.20);
-  --glow-accent:    0 8px 32px rgba(250, 159, 9, 0.30);
 }
 
+/* [MARCA] paleta secundária perceptualmente uniforme (fallback hex acima) */
+@supports (color: oklch(60% 0.1 50)) {
+  :root {
+    --color-success:     oklch(52% 0.11 140);
+    --color-success-dim: oklch(52% 0.11 140 / 0.08);
+    --color-teal:        oklch(52% 0.08 200);
+    --color-teal-dim:    oklch(52% 0.08 200 / 0.08);
+    --color-plum:        oklch(46% 0.12 355);
+    --color-plum-dim:    oklch(46% 0.12 355 / 0.08);
+    --color-danger:      oklch(50% 0.16 27);
+    --color-danger-dim:  oklch(50% 0.16 27 / 0.08);
+  }
+  [data-theme="dark"] {
+    --color-success:     oklch(76% 0.13 140);
+    --color-success-dim: oklch(76% 0.13 140 / 0.10);
+    --color-teal:        oklch(78% 0.09 195);
+    --color-teal-dim:    oklch(78% 0.09 195 / 0.10);
+    --color-plum:        oklch(74% 0.11 0);
+    --color-plum-dim:    oklch(74% 0.11 0 / 0.10);
+    --color-danger:      oklch(70% 0.15 25);
+    --color-danger-dim:  oklch(70% 0.15 25 / 0.10);
+  }
+}
+
+/* ═══ Base ═══ */
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body {
   margin: 0;
   font-family: var(--font-text);
   font-size: var(--size-body);
-  line-height: 1.65;
+  font-optical-sizing: auto;
+  line-height: 1.6;
   color: var(--color-fg);
   background: var(--color-bg);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  transition: background var(--duration-fast), color var(--duration-fast);
+  transition: background-color var(--duration-fast) var(--ease-snap), color var(--duration-fast) var(--ease-snap);
 }
 
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 3px;
-  border-radius: var(--radius-sm);
 }
 
 h1, h2, h3, h4 {
   font-family: var(--font-display);
+  font-optical-sizing: auto;
   color: var(--color-fg);
-  line-height: 1.1;
-  letter-spacing: -0.022em;
-  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.012em;
+  font-weight: 800;
+  text-wrap: balance;
 }
 p { margin: 0 0 var(--space-4); color: var(--color-fg); }
-strong { font-weight: 700; color: var(--color-fg); }
+strong { font-weight: 800; color: var(--color-fg); }
+/* ênfase de display por ITÁLICO VERDADEIRO da Newsreader — nunca cor accent (anti em-italico-accent) */
+em { font-style: italic; }
 
 /* ─── Específico do deck ──────────────────────────────────── */
 html, body { height: 100%; overflow: hidden; }
@@ -221,22 +256,8 @@ body { overscroll-behavior: none; }
 
 .deck { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
 
-body::before {
-  content: '';
-  position: fixed; inset: 0;
-  background: var(--glow-hero);
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.7;
-}
-body::after {
-  content: '';
-  position: fixed; inset: 0;
-  background: var(--glow-cool);
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.5;
-}
+/* superfície FLAT: nenhum glow-radial decorativo em body (anti glow-radial).
+   Profundidade vem do fio de coluna 1px e do contraste. */
 
 .slide {
   position: absolute; inset: 0;
@@ -244,66 +265,77 @@ body::after {
   padding: 6vh 7vw;
   opacity: 0;
   pointer-events: none;
-  transform: translateX(60px) scale(0.98);
+  transform: translateX(40px);
   transition: opacity var(--duration-fade) var(--ease-out),
               transform var(--duration-slide) var(--ease-emphatic);
   overflow: hidden;
   z-index: 1;
+  /* fio de coluna 1px à esquerda da área de conteúdo — regra de broadsheet */
+  border-left: 1px solid var(--color-border);
 }
-.slide.is-prev { transform: translateX(-60px) scale(0.98); }
-.slide.is-active { opacity: 1; transform: translateX(0) scale(1); pointer-events: auto; }
+.slide.is-prev { transform: translateX(-40px); }
+.slide.is-active { opacity: 1; transform: translateX(0); pointer-events: auto; }
 
+/* perfil cinemático: dado/figura entram por fade discreto (sem fade-up universal).
+   stagger só em grupo homogêneo, declarado por --stagger-group. */
 .slide [data-anim] {
   opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 800ms var(--ease-out), transform 800ms var(--ease-out);
+  transition: opacity 460ms var(--ease-out);
 }
 .slide.is-active [data-anim] {
   opacity: 1;
-  transform: translateY(0);
-  transition-delay: calc(var(--i, 0) * 70ms + 250ms);
+  transition-delay: 120ms;
 }
+/* grupo homogêneo único por viewport recebe leve cascata — não é o fade-up da casa */
+.slide.is-active [data-anim].stagger-group > * {
+  animation: dataIn 420ms var(--ease-out) both;
+}
+.slide.is-active [data-anim].stagger-group > *:nth-child(1) { animation-delay: 160ms; }
+.slide.is-active [data-anim].stagger-group > *:nth-child(2) { animation-delay: 210ms; }
+.slide.is-active [data-anim].stagger-group > *:nth-child(3) { animation-delay: 260ms; }
+.slide.is-active [data-anim].stagger-group > *:nth-child(4) { animation-delay: 310ms; }
+.slide.is-active [data-anim].stagger-group > *:nth-child(5) { animation-delay: 360ms; }
+.slide.is-active [data-anim].stagger-group > *:nth-child(6) { animation-delay: 410ms; }
+.slide.is-active [data-anim].stagger-group > *:nth-child(7) { animation-delay: 460ms; }
+.slide.is-active [data-anim].stagger-group > *:nth-child(8) { animation-delay: 510ms; }
+@keyframes dataIn { from { opacity: 0; } to { opacity: 1; } }
 
+/* hero entra SECO — fade + settle por spring, gesto único */
 .slide.is-active [data-anim="hero"] {
-  animation: heroIn var(--duration-hero) var(--ease-emphatic) 100ms both;
+  animation: heroIn var(--duration-hero) var(--spring-soft) 80ms both;
 }
 @keyframes heroIn {
-  from { opacity: 0; filter: blur(16px); transform: translateY(28px) scale(0.96); }
-  to   { opacity: 1; filter: blur(0);    transform: translateY(0) scale(1); }
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* divider vira por WIPE de clip-path (overdrive cinemático) */
+.slide.is-active [data-anim="wipe"] {
+  animation: heroWipe var(--duration-hero) var(--ease-emphatic) 60ms both;
+}
+@keyframes heroWipe {
+  from { clip-path: inset(0 100% 0 0); }
+  to   { clip-path: inset(0 0 0 0); }
 }
 
 .slide [data-fragment]:not([data-fragment="highlight-current"]):not([data-fragment="strike"]) {
   opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 500ms var(--ease-out), transform 500ms var(--ease-out);
+  transition: opacity 360ms var(--ease-out);
 }
-.slide [data-fragment].is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
+.slide [data-fragment].is-visible { opacity: 1; }
 .slide table [data-fragment="highlight-current"] td,
-.slide table [data-fragment="highlight-current"] th {
-  opacity: 1;
-  transform: none;
-}
+.slide table [data-fragment="highlight-current"] th { opacity: 1; }
 
 @media (prefers-reduced-motion: reduce) {
   .slide, .slide [data-anim], .slide [data-fragment] {
     transition: none !important; animation: none !important;
-    opacity: 1; transform: none !important; filter: none !important;
+    opacity: 1; transform: none !important; clip-path: none !important;
   }
 }
 
-/* ─── Overflow guard ─────────────────────────────────────────────
-   NADA vaza do slide. Toda a tipografia mega/giga ganha quebra
-   elástica + min-width 0 nos filhos diretos. Combina com autoFitSlide
-   (JS) que reduz iterativamente o título se o conteúdo ainda exceder
-   o viewport (último recurso). */
+/* ─── Overflow guard ─── */
 .slide { contain: layout paint; }
-.slide > *:not(.slide-bg):not(.slide-num) {
-  max-width: 100%;
-  min-width: 0;
-}
+.slide > *:not(.slide-bg):not(.slide-num) { max-width: 100%; min-width: 0; }
 .slide .title-mega,
 .slide .title-xl,
 .slide .title-lg,
@@ -316,77 +348,81 @@ body::after {
 }
 
 /* ─── Tipografia deck ─── */
+/* Cardápio de labels: 1 papel só — fio lateral de 2px + peso 600, sem uppercase-dot.
+   (kicker mono-uppercase fica só nos labels de KPI/th; aqui o kicker de seção é o fio.) */
 .kicker {
-  display: inline-flex; align-items: center; gap: 14px;
-  font-family: var(--font-mono);
-  font-size: clamp(0.78rem, 0.7rem + 0.25vw, 0.95rem);
-  font-weight: 600; letter-spacing: 0.18em;
+  display: block;
+  font-family: var(--font-ui);
+  font-size: clamp(0.72rem, 0.66rem + 0.2vw, 0.84rem);
+  font-weight: 700; letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--color-fg-muted);
-  margin: 0 0 var(--space-7);
+  margin: 0 0 var(--space-6);
+  padding-left: var(--space-3);
+  border-left: 2px solid var(--color-accent);
+  font-variant-numeric: lining-nums tabular-nums;
 }
-.kicker__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--color-fg-subtle); }
 .kicker--accent { color: var(--color-accent); }
-.kicker--accent .kicker__dot { background: var(--color-accent); box-shadow: 0 0 16px var(--color-accent); }
 
 .title-xl, .title-mega {
   font-family: var(--font-display);
   font-weight: 800;
   line-height: 1.0;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.025em;
   margin: 0 0 var(--space-6);
   color: var(--color-fg);
+  text-wrap: balance;
 }
 .title-xl   { font-size: var(--size-mega); max-width: 18ch; }
-.title-mega { font-size: var(--size-giga); max-width: 12ch; line-height: 0.92; }
-.title-xl em, .title-mega em {
-  color: var(--color-accent);
-  font-style: italic;
-  font-weight: 800;
-}
+.title-mega { font-size: var(--size-giga); max-width: 13ch; line-height: 0.95; }
+/* ênfase em mega/xl: itálico verdadeiro, MESMA cor (contraste por estilo, não cor) */
+.title-xl em, .title-mega em { font-style: italic; font-weight: 800; }
 
 .title-lg {
   font-family: var(--font-display);
   font-size: var(--size-display);
-  line-height: 1.05;
-  font-weight: 700;
-  letter-spacing: -0.028em;
+  line-height: 1.04;
+  font-weight: 800;
+  letter-spacing: -0.02em;
   margin: 0 0 var(--space-5);
   max-width: 24ch;
   color: var(--color-fg);
+  text-wrap: balance;
 }
-.title-lg em { color: var(--color-accent); font-style: italic; }
+.title-lg em { font-style: italic; }
 
 .title-md {
   font-family: var(--font-display);
   font-size: clamp(1.5rem, 1.2rem + 1.5vw, 2.5rem);
-  line-height: 1.1; font-weight: 700;
-  letter-spacing: -0.022em;
+  line-height: 1.1; font-weight: 800;
+  letter-spacing: -0.014em;
   margin: 0 0 var(--space-5);
   color: var(--color-fg);
+  text-wrap: balance;
 }
-.title-md em { color: var(--color-accent); font-style: italic; }
+.title-md em { font-style: italic; }
 
 .lead-deck {
   font-size: clamp(1.05rem, 0.95rem + 0.6vw, 1.5rem);
-  line-height: 1.45;
+  line-height: 1.4;
   color: var(--color-fg-muted);
   max-width: 55ch;
   margin: 0 0 var(--space-7);
-  font-weight: 400;
+  font-weight: 300;
 }
 
 .footnote {
   font-family: var(--font-mono);
   font-size: clamp(0.65rem, 0.6rem + 0.15vw, 0.75rem);
   color: var(--color-fg-subtle);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
   margin: var(--space-5) 0 0;
   max-width: 110ch;
   line-height: 1.55;
+  font-variant-numeric: lining-nums tabular-nums;
 }
 
-/* ─── Layout: HERO ─── */
+/* ─── Layout: HERO (numero-protagonista) ─── */
 .layout-hero {
   display: flex;
   flex-direction: column;
@@ -394,9 +430,30 @@ body::after {
   min-height: 100%;
   gap: var(--space-3);
 }
+/* número-manchete gigante que sangra: protagonista da capa */
+.hero-figure {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(4rem, 2rem + 9vw + 4vh, 12rem);
+  line-height: 0.82;
+  letter-spacing: -0.05em;
+  margin: 0 0 var(--space-2);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+.hero-figure small {
+  display: block;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: clamp(0.8rem, 0.7rem + 0.4vw, 1rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.3;
+  margin-bottom: var(--space-3);
+}
 .layout-hero .meta {
   display: flex; gap: var(--space-7);
-  margin-top: var(--space-8);
+  margin-top: var(--space-7);
+  font-family: var(--font-ui);
   font-size: 0.875rem;
   color: var(--color-fg-subtle);
 }
@@ -404,34 +461,11 @@ body::after {
   display: block;
   color: var(--color-fg);
   font-weight: 700;
-  font-family: var(--font-display);
+  font-family: var(--font-ui);
   margin-bottom: 4px;
 }
 
-/* ─── Layout: BIG-NUM ─── */
-.big-num {
-  display: flex; flex-direction: column;
-  align-items: flex-start; justify-content: center;
-  gap: var(--space-5);
-}
-.big-num__val {
-  font-family: var(--font-display);
-  font-size: var(--size-giga);
-  line-height: 0.88; font-weight: 800;
-  letter-spacing: -0.055em;
-  color: var(--color-fg);
-  margin: 0;
-}
-.big-num__val span { color: var(--color-accent); }
-.big-num__label {
-  font-size: clamp(1.05rem, 0.95rem + 0.5vw, 1.4rem);
-  color: var(--color-fg-muted);
-  margin: 0;
-  max-width: 50ch;
-  line-height: 1.4;
-}
-
-/* ─── Layout: METRICS ─── */
+/* ─── Layout: METRICS (KPIs — fio superior, tnum) ─── */
 .metrics-deck {
   display: grid;
   gap: 2.5vw;
@@ -441,11 +475,11 @@ body::after {
 .metrics-deck--3 { grid-template-columns: repeat(3, 1fr); }
 .metrics-deck--4 { grid-template-columns: repeat(4, 1fr); gap: 1.8vw; }
 .metrics-deck--6 { grid-template-columns: repeat(3, 1fr); gap: 1.8vw; }
-.metrics-deck--8 { grid-template-columns: repeat(4, 1fr); gap: 1.5vw; }
+.metrics-deck--8 { grid-template-columns: repeat(4, 1fr); gap: 1.6vw; }
 
 .metric-d {
-  border-top: 3px solid currentColor;
-  padding-top: var(--space-4);
+  border-top: 2px solid currentColor;
+  padding-top: var(--space-3);
   color: var(--color-fg);
   min-width: 0;
 }
@@ -459,10 +493,10 @@ body::after {
 .metric-d.var-danger  { color: var(--color-danger); }
 
 .metric-d__kicker {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: currentColor;
   margin: 0 0 var(--space-2);
@@ -470,17 +504,20 @@ body::after {
 .metric-d__val {
   font-family: var(--font-display);
   font-size: clamp(1.6rem, 1.2rem + 1.8vw, 2.8rem);
-  line-height: 0.95; font-weight: 800;
-  letter-spacing: -0.035em;
+  line-height: 0.98; font-weight: 800;
+  letter-spacing: -0.025em;
   margin: 0 0 var(--space-2);
   color: var(--color-fg);
+  font-variant-numeric: lining-nums tabular-nums;
 }
 .metric-d__val span { color: currentColor; }
 .metric-d__label {
-  font-size: clamp(0.78rem, 0.72rem + 0.25vw, 0.95rem);
+  font-family: var(--font-ui);
+  font-size: clamp(0.76rem, 0.7rem + 0.25vw, 0.92rem);
   color: var(--color-fg-muted);
   margin: 0; max-width: 28ch;
   line-height: 1.4;
+  font-weight: 400;
 }
 .metric-d__sub {
   font-size: 0.75rem; color: var(--color-fg-subtle);
@@ -493,6 +530,7 @@ body::after {
   font-family: var(--font-mono);
   font-size: 0.7rem;
   color: var(--color-fg-muted);
+  font-variant-numeric: lining-nums tabular-nums;
 }
 .metric-d__delta .pos { color: var(--color-success); }
 .metric-d__delta .neg { color: var(--color-danger); }
@@ -503,6 +541,7 @@ body::after {
   font-size: 0.65rem;
   color: var(--color-fg-subtle);
   flex-wrap: wrap;
+  font-variant-numeric: lining-nums tabular-nums;
 }
 
 /* ─── Layout: SPLIT ─── */
@@ -515,36 +554,40 @@ body::after {
 }
 .split--center { align-items: center; }
 
-/* ─── Layout: LIST ─── */
+/* ─── Layout: LIST (segmentação) ─── */
 .list-deck {
   list-style: none;
   padding: 0;
   margin: var(--space-5) 0 0;
   display: flex; flex-direction: column;
-  gap: var(--space-4);
+  gap: 0;
   max-width: 60ch;
+  border-top: 1px solid var(--color-border-strong);
 }
 .list-deck__item {
   display: flex; gap: var(--space-4);
+  align-items: baseline;
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-border);
   font-size: clamp(0.9rem, 0.85rem + 0.3vw, 1.1rem);
   line-height: 1.4;
   color: var(--color-fg);
 }
+/* numeral old-style em serif — sem caixa redonda (cardápio §7) */
 .list-deck__num {
   flex-shrink: 0;
-  width: 32px; height: 32px;
-  display: grid; place-items: center;
-  border-radius: 50%;
-  background: var(--color-accent);
-  color: var(--color-accent-fg);
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  font-weight: 700;
+  width: 1.6em;
+  font-family: var(--font-display);
+  font-size: 1.15em;
+  font-weight: 800;
+  color: var(--color-accent);
+  font-variant-numeric: lining-nums tabular-nums;
+  line-height: 1;
 }
-.list-deck__body strong { display: block; font-weight: 700; margin-bottom: 2px; color: var(--color-fg); }
-.list-deck__body span { color: var(--color-fg-muted); font-size: 0.92em; line-height: 1.5; display: block; }
+.list-deck__body strong { display: block; font-weight: 800; margin-bottom: 2px; color: var(--color-fg); }
+.list-deck__body span { color: var(--color-fg-muted); font-size: 0.92em; line-height: 1.5; display: block; font-variant-numeric: lining-nums; }
 
-/* ─── Layout: CARDS / GRID ─── */
+/* ─── Layout: CARDS / GRID — fio superior, sem sombra (flat) ─── */
 .grid-cards {
   display: grid;
   gap: var(--space-4);
@@ -555,32 +598,31 @@ body::after {
 .grid-cards--4 { grid-template-columns: repeat(4, 1fr); gap: var(--space-3); }
 .grid-cards--6 { grid-template-columns: repeat(6, 1fr); gap: var(--space-2); }
 
+/* flat: card é definido por fio superior + fundo elevado discreto, nunca por box-shadow */
 .card-d {
-  padding: var(--space-4) var(--space-5);
-  background: var(--color-bg-elevated);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  padding: var(--space-4) var(--space-5) var(--space-4) 0;
+  background: transparent;
+  border-top: 1px solid var(--color-border-strong);
   position: relative;
-  transition: all var(--duration-fast) var(--ease-out);
   min-width: 0;
 }
-.card-d--accent { border-top: 3px solid var(--color-accent); }
-.card-d--info   { border-top: 3px solid var(--color-info); }
-.card-d--success{ border-top: 3px solid var(--color-success); }
-.card-d--sage   { border-top: 3px solid var(--color-sage); }
-.card-d--teal   { border-top: 3px solid var(--color-teal); }
-.card-d--plum   { border-top: 3px solid var(--color-plum); }
+.card-d--accent { border-top-color: var(--color-accent); }
+.card-d--info   { border-top-color: var(--color-info); }
+.card-d--success{ border-top-color: var(--color-success); }
+.card-d--sage   { border-top-color: var(--color-sage); }
+.card-d--teal   { border-top-color: var(--color-teal); }
+.card-d--plum   { border-top-color: var(--color-plum); }
 
 .card-d__label {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 0.7rem; font-weight: 600;
-  letter-spacing: 0.12em; text-transform: uppercase;
+  font-family: var(--font-ui);
+  font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
   color: var(--color-fg-muted);
   margin: 0 0 var(--space-2);
+  font-variant-numeric: lining-nums tabular-nums;
 }
-.card-d__label .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+/* o dot de label sai (fio superior já é o sinal de cor) */
+.card-d__label .dot { display: none; }
 .card-d--accent .card-d__label  { color: var(--color-accent); }
 .card-d--info .card-d__label    { color: var(--color-info); }
 .card-d--success .card-d__label { color: var(--color-success); }
@@ -591,24 +633,36 @@ body::after {
 .card-d__title {
   font-family: var(--font-display);
   font-size: clamp(0.95rem, 0.9rem + 0.35vw, 1.2rem);
-  font-weight: 700; line-height: 1.2;
-  letter-spacing: -0.018em;
+  font-weight: 800; line-height: 1.15;
+  letter-spacing: -0.01em;
   margin: 0 0 var(--space-2);
   color: var(--color-fg);
 }
 .card-d__desc {
+  font-family: var(--font-ui);
   font-size: clamp(0.78rem, 0.74rem + 0.18vw, 0.92rem);
   color: var(--color-fg-muted);
   margin: 0;
   line-height: 1.5;
+  font-variant-numeric: lining-nums;
 }
 .card-d__icon {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   margin: 0 0 var(--space-2);
   display: block;
+  filter: grayscale(0.15);
+}
+/* número-dado grande dentro de card (ganhos tech, metas ESG) */
+.card-d__fig {
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin: 0 0 var(--space-2);
+  font-variant-numeric: lining-nums tabular-nums;
 }
 
-/* ─── Layout: DIVIDER ─── */
+/* ─── Layout: DIVIDER (banda de cor — estrutural, parte da identidade) ─── */
 .divider-deck {
   display: flex; flex-direction: column;
   justify-content: center; align-items: flex-start;
@@ -617,113 +671,110 @@ body::after {
 .divider-deck__num {
   font-family: var(--font-mono);
   font-size: clamp(0.85rem, 0.75rem + 0.4vw, 1.1rem);
-  letter-spacing: 0.16em;
+  letter-spacing: 0.12em;
   margin: 0 0 var(--space-6);
-  font-weight: 600;
+  font-weight: 500;
+  font-variant-numeric: lining-nums tabular-nums;
 }
 
-/* ─── Timeline horizontal ─── */
+/* ─── Cronologia horizontal — fio único, marco sem dot circular ─── */
 .timeline-h {
   display: grid;
   grid-template-columns: repeat(var(--cols, 6), 1fr);
-  gap: var(--space-3);
+  gap: var(--space-4);
   margin-top: var(--space-5);
   position: relative;
+  padding-top: var(--space-5);
+  border-top: 2px solid var(--color-fg);
 }
-.timeline-h::before {
-  content: '';
-  position: absolute;
-  left: 0; right: 0; top: 14px;
-  height: 2px;
-  background: linear-gradient(to right,
-    var(--color-accent) 0%,
-    var(--color-border) 8%,
-    var(--color-border) 92%,
-    var(--color-accent) 100%);
-}
-.timeline-h__item { position: relative; padding-top: 40px; min-width: 0; }
+.timeline-h__item { position: relative; min-width: 0; }
+/* marco = tick vertical de 2px subindo do fio, não um dot com glow */
 .timeline-h__item::before {
   content: '';
   position: absolute;
-  top: 8px; left: 0;
-  width: 14px; height: 14px;
-  border-radius: 50%;
+  top: calc(-1 * var(--space-5) - 2px);
+  left: 0;
+  width: 2px; height: var(--space-5);
   background: var(--color-accent);
-  box-shadow: 0 0 0 4px var(--color-bg), 0 0 12px var(--color-accent);
 }
 .timeline-h__date {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-family: var(--font-ui);
+  font-size: 0.74rem;
   color: var(--color-accent);
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   margin: 0 0 var(--space-1);
   font-weight: 700;
+  font-variant-numeric: lining-nums tabular-nums;
 }
 .timeline-h__title {
   font-family: var(--font-display);
-  font-size: clamp(0.78rem, 0.74rem + 0.18vw, 0.92rem);
-  font-weight: 700;
+  font-size: clamp(0.82rem, 0.76rem + 0.2vw, 0.98rem);
+  font-weight: 800;
   margin: 0 0 var(--space-1);
   color: var(--color-fg);
-  line-height: 1.25;
+  line-height: 1.18;
 }
 .timeline-h__desc {
-  font-size: 0.72rem;
+  font-family: var(--font-ui);
+  font-size: 0.74rem;
   color: var(--color-fg-muted);
   margin: 0;
   line-height: 1.45;
+  font-variant-numeric: lining-nums;
 }
 
-/* ─── Tabelas em slide ─── */
+/* ─── Tabelas broadsheet em slide — fios horizontais, tnum, fio duplo no total ─── */
 .table-deck {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  font-size: clamp(0.78rem, 0.74rem + 0.18vw, 0.95rem);
+  border-collapse: collapse;
+  font-size: clamp(0.82rem, 0.76rem + 0.18vw, 1rem);
   margin-top: var(--space-4);
+  font-variant-numeric: lining-nums tabular-nums;
 }
 .table-deck thead th {
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-fg-subtle);
-  padding: 10px 14px;
+  color: var(--color-fg-muted);
+  padding: 10px 14px 8px;
   text-align: left;
-  border-bottom: 2px solid var(--color-border-strong);
-  background: var(--color-bg-sunken);
+  border-top: 2px solid var(--color-fg);
+  border-bottom: 1px solid var(--color-border-strong);
+  background: transparent;
 }
 .table-deck tbody td {
-  padding: 12px 14px;
+  padding: 11px 14px;
   border-bottom: 1px solid var(--color-border);
   color: var(--color-fg);
   vertical-align: top;
   line-height: 1.45;
 }
-.table-deck tbody td strong { font-family: var(--font-display); color: var(--color-fg); }
-.table-deck tbody tr:nth-child(even) { background: var(--color-bg-sunken); }
-
-/* Tabelas com hover apresentador — destaca linha hovered, muta as demais.
-   Mais flexível que percorrer linha-a-linha via fragmentos — o apresentador
-   escolhe o que destacar, quando e em que ordem. */
-.slide .table-deck tbody tr {
-  transition: opacity 200ms var(--ease-out),
-              background 200ms var(--ease-out),
-              color 200ms var(--ease-out);
+.table-deck th:first-child, .table-deck td:first-child { padding-left: 0; }
+.table-deck tbody td strong { font-family: var(--font-display); color: var(--color-fg); font-weight: 800; }
+.table-deck tbody tr:last-child td { border-bottom: 2px solid var(--color-fg); }
+.table-deck td.num, .table-deck th.num { text-align: right; }
+/* fio duplo contábil — linha-total */
+.table-deck tr.is-total td {
+  border-top: 3px double var(--color-fg);
+  border-bottom: 2px solid var(--color-fg);
+  font-weight: 800;
 }
-.slide .table-deck tbody:hover tr { opacity: 0.4; }
+
+/* Tabela com hover apresentador — destaca linha, muta as demais (property-scoped) */
+.slide .table-deck tbody tr {
+  transition: opacity 200ms var(--ease-snap),
+              background-color 200ms var(--ease-snap),
+              color 200ms var(--ease-snap);
+}
+.slide .table-deck tbody:hover tr { opacity: 0.45; }
 .slide .table-deck tbody:hover tr:hover {
   opacity: 1;
-  background: var(--color-accent-dim) !important;
+  background: var(--color-accent-dim);
 }
-.slide .table-deck tbody:hover tr:hover td {
-  color: var(--color-accent);
-  font-weight: 700;
-}
-.slide .table-deck tbody:hover tr:hover td strong {
-  color: var(--color-accent);
-}
+.slide .table-deck tbody:hover tr:hover td { color: var(--color-accent); }
+.slide .table-deck tbody:hover tr:hover td strong { color: var(--color-accent); }
 @media (prefers-reduced-motion: reduce) {
   .slide .table-deck tbody tr { transition: none; }
 }
@@ -732,20 +783,19 @@ body::after {
 .deck-progress {
   position: fixed;
   bottom: 0; left: 0; right: 0;
-  height: 3px;
+  height: 2px;
   background: var(--color-border);
   z-index: 60;
 }
 .deck-progress__bar {
   height: 100%;
-  background: linear-gradient(to right, var(--color-accent), var(--color-accent-hover));
-  box-shadow: 0 0 12px var(--color-accent);
+  background: var(--color-accent);
   width: 0%;
   transition: width var(--duration) var(--ease-out);
 }
 
 .hud {
-  position: fixed; bottom: 16px; left: 0; right: 0;
+  position: fixed; bottom: 14px; left: 0; right: 0;
   display: flex; justify-content: center; align-items: center;
   gap: 10px; z-index: 50; pointer-events: none;
 }
@@ -754,18 +804,16 @@ body::after {
   width: 36px; height: 36px;
   display: grid; place-items: center;
   background: var(--color-bg-elevated);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border-strong);
   border-radius: 999px;
   cursor: pointer; color: var(--color-fg);
-  transition: all var(--duration-fast) var(--ease-out);
+  transition: background-color var(--duration-fast) var(--ease-snap), border-color var(--duration-fast) var(--ease-snap);
   font: inherit;
   font-size: 0.8rem;
-  box-shadow: var(--shadow-sm);
 }
 .hud__btn:hover, .hud__fs:hover, .theme-toggle:hover {
-  border-color: var(--color-accent);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  background: var(--color-bg-sunken);
+  border-color: var(--color-fg-muted);
 }
 .hud__counter {
   font-family: var(--font-mono);
@@ -773,68 +821,62 @@ body::after {
   color: var(--color-fg-muted);
   min-width: 60px;
   text-align: center;
-  font-weight: 600;
+  font-weight: 500;
+  font-variant-numeric: lining-nums tabular-nums;
 }
 .hud__counter span { color: var(--color-fg); font-weight: 700; }
 
-/* ─── Brand mark ─── */
+/* ─── Brand mark — fio, sem dot com glow ─── */
 .brand-mark {
   position: fixed;
-  top: 20px; right: 28px;
+  top: 18px; right: 28px;
   display: flex; align-items: center; gap: 10px;
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--color-fg-subtle);
   z-index: 40;
-}
-.brand-mark__dot {
-  width: 10px; height: 10px;
-  border-radius: 50%;
-  background: var(--color-accent);
-  box-shadow: 0 0 12px var(--color-accent);
+  padding-left: var(--space-3);
+  border-left: 2px solid var(--color-accent);
+  font-variant-numeric: lining-nums tabular-nums;
 }
 
-/* Slide-num em bottom-right (page-number style) — nunca colide com conteúdo */
+/* Slide-num em bottom-right (page-number) */
 .slide-num {
   position: absolute;
-  bottom: 18px; right: 28px;
-  font: 600 0.6875rem/1 var(--font-mono);
-  letter-spacing: 0.12em;
+  bottom: 16px; right: 28px;
+  font: 500 0.6875rem/1 var(--font-mono);
+  letter-spacing: 0.1em;
   color: var(--color-fg-muted);
-  opacity: 0.55;
+  opacity: 0.6;
   z-index: 30;
   white-space: nowrap;
   pointer-events: none;
   user-select: none;
-  top: auto;
-  left: auto;
-  padding: 0;
-  background: none;
-  border: none;
-  box-shadow: none;
+  top: auto; left: auto;
+  padding: 0; background: none; border: none;
+  font-variant-numeric: lining-nums tabular-nums;
 }
-.slide-num span { color: var(--color-accent); opacity: 0.9; font-weight: 700; }
+.slide-num span { color: var(--color-accent); opacity: 0.95; font-weight: 700; }
 .slide[data-background-color="#000000"] .slide-num,
 .slide[data-background-color="#000"] .slide-num,
 .slide[data-background-color*="orange"] .slide-num {
-  color: rgba(255,255,255,0.75);
+  color: rgba(255,255,255,0.78);
 }
 .slide[data-background-color="#000000"] .slide-num span,
 .slide[data-background-color="#000"] .slide-num span {
   color: var(--itau-orange-3, #FA9F09);
 }
-/* Padding generoso para conteúdo respirar */
-.slide { padding: clamp(64px, 8vh, 90px) clamp(48px, 8vw, 120px) clamp(56px, 7vh, 80px); }
+/* Padding generoso */
+.slide { padding: clamp(60px, 8vh, 88px) clamp(48px, 8vw, 116px) clamp(52px, 7vh, 78px); }
 @media (max-height: 760px) {
   .slide { justify-content: flex-start; }
 }
 
 /* ─── Overview Mode ─── */
 :root { --ov-scale: 0.22; --slide-w: 100vw; --slide-h: 100vh; }
-/* Tanto html quanto body precisam liberar overflow hidden global */
 html.is-overview,
 body.is-overview { overflow: auto !important; height: auto !important; }
 body.is-overview .deck {
@@ -842,8 +884,8 @@ body.is-overview .deck {
   overflow: visible !important;
   display: grid;
   grid-template-columns: repeat(auto-fill, calc(var(--slide-w) * var(--ov-scale)));
-  gap: 20px;
-  padding: 28px;
+  gap: 18px;
+  padding: 26px;
   height: auto !important;
   min-height: 100vh;
   width: 100% !important;
@@ -859,8 +901,8 @@ body.is-overview .slide {
   opacity: 1 !important;
   pointer-events: auto;
   cursor: pointer;
-  border: 2px solid var(--color-border);
-  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-strong);
+  border-left: 1px solid var(--color-border-strong);
   overflow: hidden;
   transform: scale(var(--ov-scale)) !important;
   transform-origin: top left;
@@ -871,12 +913,9 @@ body.is-overview .slide {
 }
 body.is-overview .slide.is-active {
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 4px var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-accent);
 }
-body.is-overview .slide:hover {
-  border-color: var(--color-accent);
-  box-shadow: var(--shadow-lg);
-}
+body.is-overview .slide:hover { border-color: var(--color-accent); }
 body.is-overview .hud,
 body.is-overview .deck-progress,
 body.is-overview .brand-mark { display: none !important; }
@@ -884,53 +923,56 @@ body.is-overview .slide [data-fragment],
 body.is-overview .slide [data-anim] {
   opacity: 1 !important;
   transform: none !important;
-  filter: none !important;
+  clip-path: none !important;
   animation: none !important;
 }
 
 /* ─── Fragment types ─── */
 [data-fragment="current-visible"] {
   opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 400ms var(--ease-out), transform 400ms var(--ease-out);
+  transition: opacity 360ms var(--ease-out);
 }
-[data-fragment="current-visible"].is-visible { opacity: 1; transform: none; }
-[data-fragment="current-visible"].was-visible { opacity: 0.3; transform: none; }
+[data-fragment="current-visible"].is-visible { opacity: 1; }
+[data-fragment="current-visible"].was-visible { opacity: 0.35; }
 
-[data-fragment="highlight-current"] { color: var(--color-fg-muted); transition: color 300ms, background 300ms; }
+[data-fragment="highlight-current"] { color: var(--color-fg-muted); transition: color 300ms var(--ease-snap), background-color 300ms var(--ease-snap); }
 [data-fragment="highlight-current"].is-visible { color: var(--color-accent); font-weight: 700; background: var(--color-accent-dim); }
 [data-fragment="highlight-current"].was-visible { color: var(--color-fg-muted); font-weight: inherit; background: transparent; }
 
 [data-fragment="grow"] {
   opacity: 0;
-  transform: scale(0.7);
-  transition: opacity 400ms var(--ease-out), transform 400ms var(--ease-out);
+  transform: scale(0.82);
+  transition: opacity 360ms var(--ease-out), transform 360ms var(--spring-soft);
 }
 [data-fragment="grow"].is-visible { opacity: 1; transform: scale(1); }
 
 [data-mark] { position: relative; }
-
 [data-fit-text] { white-space: nowrap; display: block; }
 
 /* ─── Layouts semânticos ─── */
 .layout-two-cols {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-7);
+  gap: var(--space-8);
   align-items: start;
   width: 100%;
 }
 .layout-two-cols .col-left, .layout-two-cols .col-right { min-width: 0; }
+/* fio vertical separando as colunas — broadsheet */
+.layout-two-cols .col-right { border-left: 1px solid var(--color-border); padding-left: var(--space-8); }
 .col-section-title {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-accent);
+  color: var(--color-fg-muted);
   margin: 0 0 var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-border-strong);
+  font-variant-numeric: lining-nums tabular-nums;
 }
-.col-section-title .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: currentColor; margin-right: 8px; vertical-align: middle; }
+.col-section-title .dot { display: none; }
 
 .layout-fact {
   display: flex;
@@ -945,19 +987,22 @@ body.is-overview .slide [data-anim] {
 .layout-fact .fact-val {
   font-family: var(--font-display);
   font-size: clamp(5rem, 18vw, 14rem);
-  font-weight: 900;
-  letter-spacing: -0.05em;
+  font-weight: 800;
+  letter-spacing: -0.045em;
   line-height: 0.9;
-  color: var(--color-accent);
+  color: var(--color-fg);
   margin: 0;
+  font-variant-numeric: lining-nums tabular-nums;
 }
-.layout-fact .fact-val em { font-style: normal; color: var(--color-fg); }
+.layout-fact .fact-val em { font-style: normal; color: var(--color-accent); }
 .layout-fact .fact-label {
+  font-family: var(--font-ui);
   font-size: clamp(1rem, 2vw, 1.5rem);
   color: var(--color-fg-muted);
   margin-top: var(--space-3);
   max-width: 50ch;
   text-align: center;
+  font-weight: 400;
 }
 
 .layout-statement {
@@ -972,16 +1017,15 @@ body.is-overview .slide [data-anim] {
 .layout-statement .statement-text {
   font-family: var(--font-display);
   font-size: clamp(2rem, 4.5vw, 4.5rem);
-  font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: -0.03em;
-  max-width: 28ch;
+  font-weight: 300;
+  line-height: 1.12;
+  letter-spacing: -0.018em;
+  max-width: 26ch;
   margin: 0;
+  text-wrap: balance;
 }
-.layout-statement .statement-text em {
-  color: var(--color-accent);
-  font-style: italic;
-}
+/* ênfase no statement: itálico verdadeiro + peso, não cor accent */
+.layout-statement .statement-text em { font-style: italic; font-weight: 800; }
 
 /* ─── Slide background layer + overdrive canvas (camada 0) ─── */
 .slide-bg,
@@ -1011,16 +1055,14 @@ body.is-overview .slide [data-anim] {
 .shortcuts-overlay.is-open { display: flex; }
 .shortcuts-panel {
   background: var(--color-bg-elevated);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-strong);
   padding: 2rem;
   min-width: 340px;
-  box-shadow: 0 32px 64px rgba(0,0,0,0.5);
 }
 .shortcuts-panel h3 {
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 0.75rem;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--color-fg-muted);
   margin: 0 0 1.25rem;
@@ -1036,12 +1078,12 @@ body.is-overview .slide [data-anim] {
   font-size: 0.8rem;
   background: var(--color-bg-sunken);
   border: 1px solid var(--color-border);
-  border-radius: 4px;
   padding: 2px 8px;
   color: var(--color-accent);
   white-space: nowrap;
 }
 .shortcuts-panel dd {
+  font-family: var(--font-ui);
   font-size: 0.875rem;
   color: var(--color-fg-muted);
   margin: 0;
@@ -1052,18 +1094,17 @@ body.is-overview .slide [data-anim] {
   width: 100%;
   padding: 0.5rem;
   background: none;
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
+  border: 1px solid var(--color-border-strong);
   color: var(--color-fg-muted);
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 0.8rem;
   cursor: pointer;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 .shortcuts-close:hover { border-color: var(--color-accent); color: var(--color-accent); }
 
-/* ─── Cultura grid (slide 6) ─── */
+/* ─── Cultura central (slide 6) ─── */
 .cultura-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -1071,42 +1112,41 @@ body.is-overview .slide [data-anim] {
   margin-top: var(--space-5);
 }
 .cultura-center {
-  grid-column: 2;
-  grid-row: 1;
+  grid-column: 2; grid-row: 1;
   background: var(--color-accent);
   color: var(--color-accent-fg);
-  border-radius: var(--radius-lg);
   padding: var(--space-5);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
   text-align: center;
   font-family: var(--font-display);
   font-weight: 800;
   font-size: clamp(1rem, 0.9rem + 0.5vw, 1.3rem);
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  box-shadow: var(--glow-accent);
+  line-height: 1.12;
+  letter-spacing: -0.015em;
 }
 
-/* ─── Chart wrap ─── */
+/* ─── Chart wrap — figura flat com fio (broadsheet) ─── */
 .chart-wrap {
   width: 100%;
   height: 100%;
   min-height: 0;
   position: relative;
+  border-top: 2px solid var(--color-fg);
+  border-bottom: 1px solid var(--color-border-strong);
+  padding: var(--space-3) 0;
 }
 .chart-wrap canvas { max-width: 100%; }
 
+/* callout — fio lateral fino, não caixa pesada */
 .callout-box {
-  background: var(--color-accent-dim);
-  border-left: 3px solid var(--color-accent);
-  padding: var(--space-3) var(--space-4);
-  border-radius: var(--radius);
+  border-left: 2px solid var(--color-accent);
+  padding: var(--space-2) var(--space-4);
   margin-top: var(--space-4);
+  font-family: var(--font-ui);
   font-size: 0.92rem;
   color: var(--color-fg);
+  font-variant-numeric: lining-nums tabular-nums;
 }
 .callout-box strong { color: var(--color-accent); }
 
@@ -1120,14 +1160,16 @@ body.is-overview .slide [data-anim] {
 }
 .contact-grid p {
   margin: 0;
+  font-family: var(--font-ui);
   font-size: 0.95rem;
   line-height: 1.5;
+  font-variant-numeric: lining-nums;
 }
 .contact-grid p strong {
   display: block;
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 0.72rem;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   margin-bottom: var(--space-2);
   color: var(--color-accent);
@@ -1136,7 +1178,6 @@ body.is-overview .slide [data-anim] {
 /* ─── Print ─── */
 @media print {
   @page { size: A4 landscape; margin: 0; }
-  body::before, body::after { display: none; }
   .hud, .deck-progress { display: none; }
   .deck { width: auto; height: auto; overflow: visible; }
   .slide {
@@ -1144,9 +1185,10 @@ body.is-overview .slide [data-anim] {
     width: 100vw; height: 100vh;
     page-break-after: always;
     opacity: 1 !important; transform: none !important;
+    border-left: none;
   }
   .slide [data-fragment], .slide [data-anim] {
-    opacity: 1 !important; transform: none !important; filter: none !important;
+    opacity: 1 !important; transform: none !important; clip-path: none !important;
   }
 }
 
@@ -1165,10 +1207,39 @@ body.is-overview .slide [data-anim] {
   body.is-overview .slide { transition: none !important; }
 }
 
-/* ─── OVERDRIVE: WebGL hero canvas ──────────────────────────────
-   Canvas generativo de fundo do slide hero. Pauses quando o slide
-   não está ativo (via JS), respeitando reduced-motion. */
+/* ─── OVERDRIVE: WebGL hero canvas (TEXTURA do hero, confinada ao slide 1) ──
+   Canvas generativo de fundo do slide hero. Pausa quando o slide não está
+   ativo (via JS), respeitando reduced-motion. NÃO é wallpaper — vive só aqui. */
 .overdrive-hero { position: relative; isolation: isolate; }
+
+/* ── W9 invariante 2 (estado-final-base): aurora MATERIAL CSS sempre presente
+      atrás do canvas, com as MESMAS cores do flow field (#FF6200 / #FBC305 /
+      #F88104). Se o WebGL pintar, cobre a aurora; se o WebGL faltar (ou o
+      fallback 2D também), a aurora discreta é o que se vê — num Chrome travado
+      o hero nunca fica preto-morto. É, ela própria, o fallback do minigl. */
+.hero-aurora {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(38% 48% at 24% 30%, rgba(255,98,0,0.50), transparent 70%),
+    radial-gradient(42% 52% at 78% 26%, rgba(251,195,5,0.30), transparent 72%),
+    radial-gradient(50% 60% at 58% 84%, rgba(248,129,4,0.28), transparent 74%),
+    #05040a;
+  background-size: 180% 180%, 200% 200%, 220% 220%, 100% 100%;
+  background-position: 0% 0%, 100% 0%, 50% 100%, 0 0;
+}
+/* movimento só quando o slide está ativo E o usuário aceita movimento —
+   transform/opacity-friendly (anima background-position, área de hero pontual) */
+@media (prefers-reduced-motion: no-preference) {
+  .slide.is-active .hero-aurora { animation: heroAuroraDrift 26s ease-in-out infinite alternate; }
+}
+@keyframes heroAuroraDrift {
+  0%   { background-position: 0% 0%,   100% 0%,  50% 100%, 0 0; }
+  100% { background-position: 100% 50%, 0% 80%,  30% 0%,  0 0; }
+}
+
 .webgl-hero {
   position: absolute;
   inset: 0;
@@ -1177,12 +1248,16 @@ body.is-overview .slide [data-anim] {
   z-index: 1;
   pointer-events: none;
   opacity: 0.95;
+  transition: opacity 800ms var(--ease-out);
 }
+/* sem WebGL nem fallback 2D, o JS marca .is-empty → o canvas some e revela a
+   aurora-base (não fica um retângulo preto chapado por cima dela). */
+.webgl-hero.is-empty { opacity: 0; }
 .overdrive-hero::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 60% 50% at 50% 60%, rgba(0,0,0,0.55) 0%, transparent 75%);
+  background: radial-gradient(ellipse 60% 50% at 50% 60%, rgba(0,0,0,0.58) 0%, transparent 75%);
   z-index: 1;
   pointer-events: none;
 }
@@ -1190,15 +1265,82 @@ body.is-overview .slide [data-anim] {
   .webgl-hero { opacity: 0.25; }
 }
 
-/* ─── OVERDRIVE: Chart pulse-on-active animations ───────────────
-   Charts ganham glow accent atmosférico e pontos pulsam quando
-   o slide do chart é ativo. */
+/* ─── OVERDRIVE W2: ROE 24,8% — counter sincronizado com a barra ──────────
+   No slide 2, o número-tese ROE conta de 0 a 24,8 ENQUANTO a barra que o
+   representa cresce de 0 a 100% — não isolados (a barra a 24,8/30 da escala
+   secundária do gráfico-tese, espelhando o pico de geração de valor).
+   3 invariantes:
+   (1) reduced-motion → estado final instantâneo (texto real + barra cheia);
+   (2) @supports (@property) + estado-FINAL como base: sem @property, o
+       fallback é o número real "24,8" no HTML (.roe-fallback) e a barra cheia;
+   (3) só composita: a barra anima transform:scaleX; o counter via @property/content. */
+@property --roe-int { syntax: '<integer>'; inherits: false; initial-value: 24; }
+@property --roe-dec { syntax: '<integer>'; inherits: false; initial-value: 8; }
+
+.metric-roe { position: relative; }
+.metric-roe .metric-d__val { display: flex; align-items: baseline; gap: 0; }
+/* trilho + preenchimento da barra-tese sob o número */
+.roe-bar {
+  position: relative;
+  height: 5px;
+  margin: var(--space-2) 0 0;
+  background: var(--color-border);
+  overflow: hidden;
+}
+.roe-bar::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: var(--color-success);
+  transform-origin: left;
+  transform: scaleX(1);            /* BASE = cheia (estado final visível) */
+}
+.roe-bar__cap {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  color: var(--color-fg-subtle);
+  margin-top: var(--space-1);
+  display: block;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+/* o número renderizado pelos counters fica oculto até haver suporte a @property;
+   o número real no HTML (.roe-fallback) é a base segura. */
+.roe-live { display: none; }
+@supports (counter-reset: t var(--roe-int)) {
+  .roe-live { display: inline; }
+  .roe-fallback { display: none; }
+  .roe-live::before {
+    counter-reset: ri var(--roe-int) rd var(--roe-dec);
+    content: counter(ri) "," counter(rd);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* dispara só quando o slide 2 entra — gesto raro (1ª dobra), delight liberado */
+  .slide[data-slide="2"].is-active .roe-live::before {
+    animation: roeCount 1500ms cubic-bezier(0.23, 1, 0.32, 1) both;
+  }
+  .slide[data-slide="2"].is-active .roe-bar::after {
+    animation: roeGrow 1500ms cubic-bezier(0.23, 1, 0.32, 1) both;
+  }
+  @keyframes roeCount {
+    from { --roe-int: 0; --roe-dec: 0; }
+    to   { --roe-int: 24; --roe-dec: 8; }
+  }
+  @keyframes roeGrow {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+  }
+}
+
+/* ─── OVERDRIVE: Chart pulse-on-active (assinatura visual nos charts) ─── */
 .slide.is-active .chart-wrap {
   animation: chartGlow 4.5s ease-in-out infinite;
 }
 @keyframes chartGlow {
   0%, 100% { box-shadow: 0 0 0 0 var(--color-accent-dim); }
-  50% { box-shadow: 0 0 48px 0 var(--color-accent-dim); }
+  50% { box-shadow: 0 0 40px 0 var(--color-accent-dim); }
 }
 @media (prefers-reduced-motion: reduce) {
   .slide.is-active .chart-wrap { animation: none; }
@@ -1207,26 +1349,28 @@ body.is-overview .slide [data-anim] {
 </head>
 <body>
 
-  <div class="brand-mark" aria-hidden="true">
-    <span class="brand-mark__dot"></span>
-    <span>ITAÚ · 1T26</span>
-  </div>
+  <div class="brand-mark" aria-hidden="true">ITAÚ · 1T26</div>
 
   <div class="deck">
 
     <!-- ════════════════════════════════════════════════════════
-         SLIDE 01 — HERO
+         SLIDE 01 — HERO · numero-protagonista (R$ 12,3 bi) sobre textura WebGL
          ════════════════════════════════════════════════════════ -->
     <section class="slide is-active overdrive-hero" data-slide="1" data-background-color="#000000">
+      <div class="hero-aurora" aria-hidden="true"></div>
       <canvas class="webgl-hero" id="webgl-hero" data-overdrive aria-hidden="true"></canvas>
       <span class="slide-num"><span>01</span> · 31</span>
       <div class="layout-hero" style="position:relative; z-index:2">
-        <p class="kicker kicker--accent" data-anim style="--i:0; color:#fff"><span class="kicker__dot"></span>ITAÚ 1T26</p>
-        <h1 class="title-mega" data-anim="hero" style="color:#fff">Apresentação <em>Institucional</em></h1>
-        <p class="lead-deck" data-anim style="--i:2; color:rgba(255,255,255,0.7)">Resultado Recorrente Gerencial 1T26 · R$ 12,3 bi</p>
-        <div class="meta" data-anim style="--i:3; color:rgba(255,255,255,0.6)">
+        <p class="kicker kicker--accent" data-anim style="color:var(--itau-orange-3); border-left-color:var(--itau-orange-3)">Itaú 1T26 · Resultado Recorrente Gerencial</p>
+        <p class="hero-figure" data-anim="hero" style="color:#fff">
+          <small style="color:rgba(255,255,255,0.66)">Resultado recorrente do trimestre</small>
+          R$&nbsp;12,3&nbsp;<span style="color:var(--itau-orange-3)">bi</span>
+        </p>
+        <h1 class="title-lg" data-anim style="color:rgba(255,255,255,0.92); max-width:30ch; margin-top:var(--space-3)">Apresentação <em>Institucional</em></h1>
+        <div class="meta" data-anim style="color:rgba(255,255,255,0.6)">
           <span style="color:rgba(255,255,255,0.6)"><strong style="color:#fff">Relações com Investidores</strong>itau.com.br/ri</span>
           <span style="color:rgba(255,255,255,0.6)"><strong style="color:#fff">Período</strong>1º Trimestre de 2026</span>
+          <span style="color:rgba(255,255,255,0.6)"><strong style="color:#fff">ROE recorrente</strong>24,8% · +10,4% a/a</span>
         </div>
       </div>
     </section>
@@ -1236,46 +1380,50 @@ body.is-overview .slide [data-anim] {
          ════════════════════════════════════════════════════════ -->
     <section class="slide" data-slide="2">
       <span class="slide-num"><span>02</span> · 31</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>VISÃO GERAL</p>
-      <h2 class="title-lg" data-anim style="--i:1">Com <em>101 anos</em> de história, somos o maior banco da América Latina</h2>
-      <div class="metrics-deck metrics-deck--8" data-anim style="--i:2">
+      <p class="kicker" data-anim>Visão geral</p>
+      <h2 class="title-lg" data-anim>Com <em>101 anos</em> de história, somos o maior banco da América Latina</h2>
+      <div class="metrics-deck metrics-deck--8 stagger-group" data-anim>
         <div class="metric-d var-accent">
-          <p class="metric-d__kicker">VALOR DE MERCADO</p>
+          <p class="metric-d__kicker">Valor de mercado</p>
           <p class="metric-d__val">US$ <span>96</span> bi</p>
           <p class="metric-d__label">em 30/04/2026</p>
         </div>
         <div class="metric-d var-info">
-          <p class="metric-d__kicker">ATIVOS TOTAIS</p>
+          <p class="metric-d__kicker">Ativos totais</p>
           <p class="metric-d__val">R$ <span>3.200</span> bi</p>
           <p class="metric-d__label">em 31/03/2026</p>
         </div>
         <div class="metric-d var-teal">
-          <p class="metric-d__kicker">CARTEIRA DE CRÉDITO</p>
+          <p class="metric-d__kicker">Carteira de crédito</p>
           <p class="metric-d__val">R$ <span>1.483</span> bi</p>
           <p class="metric-d__label">com garantias financeiras e títulos privados</p>
         </div>
-        <div class="metric-d var-success">
-          <p class="metric-d__kicker">ROE RECORRENTE</p>
-          <p class="metric-d__val"><span>24,8</span>%</p>
+        <div class="metric-d var-success metric-roe">
+          <p class="metric-d__kicker">ROE recorrente</p>
+          <p class="metric-d__val">
+            <span><span class="roe-fallback">24,8</span><span class="roe-live" aria-hidden="true"></span></span>%
+          </p>
+          <div class="roe-bar" aria-hidden="true"></div>
+          <span class="roe-bar__cap">0 → 24,8% · maior banco da AL</span>
           <p class="metric-d__label">retorno sobre patrimônio</p>
         </div>
         <div class="metric-d var-sage">
-          <p class="metric-d__kicker">ÍNDICE DE EFICIÊNCIA</p>
+          <p class="metric-d__kicker">Índice de eficiência</p>
           <p class="metric-d__val"><span>36,2</span>%</p>
           <p class="metric-d__label">Brasil · 12m findos mar/26</p>
         </div>
         <div class="metric-d var-plum">
-          <p class="metric-d__kicker">COLABORADORES</p>
+          <p class="metric-d__kicker">Colaboradores</p>
           <p class="metric-d__val"><span>91,5</span> mil</p>
           <p class="metric-d__label">no conglomerado Itaú Unibanco</p>
         </div>
         <div class="metric-d var-accent">
-          <p class="metric-d__kicker">RESULTADO 1T26</p>
+          <p class="metric-d__kicker">Resultado 1T26</p>
           <p class="metric-d__val">R$ <span>12,3</span> bi</p>
           <p class="metric-d__label">94,6% Brasil · 5,4% AL</p>
         </div>
         <div class="metric-d var-warn">
-          <p class="metric-d__kicker">VALOR DA MARCA</p>
+          <p class="metric-d__kicker">Valor da marca</p>
           <p class="metric-d__val">US$ <span>9,9</span> bi</p>
           <p class="metric-d__label">marca mais valiosa da AL</p>
         </div>
@@ -1284,74 +1432,74 @@ body.is-overview .slide [data-anim] {
     </section>
 
     <!-- ════════════════════════════════════════════════════════
-         SLIDE 03 — BIG NUM com Rough Notation
+         SLIDE 03 — FACT (18 países) com Rough Notation
          ════════════════════════════════════════════════════════ -->
     <section class="slide" data-slide="3">
       <span class="slide-num"><span>03</span> · 31</span>
       <div class="layout-fact">
-        <p class="kicker kicker--accent" data-anim style="--i:0"><span class="kicker__dot"></span>PRESENÇA</p>
-        <p class="fact-val" data-anim style="--i:1"><span data-mark="circle" data-mark-color="#FF6200">18</span> países</p>
-        <p class="fact-label" data-anim style="--i:2">com operações de varejo na América Latina. <strong>Banco universal</strong> obstinado por encantar o cliente em todas as dimensões: pessoa física, jurídica e atacado.</p>
+        <p class="kicker kicker--accent" data-anim style="align-self:center; border:none; padding:0; text-align:center">Presença</p>
+        <p class="fact-val" data-anim><span data-mark="circle" data-mark-color="#FF6200">18</span> <em>países</em></p>
+        <p class="fact-label" data-anim>com operações de varejo na América Latina. <strong>Banco universal</strong> obstinado por encantar o cliente em todas as dimensões: pessoa física, jurídica e atacado.</p>
       </div>
     </section>
 
     <!-- ════════════════════════════════════════════════════════
-         SLIDE 04 — STATEMENT (ESG marker)
+         SLIDE 04 — STATEMENT (ESG / DJSI)
          ════════════════════════════════════════════════════════ -->
     <section class="slide" data-slide="4" data-background-color="var(--color-bg-sunken)">
       <span class="slide-num"><span>04</span> · 31</span>
       <div class="layout-statement">
-        <p class="statement-text" data-anim style="--i:0">Somos o <em>único banco</em> da América Latina no Índice Dow Jones de Sustentabilidade <strong data-mark="underline">desde sua criação</strong>.</p>
-        <p class="footnote" data-anim style="--i:1; margin-top:var(--space-7); text-align:center">Selos & Reconhecimentos: B3 · NYSE · S&amp;P Dow Jones · ISE B3 · Bloomberg Gender-Equality Index · MSCI</p>
+        <p class="statement-text" data-anim>Somos o <em>único banco</em> da América Latina no Índice Dow Jones de Sustentabilidade <strong data-mark="underline">desde sua criação</strong>.</p>
+        <p class="footnote" data-anim style="margin-top:var(--space-7); text-align:center">Selos &amp; Reconhecimentos: B3 · NYSE · S&amp;P Dow Jones · ISE B3 · Bloomberg Gender-Equality Index · MSCI</p>
       </div>
     </section>
 
     <!-- ════════════════════════════════════════════════════════
-         SLIDE 05 — DIVIDER laranja (Parte 1)
+         SLIDE 05 — DIVIDER laranja (Parte 1) · wipe clip-path
          ════════════════════════════════════════════════════════ -->
     <section class="slide" data-slide="5" data-background-color="var(--itau-orange)">
       <div class="divider-deck">
-        <p class="kicker" data-anim style="--i:0; color:rgba(255,255,255,0.85)"><span class="kicker__dot" style="background:#fff"></span>PARTE 01 / 05</p>
-        <h2 class="title-mega" style="color:#fff" data-anim="hero">A gente <em style="color:#fff; font-style:italic; text-decoration:underline; text-decoration-thickness:4px; text-underline-offset:8px">é Ituber</em></h2>
-        <p class="lead-deck" data-anim style="--i:2; color:rgba(255,255,255,0.9)">Cultura, ética inegociável e seis dimensões que nos definem como organização.</p>
+        <p class="kicker" data-anim style="color:rgba(255,255,255,0.9); border-left-color:#fff">Parte 01 / 05</p>
+        <h2 class="title-mega" style="color:#fff" data-anim="wipe">A gente <em>é Ituber</em></h2>
+        <p class="lead-deck" data-anim style="color:rgba(255,255,255,0.92)">Cultura, ética inegociável e seis dimensões que nos definem como organização.</p>
       </div>
     </section>
 
     <!-- ════════════════════════════════════════════════════════
-         SLIDE 06 — CARDS 6 cultura Ituber + central
+         SLIDE 06 — CARDS 6 cultura Ituber
          ════════════════════════════════════════════════════════ -->
     <section class="slide" data-slide="6">
       <span class="slide-num"><span>06</span> · 31</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>JEITO ITUBER</p>
-      <h2 class="title-md" data-anim style="--i:1">Pra gente, <em>ética é inegociável</em></h2>
-      <div class="grid-cards grid-cards--3" data-anim style="--i:2; margin-top: var(--space-4)">
+      <p class="kicker" data-anim>Jeito Ituber</p>
+      <h2 class="title-md" data-anim>Pra gente, <em>ética é inegociável</em></h2>
+      <div class="grid-cards grid-cards--3" data-anim style="margin-top: var(--space-4)">
         <div class="card-d card-d--accent" data-fragment="current-visible">
-          <p class="card-d__label"><span class="dot"></span>01 · CLIENTE</p>
+          <p class="card-d__label">01 · Cliente</p>
           <h3 class="card-d__title">Trabalha para o cliente</h3>
           <p class="card-d__desc">Obstinado por encantar · Inovar a partir das necessidades · Simplificar sempre</p>
         </div>
         <div class="card-d card-d--info" data-fragment="current-visible">
-          <p class="card-d__label"><span class="dot"></span>02 · RESULTADO</p>
+          <p class="card-d__label">02 · Resultado</p>
           <h3 class="card-d__title">Movido por resultado</h3>
           <p class="card-d__desc">Ambicioso e eficiente · Crescimento sustentável · Impacto positivo na sociedade</p>
         </div>
         <div class="card-d card-d--teal" data-fragment="current-visible">
-          <p class="card-d__label"><span class="dot"></span>03 · APRENDIZADO</p>
+          <p class="card-d__label">03 · Aprendizado</p>
           <h3 class="card-d__title">Não sabe tudo</h3>
           <p class="card-d__desc">Olhar pra fora e aprender · Testar, errar, melhorar · Usar dados para decidir</p>
         </div>
         <div class="card-d card-d--sage" data-fragment="current-visible">
-          <p class="card-d__label"><span class="dot"></span>04 · DECISÃO</p>
+          <p class="card-d__label">04 · Decisão</p>
           <h3 class="card-d__title">Faz escolhas e decisões</h3>
           <p class="card-d__desc">Coragem para se posicionar · Saber priorizar · Saber fazer renúncias</p>
         </div>
         <div class="card-d card-d--plum" data-fragment="current-visible">
-          <p class="card-d__label"><span class="dot"></span>05 · TIME</p>
+          <p class="card-d__label">05 · Time</p>
           <h3 class="card-d__title">Vai de turma</h3>
           <p class="card-d__desc">Confiar e trabalhar com autonomia · Ajudar e pedir ajuda · Um só Itaú</p>
         </div>
         <div class="card-d card-d--success" data-fragment="current-visible">
-          <p class="card-d__label"><span class="dot"></span>06 · D&amp;I</p>
+          <p class="card-d__label">06 · D&amp;I</p>
           <h3 class="card-d__title">Diversidade e inclusão</h3>
           <p class="card-d__desc">Diverso como nossos clientes · Aberto a pontos de vista · Ser você mesmo</p>
         </div>
@@ -1363,9 +1511,9 @@ body.is-overview .slide [data-anim] {
          ════════════════════════════════════════════════════════ -->
     <section class="slide" data-slide="7" data-background-color="var(--itau-orange)">
       <div class="divider-deck">
-        <p class="kicker" data-anim style="--i:0; color:rgba(255,255,255,0.85)"><span class="kicker__dot" style="background:#fff"></span>PARTE 02 / 05</p>
-        <h2 class="title-mega" style="color:#fff" data-anim="hero">Nossa <em style="color:#fff; font-style:italic; text-decoration:underline; text-decoration-thickness:4px; text-underline-offset:8px">jornada</em></h2>
-        <p class="lead-deck" data-anim style="--i:2; color:rgba(255,255,255,0.9)">101 anos construindo o maior banco da América Latina — da Casa Moreira Salles ao SuperApp.</p>
+        <p class="kicker" data-anim style="color:rgba(255,255,255,0.9); border-left-color:#fff">Parte 02 / 05</p>
+        <h2 class="title-mega" style="color:#fff" data-anim="wipe">Nossa <em>jornada</em></h2>
+        <p class="lead-deck" data-anim style="color:rgba(255,255,255,0.92)">101 anos construindo o maior banco da América Latina — da Casa Moreira Salles ao SuperApp.</p>
       </div>
     </section>
 
@@ -1374,9 +1522,9 @@ body.is-overview .slide [data-anim] {
          ════════════════════════════════════════════════════════ -->
     <section class="slide" data-slide="8">
       <span class="slide-num"><span>08</span> · 31</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>1924 → 2000</p>
-      <h2 class="title-md" data-anim style="--i:1">Fundação e <em>pioneirismo digital</em></h2>
-      <div class="timeline-h" style="--cols:6" data-anim style="--i:2">
+      <p class="kicker" data-anim>1924 → 2000</p>
+      <h2 class="title-md" data-anim>Fundação e <em>pioneirismo digital</em></h2>
+      <div class="timeline-h" style="--cols:6" data-anim>
         <div class="timeline-h__item">
           <p class="timeline-h__date">1924 · 1943</p>
           <h4 class="timeline-h__title">Origem</h4>
@@ -1415,9 +1563,9 @@ body.is-overview .slide [data-anim] {
          ════════════════════════════════════════════════════════ -->
     <section class="slide" data-slide="9">
       <span class="slide-num"><span>09</span> · 31</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>2002 → 2020</p>
-      <h2 class="title-md" data-anim style="--i:1">Consolidação e <em>transformação digital</em></h2>
-      <div class="timeline-h" style="--cols:7" data-anim style="--i:2">
+      <p class="kicker" data-anim>2002 → 2020</p>
+      <h2 class="title-md" data-anim>Consolidação e <em>transformação digital</em></h2>
+      <div class="timeline-h" style="--cols:7" data-anim>
         <div class="timeline-h__item">
           <p class="timeline-h__date">2002</p>
           <h4 class="timeline-h__title">BBA</h4>
@@ -1461,9 +1609,9 @@ body.is-overview .slide [data-anim] {
          ════════════════════════════════════════════════════════ -->
     <section class="slide" data-slide="10">
       <span class="slide-num"><span>10</span> · 31</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>2022 → 2025</p>
-      <h2 class="title-md" data-anim style="--i:1">Era do <em>Um só Itaú</em></h2>
-      <div class="timeline-h" style="--cols:5" data-anim style="--i:2">
+      <p class="kicker" data-anim>2022 → 2025</p>
+      <h2 class="title-md" data-anim>Era do <em>Um só Itaú</em></h2>
+      <div class="timeline-h" style="--cols:5" data-anim>
         <div class="timeline-h__item">
           <p class="timeline-h__date">2022</p>
           <h4 class="timeline-h__title">Itaú Shop</h4>
@@ -1497,9 +1645,9 @@ body.is-overview .slide [data-anim] {
          ════════════════════════════════════════════════════════ -->
     <section class="slide" data-slide="11" data-background-color="var(--itau-orange)">
       <div class="divider-deck">
-        <p class="kicker" data-anim style="--i:0; color:rgba(255,255,255,0.85)"><span class="kicker__dot" style="background:#fff"></span>PARTE 03 / 05</p>
-        <h2 class="title-mega" style="color:#fff" data-anim="hero">Ecossistema <em style="color:#fff; font-style:italic; text-decoration:underline; text-decoration-thickness:4px; text-underline-offset:8px">completo</em></h2>
-        <p class="lead-deck" data-anim style="--i:2; color:rgba(255,255,255,0.9)">Segmentação, produtos e atendimento para pessoa física, jurídica e atacado.</p>
+        <p class="kicker" data-anim style="color:rgba(255,255,255,0.9); border-left-color:#fff">Parte 03 / 05</p>
+        <h2 class="title-mega" style="color:#fff" data-anim="wipe">Ecossistema <em>completo</em></h2>
+        <p class="lead-deck" data-anim style="color:rgba(255,255,255,0.92)">Segmentação, produtos e atendimento para pessoa física, jurídica e atacado.</p>
       </div>
     </section>
 
@@ -1508,11 +1656,11 @@ body.is-overview .slide [data-anim] {
          ════════════════════════════════════════════════════════ -->
     <section class="slide" data-slide="12">
       <span class="slide-num"><span>12</span> · 31</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>SEGMENTAÇÃO</p>
-      <h2 class="title-md" data-anim style="--i:1">Modelo de <em>relacionamento</em> por segmento</h2>
-      <div class="layout-two-cols" data-anim style="--i:2; margin-top:var(--space-5)">
+      <p class="kicker" data-anim>Segmentação</p>
+      <h2 class="title-md" data-anim>Modelo de <em>relacionamento</em> por segmento</h2>
+      <div class="layout-two-cols" data-anim style="margin-top:var(--space-5)">
         <div class="col-left">
-          <p class="col-section-title"><span class="dot"></span>PESSOA FÍSICA</p>
+          <p class="col-section-title">Pessoa física</p>
           <ul class="list-deck">
             <li class="list-deck__item">
               <span class="list-deck__num">1</span>
@@ -1533,7 +1681,7 @@ body.is-overview .slide [data-anim] {
           </ul>
         </div>
         <div class="col-right">
-          <p class="col-section-title"><span class="dot"></span>PESSOA JURÍDICA</p>
+          <p class="col-section-title">Pessoa jurídica</p>
           <ul class="list-deck">
             <li class="list-deck__item">
               <span class="list-deck__num">1</span>
@@ -1561,9 +1709,9 @@ body.is-overview .slide [data-anim] {
          ════════════════════════════════════════════════════════ -->
     <section class="slide" data-slide="13">
       <span class="slide-num"><span>13</span> · 31</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>PRODUTOS</p>
-      <h2 class="title-md" data-anim style="--i:1">Prateleira completa de <em>16 produtos</em></h2>
-      <div class="grid-cards grid-cards--4" data-anim style="--i:2">
+      <p class="kicker" data-anim>Produtos</p>
+      <h2 class="title-md" data-anim>Prateleira completa de <em>16 produtos</em></h2>
+      <div class="grid-cards grid-cards--4" data-anim>
         <div class="card-d card-d--accent"><span class="card-d__icon">💳</span><h3 class="card-d__title">Adquirência</h3><p class="card-d__desc">Laranjinha — maquininha</p></div>
         <div class="card-d card-d--info"><span class="card-d__icon">💳</span><h3 class="card-d__title">Cartões</h3><p class="card-d__desc">Crédito, débito, múltiplos</p></div>
         <div class="card-d card-d--teal"><span class="card-d__icon">📈</span><h3 class="card-d__title">Derivativos</h3><p class="card-d__desc">Proteção e estratégias</p></div>
@@ -1584,27 +1732,27 @@ body.is-overview .slide [data-anim] {
     </section>
 
     <!-- ════════════════════════════════════════════════════════
-         SLIDE 14 — SPLIT atendimento + callout
+         SLIDE 14 — Atendimento + callout
          ════════════════════════════════════════════════════════ -->
     <section class="slide" data-slide="14">
       <span class="slide-num"><span>14</span> · 31</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>ATENDIMENTO</p>
-      <h2 class="title-md" data-anim style="--i:1">Onde o cliente <em>quiser</em>, do jeito que <em>preferir</em></h2>
-      <div class="layout-two-cols" data-anim style="--i:2">
+      <p class="kicker" data-anim>Atendimento</p>
+      <h2 class="title-md" data-anim>Onde o cliente <em>quiser</em>, do jeito que <em>preferir</em></h2>
+      <div class="layout-two-cols" data-anim>
         <div class="col-left">
-          <p class="col-section-title"><span class="dot"></span>ATENDIMENTO REMOTO · 7 CANAIS</p>
+          <p class="col-section-title">Atendimento remoto · 7 canais</p>
           <div class="grid-cards grid-cards--2" style="margin-top:var(--space-3)">
-            <div class="card-d card-d--info" style="padding:var(--space-3)"><h3 class="card-d__title" style="font-size:0.95rem">WhatsApp</h3></div>
-            <div class="card-d card-d--info" style="padding:var(--space-3)"><h3 class="card-d__title" style="font-size:0.95rem">E-mail</h3></div>
-            <div class="card-d card-d--info" style="padding:var(--space-3)"><h3 class="card-d__title" style="font-size:0.95rem">Telefone</h3></div>
-            <div class="card-d card-d--info" style="padding:var(--space-3)"><h3 class="card-d__title" style="font-size:0.95rem">Chat</h3></div>
-            <div class="card-d card-d--info" style="padding:var(--space-3)"><h3 class="card-d__title" style="font-size:0.95rem">Click to human</h3></div>
-            <div class="card-d card-d--info" style="padding:var(--space-3)"><h3 class="card-d__title" style="font-size:0.95rem">Bankline</h3></div>
-            <div class="card-d card-d--info" style="padding:var(--space-3); grid-column:span 2"><h3 class="card-d__title" style="font-size:0.95rem">Mobile banking</h3><p class="card-d__desc">100% funcional no App</p></div>
+            <div class="card-d card-d--info" style="padding-top:var(--space-2)"><h3 class="card-d__title" style="font-size:0.95rem">WhatsApp</h3></div>
+            <div class="card-d card-d--info" style="padding-top:var(--space-2)"><h3 class="card-d__title" style="font-size:0.95rem">E-mail</h3></div>
+            <div class="card-d card-d--info" style="padding-top:var(--space-2)"><h3 class="card-d__title" style="font-size:0.95rem">Telefone</h3></div>
+            <div class="card-d card-d--info" style="padding-top:var(--space-2)"><h3 class="card-d__title" style="font-size:0.95rem">Chat</h3></div>
+            <div class="card-d card-d--info" style="padding-top:var(--space-2)"><h3 class="card-d__title" style="font-size:0.95rem">Click to human</h3></div>
+            <div class="card-d card-d--info" style="padding-top:var(--space-2)"><h3 class="card-d__title" style="font-size:0.95rem">Bankline</h3></div>
+            <div class="card-d card-d--info" style="padding-top:var(--space-2); grid-column:span 2"><h3 class="card-d__title" style="font-size:0.95rem">Mobile banking</h3><p class="card-d__desc">100% funcional no App</p></div>
           </div>
         </div>
         <div class="col-right">
-          <p class="col-section-title"><span class="dot"></span>ATENDIMENTO FÍSICO</p>
+          <p class="col-section-title">Atendimento físico</p>
           <div class="metrics-deck metrics-deck--2" style="margin-top:var(--space-3)">
             <div class="metric-d var-accent">
               <p class="metric-d__val">2,4 <span>mil</span></p>
@@ -1628,21 +1776,21 @@ body.is-overview .slide [data-anim] {
          ════════════════════════════════════════════════════════ -->
     <section class="slide" data-slide="15">
       <span class="slide-num"><span>15</span> · 31</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>ESCUTA DO CLIENTE</p>
-      <h2 class="title-md" data-anim style="--i:1">Líderes ouvindo, <em>em escala</em></h2>
-      <div class="metrics-deck metrics-deck--3" data-anim style="--i:2">
+      <p class="kicker" data-anim>Escuta do cliente</p>
+      <h2 class="title-md" data-anim>Líderes ouvindo, <em>em escala</em></h2>
+      <div class="metrics-deck metrics-deck--3 stagger-group" data-anim>
         <div class="metric-d var-accent">
-          <p class="metric-d__kicker">ITUBER ENTENDE</p>
+          <p class="metric-d__kicker">Ituber entende</p>
           <p class="metric-d__val">+70 <span>mil</span></p>
           <p class="metric-d__label">ligações de líderes ouvindo clientes — foco em dores e oportunidades</p>
         </div>
         <div class="metric-d var-info">
-          <p class="metric-d__kicker">PAPO DE CLIENTE</p>
+          <p class="metric-d__kicker">Papo de cliente</p>
           <p class="metric-d__val">+60 <span>mil</span></p>
           <p class="metric-d__label">encontros de colaboradores de agências aprimorando a experiência</p>
         </div>
         <div class="metric-d var-teal">
-          <p class="metric-d__kicker">ITUBER VISITA</p>
+          <p class="metric-d__kicker">Ituber visita</p>
           <p class="metric-d__val">+1.000</p>
           <p class="metric-d__label">visitas conectando lideranças e linha de frente</p>
         </div>
@@ -1655,50 +1803,50 @@ body.is-overview .slide [data-anim] {
          ════════════════════════════════════════════════════════ -->
     <section class="slide" data-slide="16" data-background-color="var(--itau-orange)">
       <div class="divider-deck">
-        <p class="kicker" data-anim style="--i:0; color:rgba(255,255,255,0.85)"><span class="kicker__dot" style="background:#fff"></span>PARTE 04 / 05</p>
-        <h2 class="title-mega" style="color:#fff" data-anim="hero"><em style="color:#fff; font-style:italic; text-decoration:underline; text-decoration-thickness:4px; text-underline-offset:8px">Tecnologia</em> e inovação</h2>
-        <p class="lead-deck" data-anim style="--i:2; color:rgba(255,255,255,0.9)">Metodologia integrada, IA em escala, mais de 20 mil colaboradores em squads.</p>
+        <p class="kicker" data-anim style="color:rgba(255,255,255,0.9); border-left-color:#fff">Parte 04 / 05</p>
+        <h2 class="title-mega" style="color:#fff" data-anim="wipe"><em>Tecnologia</em> e inovação</h2>
+        <p class="lead-deck" data-anim style="color:rgba(255,255,255,0.92)">Metodologia integrada, IA em escala, mais de 20 mil colaboradores em squads.</p>
       </div>
     </section>
 
     <!-- ════════════════════════════════════════════════════════
-         SLIDE 17 — SPLIT metodologia + Inteligência Itaú
+         SLIDE 17 — Metodologia + Inteligência Itaú
          ════════════════════════════════════════════════════════ -->
     <section class="slide" data-slide="17">
       <span class="slide-num"><span>17</span> · 31</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>METODOLOGIA</p>
-      <h2 class="title-md" data-anim style="--i:1">Quatro disciplinas <em>integradas</em></h2>
-      <div class="layout-two-cols" data-anim style="--i:2">
+      <p class="kicker" data-anim>Metodologia</p>
+      <h2 class="title-md" data-anim>Quatro disciplinas <em>integradas</em></h2>
+      <div class="layout-two-cols" data-anim>
         <div class="col-left">
-          <p class="col-section-title"><span class="dot"></span>NO CENTRO: CLIENTES</p>
+          <p class="col-section-title">No centro: clientes</p>
           <div class="grid-cards grid-cards--2" style="margin-top:var(--space-3)">
             <div class="card-d card-d--accent">
-              <p class="card-d__label"><span class="dot"></span>DESIGN</p>
+              <p class="card-d__label">Design</p>
               <h3 class="card-d__title">Experiência integrada</h3>
               <p class="card-d__desc">Ao dia a dia do cliente em todas as jornadas</p>
             </div>
             <div class="card-d card-d--info">
-              <p class="card-d__label"><span class="dot"></span>TECNOLOGIA</p>
+              <p class="card-d__label">Tecnologia</p>
               <h3 class="card-d__title">Modernização contínua</h3>
               <p class="card-d__desc">Resolução rápida e arquitetura cloud</p>
             </div>
             <div class="card-d card-d--teal">
-              <p class="card-d__label"><span class="dot"></span>PRODUTOS</p>
+              <p class="card-d__label">Produtos</p>
               <h3 class="card-d__title">O que clientes amam</h3>
               <p class="card-d__desc">Desenvolvimento centrado no cliente</p>
             </div>
             <div class="card-d card-d--sage">
-              <p class="card-d__label"><span class="dot"></span>DADOS &amp; IA</p>
+              <p class="card-d__label">Dados &amp; IA</p>
               <h3 class="card-d__title">Integrados na metodologia</h3>
               <p class="card-d__desc">Não como camada separada</p>
             </div>
           </div>
         </div>
         <div class="col-right">
-          <p class="col-section-title"><span class="dot"></span>INTELIGÊNCIA ITAÚ</p>
-          <div class="card-d card-d--accent" style="padding:var(--space-5); margin-top:var(--space-3)">
+          <p class="col-section-title">Inteligência Itaú</p>
+          <div class="card-d card-d--accent" style="margin-top:var(--space-3)">
             <h3 class="card-d__title" style="font-size:1.2rem">Soluções de IA generativa conversacional</h3>
-            <ul style="margin:var(--space-3) 0 0; padding-left:var(--space-4); color:var(--color-fg-muted); font-size:0.95rem; line-height:1.6">
+            <ul style="margin:var(--space-3) 0 0; padding-left:var(--space-4); color:var(--color-fg-muted); font-family:var(--font-ui); font-size:0.95rem; line-height:1.6">
               <li><strong style="color:var(--color-fg)">Pix no WhatsApp</strong> — transferências por chat</li>
               <li><strong style="color:var(--color-fg)">Inteligência de Investimentos</strong> — recomendação personalizada</li>
               <li><strong style="color:var(--color-fg)">Itaú Emps</strong> — assistente para microempreendedor</li>
@@ -1713,50 +1861,50 @@ body.is-overview .slide [data-anim] {
          ════════════════════════════════════════════════════════ -->
     <section class="slide" data-slide="18">
       <span class="slide-num"><span>18</span> · 31</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>GANHOS DE TECNOLOGIA</p>
-      <h2 class="title-md" data-anim style="--i:1">Resultados que <em>movem o ponteiro</em></h2>
-      <div class="grid-cards grid-cards--3" data-anim style="--i:2; margin-top:var(--space-4)">
+      <p class="kicker" data-anim>Ganhos de tecnologia</p>
+      <h2 class="title-md" data-anim>Resultados que <em>movem o ponteiro</em></h2>
+      <div class="grid-cards grid-cards--3 stagger-group" data-anim style="margin-top:var(--space-4)">
         <div class="card-d card-d--accent">
-          <p class="card-d__label"><span class="dot"></span>IA GENERATIVA</p>
-          <p style="font-family:var(--font-display); font-size:2.5rem; font-weight:800; color:var(--color-accent); line-height:1; margin:0 0 var(--space-2); letter-spacing:-0.03em" data-id="gain-1">+88%</p>
+          <p class="card-d__label">IA generativa</p>
+          <p class="card-d__fig" style="font-size:2.5rem; color:var(--color-accent)" data-id="gain-1">+88%</p>
           <p class="card-d__desc">volume em uso (1T26 x 1T25)</p>
         </div>
         <div class="card-d card-d--info">
-          <p class="card-d__label"><span class="dot"></span>ML TRADICIONAL</p>
-          <p style="font-family:var(--font-display); font-size:2.5rem; font-weight:800; color:var(--color-info); line-height:1; margin:0 0 var(--space-2); letter-spacing:-0.03em">+35%</p>
+          <p class="card-d__label">ML tradicional</p>
+          <p class="card-d__fig" style="font-size:2.5rem; color:var(--color-info)">+35%</p>
           <p class="card-d__desc">volume (1T26 x 1T25)</p>
         </div>
         <div class="card-d card-d--success">
-          <p class="card-d__label"><span class="dot"></span>QUALIDADE</p>
-          <p style="font-family:var(--font-display); font-size:2.5rem; font-weight:800; color:var(--color-success); line-height:1; margin:0 0 var(--space-2); letter-spacing:-0.03em">-98%</p>
+          <p class="card-d__label">Qualidade</p>
+          <p class="card-d__fig" style="font-size:2.5rem; color:var(--color-success)">-98%</p>
           <p class="card-d__desc">redução de incidentes de alto impacto (1T26 x 1T18)</p>
         </div>
         <div class="card-d card-d--teal">
-          <p class="card-d__label"><span class="dot"></span>VELOCIDADE</p>
-          <p style="font-family:var(--font-display); font-size:2.5rem; font-weight:800; color:var(--color-teal); line-height:1; margin:0 0 var(--space-2); letter-spacing:-0.03em">+2.813%</p>
+          <p class="card-d__label">Velocidade</p>
+          <p class="card-d__fig" style="font-size:2.5rem; color:var(--color-teal)">+2.813%</p>
           <p class="card-d__desc">volume de implantações (1T26 x 1T18)</p>
         </div>
         <div class="card-d card-d--plum">
-          <p class="card-d__label"><span class="dot"></span>CUSTO</p>
-          <p style="font-family:var(--font-display); font-size:2.5rem; font-weight:800; color:var(--color-plum); line-height:1; margin:0 0 var(--space-2); letter-spacing:-0.03em">-44%</p>
+          <p class="card-d__label">Custo</p>
+          <p class="card-d__fig" style="font-size:2.5rem; color:var(--color-plum)">-44%</p>
           <p class="card-d__desc">redução no custo de transações únicas (1T26 x 1T18)</p>
         </div>
         <div class="card-d card-d--sage">
-          <p class="card-d__label"><span class="dot"></span>SQUADS</p>
-          <p style="font-family:var(--font-display); font-size:2.5rem; font-weight:800; color:var(--color-sage); line-height:1; margin:0 0 var(--space-2); letter-spacing:-0.03em">+20 mil</p>
+          <p class="card-d__label">Squads</p>
+          <p class="card-d__fig" style="font-size:2.5rem; color:var(--color-sage)">+20 mil</p>
           <p class="card-d__desc">colaboradores em &gt;2,9 mil squads</p>
         </div>
       </div>
     </section>
 
     <!-- ════════════════════════════════════════════════════════
-         SLIDE 19 — SPLIT + Chart linha Eficiência
+         SLIDE 19 — Eficiência + Chart linha (#chart-eficiencia)
          ════════════════════════════════════════════════════════ -->
     <section class="slide" data-slide="19">
       <span class="slide-num"><span>19</span> · 31</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>EFICIÊNCIA OPERACIONAL</p>
-      <h2 class="title-md" data-anim style="--i:1">Mais entrega, <em>melhor custo</em></h2>
-      <div class="layout-two-cols" data-anim style="--i:2">
+      <p class="kicker" data-anim>Eficiência operacional</p>
+      <h2 class="title-md" data-anim>Mais entrega, <em>melhor custo</em></h2>
+      <div class="layout-two-cols" data-anim>
         <div class="col-left">
           <div class="metrics-deck metrics-deck--2" style="margin-top:0; gap:var(--space-4)">
             <div class="metric-d var-accent">
@@ -1778,7 +1926,7 @@ body.is-overview .slide [data-anim] {
           </div>
         </div>
         <div class="col-right">
-          <p class="col-section-title"><span class="dot"></span>ÍNDICE DE EFICIÊNCIA (%)</p>
+          <p class="col-section-title">Índice de eficiência (%)</p>
           <div class="chart-wrap" style="height:340px">
             <canvas id="chart-eficiencia" aria-label="Índice de Eficiência"></canvas>
           </div>
@@ -1791,9 +1939,9 @@ body.is-overview .slide [data-anim] {
          ════════════════════════════════════════════════════════ -->
     <section class="slide" data-slide="20" data-background-color="var(--itau-orange)">
       <div class="divider-deck">
-        <p class="kicker" data-anim style="--i:0; color:rgba(255,255,255,0.85)"><span class="kicker__dot" style="background:#fff"></span>PARTE 05 / 05</p>
-        <h2 class="title-mega" style="color:#fff" data-anim="hero">Estratégia <em style="color:#fff; font-style:italic; text-decoration:underline; text-decoration-thickness:4px; text-underline-offset:8px">ESG</em></h2>
-        <p class="lead-deck" data-anim style="--i:2; color:rgba(255,255,255,0.9)">Três pilares e uma base de governança. Único banco da AL no DJSI desde sua criação.</p>
+        <p class="kicker" data-anim style="color:rgba(255,255,255,0.9); border-left-color:#fff">Parte 05 / 05</p>
+        <h2 class="title-mega" style="color:#fff" data-anim="wipe">Estratégia <em>ESG</em></h2>
+        <p class="lead-deck" data-anim style="color:rgba(255,255,255,0.92)">Três pilares e uma base de governança. Único banco da AL no DJSI desde sua criação.</p>
       </div>
     </section>
 
@@ -1802,27 +1950,27 @@ body.is-overview .slide [data-anim] {
          ════════════════════════════════════════════════════════ -->
     <section class="slide" data-slide="21">
       <span class="slide-num"><span>21</span> · 31</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>PILARES ESG</p>
-      <h2 class="title-md" data-anim style="--i:1">Três frentes + uma <em>base de governança</em></h2>
-      <div class="grid-cards grid-cards--3" data-anim style="--i:2; margin-top:var(--space-4)">
+      <p class="kicker" data-anim>Pilares ESG</p>
+      <h2 class="title-md" data-anim>Três frentes + uma <em>base de governança</em></h2>
+      <div class="grid-cards grid-cards--3" data-anim style="margin-top:var(--space-4)">
         <div class="card-d card-d--accent">
-          <p class="card-d__label"><span class="dot"></span>SOCIAL</p>
+          <p class="card-d__label">Social</p>
           <h3 class="card-d__title">Diversidade e desenvolvimento</h3>
           <p class="card-d__desc">Promover diversidade e inclusão; desenvolvimento social e financeiro de pessoas, empresas e comunidades.</p>
         </div>
         <div class="card-d card-d--info">
-          <p class="card-d__label"><span class="dot"></span>FINANÇAS</p>
+          <p class="card-d__label">Finanças</p>
           <h3 class="card-d__title">Finanças sustentáveis</h3>
           <p class="card-d__desc">Integração de critérios ESG, advocacy de mercado e produtos sustentáveis.</p>
         </div>
         <div class="card-d card-d--teal">
-          <p class="card-d__label"><span class="dot"></span>CLIMA</p>
+          <p class="card-d__label">Clima</p>
           <h3 class="card-d__title">Transição climática</h3>
           <p class="card-d__desc">Resiliência operacional, transição low-carbon, adaptação e mitigação de riscos climáticos.</p>
         </div>
       </div>
-      <div class="card-d card-d--sage" data-anim style="--i:3; margin-top:var(--space-4); padding:var(--space-4) var(--space-5)">
-        <p class="card-d__label"><span class="dot"></span>BASE TRANSVERSAL</p>
+      <div class="card-d card-d--sage" data-anim style="margin-top:var(--space-5)">
+        <p class="card-d__label">Base transversal</p>
         <h3 class="card-d__title">Governança e conduta</h3>
         <p class="card-d__desc">Práticas de gestão sustentadas, transparência e gestão de temas materiais.</p>
       </div>
@@ -1833,40 +1981,40 @@ body.is-overview .slide [data-anim] {
          ════════════════════════════════════════════════════════ -->
     <section class="slide" data-slide="22">
       <span class="slide-num"><span>22</span> · 31</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>DIVERSIDADE NA FORÇA DE TRABALHO</p>
-      <h2 class="title-md" data-anim style="--i:1">Metas, <em>realizados</em> e perfil</h2>
-      <div class="layout-two-cols" data-anim style="--i:2">
+      <p class="kicker" data-anim>Diversidade na força de trabalho</p>
+      <h2 class="title-md" data-anim>Metas, <em>realizados</em> e perfil</h2>
+      <div class="layout-two-cols" data-anim>
         <div class="col-left">
-          <p class="col-section-title"><span class="dot"></span>GÊNERO · MULHERES 53,6%</p>
+          <p class="col-section-title">Gênero · mulheres 53,6%</p>
           <div class="metrics-deck metrics-deck--2" style="margin-top:var(--space-3); gap:var(--space-3)">
             <div class="metric-d var-accent">
-              <p class="metric-d__kicker">LIDERANÇA</p>
+              <p class="metric-d__kicker">Liderança</p>
               <p class="metric-d__val">36,1<span>%</span></p>
               <p class="metric-d__label">realizado · obj 35–40%</p>
             </div>
             <div class="metric-d var-accent">
-              <p class="metric-d__kicker">CONTRATAÇÃO</p>
+              <p class="metric-d__kicker">Contratação</p>
               <p class="metric-d__val">51,1<span>%</span></p>
               <p class="metric-d__label">realizado · obj &gt;50%</p>
             </div>
           </div>
 
-          <p class="col-section-title" style="margin-top:var(--space-5)"><span class="dot"></span>RAÇA · NEGROS 30,4%</p>
+          <p class="col-section-title" style="margin-top:var(--space-5)">Raça · negros 30,4%</p>
           <div class="metrics-deck metrics-deck--2" style="margin-top:var(--space-3); gap:var(--space-3)">
             <div class="metric-d var-teal">
-              <p class="metric-d__kicker">TEMPO INTEGRAL</p>
+              <p class="metric-d__kicker">Tempo integral</p>
               <p class="metric-d__val">29,5<span>%</span></p>
               <p class="metric-d__label">realizado · obj 27–30%</p>
             </div>
             <div class="metric-d var-teal">
-              <p class="metric-d__kicker">CONTRATAÇÃO</p>
+              <p class="metric-d__kicker">Contratação</p>
               <p class="metric-d__val">38,5<span>%</span></p>
               <p class="metric-d__label">realizado · obj &gt;40%</p>
             </div>
           </div>
         </div>
         <div class="col-right">
-          <p class="col-section-title"><span class="dot"></span>PERFIL DEMOGRÁFICO</p>
+          <p class="col-section-title">Perfil demográfico</p>
           <div class="metrics-deck metrics-deck--2" style="margin-top:var(--space-3); gap:var(--space-3)">
             <div class="metric-d var-info">
               <p class="metric-d__kicker">PCD</p>
@@ -1880,7 +2028,7 @@ body.is-overview .slide [data-anim] {
             </div>
           </div>
 
-          <p class="col-section-title" style="margin-top:var(--space-5)"><span class="dot"></span>FAIXA ETÁRIA</p>
+          <p class="col-section-title" style="margin-top:var(--space-5)">Faixa etária</p>
           <div class="metrics-deck metrics-deck--3" style="margin-top:var(--space-3); gap:var(--space-3)">
             <div class="metric-d var-sage">
               <p class="metric-d__val">31,4<span>%</span></p>
@@ -1908,49 +2056,49 @@ body.is-overview .slide [data-anim] {
          ════════════════════════════════════════════════════════ -->
     <section class="slide" data-slide="23">
       <span class="slide-num"><span>23</span> · 31</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>METAS ESG · CADEIA E CRÉDITO</p>
-      <h2 class="title-md" data-anim style="--i:1">Progresso por <em>frente</em></h2>
-      <div class="layout-two-cols" data-anim style="--i:2">
+      <p class="kicker" data-anim>Metas ESG · cadeia e crédito</p>
+      <h2 class="title-md" data-anim>Progresso por <em>frente</em></h2>
+      <div class="layout-two-cols" data-anim>
         <div class="col-left">
-          <p class="col-section-title"><span class="dot"></span>FORNECEDORES ESG</p>
+          <p class="col-section-title">Fornecedores ESG</p>
           <div class="grid-cards grid-cards--2" style="margin-top:var(--space-3); gap:var(--space-3)">
             <div class="card-d card-d--accent">
-              <p class="card-d__label"><span class="dot"></span>QUESTIONÁRIO ESG</p>
-              <p style="font-family:var(--font-display); font-size:2.2rem; font-weight:800; color:var(--color-accent); line-height:1; margin:0; letter-spacing:-0.03em">73%</p>
+              <p class="card-d__label">Questionário ESG</p>
+              <p class="card-d__fig" style="font-size:2.2rem; color:var(--color-accent)">73%</p>
               <p class="card-d__desc">atingido · meta até 2026</p>
             </div>
             <div class="card-d card-d--info">
-              <p class="card-d__label"><span class="dot"></span>CENSO DIVERSIDADE</p>
-              <p style="font-family:var(--font-display); font-size:2.2rem; font-weight:800; color:var(--color-info); line-height:1; margin:0; letter-spacing:-0.03em">47%</p>
+              <p class="card-d__label">Censo diversidade</p>
+              <p class="card-d__fig" style="font-size:2.2rem; color:var(--color-info)">47%</p>
               <p class="card-d__desc">atingido · meta até 2030</p>
             </div>
             <div class="card-d card-d--teal">
-              <p class="card-d__label"><span class="dot"></span>INVENTÁRIO EMISSÕES</p>
-              <p style="font-family:var(--font-display); font-size:2.2rem; font-weight:800; color:var(--color-teal); line-height:1; margin:0; letter-spacing:-0.03em">56%</p>
+              <p class="card-d__label">Inventário emissões</p>
+              <p class="card-d__fig" style="font-size:2.2rem; color:var(--color-teal)">56%</p>
               <p class="card-d__desc">atingido · meta até 2030</p>
             </div>
             <div class="card-d card-d--success">
-              <p class="card-d__label"><span class="dot"></span>AUDITORIA ESG SENSÍVEIS</p>
-              <p style="font-family:var(--font-display); font-size:2.2rem; font-weight:800; color:var(--color-success); line-height:1; margin:0; letter-spacing:-0.03em">98%</p>
+              <p class="card-d__label">Auditoria ESG sensíveis</p>
+              <p class="card-d__fig" style="font-size:2.2rem; color:var(--color-success)">98%</p>
               <p class="card-d__desc">atingido · meta até 2030</p>
             </div>
           </div>
         </div>
         <div class="col-right">
-          <p class="col-section-title"><span class="dot"></span>CRÉDITO ESG · METAS ATÉ 2030</p>
-          <div class="card-d card-d--accent" style="margin-top:var(--space-3); padding:var(--space-4)">
-            <p class="card-d__label"><span class="dot"></span>MULHERES</p>
-            <p style="font-family:var(--font-display); font-size:1.6rem; font-weight:800; color:var(--color-fg); line-height:1.1; margin:0 0 var(--space-1)"><strong style="color:var(--color-accent)">R$ 23 bi</strong> / R$ 34,7 bi</p>
+          <p class="col-section-title">Crédito ESG · metas até 2030</p>
+          <div class="card-d card-d--accent" style="margin-top:var(--space-3)">
+            <p class="card-d__label">Mulheres</p>
+            <p class="card-d__fig" style="font-size:1.6rem; line-height:1.1; color:var(--color-fg)"><strong style="color:var(--color-accent)">R$ 23 bi</strong> / R$ 34,7 bi</p>
             <p class="card-d__desc">9,3% × 2024 · em andamento</p>
           </div>
-          <div class="card-d card-d--info" style="margin-top:var(--space-3); padding:var(--space-4)">
-            <p class="card-d__label"><span class="dot"></span>MICROCRÉDITO</p>
-            <p style="font-family:var(--font-display); font-size:1.6rem; font-weight:800; color:var(--color-fg); line-height:1.1; margin:0 0 var(--space-1)"><strong style="color:var(--color-info)">R$ 2,8 bi</strong> / R$ 15 bi</p>
+          <div class="card-d card-d--info" style="margin-top:var(--space-4)">
+            <p class="card-d__label">Microcrédito</p>
+            <p class="card-d__fig" style="font-size:1.6rem; line-height:1.1; color:var(--color-fg)"><strong style="color:var(--color-info)">R$ 2,8 bi</strong> / R$ 15 bi</p>
             <p class="card-d__desc">19% atingido</p>
           </div>
-          <div class="card-d card-d--teal" style="margin-top:var(--space-3); padding:var(--space-4)">
-            <p class="card-d__label"><span class="dot"></span>MPE — MICRO E PEQUENAS EMPRESAS</p>
-            <p style="font-family:var(--font-display); font-size:1.6rem; font-weight:800; color:var(--color-fg); line-height:1.1; margin:0 0 var(--space-1)"><strong style="color:var(--color-teal)">R$ 44,7 mi</strong> / R$ 67,1 bi</p>
+          <div class="card-d card-d--teal" style="margin-top:var(--space-4)">
+            <p class="card-d__label">MPE — micro e pequenas empresas</p>
+            <p class="card-d__fig" style="font-size:1.6rem; line-height:1.1; color:var(--color-fg)"><strong style="color:var(--color-teal)">R$ 44,7 mi</strong> / R$ 67,1 bi</p>
             <p class="card-d__desc">67% atingido</p>
           </div>
         </div>
@@ -1962,19 +2110,19 @@ body.is-overview .slide [data-anim] {
          ════════════════════════════════════════════════════════ -->
     <section class="slide" data-slide="24">
       <span class="slide-num"><span>24</span> · 31</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>TRANSIÇÃO CLIMÁTICA</p>
-      <h2 class="title-md" data-anim style="--i:1">Caminho para o <em>Net Zero 2050</em></h2>
-      <div class="layout-two-cols" data-anim style="--i:2">
+      <p class="kicker" data-anim>Transição climática</p>
+      <h2 class="title-md" data-anim>Caminho para o <em>Net Zero 2050</em></h2>
+      <div class="layout-two-cols" data-anim>
         <div class="col-left">
-          <p class="col-section-title"><span class="dot"></span><span data-mark="circle" data-mark-color="#FF6200">NET ZERO 2050</span></p>
+          <p class="col-section-title"><span data-mark="circle" data-mark-color="#FF6200">Net Zero 2050</span></p>
           <div class="card-d card-d--success" style="margin-top:var(--space-4)">
-            <p class="card-d__label"><span class="dot"></span>EMISSÕES ESCOPOS 1 + 2</p>
-            <p style="font-family:var(--font-display); font-size:2.2rem; font-weight:800; color:var(--color-success); line-height:1; margin:0; letter-spacing:-0.03em">-11,2%</p>
+            <p class="card-d__label">Emissões escopos 1 + 2</p>
+            <p class="card-d__fig" style="font-size:2.2rem; color:var(--color-success)">-11,2%</p>
             <p class="card-d__desc">16.634 tCO2e · baseline 18.738 tCO2e</p>
           </div>
-          <div class="card-d card-d--teal" style="margin-top:var(--space-3)">
-            <p class="card-d__label"><span class="dot"></span>EMISSÕES ESCOPO 3</p>
-            <p style="font-family:var(--font-display); font-size:2.2rem; font-weight:800; color:var(--color-teal); line-height:1; margin:0; letter-spacing:-0.03em">-7,8%</p>
+          <div class="card-d card-d--teal" style="margin-top:var(--space-4)">
+            <p class="card-d__label">Emissões escopo 3</p>
+            <p class="card-d__fig" style="font-size:2.2rem; color:var(--color-teal)">-7,8%</p>
             <p class="card-d__desc">35.288 tCO2e · baseline 38.263 tCO2e</p>
           </div>
           <div class="callout-box" style="margin-top:var(--space-4)">
@@ -1982,39 +2130,39 @@ body.is-overview .slide [data-anim] {
           </div>
         </div>
         <div class="col-right">
-          <p class="col-section-title"><span class="dot"></span>SETORES CARBONO-INTENSIVOS · METAS 2030</p>
+          <p class="col-section-title">Setores carbono-intensivos · metas 2030</p>
           <div class="metrics-deck metrics-deck--4" style="margin-top:var(--space-3); gap:var(--space-3)">
-            <div class="metric-d var-plum"><p class="metric-d__kicker">AÇO</p><p class="metric-d__val">23<span>%</span></p></div>
-            <div class="metric-d var-warn"><p class="metric-d__kicker">ELETRICIDADE</p><p class="metric-d__val">63<span>%</span></p></div>
-            <div class="metric-d var-info"><p class="metric-d__kicker">ALUMÍNIO</p><p class="metric-d__val">19<span>%</span></p></div>
-            <div class="metric-d var-accent"><p class="metric-d__kicker">TRANSPORTES</p><p class="metric-d__val">44<span>%</span></p></div>
-            <div class="metric-d var-teal"><p class="metric-d__kicker">CIMENTO</p><p class="metric-d__val">23<span>%</span></p></div>
-            <div class="metric-d var-danger"><p class="metric-d__kicker">CARVÃO</p><p class="metric-d__val">Phase-out</p></div>
-            <div class="metric-d var-success"><p class="metric-d__kicker">MILHO</p><p class="metric-d__val">36<span>%</span></p></div>
-            <div class="metric-d var-success"><p class="metric-d__kicker">SOJA</p><p class="metric-d__val">25<span>%</span></p></div>
+            <div class="metric-d var-plum"><p class="metric-d__kicker">Aço</p><p class="metric-d__val">23<span>%</span></p></div>
+            <div class="metric-d var-warn"><p class="metric-d__kicker">Eletricidade</p><p class="metric-d__val">63<span>%</span></p></div>
+            <div class="metric-d var-info"><p class="metric-d__kicker">Alumínio</p><p class="metric-d__val">19<span>%</span></p></div>
+            <div class="metric-d var-accent"><p class="metric-d__kicker">Transportes</p><p class="metric-d__val">44<span>%</span></p></div>
+            <div class="metric-d var-teal"><p class="metric-d__kicker">Cimento</p><p class="metric-d__val">23<span>%</span></p></div>
+            <div class="metric-d var-danger"><p class="metric-d__kicker">Carvão</p><p class="metric-d__val">Phase-out</p></div>
+            <div class="metric-d var-success"><p class="metric-d__kicker">Milho</p><p class="metric-d__val">36<span>%</span></p></div>
+            <div class="metric-d var-success"><p class="metric-d__kicker">Soja</p><p class="metric-d__val">25<span>%</span></p></div>
           </div>
-          <div class="metric-d var-sage" style="margin-top:var(--space-3)"><p class="metric-d__kicker">PECUÁRIA</p><p class="metric-d__val">12<span>%</span></p></div>
+          <div class="metric-d var-sage" style="margin-top:var(--space-3)"><p class="metric-d__kicker">Pecuária</p><p class="metric-d__val">12<span>%</span></p></div>
         </div>
       </div>
     </section>
 
     <!-- ════════════════════════════════════════════════════════
-         SLIDE 25 — R$ 1 tri finanças sustentáveis + Chart bar
+         SLIDE 25 — R$ 1 tri finanças sustentáveis + Chart bar (#chart-fin-sust)
          ════════════════════════════════════════════════════════ -->
     <section class="slide" data-slide="25">
       <span class="slide-num"><span>25</span> · 31</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>FINANÇAS SUSTENTÁVEIS</p>
-      <h2 class="title-md" data-anim style="--i:1">Compromisso de <em>R$ 1 trilhão</em></h2>
-      <div class="layout-two-cols" data-anim style="--i:2">
+      <p class="kicker" data-anim>Finanças sustentáveis</p>
+      <h2 class="title-md" data-anim>Compromisso de <em>R$ 1 trilhão</em></h2>
+      <div class="layout-two-cols" data-anim>
         <div class="col-left">
           <div style="display:flex; flex-direction:column; justify-content:center; height:100%">
-            <p style="font-family:var(--font-display); font-size:clamp(3.5rem,10vw,7rem); font-weight:900; color:var(--color-accent); line-height:0.9; letter-spacing:-0.05em; margin:0"><span data-mark="circle" data-mark-color="#FF6200">R$ 1 tri</span></p>
+            <p style="font-family:var(--font-display); font-size:clamp(3.5rem,10vw,7rem); font-weight:800; color:var(--color-fg); line-height:0.9; letter-spacing:-0.045em; margin:0; font-variant-numeric:lining-nums tabular-nums"><span data-mark="circle" data-mark-color="#FF6200">R$ 1 tri</span></p>
             <p class="lead-deck" style="margin-top:var(--space-5); max-width:50ch">em finanças sustentáveis até <strong>2030</strong>.</p>
-            <p style="font-family:var(--font-mono); font-size:0.95rem; color:var(--color-fg-muted); margin-top:var(--space-3)"><strong style="color:var(--color-fg)">R$ 577,6 bi</strong> direcionados entre jan/20 e fev/26</p>
+            <p style="font-family:var(--font-mono); font-size:0.95rem; color:var(--color-fg-muted); margin-top:var(--space-3); font-variant-numeric:lining-nums tabular-nums"><strong style="color:var(--color-fg)">R$ 577,6 bi</strong> direcionados entre jan/20 e fev/26</p>
           </div>
         </div>
         <div class="col-right">
-          <p class="col-section-title"><span class="dot"></span>PROGRESSO ACUMULADO (%)</p>
+          <p class="col-section-title">Progresso acumulado (%)</p>
           <div class="chart-wrap" style="height:340px">
             <canvas id="chart-fin-sust" aria-label="Progresso finanças sustentáveis"></canvas>
           </div>
@@ -2023,17 +2171,18 @@ body.is-overview .slide [data-anim] {
     </section>
 
     <!-- ════════════════════════════════════════════════════════
-         SLIDE 26 — CHART MISTO (Geração de valor 2013-2025)
+         SLIDE 26 — CHART MISTO (Geração de valor 2013-1T26) · ASSINATURA M2
+         A linha ROE (#chart-valor) se desenha até o valor real 24,8% (1T26).
          ════════════════════════════════════════════════════════ -->
     <section class="slide" data-slide="26">
       <span class="slide-num"><span>26</span> · 31</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>GERAÇÃO DE VALOR · 2013 → 1T26</p>
-      <h2 class="title-md" data-anim style="--i:1">Geramos valor de forma <em>consistente</em></h2>
-      <div class="chart-wrap" data-anim style="--i:2; height: 56vh; margin-top: var(--space-3)">
+      <p class="kicker" data-anim>Geração de valor · 2013 → 1T26</p>
+      <h2 class="title-md" data-anim>Geramos valor de forma <em>consistente</em></h2>
+      <div class="chart-wrap" data-anim style="height: 56vh; margin-top: var(--space-3)">
         <canvas id="chart-valor" aria-label="Geração de valor consistente"></canvas>
       </div>
-      <div class="callout-box" data-anim style="--i:3; margin-top:var(--space-4); max-width:60ch"><strong data-mark="underline" data-mark-color="#FF6200">+26%</strong> na criação de valor 1T26 × 1T25</div>
-      <p class="footnote" data-anim style="--i:4">Resultado recorrente gerencial = soma de Custo de capital + Criação de valor. ROE e Custo de capital médio em escala secundária (%).</p>
+      <div class="callout-box" data-anim style="margin-top:var(--space-4); max-width:60ch"><strong data-mark="underline" data-mark-color="#FF6200">+26%</strong> na criação de valor 1T26 × 1T25</div>
+      <p class="footnote" data-anim>Resultado recorrente gerencial = soma de Custo de capital + Criação de valor. ROE e Custo de capital médio em escala secundária (%).</p>
     </section>
 
     <!-- ════════════════════════════════════════════════════════
@@ -2041,42 +2190,42 @@ body.is-overview .slide [data-anim] {
          ════════════════════════════════════════════════════════ -->
     <section class="slide" data-slide="27" data-auto-animate>
       <span class="slide-num"><span>27</span> · 31</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>PERFORMANCE FINANCEIRA · 1T26</p>
-      <h2 class="title-md" data-anim style="--i:1">Resultado <em>recorrente</em> de R$ 12,3 bi</h2>
-      <div class="grid-cards grid-cards--3" data-anim style="--i:2; margin-top:var(--space-4); gap:var(--space-3)">
+      <p class="kicker" data-anim>Performance financeira · 1T26</p>
+      <h2 class="title-md" data-anim>Resultado <em>recorrente</em> de R$ 12,3 bi</h2>
+      <div class="grid-cards grid-cards--3" data-anim style="margin-top:var(--space-4); gap:var(--space-3)">
         <div class="card-d card-d--accent">
-          <p class="card-d__label"><span class="dot"></span>MARGEM FINANCEIRA CLIENTES</p>
-          <p style="font-family:var(--font-display); font-size:2rem; font-weight:800; color:var(--color-fg); line-height:1; margin:0 0 var(--space-1); letter-spacing:-0.03em">R$ 31,5 bi</p>
+          <p class="card-d__label">Margem financeira clientes</p>
+          <p class="card-d__fig" style="font-size:2rem; color:var(--color-fg)">R$ 31,5 bi</p>
           <div class="metric-d__delta"><span class="neg">-0,7% vs 4T25</span><span class="pos">+4,5% vs 1T25</span></div>
           <p class="metric-d__hist">Hist 1T22→25: 20,0 · 24,0 · 26,5 · 30,2</p>
         </div>
         <div class="card-d card-d--info">
-          <p class="card-d__label"><span class="dot"></span>MARGEM FINANCEIRA MERCADO</p>
-          <p style="font-family:var(--font-display); font-size:2rem; font-weight:800; color:var(--color-fg); line-height:1; margin:0 0 var(--space-1); letter-spacing:-0.03em">R$ 0,8 bi</p>
+          <p class="card-d__label">Margem financeira mercado</p>
+          <p class="card-d__fig" style="font-size:2rem; color:var(--color-fg)">R$ 0,8 bi</p>
           <div class="metric-d__delta"><span class="pos">+37,4% vs 4T25</span><span class="neg">-11,2% vs 1T25</span></div>
           <p class="metric-d__hist">Hist 1T22→25: 1,0 · 0,6 · 1,1 · 0,9</p>
         </div>
         <div class="card-d card-d--plum">
-          <p class="card-d__label"><span class="dot"></span>CUSTO DO CRÉDITO</p>
-          <p style="font-family:var(--font-display); font-size:2rem; font-weight:800; color:var(--color-fg); line-height:1; margin:0 0 var(--space-1); letter-spacing:-0.03em">R$ 10,0 bi</p>
+          <p class="card-d__label">Custo do crédito</p>
+          <p class="card-d__fig" style="font-size:2rem; color:var(--color-fg)">R$ 10,0 bi</p>
           <div class="metric-d__delta"><span class="neg">+2,5% vs 4T25</span><span class="neg">+4,5% vs 1T25</span></div>
           <p class="metric-d__hist">Hist 1T22→25: 7,0 · 9,1 · 9,4 · 9,5</p>
         </div>
         <div class="card-d card-d--teal">
-          <p class="card-d__label"><span class="dot"></span>RECEITA SERVIÇOS E SEGUROS</p>
-          <p style="font-family:var(--font-display); font-size:2rem; font-weight:800; color:var(--color-fg); line-height:1; margin:0 0 var(--space-1); letter-spacing:-0.03em">R$ 14,0 bi</p>
+          <p class="card-d__label">Receita serviços e seguros</p>
+          <p class="card-d__fig" style="font-size:2rem; color:var(--color-fg)">R$ 14,0 bi</p>
           <div class="metric-d__delta"><span class="neg">-5,7% vs 4T25</span><span class="pos">+5,3% vs 1T25</span></div>
           <p class="metric-d__hist">Hist 1T22→25: 11,6 · 12,4 · 12,7 · 13,3</p>
         </div>
         <div class="card-d card-d--sage">
-          <p class="card-d__label"><span class="dot"></span>DESPESAS N/D JUROS</p>
-          <p style="font-family:var(--font-display); font-size:2rem; font-weight:800; color:var(--color-fg); line-height:1; margin:0 0 var(--space-1); letter-spacing:-0.03em">R$ 16,2 bi</p>
+          <p class="card-d__label">Despesas n/d juros</p>
+          <p class="card-d__fig" style="font-size:2rem; color:var(--color-fg)">R$ 16,2 bi</p>
           <div class="metric-d__delta"><span class="pos">-5,0% vs 4T25</span><span class="neg">+4,8% vs 1T25</span></div>
           <p class="metric-d__hist">Hist 1T22→25: 12,8 · 13,8 · 14,0 · 15,5</p>
         </div>
         <div class="card-d card-d--accent">
-          <p class="card-d__label"><span class="dot"></span>RESULTADO RECORRENTE</p>
-          <p style="font-family:var(--font-display); font-size:2rem; font-weight:800; color:var(--color-accent); line-height:1; margin:0 0 var(--space-1); letter-spacing:-0.03em" data-id="gain-1">R$ 12,3 bi</p>
+          <p class="card-d__label">Resultado recorrente</p>
+          <p class="card-d__fig" style="font-size:2rem; color:var(--color-accent)" data-id="gain-1">R$ 12,3 bi</p>
           <div class="metric-d__delta"><span class="neg">-0,3% vs 4T25</span><span class="pos">+10,4% vs 1T25</span></div>
           <p class="metric-d__hist">Hist 1T22→25: 7,4 · 8,4 · 9,8 · 11,1</p>
         </div>
@@ -2088,42 +2237,42 @@ body.is-overview .slide [data-anim] {
          ════════════════════════════════════════════════════════ -->
     <section class="slide" data-slide="28">
       <span class="slide-num"><span>28</span> · 31</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>GESTÃO DE RISCO · 1T26</p>
-      <h2 class="title-md" data-anim style="--i:1">Balanço <em>sólido</em> e bem capitalizado</h2>
-      <div class="grid-cards grid-cards--3" data-anim style="--i:2; margin-top:var(--space-4); gap:var(--space-3)">
+      <p class="kicker" data-anim>Gestão de risco · 1T26</p>
+      <h2 class="title-md" data-anim>Balanço <em>sólido</em> e bem capitalizado</h2>
+      <div class="grid-cards grid-cards--3" data-anim style="margin-top:var(--space-4); gap:var(--space-3)">
         <div class="card-d card-d--accent">
-          <p class="card-d__label"><span class="dot"></span>CARTEIRA DE CRÉDITO</p>
-          <p style="font-family:var(--font-display); font-size:2rem; font-weight:800; color:var(--color-fg); line-height:1; margin:0 0 var(--space-1); letter-spacing:-0.03em">R$ 1.483 bi</p>
+          <p class="card-d__label">Carteira de crédito</p>
+          <p class="card-d__fig" style="font-size:2rem; color:var(--color-fg)">R$ 1.483 bi</p>
           <div class="metric-d__delta"><span class="neg">-0,5% vs Dez-25</span><span class="pos">+7,2% vs Mar-25</span></div>
           <p class="metric-d__hist">Hist Mar-22→25: 1.032 · 1.153 · 1.222 · 1.383</p>
         </div>
         <div class="card-d card-d--success">
-          <p class="card-d__label"><span class="dot"></span>NPL 90 DIAS C/ TVM</p>
-          <p style="font-family:var(--font-display); font-size:2rem; font-weight:800; color:var(--color-fg); line-height:1; margin:0 0 var(--space-1); letter-spacing:-0.03em">1,9%</p>
+          <p class="card-d__label">NPL 90 dias c/ TVM</p>
+          <p class="card-d__fig" style="font-size:2rem; color:var(--color-fg)">1,9%</p>
           <div class="metric-d__delta"><span>0pp vs Dez-25</span><span>0pp vs Mar-25</span></div>
           <p class="metric-d__hist">Hist Mar-22→25: 2,6 · 2,9 · 2,7 · 1,9</p>
         </div>
         <div class="card-d card-d--info">
-          <p class="card-d__label"><span class="dot"></span>CAPITAL NÍVEL 1</p>
-          <p style="font-family:var(--font-display); font-size:2rem; font-weight:800; color:var(--color-fg); line-height:1; margin:0 0 var(--space-1); letter-spacing:-0.03em">13,4%</p>
+          <p class="card-d__label">Capital nível 1</p>
+          <p class="card-d__fig" style="font-size:2rem; color:var(--color-fg)">13,4%</p>
           <div class="metric-d__delta"><span class="neg">-0,4pp Dez</span><span class="neg">-0,7pp Mar</span></div>
           <p class="metric-d__hist">Hist Mar-22→25: 12,5 · 13,5 · 14,5 · 14,1</p>
         </div>
         <div class="card-d card-d--teal">
-          <p class="card-d__label"><span class="dot"></span>FUNDING</p>
-          <p style="font-family:var(--font-display); font-size:2rem; font-weight:800; color:var(--color-fg); line-height:1; margin:0 0 var(--space-1); letter-spacing:-0.03em">R$ 1.667 bi</p>
+          <p class="card-d__label">Funding</p>
+          <p class="card-d__fig" style="font-size:2rem; color:var(--color-fg)">R$ 1.667 bi</p>
           <div class="metric-d__delta"><span class="neg">-2,0% Dez</span><span class="pos">+10,5% Mar</span></div>
           <p class="metric-d__hist">Hist Mar-22→25: 1.111 · 1.301 · 1.395 · 1.509</p>
         </div>
         <div class="card-d card-d--sage">
-          <p class="card-d__label"><span class="dot"></span>LCR · LIQUIDEZ CURTO PRAZO</p>
-          <p style="font-family:var(--font-display); font-size:2rem; font-weight:800; color:var(--color-fg); line-height:1; margin:0 0 var(--space-1); letter-spacing:-0.03em">195,1%</p>
+          <p class="card-d__label">LCR · liquidez curto prazo</p>
+          <p class="card-d__fig" style="font-size:2rem; color:var(--color-fg)">195,1%</p>
           <div class="metric-d__delta"><span class="neg">-19,9pp Dez</span><span class="neg">-1,3pp Mar</span></div>
           <p class="metric-d__hist">Hist Mar-22→25: 150 · 162 · 194 · 196</p>
         </div>
         <div class="card-d card-d--plum">
-          <p class="card-d__label"><span class="dot"></span>NSFR · FUNDING ESTÁVEL</p>
-          <p style="font-family:var(--font-display); font-size:2rem; font-weight:800; color:var(--color-fg); line-height:1; margin:0 0 var(--space-1); letter-spacing:-0.03em">122,0%</p>
+          <p class="card-d__label">NSFR · funding estável</p>
+          <p class="card-d__fig" style="font-size:2rem; color:var(--color-fg)">122,0%</p>
           <div class="metric-d__delta"><span class="neg">-2,8pp Dez</span><span class="neg">-0,3pp Mar</span></div>
           <p class="metric-d__hist">Hist Mar-22→25: 120 · 129 · 126 · 122</p>
         </div>
@@ -2135,26 +2284,26 @@ body.is-overview .slide [data-anim] {
          ════════════════════════════════════════════════════════ -->
     <section class="slide" data-slide="29">
       <span class="slide-num"><span>29</span> · 31</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>ESTRATÉGIA</p>
-      <h2 class="title-md" data-anim style="--i:1">Explorando as potenciais avenidas de <em>crescimento</em></h2>
-      <div class="grid-cards grid-cards--4" data-anim style="--i:2; margin-top:var(--space-4); gap:var(--space-3)">
+      <p class="kicker" data-anim>Estratégia</p>
+      <h2 class="title-md" data-anim>Explorando as potenciais avenidas de <em>crescimento</em></h2>
+      <div class="grid-cards grid-cards--4" data-anim style="margin-top:var(--space-4); gap:var(--space-3)">
         <div class="card-d card-d--accent">
-          <p class="card-d__label"><span class="dot"></span>PESSOA FÍSICA</p>
+          <p class="card-d__label">Pessoa física</p>
           <h3 class="card-d__title">Maior principalidade e engajamento</h3>
           <p class="card-d__desc"><strong>One Itaú</strong> — alavanca de curto prazo. <strong>Agenda associativa</strong> com prateleira completa. <strong>Beyond banking</strong> além de serviços financeiros: iPhone pra Sempre, Itaú Shop, Samsung no Itaú, Inteligência Financeira.</p>
         </div>
         <div class="card-d card-d--info">
-          <p class="card-d__label"><span class="dot"></span>PESSOA JURÍDICA</p>
+          <p class="card-d__label">Pessoa jurídica</p>
           <h3 class="card-d__title">Intensidade de relacionamento</h3>
           <p class="card-d__desc">Aumento da base de clientes com foco em menor faturamento. <strong>Itaú Emps</strong> com proposta digital específica para microempreendedor.</p>
         </div>
         <div class="card-d card-d--teal">
-          <p class="card-d__label"><span class="dot"></span>SEGUROS</p>
+          <p class="card-d__label">Seguros</p>
           <h3 class="card-d__title">Penetração na base</h3>
           <p class="card-d__desc">Potencial de crescimento do setor + penetração na base atual. <strong>+20 produtos</strong> comercializados em plataforma aberta com <strong>+15 empresas parceiras</strong>.</p>
         </div>
         <div class="card-d card-d--plum">
-          <p class="card-d__label"><span class="dot"></span>CORPORATE</p>
+          <p class="card-d__label">Corporate</p>
           <h3 class="card-d__title">Liderança no atacado</h3>
           <p class="card-d__desc">Banco de atacado líder em <strong>crédito</strong> e <strong>mercado de capitais</strong> — manutenção e fortalecimento da posição.</p>
         </div>
@@ -2162,13 +2311,13 @@ body.is-overview .slide [data-anim] {
     </section>
 
     <!-- ════════════════════════════════════════════════════════
-         SLIDE 30 — TABLE Guidance 2026
+         SLIDE 30 — TABLE Guidance 2026 (broadsheet, tnum)
          ════════════════════════════════════════════════════════ -->
     <section class="slide" data-slide="30">
       <span class="slide-num"><span>30</span> · 31</span>
-      <p class="kicker" data-anim style="--i:0"><span class="kicker__dot"></span>GUIDANCE</p>
-      <h2 class="title-md" data-anim style="--i:1">Projeções para <em>2026</em></h2>
-      <div data-anim style="--i:2">
+      <p class="kicker" data-anim>Guidance</p>
+      <h2 class="title-md" data-anim>Projeções para <em>2026</em></h2>
+      <div data-anim>
         <table class="table-deck">
           <thead>
             <tr>
@@ -2188,7 +2337,7 @@ body.is-overview .slide [data-anim] {
           </tbody>
         </table>
       </div>
-      <p class="footnote" data-anim style="--i:3">
+      <p class="footnote" data-anim>
         <sup>1</sup> Inclui garantias financeiras prestadas e títulos privados.
         <sup>2</sup> Composto por despesa de perda esperada, descontos concedidos e recuperação de créditos.
         <sup>3</sup> Receitas de prestação de serviços + resultado de seguros, previdência e capitalização + despesas com sinistros.
@@ -2200,9 +2349,9 @@ body.is-overview .slide [data-anim] {
          ════════════════════════════════════════════════════════ -->
     <section class="slide" data-slide="31" data-background-color="#000000">
       <div class="layout-fact" style="align-items:flex-start; text-align:left; justify-content:center">
-        <p class="kicker kicker--accent" data-anim style="--i:0; color:#fff"><span class="kicker__dot"></span>RELAÇÕES COM INVESTIDORES</p>
-        <h2 class="title-xl" data-anim style="--i:1; color:#fff; max-width:18ch">Vamos <em style="color:var(--itau-orange-3); font-style:italic">conversar?</em></h2>
-        <div class="contact-grid" data-anim style="--i:2; color:#fff">
+        <p class="kicker kicker--accent" data-anim style="color:var(--itau-orange-3); border-left-color:var(--itau-orange-3)">Relações com investidores</p>
+        <h2 class="title-xl" data-anim style="color:#fff; max-width:18ch">Vamos <em>conversar?</em></h2>
+        <div class="contact-grid" data-anim style="color:#fff">
           <p style="color:rgba(255,255,255,0.9)">
             <strong style="color:var(--itau-orange-3)">Telefone / WhatsApp</strong>
             (11) 2794-3547
@@ -2216,7 +2365,7 @@ body.is-overview .slide [data-anim] {
             itau.com.br/relacoes-com-investidores
           </p>
         </div>
-        <p class="footnote" data-anim style="--i:3; color:rgba(255,255,255,0.5); margin-top:var(--space-8)">Itaú Unibanco Holding S.A. · CNPJ 60.872.504/0001-23 · Praça Alfredo Egydio de Souza Aranha, 100 · Torre Olavo Setubal · São Paulo/SP</p>
+        <p class="footnote" data-anim style="color:rgba(255,255,255,0.5); margin-top:var(--space-8)">Itaú Unibanco Holding S.A. · CNPJ 60.872.504/0001-23 · Praça Alfredo Egydio de Souza Aranha, 100 · Torre Olavo Setubal · São Paulo/SP</p>
       </div>
     </section>
 
@@ -2420,14 +2569,18 @@ body.is-overview .slide [data-anim] {
       // Re-render charts on theme/slide change for the chart slides
       if (n === 18) renderChartEficiencia();
       if (n === 24) renderChartFinSust();
-      if (n === 25) renderChartValor();
+      if (n === 25) {
+        renderChartValor();
+        // W8: dispara o sweep da anotação viva ao entrar no gráfico-tese
+        requestAnimationFrame(() => { try { valorSweep(); } catch (e) {} });
+      } else if (valorAnno.hover !== null) {
+        // limpa o crosshair ao sair do slide 26
+        valorAnno.hover = null;
+        try { chartValor && chartValor.draw(); } catch (e) {}
+      }
     }
 
-    /* ─── autoFitSlide — último recurso contra overflow ────────────
-       Se o conteúdo do slide ativo ainda exceder o viewport mesmo
-       depois do CSS guard, reduz iterativamente o font-size dos
-       títulos grandes até caber. Idempotente: re-executar não acumula
-       reduções porque resetamos o font-size inline antes de medir. */
+    /* ─── autoFitSlide — último recurso contra overflow ─── */
     function autoFitSlide(slide) {
       if (!slide) return;
       const targets = slide.querySelectorAll(
@@ -2584,15 +2737,32 @@ body.is-overview .slide [data-anim] {
     acquireWakeLock();
 
     /* ════════════════════════════════════════════════════════
-       CHARTS — Chart.js
+       CHARTS — Chart.js · defaults §5.0 (fonte do documento + pt-BR)
        ════════════════════════════════════════════════════════ */
     const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
-    let chartEf = null, chartFs = null, chartValor = null;
+    const fmtBR  = (v, dec = 0) => v.toLocaleString('pt-BR', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+    const fmtBRL = (v, suf = '') => 'R$ ' + fmtBR(v, v % 1 ? 1 : 0) + (suf ? ' ' + suf : '');
 
-    /* ── OVERDRIVE Chart.js plugin: accent glow + pulse on active points ──
-       Detecta a cor accent automaticamente via CSS custom property,
-       desenha um halo sob cada série usando essa cor e faz o último
-       ponto (índice mais recente) pulsar quando o chart está visível.
+    function applyChartDefaults() {
+      // Fonte e cor do DOCUMENTO (Archivo/ui), nunca o Helvetica default da lib
+      Chart.defaults.font.family = css('--font-ui') || css('--font-text');
+      Chart.defaults.font.size = 12;
+      Chart.defaults.color = css('--color-fg-muted');
+      // Tooltip tematizado (não o chrome default)
+      Chart.defaults.plugins.tooltip.backgroundColor = css('--color-bg-elevated');
+      Chart.defaults.plugins.tooltip.titleColor = css('--color-fg');
+      Chart.defaults.plugins.tooltip.bodyColor = css('--color-fg-muted');
+      Chart.defaults.plugins.tooltip.borderColor = css('--color-border-strong');
+      Chart.defaults.plugins.tooltip.borderWidth = 1;
+    }
+
+    let chartEf = null, chartFs = null, chartValor = null;
+    // assinatura M2: a linha ROE só "desenha" uma vez (primeira render do slide 26)
+    let valorDrawn = false;
+
+    /* ── OVERDRIVE Chart.js plugin: accent glow + pulse no último ponto ──
+       Detecta a cor accent via CSS custom property, desenha halo sob a linha
+       e faz o último ponto pulsar quando o chart está visível.
        Respeita prefers-reduced-motion. */
     const overdrivePulse = {
       id: 'overdrivePulse',
@@ -2608,7 +2778,6 @@ body.is-overview .slide [data-anim] {
             if (ds.type !== 'line' && chart.config.type !== 'line') return;
             const meta = chart.getDatasetMeta(di);
             if (!meta || !meta.dataset) return;
-            // Glow under the line: stroke same path with bigger shadow
             ctx.save();
             ctx.shadowColor = accent;
             ctx.shadowBlur = 18;
@@ -2672,10 +2841,12 @@ body.is-overview .slide [data-anim] {
       requestAnimationFrame(tick);
     })();
 
-    /* SLIDE 19 — Índice de Eficiência (linha) */
+    /* SLIDE 19 — Índice de Eficiência (linha)
+       séries de variação relativa (%) — exceção de escala declarada (não parte de 0) */
     function renderChartEficiencia() {
       const el = document.getElementById('chart-eficiencia');
       if (!el) return;
+      applyChartDefaults();
       if (chartEf) chartEf.destroy();
       chartEf = new Chart(el, {
         type: 'line',
@@ -2687,7 +2858,7 @@ body.is-overview .slide [data-anim] {
               data: [38.5, 38.4, 38.5, 38.4, 38.0, 38.0],
               borderColor: css('--color-accent'),
               backgroundColor: 'transparent',
-              borderWidth: 2.5, tension: 0.3,
+              borderWidth: 2.5, tension: 0,
               pointRadius: 4, pointHoverRadius: 6,
               pointBackgroundColor: css('--color-accent')
             },
@@ -2696,7 +2867,7 @@ body.is-overview .slide [data-anim] {
               data: [36.8, 36.6, 36.7, 36.5, 36.3, 36.2],
               borderColor: css('--color-info'),
               backgroundColor: 'transparent',
-              borderWidth: 2.5, tension: 0.3,
+              borderWidth: 2.5, tension: 0,
               pointRadius: 4, pointHoverRadius: 6,
               pointBackgroundColor: css('--color-info')
             },
@@ -2705,7 +2876,7 @@ body.is-overview .slide [data-anim] {
               data: [39.6, 37.0, 38.0, 38.8, 38.3, 37.1],
               borderColor: css('--color-fg-muted'),
               backgroundColor: 'transparent',
-              borderWidth: 2, borderDash: [5, 4], tension: 0.3,
+              borderWidth: 2, borderDash: [5, 4], tension: 0,
               pointRadius: 3, pointHoverRadius: 5,
               pointBackgroundColor: css('--color-fg-muted')
             },
@@ -2714,7 +2885,7 @@ body.is-overview .slide [data-anim] {
               data: [37.4, 35.1, 36.3, 37.1, 36.4, 34.9],
               borderColor: css('--color-teal'),
               backgroundColor: 'transparent',
-              borderWidth: 2, borderDash: [5, 4], tension: 0.3,
+              borderWidth: 2, borderDash: [5, 4], tension: 0,
               pointRadius: 3, pointHoverRadius: 5,
               pointBackgroundColor: css('--color-teal')
             }
@@ -2728,11 +2899,11 @@ body.is-overview .slide [data-anim] {
               position: 'bottom',
               labels: { color: css('--color-fg-muted'), font: { size: 11 }, padding: 12, usePointStyle: true, pointStyle: 'line' }
             },
-            tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y + '%' } }
+            tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + fmtBR(ctx.parsed.y, 1) + '%' } }
           },
           scales: {
             x: { grid: { display: false }, ticks: { color: css('--color-fg-muted') } },
-            y: { min: 30, max: 42, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => v + '%' } }
+            y: { min: 30, max: 42, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => fmtBR(v) + '%' } }
           }
         }
       });
@@ -2742,6 +2913,7 @@ body.is-overview .slide [data-anim] {
     function renderChartFinSust() {
       const el = document.getElementById('chart-fin-sust');
       if (!el) return;
+      applyChartDefaults();
       if (chartFs) chartFs.destroy();
       chartFs = new Chart(el, {
         type: 'bar',
@@ -2753,28 +2925,147 @@ body.is-overview .slide [data-anim] {
             backgroundColor: [css('--color-accent-dim'), css('--color-accent-dim'), css('--color-accent-dim'), css('--color-accent')],
             borderColor: [css('--color-accent'), css('--color-accent'), css('--color-accent'), css('--color-accent')],
             borderWidth: 2,
-            borderRadius: 6
+            borderRadius: 0
           }]
         },
         options: {
           responsive: true, maintainAspectRatio: false, indexAxis: 'y',
           plugins: {
             legend: { display: false },
-            tooltip: { callbacks: { label: ctx => 'R$ ' + (ctx.parsed.x * 10).toFixed(0) + ' bi · ' + ctx.parsed.x + '%' } }
+            tooltip: { callbacks: { label: ctx => 'R$ ' + fmtBR(ctx.parsed.x * 10) + ' bi · ' + fmtBR(ctx.parsed.x, 1) + '%' } }
           },
           scales: {
-            x: { min: 0, max: 100, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => v + '%' } },
+            x: { min: 0, max: 100, grid: { color: css('--color-border') }, ticks: { color: css('--color-fg-muted'), callback: v => fmtBR(v) + '%' } },
             y: { grid: { display: false }, ticks: { color: css('--color-fg-muted'), font: { size: 12 } } }
           }
         }
       });
     }
 
-    /* SLIDE 26 — Geração de valor (chart MISTO: barras empilhadas + 2 linhas) */
+    /* ════════════════════════════════════════════════════════════════
+       W8 — ANOTAÇÃO VIVA no gráfico-tese (slide 26 · #chart-valor).
+       Generaliza o annoPlugin do exemplo-scrollytelling. Lê um objeto
+       `valorAnno` mutável e desenha, no afterDatasetsDraw:
+        · uma LINHA DE REFERÊNCIA no ROE 24,8% (eixo y2) que o callout narra,
+          VARRENDO da esquerda (valorAnno.reveal 0→1) na entrada do slide,
+          sincronizada com a linha M2 que se desenha;
+        · um leader-line + label "ROE 24,8% · 1T26 — recorde" ancorado no
+          último ponto (o pico-tese);
+        · um CROSSHAIR de leitura no hover (valorAnno.hover = índice): linha
+          vertical + valores de cada série no ponto apontado (craft FT/NYT).
+       3 invariantes:
+       (1) reduced-motion → reveal=1 instantâneo (estado-base já é 1);
+       (2) sem scroll/hover, a anotação é desenhada no 1º render (reveal=1 base)
+           — nada depende de gesto para o conteúdo aparecer;
+       (3) só canvas 2D (afterDatasetsDraw), sem efeito caro fullscreen. */
+    const valorAnno = { reveal: 1, hover: null, roe: 24.8, roeLabel: '1T26' };
+    const annoValorPlugin = {
+      id: 'annoValor',
+      afterDatasetsDraw(chart) {
+        try {
+          const { ctx, chartArea, scales } = chart;
+          const y2 = scales.y2, x = scales.x;
+          if (!y2 || !x) return;
+          const reveal = Math.max(0, Math.min(1, valorAnno.reveal));
+          const yPix = y2.getPixelForValue(valorAnno.roe);
+          const accent = css('--color-accent') || '#FF6200';
+          const muted  = css('--color-fg-muted') || '#6b5d50';
+
+          /* 1) linha de referência horizontal no ROE-tese, varrendo da esquerda */
+          ctx.save();
+          ctx.strokeStyle = accent;
+          ctx.globalAlpha = 0.55 * reveal;
+          ctx.setLineDash([5, 4]);
+          ctx.lineWidth = 1.25;
+          ctx.beginPath();
+          ctx.moveTo(chartArea.left, yPix);
+          ctx.lineTo(chartArea.left + (chartArea.right - chartArea.left) * reveal, yPix);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          /* 2) leader-line + label ancorado no último ponto (pico-tese) */
+          if (reveal >= 0.85) {
+            // âncora robusta: último ponto da linha ROE (dataset 2), não índice cru
+            const roeMeta = chart.getDatasetMeta(2);
+            const lastPt = roeMeta && roeMeta.data && roeMeta.data[roeMeta.data.length - 1];
+            const px = (lastPt && !isNaN(lastPt.x)) ? lastPt.x : chartArea.right;
+            const labelTxt = 'ROE ' + fmtBR(valorAnno.roe, 1) + '% · ' + valorAnno.roeLabel;
+            const sub = 'recorde';
+            ctx.font = '700 12px ' + (css('--font-ui') || 'sans-serif');
+            const tw = Math.max(ctx.measureText(labelTxt).width, ctx.measureText(sub).width);
+            const boxW = tw + 14, boxH = 34;
+            let bx = px - boxW - 10;
+            if (bx < chartArea.left + 4) bx = Math.min(px + 10, chartArea.right - boxW - 4);
+            const by = Math.max(chartArea.top + 2, yPix - boxH - 10);
+            ctx.globalAlpha = (reveal - 0.85) / 0.15;
+            /* pino no ponto */
+            ctx.fillStyle = accent;
+            ctx.beginPath(); ctx.arc(px, yPix, 4.5, 0, Math.PI * 2); ctx.fill();
+            /* haste do leader */
+            ctx.strokeStyle = accent; ctx.lineWidth = 1.25;
+            ctx.beginPath(); ctx.moveTo(px, yPix); ctx.lineTo(bx + boxW, by + boxH); ctx.stroke();
+            /* caixa de label flat com fio (broadsheet) */
+            ctx.fillStyle = css('--color-bg-elevated') || '#fff';
+            ctx.globalAlpha = 0.96 * ((reveal - 0.85) / 0.15);
+            ctx.fillRect(bx, by, boxW, boxH);
+            ctx.globalAlpha = (reveal - 0.85) / 0.15;
+            ctx.strokeStyle = accent; ctx.lineWidth = 1;
+            ctx.strokeRect(bx + 0.5, by + 0.5, boxW - 1, boxH - 1);
+            ctx.fillStyle = accent;
+            ctx.fillText(labelTxt, bx + 7, by + 14);
+            ctx.fillStyle = muted;
+            ctx.font = '500 10px ' + (css('--font-mono') || 'monospace');
+            ctx.fillText(sub, bx + 7, by + 27);
+          }
+          ctx.restore();
+
+          /* 3) crosshair de leitura ao vivo (hover) — valores no índice narrado */
+          if (valorAnno.hover != null) {
+            const hx = x.getPixelForValue(valorAnno.hover);
+            if (hx != null && !isNaN(hx)) {
+              ctx.save();
+              ctx.strokeStyle = muted; ctx.globalAlpha = 0.5;
+              ctx.setLineDash([3, 3]); ctx.lineWidth = 1;
+              ctx.beginPath(); ctx.moveTo(hx, chartArea.top); ctx.lineTo(hx, chartArea.bottom); ctx.stroke();
+              ctx.setLineDash([]);
+              ctx.font = '600 11px ' + (css('--font-mono') || 'monospace');
+              /* só as 2 linhas (ROE / custo de capital) — as barras têm tooltip próprio */
+              chart.data.datasets.forEach(ds => {
+                if ((ds.type || chart.config.type) !== 'line') return;
+                const v = ds.data[valorAnno.hover];
+                if (v == null) return;
+                const py = (ds.yAxisID === 'y2' ? y2 : scales.y).getPixelForValue(v);
+                ctx.globalAlpha = 1;
+                ctx.fillStyle = ds.borderColor;
+                ctx.beginPath(); ctx.arc(hx, py, 3.5, 0, Math.PI * 2); ctx.fill();
+                const lbl = fmtBR(v, 1) + '%';
+                const tw2 = ctx.measureText(lbl).width;
+                const lx = Math.min(hx + 7, chartArea.right - tw2 - 5);
+                ctx.fillStyle = css('--color-bg-elevated') || '#fff';
+                ctx.globalAlpha = 0.9; ctx.fillRect(lx - 3, py - 8, tw2 + 6, 16);
+                ctx.globalAlpha = 1; ctx.fillStyle = ds.borderColor;
+                ctx.fillText(lbl, lx, py + 4);
+              });
+              ctx.restore();
+            }
+          }
+        } catch (err) {}
+      }
+    };
+
+    /* SLIDE 26 — Geração de valor (chart MISTO: barras empilhadas + 2 linhas)
+       ASSINATURA M2: a linha ROE (dataset 3) se desenha progressivamente até
+       o valor real 24,8% (1T26) na primeira render — depois fica estática.
+       W8: anotação viva (annoValorPlugin) — linha de referência + leader-line
+       no ROE 24,8%, sweep na entrada + crosshair no hover. */
     function renderChartValor() {
       const el = document.getElementById('chart-valor');
       if (!el) return;
+      applyChartDefaults();
       if (chartValor) chartValor.destroy();
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const drawROE = !valorDrawn && !reduced; // só anima uma vez
+      valorDrawn = true;
       const labels = ['2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025', '1T25', '1T26'];
       chartValor = new Chart(el, {
         type: 'bar',
@@ -2810,7 +3101,7 @@ body.is-overview .slide [data-anim] {
               borderColor: css('--color-accent'),
               backgroundColor: 'transparent',
               borderWidth: 2.5,
-              tension: 0.3,
+              tension: 0,
               pointRadius: 4,
               pointHoverRadius: 6,
               pointBackgroundColor: css('--color-accent'),
@@ -2825,7 +3116,7 @@ body.is-overview .slide [data-anim] {
               backgroundColor: 'transparent',
               borderWidth: 2,
               borderDash: [4, 4],
-              tension: 0.3,
+              tension: 0,
               pointRadius: 3,
               pointHoverRadius: 5,
               pointBackgroundColor: css('--color-fg-muted'),
@@ -2838,6 +3129,37 @@ body.is-overview .slide [data-anim] {
           responsive: true,
           maintainAspectRatio: false,
           interaction: { mode: 'index', intersect: false },
+          /* W8: crosshair de leitura — o índice apontado alimenta o annoValorPlugin */
+          onHover(evt, els, chart) {
+            const pts = chart.getElementsAtEventForMode(evt, 'index', { intersect: false }, false);
+            const next = pts.length ? pts[0].index : null;
+            if (next !== valorAnno.hover) { valorAnno.hover = next; chart.draw(); }
+          },
+          /* M2: progressão por ponto SÓ na linha ROE, só na 1ª render */
+          animation: drawROE ? {
+            x: {
+              type: 'number',
+              easing: 'easeInOutCubic',
+              duration: 1400,
+              from: NaN,
+              delay(ctx) {
+                if (ctx.type !== 'data' || ctx.datasetIndex !== 2 || ctx.xStarted) return 0;
+                ctx.xStarted = true;
+                return ctx.index * 80;
+              }
+            },
+            y: {
+              type: 'number',
+              easing: 'easeInOutCubic',
+              duration: 1400,
+              from: (ctx) => ctx.datasetIndex === 2 ? ctx.chart.scales.y2.getPixelForValue(0) : undefined,
+              delay(ctx) {
+                if (ctx.type !== 'data' || ctx.datasetIndex !== 2 || ctx.yStarted) return 0;
+                ctx.yStarted = true;
+                return ctx.index * 80;
+              }
+            }
+          } : { duration: 0 },
           plugins: {
             legend: {
               position: 'top',
@@ -2848,8 +3170,8 @@ body.is-overview .slide [data-anim] {
               callbacks: {
                 label: ctx => {
                   const v = ctx.parsed.y;
-                  if (ctx.dataset.yAxisID === 'y') return ctx.dataset.label + ': R$ ' + v + ' bi';
-                  return ctx.dataset.label + ': ' + v + '%';
+                  if (ctx.dataset.yAxisID === 'y') return ctx.dataset.label + ': R$ ' + fmtBR(v, 1) + ' bi';
+                  return ctx.dataset.label + ': ' + fmtBR(v, 1) + '%';
                 }
               }
             }
@@ -2867,7 +3189,7 @@ body.is-overview .slide [data-anim] {
               min: 0,
               max: 50,
               grid: { color: css('--color-border') },
-              ticks: { color: css('--color-fg-muted'), callback: v => 'R$ ' + v + ' bi', font: { size: 10 } },
+              ticks: { color: css('--color-fg-muted'), callback: v => 'R$ ' + fmtBR(v) + ' bi', font: { size: 10 } },
               title: { display: true, text: 'Resultado recorrente gerencial (R$ bi)', color: css('--color-fg-muted'), font: { size: 11 } }
             },
             y2: {
@@ -2876,13 +3198,43 @@ body.is-overview .slide [data-anim] {
               min: 0,
               max: 30,
               grid: { drawOnChartArea: false },
-              ticks: { color: css('--color-fg-muted'), callback: v => v + '%', font: { size: 10 } },
+              ticks: { color: css('--color-fg-muted'), callback: v => fmtBR(v) + '%', font: { size: 10 } },
               title: { display: true, text: 'ROE / Custo de capital (%)', color: css('--color-fg-muted'), font: { size: 11 } }
             }
           }
-        }
+        },
+        plugins: [annoValorPlugin]   /* W8 — anotação viva do gráfico-tese */
       });
+      /* W8 fallback/base: garante a anotação desenhada já no 1º render (reveal=1
+         quando reduced-motion; o sweep abaixo regride p/ 0→1 só com movimento) */
+      if (reduced) { valorAnno.reveal = 1; valorAnno.hover = null; }
     }
+
+    /* ════════════════════════════════════════════════════════════════
+       W8 — sweep da anotação do gráfico-tese (slide 26).
+       Quando o slide 26 entra, valorAnno.reveal anima 0→1: a linha de
+       referência no ROE 24,8% e o leader-line ACENDEM varrendo da esquerda,
+       sincronizados com a linha M2 que se desenha (mesmo easeOutCubic, com
+       delay para a linha já ter avançado). Invariantes: reduced-motion →
+       reveal=1 instantâneo (estado-base já é 1); só roda com o slide ativo. */
+    const valorSweep = (() => {
+      let raf = null;
+      return function sweep() {
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduce) { valorAnno.reveal = 1; try { chartValor && chartValor.draw(); } catch (e) {} return; }
+        if (raf) cancelAnimationFrame(raf);
+        valorAnno.reveal = 0;
+        const t0 = performance.now();
+        const DUR = 1000, DELAY = 700;   /* começa depois da linha M2 já correr */
+        function step(now) {
+          const p = Math.max(0, Math.min(1, (now - t0 - DELAY) / DUR));
+          valorAnno.reveal = 1 - Math.pow(1 - p, 3);   /* easeOutCubic */
+          try { chartValor && chartValor.draw(); } catch (e) {}
+          if (p < 1) raf = requestAnimationFrame(step);
+        }
+        raf = requestAnimationFrame(step);
+      };
+    })();
 
     /* ── Inicializar via hash ── */
     const fromHash = parseInt((location.hash.match(/^#s(\d+)$/) || [])[1], 10);
@@ -2897,9 +3249,8 @@ body.is-overview .slide [data-anim] {
 
     /* ════════════════════════════════════════════════════════
        OVERDRIVE: WebGL hero — flow field generativo
-       Renderiza um campo de fluxo de partículas com cor accent
-       sobre fundo preto do slide 1. Pausa quando o slide hero
-       não está ativo (CPU/GPU savings) e respeita reduced-motion.
+       Textura de fundo do slide 1 (numero-protagonista). Pausa quando o
+       hero não está ativo (CPU/GPU savings) e respeita reduced-motion.
        ════════════════════════════════════════════════════════ */
     (function webglHero() {
       const canvas = document.getElementById('webgl-hero');
@@ -2912,7 +3263,9 @@ body.is-overview .slide [data-anim] {
       if (!gl) {
         // Fallback 2D simples se WebGL não disponível
         const ctx2d = canvas.getContext('2d');
-        if (!ctx2d) return;
+        // W9 invariante: sem nenhum contexto, o canvas some e a aurora-base CSS
+        // (mesmas cores) é o que se vê — nunca um retângulo preto morto.
+        if (!ctx2d) { canvas.classList.add('is-empty'); return; }
         function resize2d() {
           const dpr = Math.min(2, window.devicePixelRatio || 1);
           canvas.width = Math.floor(canvas.clientWidth * dpr);
@@ -3020,13 +3373,14 @@ body.is-overview .slide [data-anim] {
       }
       const vs = compile(gl.VERTEX_SHADER, vsSrc);
       const fs = compile(gl.FRAGMENT_SHADER, fsSrc);
-      if (!vs || !fs) return;
+      if (!vs || !fs) { canvas.classList.add('is-empty'); return; }
       const prog = gl.createProgram();
       gl.attachShader(prog, vs);
       gl.attachShader(prog, fs);
       gl.linkProgram(prog);
       if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
         console.warn('link error', gl.getProgramInfoLog(prog));
+        canvas.classList.add('is-empty');
         return;
       }
       gl.useProgram(prog);
