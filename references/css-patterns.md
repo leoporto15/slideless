@@ -539,6 +539,35 @@ Chart.defaults.plugins.tooltip.borderColor = css('--color-border-strong');
 Chart.defaults.plugins.tooltip.borderWidth = 1;
 ```
 
+### 5.0b Guard de CDN — OBRIGATÓRIO sempre que houver gráfico
+
+O Chart.js vem de **CDN externo**. Em rede corporativa/intranet que bloqueia `cdn.jsdelivr.net` (cenário real do banco), `Chart` fica `undefined` e a PRIMEIRA linha `Chart.defaults…` lança `ReferenceError` que **mata o script inteiro** — o documento todo deixa de inicializar (slides não navegam, não só o gráfico some). Blindar SEMPRE: testar `Chart` antes de tocar nele e dar um fallback visível no lugar do canvas.
+
+```js
+const CHART_OK = (typeof Chart !== 'undefined');
+if (CHART_OK) {
+  Chart.defaults.font.family = css('--font-ui') || css('--font-text');
+  /* …resto do bloco §5.0 (defaults + tooltip)… */
+} else {
+  // fallback digno: o leitor entende o porquê, não vê um retângulo em branco
+  document.querySelectorAll('canvas[id^="chart-"]').forEach(c => {
+    const note = document.createElement('p');
+    note.style.cssText = 'color:var(--color-fg-muted);font-size:.95rem;text-align:center;padding:3rem 1rem';
+    note.textContent = 'Gráfico indisponível offline (requer Chart.js via internet).';
+    c.parentNode && c.parentNode.replaceChild(note, c);
+  });
+}
+
+// fmtBR/fmtBRL ficam FORA do guard (não dependem do Chart) — usados em callbacks de tick
+const fmtBR  = (v, dec = 0) => v.toLocaleString('pt-BR', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+const fmtBRL = (v, suf = '') => 'R$ ' + fmtBR(v, v % 1 ? 1 : 0) + (suf ? ' ' + suf : '');
+
+// cada função de render guarda também:
+function renderChartX() { const el = document.getElementById('chart-x'); if (!el || !CHART_OK) return; /* new Chart… */ }
+```
+
+**Regra:** nenhum `new Chart()` sem o guard `typeof Chart !== 'undefined'`. Offline, o documento continua navegável e cada gráfico vira a nota de fallback — nunca um canvas em branco nem o script morto. O validador sinaliza `P5b-chart-no-guard`.
+
 **Regras de design de dados (somam-se às de fidelidade abaixo):**
 - `tension`: **0 para medições discretas/regulatórias/financeiras** (trimestres, saldos, índices oficiais); ≤0.3 apenas para narrativa contínua. Nunca 0.4 por omissão.
 - `borderRadius` em barras: 0 por default — radius em barra é decisão declarada, não herança.
