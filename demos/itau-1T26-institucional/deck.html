@@ -1432,32 +1432,32 @@ body.is-overview .slide [data-anim] {
       <p class="kicker" data-anim>JEITO ITUBER</p>
       <h2 class="title-md" data-anim>Pra gente, <em>ética é inegociável</em></h2>
       <div class="grid-cards grid-cards--3" data-anim style="margin-top: var(--space-4)">
-        <div class="card-d card-d--accent" data-fragment="current-visible">
+        <div class="card-d card-d--accent">
           <p class="card-d__label">01 · CLIENTE</p>
           <h3 class="card-d__title">Trabalha para o cliente</h3>
           <p class="card-d__desc">Obstinado por encantar · Inovar a partir das necessidades · Simplificar sempre</p>
         </div>
-        <div class="card-d card-d--info" data-fragment="current-visible">
+        <div class="card-d card-d--info">
           <p class="card-d__label">02 · RESULTADO</p>
           <h3 class="card-d__title">Movido por resultado</h3>
           <p class="card-d__desc">Ambicioso e eficiente · Crescimento sustentável · Impacto positivo na sociedade</p>
         </div>
-        <div class="card-d card-d--teal" data-fragment="current-visible">
+        <div class="card-d card-d--teal">
           <p class="card-d__label">03 · APRENDIZADO</p>
           <h3 class="card-d__title">Não sabe tudo</h3>
           <p class="card-d__desc">Olhar pra fora e aprender · Testar, errar, melhorar · Usar dados para decidir</p>
         </div>
-        <div class="card-d card-d--sage" data-fragment="current-visible">
+        <div class="card-d card-d--sage">
           <p class="card-d__label">04 · DECISÃO</p>
           <h3 class="card-d__title">Faz escolhas e decisões</h3>
           <p class="card-d__desc">Coragem para se posicionar · Saber priorizar · Saber fazer renúncias</p>
         </div>
-        <div class="card-d card-d--plum" data-fragment="current-visible">
+        <div class="card-d card-d--plum">
           <p class="card-d__label">05 · TIME</p>
           <h3 class="card-d__title">Vai de turma</h3>
           <p class="card-d__desc">Confiar e trabalhar com autonomia · Ajudar e pedir ajuda · Um só Itaú</p>
         </div>
-        <div class="card-d card-d--success" data-fragment="current-visible">
+        <div class="card-d card-d--success">
           <p class="card-d__label">06 · D&amp;I</p>
           <h3 class="card-d__title">Diversidade e inclusão</h3>
           <p class="card-d__desc">Diverso como nossos clientes · Aberto a pontos de vista · Ser você mesmo</p>
@@ -2744,25 +2744,35 @@ body.is-overview .slide [data-anim] {
 
     /* ── Bloco de defaults — OBRIGATÓRIO antes do primeiro new Chart (css-patterns §5.0) ── */
     // Fonte e cor do DOCUMENTO (Archivo, via --font-ui), nunca o Helvetica default da lib
-    Chart.defaults.font.family = css('--font-ui') || css('--font-text');
-    Chart.defaults.font.size = 12;
-    Chart.defaults.color = css('--color-fg-muted');
-    // Formatação numérica pt-BR — "22,3%" no tick igual ao corpo (en-US é tell de IA)
+    // fmtBR/fmtBRL fora do guard (nao dependem do Chart)
     const fmtBR  = (v, dec = 0) => v.toLocaleString('pt-BR', { minimumFractionDigits: dec, maximumFractionDigits: dec });
     const fmtBRL = (v, suf = '') => 'R$ ' + fmtBR(v, v % 1 ? 1 : 0) + (suf ? ' ' + suf : '');
-    // Tooltip tematizado (não o chrome default)
-    Chart.defaults.plugins.tooltip.backgroundColor = css('--color-bg-elevated');
-    Chart.defaults.plugins.tooltip.titleColor = css('--color-fg');
-    Chart.defaults.plugins.tooltip.bodyColor = css('--color-fg-muted');
-    Chart.defaults.plugins.tooltip.borderColor = css('--color-border-strong');
-    Chart.defaults.plugins.tooltip.borderWidth = 1;
+    // Se o Chart.js (CDN) nao carregar (ex.: intranet), NAO quebrar o deck: guard + fallback.
+    const CHART_OK = (typeof Chart !== 'undefined');
+    if (CHART_OK) {
+      Chart.defaults.font.family = css('--font-ui') || css('--font-text');
+      Chart.defaults.font.size = 12;
+      Chart.defaults.color = css('--color-fg-muted');
+      Chart.defaults.plugins.tooltip.backgroundColor = css('--color-bg-elevated');
+      Chart.defaults.plugins.tooltip.titleColor = css('--color-fg');
+      Chart.defaults.plugins.tooltip.bodyColor = css('--color-fg-muted');
+      Chart.defaults.plugins.tooltip.borderColor = css('--color-border-strong');
+      Chart.defaults.plugins.tooltip.borderWidth = 1;
+    } else {
+      document.querySelectorAll('canvas[id^="chart-"]').forEach(function (c) {
+        var note = document.createElement('p');
+        note.style.cssText = 'color:var(--color-fg-muted);font-size:.95rem;text-align:center;padding:3rem 1rem';
+        note.textContent = 'Gráfico indisponível offline (requer Chart.js via internet).';
+        if (c.parentNode) c.parentNode.replaceChild(note, c);
+      });
+    }
 
     let chartEf = null, chartFs = null, chartValor = null;
 
     /* SLIDE 19 — Índice de Eficiência (linha) — medição trimestral discreta, tension 0 */
     function renderChartEficiencia() {
       const el = document.getElementById('chart-eficiencia');
-      if (!el) return;
+      if (!el || !CHART_OK) return;
       if (chartEf) chartEf.destroy();
       chartEf = new Chart(el, {
         type: 'line',
@@ -2828,7 +2838,7 @@ body.is-overview .slide [data-anim] {
     /* SLIDE 25 — Progresso finanças sustentáveis (barra horizontal) */
     function renderChartFinSust() {
       const el = document.getElementById('chart-fin-sust');
-      if (!el) return;
+      if (!el || !CHART_OK) return;
       if (chartFs) chartFs.destroy();
       chartFs = new Chart(el, {
         type: 'bar',
@@ -2933,7 +2943,7 @@ body.is-overview .slide [data-anim] {
     /* SLIDE 26 — Geração de valor (chart MISTO: barras empilhadas + 2 linhas) */
     function renderChartValor() {
       const el = document.getElementById('chart-valor');
-      if (!el) return;
+      if (!el || !CHART_OK) return;
       if (chartValor) chartValor.destroy();
       const labels = ['2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025', '1T25', '1T26'];
       chartValor = new Chart(el, {
