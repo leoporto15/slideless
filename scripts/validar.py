@@ -483,6 +483,17 @@ def check_chart_defaults(html: str, report: Report) -> None:
             "default da lib (tell imediato). Colar o bloco §5.0 de css-patterns.md."))
 
 
+def check_chart_guard(html: str, report: Report) -> None:
+    """P5b: gráfico (new Chart) sem guard de CDN. Se cdn.jsdelivr.net for bloqueado
+    (intranet), `Chart` fica undefined e Chart.defaults lança, matando o script inteiro.
+    Aceita `typeof Chart` ou `window.Chart` como guard. Ver css-patterns §5.0b."""
+    if re.search(r"new\s+Chart\s*\(", html) and not re.search(r"typeof\s+Chart\b|window\.Chart\b", html):
+        report.issues.append(Issue(SEVERITY_WARN, "P5b-chart-no-guard",
+            "new Chart() sem guard de CDN (`typeof Chart !== 'undefined'`) — se o Chart.js for "
+            "bloqueado (intranet), o script inteiro morre e o documento não inicializa. Envolver "
+            "defaults/renders no guard + fallback no lugar do canvas (css-patterns §5.0b)."))
+
+
 def check_glow_wallpaper(html: str, report: Report) -> None:
     """P-glow: glow radial incondicional em body::before/after."""
     m = re.search(r"body::(?:before|after)\s*\{[^}]*radial-gradient", html)
@@ -504,6 +515,29 @@ def check_hover_lift(html: str, report: Report) -> None:
             f"translateY negativo em :hover ({len(matches)} ocorrência(s)) sem perfil de "
             "motion cinemático declarado. Lift só em card clicável + perfil cinemático.",
             _line_of(html, matches[0].start())))
+
+
+def check_hairline_reveal(html: str, report: Report) -> None:
+    """P-hairline: reveal por opacidade (data-fragment/data-anim) em CARDS de um grid de
+    fios expõe o fundo pintado do grid como bloco cinza sólido. Em opacity:0 o fundo do
+    card (que cobre o cinza) some. Ver slide-patterns.md → Pitfalls."""
+    scrubbed = _scrub(html)
+    hairline = set()
+    for m in re.finditer(r'\.([A-Za-z0-9_-]+)\s*\{([^}]*)\}', scrubbed):
+        cls, body = m.group(1), m.group(2)
+        if (re.search(r'gap:\s*[1-3]px', body)
+                and re.search(r'background:\s*(?!\s*(?:transparent|none|inherit)\b)\S', body)
+                and 'grid' in body):
+            hairline.add(cls)
+    for cls in hairline:
+        pat = (r'<[^>]*class="[^"]*\b' + re.escape(cls)
+               + r'\b[^"]*"[^>]*>[\s\S]{0,2000}?<[^>]*class="[^"]*card[^"]*"[^>]*\sdata-(?:fragment|anim)\b')
+        if re.search(pat, html):
+            report.issues.append(Issue(SEVERITY_WARN, "P-hairline-reveal",
+                f'Reveal por opacidade em cards do grid de fios ".{cls}" — em opacity:0 o fundo '
+                "do grid vira bloco cinza sólido. Revele o CONTAINER (data-anim no grid), não cada "
+                "card. Ver slide-patterns.md → Pitfalls."))
+            return
 
 
 def check_em_accent_ratio(html: str, report: Report) -> None:
@@ -636,8 +670,10 @@ def run_p_checks(html: str, report: Report) -> None:
     check_transition_all(html, report)
     check_single_easing(html, report)
     check_chart_defaults(html, report)
+    check_chart_guard(html, report)
     check_glow_wallpaper(html, report)
     check_hover_lift(html, report)
+    check_hairline_reveal(html, report)
     check_em_accent_ratio(html, report)
     check_banned_headlines(html, report)
     check_ai_wordlist(html, report)
