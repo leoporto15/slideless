@@ -537,6 +537,28 @@ Cada `<section>` pode ter background próprio, animado independentemente do cont
 <tr><td>Linha B</td>...</tr>
 ```
 
+### Grid de fios (hairline) com reveal por opacidade — bloco cinza fantasma
+**Sintoma:** um slide com `.grid-cards` (ou qualquer grid de "fios") mostra um **retângulo cinza sólido** no lugar dos cards, em vez do conteúdo.
+
+**Causa-raiz:** a técnica de fios pinta o **fundo do container** (`background: var(--color-border)`) com `gap: 1px` — são os **fundos dos cards** (`background: var(--color-bg)`) que cobrem esse cinza, deixando só as linhas de 1px. Quando os cards recebem reveal por **opacidade** (`data-fragment` de qualquer tipo, ou `data-anim`), em `opacity: 0` o fundo do card some e o **fundo cinza do grid aparece inteiro** = o bloco cinza.
+
+**Correto:** nunca combinar reveal-por-opacidade nos **cards** de um grid de fios. Escolher uma:
+- revelar o **container** (`data-anim` no `.grid-cards`), não cada card — os cards entram juntos sobre os fios;
+- se precisar de stagger por card, usar grid com `gap` normal e cards com borda/fundo próprios (não a técnica de fios), de modo que `opacity:0` exponha o bg do slide, não um fundo pintado;
+- ou animar só o **conteúdo** do card, mantendo o card opaco.
+
+```html
+<!-- ❌ ERRADO: cards de um grid de fios revelados por opacidade -->
+<div class="grid-cards grid-cards--3">   <!-- background: var(--color-border); gap:1px -->
+  <div class="card-d" data-fragment="current-visible">…</div>   <!-- opacity:0 → expõe o cinza -->
+</div>
+
+<!-- ✅ CERTO: revela o container; cards aparecem juntos sobre os fios -->
+<div class="grid-cards grid-cards--3" data-anim>
+  <div class="card-d">…</div>
+</div>
+```
+
 ### Slide-num colidindo com título (REGRA CANÔNICA)
 
 **NUNCA posicionar `.slide-num` no canto top-left.** Esse é o canto onde kicker e título vivem (slides com `justify-content: center` podem ter conteúdo alto que overflowa para a área superior, sobrepondo o slide-num). Tentativas com `backdrop-filter`, `z-index` alto e background sólido falham porque o background (`--color-bg-elevated`) costuma ser quase idêntico ao bg do slide no tema itaú (ambos cream).
