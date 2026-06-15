@@ -410,6 +410,71 @@ body.is-overview .slide [data-anim]{ opacity:1 !important; transform:none !impor
 .chart-wrap{ background:var(--color-bg-elevated); border:1px solid var(--color-border); border-radius:var(--radius); padding:var(--space-4); margin-top:var(--space-4); height:50vh; max-height:380px; min-height:240px; display:flex; flex-direction:column; }
 .chart-wrap canvas{ flex:1; min-height:0; }
 
+/* ─── W20 — aurora-mesh: sistema ambiente atrás de um divider ─── */
+@property --au-x { syntax: '<percentage>'; inherits: false; initial-value: 24%; }
+.aurora-mesh { position: relative; isolation: isolate; }
+.aurora-mesh::before {
+  content: ''; position: absolute; inset: -10%; z-index: -1; pointer-events: none; filter: blur(60px);
+  background:
+    radial-gradient(38vw at var(--au-x) 30%, color-mix(in srgb, var(--itau-orange) 40%, transparent), transparent 60%),
+    radial-gradient(42vw at 78% 64%, color-mix(in srgb, var(--itau-blue-3) 26%, transparent), transparent 64%);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .aurora-mesh::before { animation: auDrift 22s var(--ease-out, ease-in-out) infinite alternate; }
+  @keyframes auDrift { to { --au-x: 70%; } }
+}
+
+/* ─── W19 — masked-type: cor viva da marca DENTRO das letras (1 por doc, fundo calmo) ─── */
+@property --mt-a { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+.masked-type { color: var(--color-accent); }            /* base = preenchimento sólido da marca */
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  .masked-type {
+    background: conic-gradient(from var(--mt-a), var(--itau-orange), var(--itau-orange-3), var(--itau-orange));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .masked-type { animation: mtSpin 16s linear infinite; }
+    @keyframes mtSpin { to { --mt-a: 360deg; } }
+  }
+  .masked-type strong { color: inherit; -webkit-text-fill-color: currentColor; }
+}
+
+/* ─── W24 — 3D tilt num card-herói ─── */
+[data-tilt] { transform: perspective(800px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)); transform-style: preserve-3d;
+  transition: transform 200ms var(--ease-out, ease-out); }
+[data-tilt] > .tilt-layer { transform: translateZ(40px); }
+
+/* ─── W30 — flip-in num título-herói ─── */
+[data-flip-in] span { display: inline-block; transform-origin: bottom; }
+@media (prefers-reduced-motion: no-preference) {
+  [data-flip-in] span { animation: flipIn .5s var(--spring, cubic-bezier(.2,.7,.2,1)) both; animation-delay: calc(var(--i,0) * 38ms); }
+  @keyframes flipIn { from { transform: perspective(400px) rotateX(-90deg); opacity: 0; } to { transform: none; opacity: 1; } }
+}
+
+/* ─── W15 — odômetro num número-tese ─── */
+.odometer { display:inline-flex; overflow:clip; line-height:1; font-variant-numeric: tabular-nums lining-nums; }
+.od-digit { display:inline-block; width:1ch; height: 1em; overflow:clip; }
+.od-reel { display:flex; flex-direction:column; transition: transform 900ms var(--ease-out-strong, cubic-bezier(0.23,1,0.32,1)); }
+.od-reel > span { height:1em; }
+@media (prefers-reduced-motion: reduce) { .od-reel { transition:none; } }
+
+/* ─── W25 — data-choreography num bloco KPI número+barra+legenda ─── */
+@property --cn { syntax: '<integer>'; inherits: false; initial-value: 0; }
+[data-choreo] .num::after { content: counter(cn); }
+[data-choreo] .num { counter-reset: cn var(--cn); }
+[data-choreo] .bar { transform: scaleX(1); transform-origin: left; }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-choreo] { animation-timeline: view(); animation-range: entry 20% entry 70%; }
+    [data-choreo] .num { animation: choreoCount 1s var(--spring) both; }
+    [data-choreo] .bar { transform: scaleX(0); animation: choreoFill 1s var(--spring) .15s both; }
+    [data-choreo] .cap { opacity: 0; animation: choreoRise .6s ease .4s both; }
+    @keyframes choreoCount { to { --cn: 100; } }
+    @keyframes choreoFill { to { transform: scaleX(1); } }
+    @keyframes choreoRise { to { opacity: 1; transform: none; } }
+  }
+}
+
 @media print{
   @page{ size:A4 landscape; margin:0; }
   .hud, .deck-progress, .brand-mark, .hero-canvas{ display:none; }
@@ -419,7 +484,7 @@ body.is-overview .slide [data-anim]{ opacity:1 !important; transform:none !impor
 </style>
 </head>
 
-<body>
+<body data-showcase>
 
 <div class="brand-mark" aria-hidden="true">
   <span class="brand-mark__rule"></span>
@@ -540,7 +605,7 @@ body.is-overview .slide [data-anim]{ opacity:1 !important; transform:none !impor
   <section class="slide slide--overdrive" data-slide="8" data-hero-canvas="1">
     <canvas class="hero-canvas" data-overdrive id="hero-canvas-8"></canvas>
     <span class="slide-num"><span>08</span> · 25</span>
-    <div class="divider-deck">
+    <div class="divider-deck aurora-mesh">
       <p class="divider-deck__num" data-anim>Parte 02 · 06</p>
       <hr class="frontis-rule" aria-hidden="true">
       <h2 class="title-xl" data-anim="hero">Posicionamento e <strong>estrutura</strong>.</h2>
@@ -553,7 +618,7 @@ body.is-overview .slide [data-anim]{ opacity:1 !important; transform:none !impor
   <section class="slide" data-slide="9">
     <span class="slide-num"><span>09</span> · 25</span>
     <p class="kicker kicker--accent" data-anim>Três pilares</p>
-    <h2 class="title-xl" data-anim="hero"><strong>Sofisticada</strong> no modelo. <strong>Democrática</strong> no acesso. <strong>Internacional</strong> nas possibilidades.</h2>
+    <h2 class="title-xl masked-type" data-anim="hero"><strong>Sofisticada</strong> no modelo. <strong>Democrática</strong> no acesso. <strong>Internacional</strong> nas possibilidades.</h2>
     <p class="lead-deck" data-anim>A promessa institucional que orienta toda a operação.</p>
   </section>
 
@@ -614,7 +679,7 @@ body.is-overview .slide [data-anim]{ opacity:1 !important; transform:none !impor
     <div class="divider-deck">
       <p class="divider-deck__num" data-anim>Parte 03 · 06</p>
       <hr class="frontis-rule" aria-hidden="true">
-      <h2 class="title-xl" data-anim="hero">Quem <strong>lidera</strong>.</h2>
+      <h2 class="title-xl" data-anim="hero" data-flip-in>Quem lidera.</h2>
       <p class="lead-deck" data-anim>Diretoria encabeçada por Carlos Augusto Salamonde.</p>
       <hr class="frontis-rule" aria-hidden="true">
     </div>
@@ -625,10 +690,12 @@ body.is-overview .slide [data-anim]{ opacity:1 !important; transform:none !impor
     <span class="slide-num"><span>14</span> · 25</span>
     <p class="kicker" data-anim>Diretoria · Liderança</p>
     <h2 class="title-md" data-anim>Liderança <strong>direta</strong>.</h2>
-    <div class="card-d card-d--accent" data-anim style="margin-bottom: var(--space-4);">
-      <p class="card-d__label">Diretor</p>
-      <h4 class="card-d__title" style="font-size: 1.5rem;">Carlos Augusto Salamonde (CAS)</h4>
-      <p class="card-d__desc">Diretor de Gestão de Investimentos Globais.</p>
+    <div class="card-d card-d--accent" data-anim data-tilt style="margin-bottom: var(--space-4);">
+      <div class="tilt-layer">
+        <p class="card-d__label">Diretor</p>
+        <h4 class="card-d__title" style="font-size: 1.5rem;">Carlos Augusto Salamonde (CAS)</h4>
+        <p class="card-d__desc">Diretor de Gestão de Investimentos Globais.</p>
+      </div>
     </div>
     <div class="grid-cards grid-cards--4" data-anim>
       <div class="card-d card-d--info"><p class="card-d__label">Head</p><h4 class="card-d__title">Pedro G. Boainain</h4><p class="card-d__desc">Asset Core</p></div>
@@ -677,7 +744,7 @@ body.is-overview .slide [data-anim]{ opacity:1 !important; transform:none !impor
     <h2 class="title-md" data-anim>R$ <strong>174,49 bi</strong> em gestão indexada.</h2>
     <div class="metrics-deck metrics-deck--2" data-anim>
       <div class="metric-d var-accent"><p class="metric-d__val">R$&nbsp;<span>18,77</span>&nbsp;bi</p><p class="metric-d__label">em ETFs listados</p></div>
-      <div class="metric-d var-info"><p class="metric-d__val">+R$&nbsp;<span>174,49</span>&nbsp;bi</p><p class="metric-d__label">em gestão indexada total</p></div>
+      <div class="metric-d var-info"><p class="metric-d__val">+R$&nbsp;<span class="odometer" data-odometer="174,49" aria-label="174,49">174,49</span>&nbsp;bi</p><p class="metric-d__label">em gestão indexada total</p></div>
     </div>
     <div class="split" data-anim style="margin-top: var(--space-6); gap: 3vw;">
       <div>
@@ -711,7 +778,7 @@ body.is-overview .slide [data-anim]{ opacity:1 !important; transform:none !impor
     <p class="kicker" data-anim>Multimesas · AuM por categoria</p>
     <h2 class="title-md" data-anim>Quatro categorias, <strong>R$ 227 bi</strong>.</h2>
     <div class="metrics-deck metrics-deck--4" data-anim>
-      <div class="metric-d var-accent"><p class="metric-d__val">R$&nbsp;<span>113,5</span></p><p class="metric-d__label">bi · Retorno Absoluto</p></div>
+      <div class="metric-d var-accent" data-choreo><p class="metric-d__val">R$&nbsp;<span>113,5</span></p><div class="bar" aria-hidden="true" style="height:4px; margin:var(--space-2) 0; border-radius:var(--radius-sm); background:var(--color-accent);"></div><p class="metric-d__label cap">bi · Retorno Absoluto</p></div>
       <div class="metric-d var-teal"><p class="metric-d__val">R$&nbsp;<span>89,8</span></p><p class="metric-d__label">bi · Créd. + RF Unconstr.</p></div>
       <div class="metric-d var-info"><p class="metric-d__val">R$&nbsp;<span>18,5</span></p><p class="metric-d__label">bi · Macro</p></div>
       <div class="metric-d var-success"><p class="metric-d__val">R$&nbsp;<span>5,2</span></p><p class="metric-d__label">bi · Equities</p></div>
@@ -1413,6 +1480,40 @@ function renderMmChart() {
   });
 }
 window.addEventListener('load', () => { applyChartDefaults(); renderEsgChart(); renderMmChart(); });
+
+/* ─── W24 — 3D tilt (guard hover+pointer fino, respeita reduced-motion) ─── */
+document.querySelectorAll('[data-tilt]').forEach(el => {
+  if (!matchMedia('(hover:hover) and (pointer:fine)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  el.addEventListener('pointermove', e => { const r = el.getBoundingClientRect();
+    el.style.setProperty('--rx', ((.5-(e.clientY-r.top)/r.height)*10).toFixed(2)+'deg');
+    el.style.setProperty('--ry', (((e.clientX-r.left)/r.width-.5)*10).toFixed(2)+'deg'); });
+  el.addEventListener('pointerleave', () => { el.style.setProperty('--rx','0deg'); el.style.setProperty('--ry','0deg'); });
+});
+
+/* ─── W30 — flip-in (split por caractere, aria-label preserva o texto) ─── */
+document.querySelectorAll('[data-flip-in]').forEach(el => {
+  if (el._flip) return; el._flip = true;
+  const t = el.textContent; el.setAttribute('aria-label', t);
+  el.innerHTML = [...t].map((c,i) => `<span aria-hidden="true" style="--i:${i}">${c===' '?'&nbsp;':c}</span>`).join('');
+});
+
+/* ─── W15 — odômetro (reel por dígito, dispara na entrada via IntersectionObserver) ─── */
+function buildOdometer(el){
+  const raw = el.dataset.odometer || el.textContent;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  el.textContent = '';
+  [...raw].forEach(ch => {
+    if (!/\d/.test(ch)) { el.append(ch); return; }
+    const d = document.createElement('span'); d.className = 'od-digit';
+    const reel = document.createElement('span'); reel.className = 'od-reel';
+    for (let i = 0; i <= 9; i++) { const s = document.createElement('span'); s.textContent = i; reel.append(s); }
+    d.append(reel); el.append(d);
+    const setY = () => { reel.style.transform = `translateY(${-ch}em)`; };
+    if (reduce) setY(); else requestAnimationFrame(() => requestAnimationFrame(setY));
+  });
+}
+const odoIO = new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting) { buildOdometer(e.target); odoIO.unobserve(e.target); } }), { threshold: 0.6 });
+document.querySelectorAll('.odometer').forEach(el => odoIO.observe(el));
 </script>
 
 </body>

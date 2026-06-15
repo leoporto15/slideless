@@ -14,7 +14,7 @@
   motion: editorial (troca de view com continuidade; reveal opacity-only só em figuras de gráfico)
   assinatura: M0 — a view #performance tem a tabela "Performance financeira · 1T26" como tabela-protagonista full-bleed com fio duplo
   ambicao: A2-elevado (institucional de resultados — trocar de view com continuidade; sobriedade por fio)
-  momento-wow: W5 View Transitions entre views (cross-fade same-document, com guard) + W3 manchete de view cinética contida (Newsreader opsz) + W8 anotação viva nos gráficos (crosshair de leitura no hover + label no ponto-tese)
+  momento-wow: W5 View Transitions entre views (cross-fade same-document, com guard) + W3 manchete de view cinética contida (Newsreader opsz) + W8 anotação viva nos gráficos (crosshair de leitura no hover + label no ponto-tese) + W21 scroll-hue drift ambiente (fio do masthead migra de temperatura quente→frio→quente, S/L travados; tecido conectivo sóbrio) + W29 blur-to-sharp focus nas figuras de gráfico (racking focus na entrada — sistema material, não momento)
   nao-vai-ter: glow-radial; kicker-dot; grid-3-cards
   serie: familia itau-1T26
   -->
@@ -447,11 +447,44 @@ strong { font-weight: 700; color: var(--color-fg); }
   }
 }
 
+/* ─── W21 · Scroll-hue drift (sistema ambiente, 1 por doc) — tecido conectivo ──
+   O acento ambiente migra de temperatura conforme o scroll do root: quente
+   (laranja Itaú, hue 24) na abertura → frio (hue 210) no miolo de dados → quente
+   no fecho. S/L TRAVADOS (só o hue muda — nunca vira brinquedo). Aplicado a UM
+   detalhe ambiente (o fio do masthead), nunca a texto de leitura. Sóbrio: não é
+   premium-de-agência, é continuidade — legítimo no registro de RI.
+   invariante 2 — base = hue fixo da marca; invariante 1 — reduced-motion trava. */
+@property --doc-hue { syntax: '<number>'; inherits: true; initial-value: 24; }
+html { --doc-hue: 24; }
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    html { animation: hueDrift linear both; animation-timeline: scroll(root); }
+    @keyframes hueDrift { 45% { --doc-hue: 210; } 100% { --doc-hue: 24; } }
+  }
+}
+/* só o fio inferior do masthead respira de temperatura (detalhe ambiente) */
+.topbar { border-bottom-color: hsl(var(--doc-hue) 55% 30%); }
+[data-theme="dark"] .topbar { border-bottom-color: hsl(var(--doc-hue) 45% 70%); }
+
+/* ─── W29 · Blur-to-sharp focus (sistema, não momento) — figuras de gráfico ──
+   As figuras-tese entram levemente borradas/dessaturadas e "racking focus" ao
+   chegar na leitura. Consistência material sóbria (não é momento espetáculo).
+   invariante 2 — base = nítido (sem suporte/sem JS a figura nasce limpa);
+   invariante 1 — reduced-motion = nítido instantâneo. Só transform/filter/opacity. */
+.focus-reveal { filter: none; }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .focus-reveal { animation: focusIn linear both; animation-timeline: view(); animation-range: entry 8% entry 58%; }
+    @keyframes focusIn { from { filter: blur(12px) saturate(.5); opacity: .5; } to { filter: blur(0) saturate(1); opacity: 1; } }
+  }
+}
+
 /* ─── Motion: perfil EDITORIAL — reveal opacity-only, só em figuras ── */
 [data-reveal] { opacity: 0; transition: opacity 350ms var(--ease-out); }
 [data-reveal].is-visible { opacity: 1; }
 @media (prefers-reduced-motion: reduce) {
   [data-reveal] { opacity: 1; transition: none; }
+  .focus-reveal { filter: none !important; opacity: 1 !important; } /* W29: nítido instantâneo */
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
@@ -495,20 +528,49 @@ strong { font-weight: 700; color: var(--color-fg); }
   body::after { display: none; }                 /* grão fora da impressão */
   .cover__main h1, .view__hero h1 { font-variation-settings: 'opsz' 72; } /* manchete em estado final no PDF */
 }
+
+/* ─── Wow families (showcase) ─────────────────────────────────────────
+   W30 flip-in · W24 tilt 3D · W11 magnetismo · W12 spotlight.
+   Componentes cursor-reativos (W11/W12/W24) com guard hover/pointer no JS. */
+
+/* W30 — split-flap na entrada de UMA manchete plana (cover__data-title) */
+[data-flip-in] span { display: inline-block; transform-origin: bottom; }
+@media (prefers-reduced-motion: no-preference) {
+  [data-flip-in] span { animation: flipIn .5s var(--spring, cubic-bezier(.2,.7,.2,1)) both; animation-delay: calc(var(--i, 0) * 38ms); }
+  @keyframes flipIn { from { transform: perspective(400px) rotateX(-90deg); opacity: 0; } to { transform: none; opacity: 1; } }
+}
+
+/* W24 — tilt 3D no bignum R$ 1 tri (view ESG) */
+[data-tilt] { transform: perspective(800px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transform-style: preserve-3d;
+  transition: transform 200ms var(--ease-out, ease-out); }
+[data-tilt] > .tilt-layer { transform: translateZ(40px); }
+
+/* W11 — magnetismo nos links do topnav */
+[data-magnetic] { transition: transform 160ms var(--ease-out-strong, cubic-bezier(0.23,1,0.32,1)); }
+
+/* W12 — spotlight na capa Home */
+[data-spotlight] { --mx: 50%; --my: 50%; position: relative; }
+[data-spotlight]::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+  background: radial-gradient(220px circle at var(--mx) var(--my), color-mix(in srgb, var(--color-accent) 18%, transparent), transparent 60%);
+  opacity: 0; transition: opacity 200ms;
+}
+[data-spotlight]:hover::after { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { [data-spotlight]::after { transition: none; } }
   </style>
 </head>
-<body>
+<body data-showcase>
   <header class="topbar">
     <a href="#home" class="topbar__brand">
       <span class="topbar__logo" aria-hidden="true"></span>
       <span>Itaú Unibanco</span>
     </a>
     <nav class="topnav" aria-label="Navegação principal">
-      <a href="#home" class="topnav__link">Home</a>
-      <a href="#cultura" class="topnav__link">Cultura &amp; Jornada</a>
-      <a href="#ecossistema" class="topnav__link">Ecossistema</a>
-      <a href="#esg" class="topnav__link">ESG</a>
-      <a href="#performance" class="topnav__link">Performance</a>
+      <a href="#home" class="topnav__link" data-magnetic>Home</a>
+      <a href="#cultura" class="topnav__link" data-magnetic>Cultura &amp; Jornada</a>
+      <a href="#ecossistema" class="topnav__link" data-magnetic>Ecossistema</a>
+      <a href="#esg" class="topnav__link" data-magnetic>ESG</a>
+      <a href="#performance" class="topnav__link" data-magnetic>Performance</a>
     </nav>
     <span class="topbar__spacer"></span>
     <button class="theme-toggle" type="button" aria-label="Alternar tema"><span aria-hidden="true">◐</span></button>
@@ -517,14 +579,14 @@ strong { font-weight: 700; color: var(--color-fg); }
   <main>
     <!-- HOME — capa split-assimetrico: manchete | ledger de KPIs -->
     <article class="view is-active" id="home">
-      <header class="cover">
+      <header class="cover" data-spotlight>
         <div class="cover__main">
           <p class="dateline">RI · 1º Trimestre de 2026 · Resultado Recorrente R$&nbsp;12,3&nbsp;bi</p>
           <h1>O maior banco da América Latina, em <em>101 anos</em>.</h1>
           <p class="lead">Banco universal obstinado por encantar o cliente em todas as dimensões — pessoa física, jurídica e atacado. Operações de varejo em 18 países. Único banco da AL no Índice Dow Jones de Sustentabilidade desde sua criação.</p>
         </div>
         <aside class="cover__data" aria-label="Números-âncora 1T26">
-          <h2 class="cover__data-title">Números-âncora 1T26</h2>
+          <h2 class="cover__data-title" data-flip-in>Números-âncora 1T26</h2>
           <div class="ledger">
             <div class="ledger__row"><span class="ledger__label">Valor de mercado</span><span class="ledger__val">US$&nbsp;96&nbsp;bi</span><p class="ledger__note">em 30/04/2026</p></div>
             <div class="ledger__row"><span class="ledger__label">Ativos totais</span><span class="ledger__val">R$&nbsp;3.200&nbsp;bi</span><p class="ledger__note">em 31/03/2026</p></div>
@@ -759,9 +821,9 @@ strong { font-weight: 700; color: var(--color-fg); }
 
       <section>
         <h2>Finanças sustentáveis — <em>R$ 1 trilhão</em></h2>
-        <p class="hero-bignum">R$&nbsp;<span>1&nbsp;tri</span></p>
+        <p class="hero-bignum" data-tilt>R$&nbsp;<span class="tilt-layer">1&nbsp;tri</span></p>
         <p class="lead">Compromisso em finanças sustentáveis até 2030. <strong>R$&nbsp;577,6&nbsp;bi</strong> já foram direcionados entre jan/20 e fev/26.</p>
-        <div class="chart-wrap" style="height:320px" data-reveal>
+        <div class="chart-wrap focus-reveal" style="height:320px" data-reveal>
           <canvas id="chart-fin-sust" aria-label="Progresso finanças sustentáveis"></canvas>
         </div>
       </section>
@@ -776,7 +838,7 @@ strong { font-weight: 700; color: var(--color-fg); }
       </section>
 
       <h2>Geração de valor · 2013 → 1T26</h2>
-      <div class="chart-wrap" style="height:440px" data-reveal>
+      <div class="chart-wrap focus-reveal" style="height:440px" data-reveal>
         <canvas id="chart-valor" aria-label="Geração de valor 2013-1T26"></canvas>
       </div>
       <div class="callout-box"><strong>+26%</strong> na criação de valor 1T26 × 1T25. Resultado recorrente gerencial = Custo de capital + Criação de valor.</div>
@@ -827,7 +889,7 @@ strong { font-weight: 700; color: var(--color-fg); }
           <div class="strip__item"><p class="strip__kicker">Squads</p><p class="strip__val">+20&nbsp;mil</p><p class="strip__label">colaboradores em &gt;2,9&nbsp;mil squads</p></div>
         </div>
         <p>Investimento em desenvolvimento de soluções: <strong>+3x</strong> vs 2018. Custos de infraestrutura: <strong>-31%</strong>. Cultura de questionamento contínuo e revisão de processos.</p>
-        <div class="chart-wrap" data-reveal>
+        <div class="chart-wrap focus-reveal" data-reveal>
           <canvas id="chart-eficiencia" aria-label="Índice de Eficiência (%)"></canvas>
         </div>
       </section>
@@ -1044,6 +1106,50 @@ strong { font-weight: 700; color: var(--color-fg); }
       if (view === 'performance') { renderChartValor(); renderChartEficiencia(); }
       if (view === 'esg') { renderChartFinSust(); }
     }
+
+    /* ── Wow families init — roda UMA vez no load; querySelectorAll varre o
+       doc inteiro (views ocultas também recebem listeners). Não interfere
+       em route()/reveal. Guards hover/pointer/reduced por componente. ── */
+    addEventListener('DOMContentLoaded', () => {
+      /* W30 — flip-in: split em spans + aria-label (a11y preservada) */
+      document.querySelectorAll('[data-flip-in]').forEach(el => {
+        if (el._flip) return; el._flip = true;
+        const t = el.textContent; el.setAttribute('aria-label', t);
+        el.innerHTML = [...t].map((c, i) => `<span aria-hidden="true" style="--i:${i}">${c === ' ' ? '&nbsp;' : c}</span>`).join('');
+      });
+
+      /* W24 — tilt 3D */
+      document.querySelectorAll('[data-tilt]').forEach(el => {
+        if (!matchMedia('(hover:hover) and (pointer:fine)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        el.addEventListener('pointermove', e => { const r = el.getBoundingClientRect();
+          el.style.setProperty('--rx', ((.5 - (e.clientY - r.top) / r.height) * 10).toFixed(2) + 'deg');
+          el.style.setProperty('--ry', (((e.clientX - r.left) / r.width - .5) * 10).toFixed(2) + 'deg'); });
+        el.addEventListener('pointerleave', () => { el.style.setProperty('--rx', '0deg'); el.style.setProperty('--ry', '0deg'); });
+      });
+
+      /* W11 — magnetismo */
+      document.querySelectorAll('[data-magnetic]').forEach(el => {
+        if (!matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        const S = 0.3; let raf = 0, lx = 0, ly = 0;
+        el.addEventListener('pointermove', e => {
+          const r = el.getBoundingClientRect();
+          lx = (e.clientX - (r.left + r.width / 2)) * S; ly = (e.clientY - (r.top + r.height / 2)) * S;
+          if (!raf) raf = requestAnimationFrame(() => { raf = 0; el.style.transform = `translate(${lx}px, ${ly}px)`; });
+        });
+        el.addEventListener('pointerleave', () => { el.style.transform = 'translate(0,0)'; });
+      });
+
+      /* W12 — spotlight */
+      document.querySelectorAll('[data-spotlight]').forEach(el => {
+        if (!matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+        el.addEventListener('pointermove', e => {
+          const r = el.getBoundingClientRect();
+          el.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+          el.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+        });
+      });
+    });
   </script>
 </body>
 </html>

@@ -417,8 +417,12 @@ li::marker { color: var(--color-fg-subtle); }
 
 /* ═══ Full-bleed — dispositivo que quebra a coluna ═══ */
 .bleed {
-  width: calc(100% + 2 * var(--content-pad));
-  margin-left: calc(-1 * var(--content-pad));
+  /* contido na coluna de conteúdo: o bleed para padding invadia o TOC à direita.
+     overflow-x:auto faz tabela larga rolar em vez de invadir a coluna lateral. */
+  width: 100%;
+  margin-left: 0;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 /* ═══ Motion — perfil editorial A2-sóbrio (figuras + h2; texto/tabelas/TOC NUNCA) ═══ */
@@ -464,10 +468,24 @@ li::marker { color: var(--color-fg-subtle); }
   }
 }
 
+/* W6 — text reveal editorial (palavra sobe) */
+.w { display: inline-block; overflow: clip; vertical-align: top; }
+.w-i { display: inline-block; transform: none; }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-split] { view-timeline-name: --r; view-timeline-axis: block; }
+    .w-i { animation: riseWord linear both; animation-timeline: --r;
+           animation-range: entry 0% entry 70%; animation-delay: calc(var(--i, 0) * 50ms); }
+    @keyframes riseWord { from { transform: translateY(110%); } to { transform: none; } }
+  }
+}
+
 /* ═══ Friso de dados (metrics) — fios, sem cor decorativa ═══ */
 .metrics {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  /* 190px: a coluna precisa caber "R$ 3.200 bi" (~165px) + padding sem estourar
+     na largura estreita do handbook (sidebar + TOC reduzem o miolo a ~684px) */
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
   gap: 1px;
   background: var(--color-border);
   border-top: 2px solid var(--color-fg);
@@ -675,9 +693,63 @@ li::marker { color: var(--color-fg-subtle); }
   .h2-rise { transform: none !important; }   /* sem rise; título já legível */
 }
 
+/* ═══════════════════════════════════════════════════════════════════════
+   REPERTÓRIO v7 — sistemas ambientes + draw-on (A2 sóbrio, calma editorial)
+   §STACKING: 2 sistemas ambientes na mesma física (W21 hue + W29 blur-focus)
+   + 1 momento espaçado (W22 draw-on). Tudo @supports + estado-final-base +
+   branch reduced-motion. Nada de cassino — handbook é registro de leitura.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── W21 — scroll-hue drift (sistema ambiente global) ──
+   A temperatura do acento migra quente→frio→quente ao longo do documento.
+   Tecido conectivo: aplicado SÓ a detalhes-fio (não a texto de leitura);
+   S/L travados — só o matiz anda. */
+@property --doc-hue { syntax: '<number>'; inherits: true; initial-value: 24; }   /* 24 = laranja Itaú */
+html { --doc-hue: 24; }
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    html { animation: hueDrift linear both; animation-timeline: scroll(root); }
+    @keyframes hueDrift { 45% { --doc-hue: 210; } 100% { --doc-hue: 24; } }
+  }
+}
+/* fio-mestre dos frisos e da figura respira com o capítulo (detalhe, não texto) */
+.metrics, .chart-wrap { border-top-color: hsl(var(--doc-hue) 90% 42%); }
+[data-theme="dark"] .metrics, [data-theme="dark"] .chart-wrap { border-top-color: hsl(var(--doc-hue) 95% 58%); }
+
+/* ── W29 — blur-to-sharp focus (sistema ambiente das figuras) ──
+   Figuras-gráfico entram desfocadas/dessaturadas e "racking focus" na leitura.
+   BASE = nítido (Chrome travado / reduced-motion nunca borra o dado). */
+.focus-reveal { filter: none; }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .focus-reveal { animation: focusIn linear both; animation-timeline: view(); animation-range: entry 8% entry 58%; }
+    @keyframes focusIn { from { filter: blur(12px) saturate(.5); opacity: .5; } to { filter: blur(0) saturate(1); opacity: 1; } }
+  }
+}
+
+/* ── W22 — draw-on SVG (momento: o diagrama dos três ciclos se desenha) ──
+   Linhas do fluxo da jornada (1924→2000 · 2002→2020 · 2022→2026) desenham
+   stroke-a-stroke ao entrar. BASE = desenhado (stroke-dashoffset:0). */
+.cycle-flow { width: 100%; height: auto; display: block; margin: var(--space-5) 0 var(--space-2); overflow: visible; }
+.cycle-flow text { font-family: var(--font-ui); fill: var(--color-fg); }
+.cycle-flow .cf-num { font-family: var(--font-display); font-weight: 800; fill: var(--color-fg); }
+.cycle-flow .cf-sub { fill: var(--color-fg-muted); }
+.cycle-flow .cf-node { fill: var(--color-bg); stroke: hsl(var(--doc-hue) 90% 46%); stroke-width: 1.5; }
+.draw-on { stroke-dasharray: var(--len, 1000); stroke-dashoffset: 0; }   /* base = desenhado */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .draw-on { stroke-dashoffset: var(--len, 1000); animation: drawPath 1.2s ease both;
+               animation-timeline: view(); animation-range: cover 8% cover 42%; }
+    @keyframes drawPath { to { stroke-dashoffset: 0; } }
+  }
+}
+
 /* ═══ Print ═══ */
 @media print {
   body::after { display: none; }                 /* grão fora do PDF */
+  .focus-reveal { filter: none !important; animation: none !important; }
+  .draw-on { stroke-dashoffset: 0 !important; animation: none !important; }
+  .metrics, .chart-wrap { border-top-color: var(--color-fg) !important; }
   .topbar, .sidebar, .toc, .theme-toggle { display: none; }
   .layout { display: block; }
   .content { padding: 0; max-width: 100%; }
@@ -690,7 +762,7 @@ li::marker { color: var(--color-fg-subtle); }
 }
   </style>
 </head>
-<body>
+<body data-showcase>
   <header class="topbar">
     <a href="#topo" class="topbar__brand">
       <span class="topbar__logo" aria-hidden="true"></span>
@@ -772,7 +844,7 @@ li::marker { color: var(--color-fg-subtle); }
       <div class="content__inner">
         <h1>Itaú Unibanco — Apresentação Institucional 1T26</h1>
         <p class="content__meta">RI · 1º Trimestre de 2026 · Resultado Recorrente Gerencial R$&nbsp;12,3&nbsp;bi</p>
-        <p class="lead">101 anos de história. O maior banco da América Latina, presente em 18 países, com R$&nbsp;3.200&nbsp;bi em ativos e ROE recorrente de 24,8%. Este handbook reúne a apresentação institucional do 1T26 em formato de leitura contínua.</p>
+        <p class="lead" data-split>101 anos de história. O maior banco da América Latina, presente em 18 países, com R$&nbsp;3.200&nbsp;bi em ativos e ROE recorrente de 24,8%. Este handbook reúne a apresentação institucional do 1T26 em formato de leitura contínua.</p>
 
         <section id="visao-geral">
           <h2>101 anos, 18 países: o maior banco da América Latina</h2>
@@ -879,6 +951,21 @@ li::marker { color: var(--color-fg-subtle); }
         <section id="jornada">
           <h2>Da Casa Moreira Salles ao SuperApp: 101 anos em três ciclos</h2>
           <p>101 anos construindo o maior banco da América Latina — da Casa Moreira Salles ao SuperApp. A jornada se divide em três grandes ciclos: fundação e pioneirismo digital (1924—2000), consolidação e transformação digital (2002—2020), e a era do Um só Itaú (2022—2026).</p>
+
+          <!-- W22 — draw-on: os três ciclos da jornada se desenham ao entrar (fluxo ligado ao conteúdo abaixo) -->
+          <svg class="cycle-flow bleed" viewBox="0 0 760 96" role="img" aria-label="Três ciclos da jornada: 1924–2000 fundação e pioneirismo digital, 2002–2020 consolidação e transformação digital, 2022–2026 era do Um só Itaú">
+            <line class="draw-on" x1="64" y1="48" x2="316" y2="48" stroke="hsl(var(--doc-hue) 90% 46%)" stroke-width="1.5"/>
+            <line class="draw-on" x1="380" y1="48" x2="632" y2="48" stroke="hsl(var(--doc-hue) 90% 46%)" stroke-width="1.5"/>
+            <circle class="cf-node" cx="48" cy="48" r="11"/>
+            <circle class="cf-node" cx="348" cy="48" r="11"/>
+            <circle class="cf-node" cx="700" cy="48" r="11"/>
+            <text class="cf-num" x="40" y="30" font-size="14">1924→2000</text>
+            <text class="cf-sub" x="40" y="74" font-size="11">Fundação e pioneirismo</text>
+            <text class="cf-num" x="320" y="30" font-size="14">2002→2020</text>
+            <text class="cf-sub" x="320" y="74" font-size="11">Consolidação e digital</text>
+            <text class="cf-num" x="640" y="30" font-size="14" text-anchor="end">2022→2026</text>
+            <text class="cf-sub" x="752" y="74" font-size="11" text-anchor="end">Era do Um só Itaú</text>
+          </svg>
 
           <h3>1924 → 2000 · Fundação e pioneirismo digital</h3>
           <ul class="timeline">
@@ -1196,7 +1283,7 @@ li::marker { color: var(--color-fg-subtle); }
         <section id="eficiencia">
           <h2>Eficiência operacional — mais entrega, melhor custo</h2>
           <p>O índice de eficiência Brasil em 12 meses findos em mar/26 ficou em <strong>36,2%</strong>. Investimento em desenvolvimento de soluções cresceu mais de 3x desde 2018, com redução de 31% nos custos de infraestrutura. A cultura de questionamento contínuo e revisão de processos sustenta o ganho.</p>
-          <div class="chart-wrap" data-reveal>
+          <div class="chart-wrap focus-reveal" data-reveal>
             <canvas id="chart-eficiencia" aria-label="Índice de Eficiência (%)"></canvas>
           </div>
         </section>
@@ -1360,7 +1447,7 @@ li::marker { color: var(--color-fg-subtle); }
         <section id="financas-sustentaveis">
           <h2>Finanças sustentáveis — compromisso de R$&nbsp;1&nbsp;trilhão</h2>
           <p>Compromisso de <strong>R$&nbsp;1&nbsp;trilhão em finanças sustentáveis até 2030</strong>. R$&nbsp;577,6&nbsp;bi já foram direcionados entre jan/20 e fev/26.</p>
-          <div class="chart-wrap" data-reveal>
+          <div class="chart-wrap focus-reveal" data-reveal>
             <canvas id="chart-fin-sust" aria-label="Progresso finanças sustentáveis (%)"></canvas>
           </div>
         </section>
@@ -1368,7 +1455,7 @@ li::marker { color: var(--color-fg-subtle); }
         <section id="geracao-valor">
           <h2>Geração de valor — consistência de 2013 ao 1T26</h2>
           <p>Geramos valor de forma consistente. O resultado recorrente gerencial é a soma de Custo de capital + Criação de valor; o ROE e Custo de capital médio aparecem em escala secundária (%). <strong>+26% na criação de valor 1T26 × 1T25</strong>.</p>
-          <div class="chart-wrap" style="height:420px" data-reveal>
+          <div class="chart-wrap focus-reveal" style="height:420px" data-reveal>
             <canvas id="chart-valor" aria-label="Geração de valor 2013-1T26"></canvas>
           </div>
         </section>
@@ -1510,6 +1597,13 @@ li::marker { color: var(--color-fg-subtle); }
       span.className = 'h2-rise';
       while (h.firstChild) span.appendChild(h.firstChild);
       h.appendChild(span);
+    });
+
+    /* W6 — split grapheme-safe pt-BR */
+    document.querySelectorAll('[data-split]').forEach(el => {
+      const seg = new Intl.Segmenter('pt', { granularity: 'word' });
+      el.innerHTML = [...seg.segment(el.textContent)]
+        .map(s => s.isWordLike ? `<span class="w"><span class="w-i">${s.segment}</span></span>` : s.segment).join('');
     });
 
     // TOC gerada dos h2 do conteúdo
@@ -1751,6 +1845,11 @@ li::marker { color: var(--color-fg-subtle); }
       });
     }, { threshold: 0.1 });
     document.querySelectorAll('.chart-wrap').forEach(w => chartObs.observe(w));
+
+    // W22 — mede o comprimento real de cada traço do fluxo (1x, no load) para o draw-on
+    document.querySelectorAll('.draw-on').forEach(p => {
+      try { p.style.setProperty('--len', Math.ceil(p.getTotalLength())); } catch (e) {}
+    });
   </script>
 </body>
 </html>

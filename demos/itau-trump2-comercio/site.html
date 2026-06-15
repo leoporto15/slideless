@@ -14,7 +14,7 @@
   motion: editorial (troca de view = cross-fade contínuo via View Transitions; data-reveal SÓ em figuras/charts/tabelas, nunca em texto corrido)
   assinatura: M2 — o gráfico-tese (origem da soja chinesa, Brasil vs EUA, em #commodities) se desenha por ponto com banda de evento anotada "guerra comercial 2018-20"
   ambicao: A2-elevado (dossiê de comércio — trocar de view com continuidade; manchete que se constrói) — registro condensado-noticioso permite A2 cheio; o eixo wdth do Archivo (já pago no download) deixa de ser estático e vira a manchete de cada despacho
-  momento-wow: W5 View Transitions entre views (cross-fade same-document, sem framework, com guard) + W3 manchete de view cinética (Archivo wdth 62→125, wght 400→900, na entrada) + W8 anotação viva nos gráficos-tese (eventBands acendem no scroll + crosshair de leitura no hover)
+  momento-wow: W5 View Transitions entre views (cross-fade same-document, sem framework, com guard) + W3 manchete de view cinética (Archivo wdth 62→125, wght 400→900, na entrada) + W8 anotação viva nos gráficos-tese (eventBands acendem no scroll + crosshair de leitura no hover) + W30 flip-in 3D na manchete da home (split-flap element-aware, preserva strong-word) + W24 3D tilt nos cards-índice da home (só desktop+mouse) + W21 scroll-hue drift ambiente (fio do topbar migra de temperatura quente→frio→quente, S/L travados)
   nao-vai-ter: glow-radial; kicker-dot; grid-3-cards; spring-bouncy em UI (cross-fade é sóbrio, não saltitante)
   serie: familia itau-trump2 (noticiosa-condensada)
   -->
@@ -511,6 +511,68 @@
       .authors-footer__right { text-align: left; }
     }
 
+    /* ─── W21 — Scroll-hue drift (sistema ambiente, 1 por doc) ───
+       O acento "migra de temperatura" capítulo a capítulo conforme o scroll do root:
+       quente (laranja Itaú, hue 24) na abertura → frio (hue 210) no miolo de dados →
+       volta quente no fecho. Tecido conectivo, não momento. S/L travados (só hue muda).
+       Aplicado a UM detalhe ambiente (o fio duplo do topbar) — nunca a texto de leitura.
+       invariante 2 — base = hue fixo da marca; invariante 1 — reduced-motion trava o hue. */
+    @property --doc-hue { syntax: '<number>'; inherits: true; initial-value: 24; }
+    html { --doc-hue: 24; }
+    @supports (animation-timeline: scroll()) {
+      @media (prefers-reduced-motion: no-preference) {
+        html { animation: hueDrift linear both; animation-timeline: scroll(root); }
+        @keyframes hueDrift { 45% { --doc-hue: 210; } 100% { --doc-hue: 24; } }
+      }
+    }
+    /* só o fio ambiente do topbar respira de temperatura (detalhe, não conteúdo) */
+    .topbar { border-bottom-color: hsl(var(--doc-hue) 70% 38%); }
+    [data-theme="dark"] .topbar { border-bottom-color: hsl(var(--doc-hue) 60% 62%); }
+
+    /* ─── W24 — 3D tilt scene: os cards-índice da home inclinam rumo ao cursor ───
+       Sinal mais rápido de "site premium". invariante: só desktop+mouse (guard no JS
+       @media hover:hover + reduced-motion), só nos cards-herói do índice (não em todo card).
+       base = sem rotação (--rx/--ry 0); o pousar volta a 0 na transição. */
+    [data-tilt] {
+      transform: perspective(800px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+      transform-style: preserve-3d;
+      transition: transform 200ms var(--ease-out);
+    }
+    [data-tilt] > .tilt-layer { transform: translateZ(28px); }
+
+    /* ─── W30 — Flip-in 3D: as letras da manchete da HOME giram de plano (split-flap) ───
+       Device de herói (1 manchete). O JS divide em letras PRESERVANDO os <span> de
+       ênfase (strong-word) — só nós de texto viram letras animáveis; aria-label mantém
+       a leitura por screen reader. invariante 1 — reduced-motion = opacidade plena, sem flip;
+       invariante 2 — sem JS a manchete aparece normal (base visível). */
+    [data-flip-in] span.fl { display: inline-block; transform-origin: bottom; }
+    @media (prefers-reduced-motion: no-preference) {
+      [data-flip-in] span.fl {
+        animation: flipIn .5s var(--spring, cubic-bezier(.2,.7,.2,1)) both;
+        animation-delay: calc(var(--i, 0) * 34ms);
+      }
+      @keyframes flipIn {
+        from { transform: perspective(400px) rotateX(-90deg); opacity: 0; }
+        to   { transform: none; opacity: 1; }
+      }
+    }
+
+    /* ─── W26 — Spotlight mask: o cursor revela a 2ª camada do veredito (conclusão) ───
+       Sobre o bloco .verdict da view #conclusao (NÃO a home — esta é outra viewport,
+       sem data-tilt). O fade é SUAVE (35%, não transparência total): o conteúdo dimmed
+       segue legível — ênfase secundária, nunca esconde conteúdo essencial.
+       Guard hover:hover + pointer:fine (só desktop+mouse); @supports e reduced-motion
+       removem a máscara (fallback = camada cheia). 1 por doc. */
+    [data-spot-mask] { --mx: 50%; --my: 50%; }
+    @media (hover: hover) and (pointer: fine) {
+      [data-spot-mask] {
+        -webkit-mask: radial-gradient(circle 150px at var(--mx) var(--my), #000 0 99%, color-mix(in srgb, #000 35%, transparent) 100%);
+                mask: radial-gradient(circle 150px at var(--mx) var(--my), #000 0 99%, color-mix(in srgb, #000 35%, transparent) 100%);
+      }
+    }
+    @supports not (mask: radial-gradient(circle at 0 0, #000, transparent)) { [data-spot-mask] { -webkit-mask: none; mask: none; } }
+    @media (prefers-reduced-motion: reduce) { [data-spot-mask] { -webkit-mask: none; mask: none; } }
+
     /* ─── MOTION editorial: reveal SÓ em figuras/dados (≤40% das sections) ─── */
     [data-reveal] { opacity: 0; transition: opacity 350ms var(--ease-out); }
     [data-reveal].is-visible { opacity: 1; }
@@ -518,6 +580,7 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
       [data-reveal] { opacity: 1 !important; transition: none; }
+      [data-flip-in] span.fl { opacity: 1 !important; transform: none !important; } /* W30: sem flip */
     }
 
     @media print {
@@ -529,7 +592,7 @@
     }
   </style>
 </head>
-<body>
+<body data-showcase>
   <header class="topbar">
     <a href="#home" class="topbar__brand">
       <span class="topbar__logo" aria-hidden="true">i</span>
@@ -551,7 +614,7 @@
     <article class="view is-active" id="home">
       <section class="view__hero">
         <p class="dateline">Macro Insights · Janeiro 2025 · Despacho</p>
-        <h1>Brasil: como fica o comércio exterior no governo <span class="strong-word">Trump&nbsp;2</span>?</h1>
+        <h1 data-flip-in>Brasil: como fica o comércio exterior no governo <span class="strong-word">Trump&nbsp;2</span>?</h1>
         <p class="lead">Tese de pesquisa: balanço de riscos assimétrico para o lado negativo. Ganhos limitados pela alta participação brasileira nas importações chinesas; riscos crescentes via tarifas universais ou equiparação.</p>
       </section>
 
@@ -569,24 +632,24 @@
         <h2>Navegação</h2>
         <p>Quatro seções dão estrutura à análise:</p>
         <ul class="index-list">
-          <li><a class="index-row" href="#contexto">
+          <li><a class="index-row" href="#contexto" data-tilt>
             <span class="index-row__num">01</span>
-            <span class="index-row__title">Eleições e mercado<small class="index-row__kicker">Contexto</small></span>
+            <span class="index-row__title tilt-layer">Eleições e mercado<small class="index-row__kicker">Contexto</small></span>
             <span class="index-row__desc">Mercado chinês 2022, pauta brasileira, Brasil↔EUA, Índice de Incerteza do Comércio.</span>
           </a></li>
-          <li><a class="index-row" href="#commodities">
+          <li><a class="index-row" href="#commodities" data-tilt>
             <span class="index-row__num">02</span>
-            <span class="index-row__title">5 produtos chave<small class="index-row__kicker">Commodities</small></span>
+            <span class="index-row__title tilt-layer">5 produtos chave<small class="index-row__kicker">Commodities</small></span>
             <span class="index-row__desc">Soja, milho, aço, petróleo e minério de ferro — espaço de substituição limitado.</span>
           </a></li>
-          <li><a class="index-row" href="#tarifas">
+          <li><a class="index-row" href="#tarifas" data-tilt>
             <span class="index-row__num">03</span>
-            <span class="index-row__title">2 cenários<small class="index-row__kicker">Tarifas</small></span>
+            <span class="index-row__title tilt-layer">2 cenários<small class="index-row__kicker">Tarifas</small></span>
             <span class="index-row__desc">Histórico do 1º mandato Trump + cenário de equiparação tarifária com universal 10%.</span>
           </a></li>
-          <li><a class="index-row" href="#conclusao">
+          <li><a class="index-row" href="#conclusao" data-tilt>
             <span class="index-row__num">04</span>
-            <span class="index-row__title">Balanço assimétrico<small class="index-row__kicker">Conclusão</small></span>
+            <span class="index-row__title tilt-layer">Balanço assimétrico<small class="index-row__kicker">Conclusão</small></span>
             <span class="index-row__desc">Ganhos limitados, tarifas na mesa, pauta básica como diferencial brasileiro.</span>
           </a></li>
         </ul>
@@ -915,7 +978,7 @@
         <p class="lead">Riscos positivos limitados vs riscos negativos crescentes para o Brasil. Três vetores resumem a tese.</p>
       </section>
 
-      <div class="verdict">
+      <div class="verdict" data-spot-mask>
         <div class="verdict-row">
           <div class="verdict-row__num">01</div>
           <div class="verdict-row__head">Pouco espaço a ganhar<small>Ganhos limitados</small></div>
@@ -1010,6 +1073,58 @@
       es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); rio.unobserve(e.target); } });
     }, { threshold: 0.10 });
     document.querySelectorAll('[data-reveal]').forEach(el => rio.observe(el));
+
+    /* ═════ W30 — Flip-in 3D na manchete da HOME (split-flap) ═════
+       Splitter ELEMENT-AWARE: percorre os nós filhos e só divide TEXTO em letras
+       (.fl), preservando os <span class="strong-word"> de ênfase — conteúdo intacto.
+       aria-label guarda a frase inteira para screen readers; as letras são aria-hidden. */
+    document.querySelectorAll('[data-flip-in]').forEach(el => {
+      if (el._flip) return; el._flip = true;
+      el.setAttribute('aria-label', el.textContent);
+      let i = 0;
+      const wrapText = (txt) => {
+        const frag = document.createDocumentFragment();
+        [...txt].forEach(c => {
+          const s = document.createElement('span');
+          s.className = 'fl'; s.setAttribute('aria-hidden', 'true');
+          s.style.setProperty('--i', i++);
+          s.innerHTML = (c === ' ' ? '&nbsp;' : c);
+          frag.appendChild(s);
+        });
+        return frag;
+      };
+      [...el.childNodes].forEach(node => {
+        if (node.nodeType === 3) {                         /* nó de texto puro */
+          el.replaceChild(wrapText(node.textContent), node);
+        } else if (node.nodeType === 1) {                  /* elemento (strong-word) — divide o texto dentro, preserva o wrapper */
+          const inner = node.textContent;
+          node.textContent = '';
+          node.setAttribute('aria-hidden', 'true');
+          node.appendChild(wrapText(inner));
+        }
+      });
+    });
+
+    /* ═════ W24 — 3D tilt nos cards-índice (só desktop+mouse, acessível) ═════ */
+    document.querySelectorAll('[data-tilt]').forEach(el => {
+      if (!matchMedia('(hover:hover) and (pointer:fine)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      el.addEventListener('pointermove', e => {
+        const r = el.getBoundingClientRect();
+        el.style.setProperty('--rx', ((.5 - (e.clientY - r.top) / r.height) * 8).toFixed(2) + 'deg');
+        el.style.setProperty('--ry', (((e.clientX - r.left) / r.width - .5) * 8).toFixed(2) + 'deg');
+      });
+      el.addEventListener('pointerleave', () => { el.style.setProperty('--rx', '0deg'); el.style.setProperty('--ry', '0deg'); });
+    });
+
+    /* ═════ W26 — Spotlight mask: o cursor move o foco da 2ª camada (só desktop+mouse) ═════ */
+    document.querySelectorAll('[data-spot-mask]').forEach(el => {
+      if (!matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+      el.addEventListener('pointermove', e => {
+        const r = el.getBoundingClientRect();
+        el.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+        el.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+      });
+    });
 
     /* ═════ CHARTS ═════ */
     const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();

@@ -1327,6 +1327,65 @@ Para páginas com muitas seções (handbook, site, scrollytelling).
 }
 ```
 
+---
+
+## 14. Layout expressivo — craft mais alto, SEM animação (A1-safe, vale até no report)
+
+> O "uau" não vem só de movimento. A maior parte da diferença entre "decente" e "editorial de agência" é **composição**: assimetria, escala, sangria, tipografia como protagonista. Estes padrões são **estáticos e ligados ao conteúdo** — sobem o craft em qualquer registro, inclusive `report` sóbrio (onde os W animados são proibidos). Ligam-se aos eixos `capa:`/`assinatura:` do parti (`split-assimetrico`, `numero-protagonista` já são nomes de capa). Os mais ousados (`broken-grid`) ficam para registros expressivos.
+
+### 14a. Coluna assimétrica (2fr / 1fr) — quebra o centro morto
+```css
+.asym { display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-8); align-items: start; }
+.asym--reverse { grid-template-columns: 1fr 2fr; }
+@media (max-width: 720px) { .asym, .asym--reverse { grid-template-columns: 1fr; } }
+```
+
+### 14b. Numeral gigante como composição (sangra a margem) — M0 do report
+```css
+/* O número-tese vira o elemento gráfico. Sangra para fora da coluna; o texto encaixa ao lado. */
+.numeral-bleed { position: relative; padding-left: clamp(0px, 8vw, 7rem); }
+.numeral-bleed__n {
+  position: absolute; left: -2vw; top: -0.15em; z-index: 0;
+  font-family: var(--font-display); font-weight: 800; line-height: 0.8;
+  font-size: clamp(7rem, 22vw, 18rem); letter-spacing: -0.04em;
+  color: var(--color-border-strong);          /* fantasma; ou var(--color-accent) p/ ênfase */
+  font-variant-numeric: tabular-nums lining-nums; user-select: none; pointer-events: none;
+}
+.numeral-bleed > * { position: relative; z-index: 1; }
+```
+
+### 14c. Tipografia full-bleed (manchete que ocupa a largura)
+```css
+.full-bleed-type {
+  font-family: var(--font-display); font-weight: 800;
+  font-size: clamp(2.5rem, 9vw, 7rem); line-height: 0.95; letter-spacing: -0.03em;
+  text-wrap: balance; margin-inline: calc(-1 * var(--space-4));
+}
+```
+
+### 14d. Broken grid (sobreposição editorial — só registros expressivos)
+```css
+/* Imagem/figura e texto se sobrepõem em vez de empilhar. Tensão controlada. */
+.broken-grid { display: grid; grid-template-columns: repeat(12, 1fr); align-items: center; }
+.broken-grid__fig  { grid-column: 1 / 8; grid-row: 1; z-index: 0; }
+.broken-grid__text { grid-column: 6 / 13; grid-row: 1; z-index: 1;
+  background: var(--color-bg-elevated); padding: var(--space-6); border: 1px solid var(--color-border); }
+@media (max-width: 720px) {
+  .broken-grid { display: block; }
+  .broken-grid__text { margin-top: calc(-1 * var(--space-6)); }
+}
+```
+
+### 14e. Tabela-protagonista full-bleed (report, M0)
+```css
+/* A tabela ocupa toda a largura do conteúdo, com fio duplo no total (linguagem contábil). */
+.table-hero { width: 100%; margin: var(--space-8) 0; }
+.table-hero table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums lining-nums; }
+.table-hero tfoot td, .table-hero tr.total td { border-top: 3px double var(--color-fg); font-weight: 700; }
+```
+
+**Régua:** numeral gigante e full-bleed type são protagonistas — **um por dobra/seção**, no dado-tese. Broken-grid: tensão controlada, nunca sobreposição que prejudique leitura (WCAG: contraste do `__text` garantido pelo `background`).
+
 ```js
 /* Scroll spy — scroll active nav link to center on mobile */
 const navLinks = document.querySelectorAll('.side-nav a');
@@ -1485,3 +1544,27 @@ function navigate(updateDOM){
 // Crosshair de leitura (hover): options.onHover → linha vertical no índice + valor fmtBR. Ver §5.0b (eventBand) e exemplo-scrollytelling.
 // Fallback: desenhar a anotação no 1º render (não depender de scroll/hover).
 ```
+
+### 14f. Stepper de processo (fluxo de N passos) — NÃO use draw-on cru de bolinhas
+
+O fluxograma "bolinhas + linha fina + label cinza" sai estático e feio. Para um processo (brief→/criar→formato→pronto), use discos numerados grandes, o último em destaque, labels com sub-texto, e a linha que se desenha (W22) + discos que entram em sequência (scale/stagger via IO, base visível):
+
+```css
+.flow__row{ display:grid; grid-template-columns:repeat(4,1fr); position:relative; }
+.flow__track{ position:absolute; top:29px; left:12.5%; right:12.5%; height:2px; }
+.flow__track .draw-on{ stroke:var(--color-accent); stroke-width:2.5; stroke-dasharray:100; stroke-dashoffset:0; }
+.flow__disc{ width:60px; height:60px; border-radius:50%; display:grid; place-items:center;
+  font-family:var(--font-display); font-weight:700; font-size:1.45rem;
+  background:var(--color-bg-elevated); border:2px solid var(--color-border-strong); color:var(--color-fg-muted); }
+.flow__disc.is-final{ background:var(--color-accent); border-color:var(--color-accent); color:var(--color-accent-fg); box-shadow:0 12px 34px var(--color-accent-dim); }
+/* JS: a classe .flow--anim só é adicionada POR JS (base = tudo visível); IO adiciona .is-in. */
+.flow--anim .flow__disc{ opacity:0; transform:scale(.55); transition:opacity .5s var(--spring), transform .5s var(--spring); transition-delay:calc(var(--i,0)*120ms); }
+.flow--anim.is-in .flow__disc{ opacity:1; transform:none; }
+.flow--anim .draw-on{ stroke-dashoffset:100; transition:stroke-dashoffset 1.5s ease .15s; }
+.flow--anim.is-in .draw-on{ stroke-dashoffset:0; }
+@media (max-width:640px){ .flow__row{ grid-template-columns:1fr; } .flow__track{ display:none; } }
+```
+
+### 14g. Comparação "antes/depois" — contraste, não texto chapado
+
+Duas colunas de texto cinza igual não comunicam. Faça o "antes" **apagado e riscado** (✕, opacity, `text-decoration:line-through`) e o "depois" **em card de destaque** (borda accent, glow, ✓). E **nunca** esconda a comparação em `data-fragment="current-visible"` (spotlight mostra um lado por vez e some no load) — comparação tem que aparecer inteira.

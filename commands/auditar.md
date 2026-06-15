@@ -7,11 +7,21 @@ Você foi invocado para auditar um documento slideless.
 
 ## Procedimento
 
-1. **Validador determinístico:**
+1. **Validador determinístico** (estrutura — regex/DOM):
    ```bash
    python ../scripts/validar.py <arquivo.html>
    ```
    Capturar saída. Cada linha numerada é uma violação a corrigir.
+1.5. **Smoke-test de RENDER** (runtime — o validador NÃO vê JS quebrado nem render):
+   ```bash
+   python ../scripts/smoke.py <arquivo.html>
+   ```
+   Carrega o doc num Chromium headless e pega o que a estrutura não vê: `PAGEERROR`
+   (JS quebrado que mata navegação/animações/números), conteúdo invisível, placeholder
+   renderizado. **SMOKE FAIL = bloqueante.** Se imprimir `SKIP` (Playwright ausente),
+   instalar: `pip install playwright && python -m playwright install chromium`. Esta rede
+   foi adicionada depois que um `<script>` aninhado matou todo o JS de 5 docs em silêncio
+   e o validador estrutural passou — render-verificar é obrigatório.
 2. **Checklist de revisão LLM** ([../references/checklist-revisao.md](../references/checklist-revisao.md)):
    - Bloqueantes (🚫) — corrigir antes de entregar
    - Alto (⚠️)

@@ -58,17 +58,21 @@ O "step ativo" que muta o gráfico/cena é o único JS (IO com `rootMargin:'-50%
 O número-tese conta de 0 ao valor real **enquanto** a barra que o representa cresce — não isolados.
 ```css
 @property --n { syntax:'<integer>'; inherits:false; initial-value:0; }
+/* número real em texto vive em .kpi__num-base (fallback) */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     .kpi { counter-reset: n var(--n); animation: count linear both; animation-timeline: view(); animation-range: entry 20% cover 50%; }
-    .kpi::after { content: counter(n); }
+    .kpi__num-base { display: none; }            /* esconde o texto real… */
+    .kpi__num::after { content: counter(n); }    /* …e mostra SÓ o counter */
     .kpi .bar { transform: scaleX(0); transform-origin:left; animation: grow linear both; animation-timeline: view(); animation-range: entry 20% cover 50%; }
     @keyframes count { to { --n: 3200; } }
     @keyframes grow  { to { transform: scaleX(1); } }
   }
 }
 ```
-**Fallback:** o número final em texto real no HTML (não só `::after`) + barra em `scaleX(1)` no base. Reduced-motion: idem.
+HTML: `<span class="kpi__num"><span class="kpi__num-base">3.200</span></span>`.
+**Fallback:** o `.kpi__num-base` (texto real) aparece sem `@supports`/reduced-motion; a barra fica `scaleX(1)`.
+**NÃO FAÇA:** número como texto direto **E** `::after { content: counter }` ao mesmo tempo → renderiza duplicado ("32003200"). Ver a versão completa em [wow-components.md](wow-components.md) (W2/W25).
 
 ### W3 — Manchete cinética (eixo da variable font se constrói)
 A manchete-tese engorda/expande no eixo da fonte conforme entra na viewport. **Colhe os eixos `wdth`/`SOFT/WONK`/`GRAD` que os kits 05/06 já pagam e hoje usam estático.**
@@ -158,6 +162,10 @@ else { document.getElementById('hero-canvas').classList.add('aurora-fallback'); 
 ```
 
 ---
+
+## v7 — repertório expandido + empilhamento (W18-W31)
+
+Além de W1-W9 (acima), há **14 componentes "agência premiada"** (W18-W31) prontos em [wow-components.md](wow-components.md): sticky-stack, masked-type, aurora-mesh, hue-drift, draw-on SVG, gooey, 3D tilt, data-choreography, spotlight-mask, marquee, chapter-divider, blur-focus, flip-in, glitch. **A2/A3 EMPILHA vários** (A2 2-4, A3 4-6): **1 herói pinned + 2 sistemas ambientes na mesma `--spring` + 3-4 momentos espaçados + zonas de silêncio** (regras de conflito e §STACKING completas em wow-components.md). masked-type e glitch são premium reabilitados com disciplina (hue da marca, 1×).
 
 ## Materialidade — os 4 "premium baratos" (0KB, fallback gracioso)
 

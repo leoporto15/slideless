@@ -1235,7 +1235,9 @@ body.is-overview .slide [data-anim] {
 /* ─── OVERDRIVE: WebGL hero canvas (TEXTURA do hero, confinada ao slide 1) ──
    Canvas generativo de fundo do slide hero. Pausa quando o slide não está
    ativo (via JS), respeitando reduced-motion. NÃO é wallpaper — vive só aqui. */
-.overdrive-hero { position: relative; isolation: isolate; }
+/* NÃO sobrescrever position: o .slide base é absolute/inset:0 (enche o .deck);
+   relative aqui colapsava a capa pra altura do conteúdo (resto branco). */
+.overdrive-hero { isolation: isolate; }
 
 /* ── W9 invariante 2 (estado-final-base): aurora MATERIAL CSS sempre presente
       atrás do canvas, com as MESMAS cores do flow field (#FF6200 / #FBC305 /
@@ -1370,9 +1372,72 @@ body.is-overview .slide [data-anim] {
 @media (prefers-reduced-motion: reduce) {
   .slide.is-active .chart-wrap { animation: none; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   REPERTÓRIO v7 — momentos-wow premium adicionais
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ─── W20 — aurora-mesh (sistema ambiente atrás do herói do divider) ─── */
+@property --au-x { syntax: '<percentage>'; inherits: false; initial-value: 24%; }
+.aurora-mesh { position: relative; isolation: isolate; }
+/* em SLIDE, manter o absolute/inset:0 do .slide (relative colapsava o slide
+   pra altura do conteúdo); em DIV o relative segue valendo p/ o ::before do mesh */
+.slide.aurora-mesh { position: absolute; inset: 0; }
+.aurora-mesh::before {
+  content: ''; position: absolute; inset: -10%; z-index: -1; pointer-events: none; filter: blur(60px);
+  background:
+    radial-gradient(38vw at var(--au-x) 30%, color-mix(in srgb, var(--itau-orange) 40%, transparent), transparent 60%),
+    radial-gradient(42vw at 78% 64%, color-mix(in srgb, var(--itau-blue-3) 26%, transparent), transparent 64%);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .aurora-mesh::before { animation: auDrift 22s var(--ease-out, ease-in-out) infinite alternate; }
+  @keyframes auDrift { to { --au-x: 70%; } }
+}
+
+/* ─── W24 — 3D tilt cursor-reativo (card-herói ROE) ─── */
+[data-tilt] { transform: perspective(800px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)); transform-style: preserve-3d;
+  transition: transform 200ms var(--ease-out, ease-out); }
+[data-tilt] > .tilt-layer { transform: translateZ(40px); }
+
+/* ─── W30 — flip-in por letra (título-herói do divider Parte 02) ─── */
+[data-flip-in] span { display: inline-block; transform-origin: bottom; }
+@media (prefers-reduced-motion: no-preference) {
+  [data-flip-in] span { animation: flipIn .5s var(--spring, cubic-bezier(.2,.7,.2,1)) both; animation-delay: calc(var(--i,0) * 38ms); }
+  @keyframes flipIn { from { transform: perspective(400px) rotateX(-90deg); opacity: 0; } to { transform: none; opacity: 1; } }
+}
+
+/* ─── W15 — odômetro (número-tese: ativos totais R$ 3.200 bi) ─── */
+.odometer { display:inline-flex; overflow:clip; line-height:1; font-variant-numeric: tabular-nums lining-nums; }
+.od-digit { display:inline-block; width:1ch; height: 1em; overflow:clip; }
+.od-reel { display:flex; flex-direction:column; transition: transform 900ms var(--ease-out-strong, cubic-bezier(0.23,1,0.32,1)); }
+.od-reel > span { height:1em; }
+@media (prefers-reduced-motion: reduce) { .od-reel { transition:none; } }
+
+/* ─── W25 — data-choreography (KPI bar+cap sincronizados na entrada) ─── */
+:root { --spring: linear(0, .5 30%, 1.08 60%, .98, 1); }
+@property --cn { syntax: '<integer>'; inherits: false; initial-value: 0; }
+[data-choreo] .num::after { content: counter(cn); }
+[data-choreo] .num { counter-reset: cn var(--cn); }
+[data-choreo] .bar { transform: scaleX(1); transform-origin: left; }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-choreo] { animation-timeline: view(); animation-range: entry 20% entry 70%; }
+    [data-choreo] .num { animation: choreoCount 1s var(--spring) both; }
+    [data-choreo] .bar { transform: scaleX(0); animation: choreoFill 1s var(--spring) .15s both; }
+    [data-choreo] .cap { opacity: 0; animation: choreoRise .6s ease .4s both; }
+    @keyframes choreoCount { to { --cn: 3200; } }
+    @keyframes choreoFill { to { transform: scaleX(1); } }
+    @keyframes choreoRise { to { opacity: 1; transform: none; } }
+  }
+}
+/* visual da barra W25 — herda accent do card */
+[data-choreo] .bar {
+  display:block; height:3px; margin-top:var(--space-2); border-radius:99px;
+  background: currentColor; opacity:.7;
+}
   </style>
 </head>
-<body>
+<body data-showcase>
 
   <div class="brand-mark" aria-hidden="true">ITAÚ · 1T26</div>
 
@@ -1415,7 +1480,7 @@ body.is-overview .slide [data-anim] {
         </div>
         <div class="metric-d var-info">
           <p class="metric-d__kicker">Ativos totais</p>
-          <p class="metric-d__val">R$ <span>3.200</span> bi</p>
+          <p class="metric-d__val">R$ <span class="odometer" data-odometer="3.200" aria-label="3.200">3.200</span> bi</p>
           <p class="metric-d__label">em 31/03/2026</p>
         </div>
         <div class="metric-d var-teal">
@@ -1423,14 +1488,16 @@ body.is-overview .slide [data-anim] {
           <p class="metric-d__val">R$ <span>1.483</span> bi</p>
           <p class="metric-d__label">com garantias financeiras e títulos privados</p>
         </div>
-        <div class="metric-d var-success metric-roe">
-          <p class="metric-d__kicker">ROE recorrente</p>
-          <p class="metric-d__val">
-            <span><span class="roe-fallback">24,8</span><span class="roe-live" aria-hidden="true"></span></span>%
-          </p>
-          <div class="roe-bar" aria-hidden="true"></div>
-          <span class="roe-bar__cap">0 → 24,8% · maior banco da AL</span>
-          <p class="metric-d__label">retorno sobre patrimônio</p>
+        <div class="metric-d var-success metric-roe" data-tilt>
+          <div class="tilt-layer">
+            <p class="metric-d__kicker">ROE recorrente</p>
+            <p class="metric-d__val">
+              <span><span class="roe-fallback">24,8</span><span class="roe-live" aria-hidden="true"></span></span>%
+            </p>
+            <div class="roe-bar" aria-hidden="true"></div>
+            <span class="roe-bar__cap">0 → 24,8% · maior banco da AL</span>
+            <p class="metric-d__label">retorno sobre patrimônio</p>
+          </div>
         </div>
         <div class="metric-d var-sage">
           <p class="metric-d__kicker">Índice de eficiência</p>
@@ -1482,7 +1549,7 @@ body.is-overview .slide [data-anim] {
     <!-- ════════════════════════════════════════════════════════
          SLIDE 05 — DIVIDER laranja (Parte 1) · wipe clip-path
          ════════════════════════════════════════════════════════ -->
-    <section class="slide" data-slide="5" data-background-color="var(--itau-orange)">
+    <section class="slide aurora-mesh" data-slide="5" data-background-color="var(--itau-orange)">
       <div class="divider-deck">
         <p class="kicker" data-anim style="color:rgba(255,255,255,0.9); border-left-color:#fff">Parte 01 / 05</p>
         <h2 class="title-mega" style="color:#fff" data-anim="wipe">A gente <em>é Ituber</em></h2>
@@ -1537,7 +1604,7 @@ body.is-overview .slide [data-anim] {
     <section class="slide" data-slide="7" data-background-color="var(--itau-orange)">
       <div class="divider-deck">
         <p class="kicker" data-anim style="color:rgba(255,255,255,0.9); border-left-color:#fff">Parte 02 / 05</p>
-        <h2 class="title-mega" style="color:#fff" data-anim="wipe">Nossa <em>jornada</em></h2>
+        <h2 class="title-mega" style="color:#fff" data-flip-in>Nossa jornada</h2>
         <p class="lead-deck" data-anim style="color:rgba(255,255,255,0.92)">101 anos construindo o maior banco da América Latina — da Casa Moreira Salles ao SuperApp.</p>
       </div>
     </section>
@@ -1814,10 +1881,11 @@ body.is-overview .slide [data-anim] {
           <p class="metric-d__val">+60 <span>mil</span></p>
           <p class="metric-d__label">encontros de colaboradores de agências aprimorando a experiência</p>
         </div>
-        <div class="metric-d var-teal">
+        <div class="metric-d var-teal" data-choreo>
           <p class="metric-d__kicker">Ituber visita</p>
           <p class="metric-d__val">+1.000</p>
-          <p class="metric-d__label">visitas conectando lideranças e linha de frente</p>
+          <span class="bar" aria-hidden="true"></span>
+          <p class="metric-d__label cap">visitas conectando lideranças e linha de frente</p>
         </div>
       </div>
       <p class="footnote">Programa contínuo de aproximação entre liderança executiva e clientes finais.</p>
@@ -3473,6 +3541,40 @@ body.is-overview .slide [data-anim] {
       }
       requestAnimationFrame(frame);
     })();
+
+    /* ─── W24 — 3D tilt cursor-reativo ─── */
+    document.querySelectorAll('[data-tilt]').forEach(el => {
+      if (!matchMedia('(hover:hover) and (pointer:fine)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      el.addEventListener('pointermove', e => { const r = el.getBoundingClientRect();
+        el.style.setProperty('--rx', ((.5-(e.clientY-r.top)/r.height)*10).toFixed(2)+'deg');
+        el.style.setProperty('--ry', (((e.clientX-r.left)/r.width-.5)*10).toFixed(2)+'deg'); });
+      el.addEventListener('pointerleave', () => { el.style.setProperty('--rx','0deg'); el.style.setProperty('--ry','0deg'); });
+    });
+
+    /* ─── W30 — flip-in por letra ─── */
+    document.querySelectorAll('[data-flip-in]').forEach(el => {
+      if (el._flip) return; el._flip = true;
+      const t = el.textContent; el.setAttribute('aria-label', t);
+      el.innerHTML = [...t].map((c,i) => `<span aria-hidden="true" style="--i:${i}">${c===' '?'&nbsp;':c}</span>`).join('');
+    });
+
+    /* ─── W15 — odômetro ─── */
+    function buildOdometer(el){
+      const raw = el.dataset.odometer || el.textContent;
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      el.textContent = '';
+      [...raw].forEach(ch => {
+        if (!/\d/.test(ch)) { el.append(ch); return; }
+        const d = document.createElement('span'); d.className = 'od-digit';
+        const reel = document.createElement('span'); reel.className = 'od-reel';
+        for (let i = 0; i <= 9; i++) { const s = document.createElement('span'); s.textContent = i; reel.append(s); }
+        d.append(reel); el.append(d);
+        const setY = () => { reel.style.transform = `translateY(${-ch}em)`; };
+        if (reduce) setY(); else requestAnimationFrame(() => requestAnimationFrame(setY));
+      });
+    }
+    const odoIO = new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting) { buildOdometer(e.target); odoIO.unobserve(e.target); } }), { threshold: 0.6 });
+    document.querySelectorAll('.odometer').forEach(el => odoIO.observe(el));
   </script>
 </body>
 </html>

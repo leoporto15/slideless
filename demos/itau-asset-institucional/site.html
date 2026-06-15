@@ -14,7 +14,7 @@ superficie: flat; luz flat (vai virar PDF/impressão institucional; profundidade
 motion: editorial (troca de view com fade simples; reveal só em figuras/dados — tabelas, texto, nav e timeline nunca animam entrada)
 assinatura: M0 — a view Multimesas com a tabela das oito mesas como tabela-protagonista full-bleed, fio duplo contábil no total de AuM (R$ 113,5 bi) — composição, sem motion
 ambicao: A2-elevado (institucional de gestora — trocar de view com continuidade; sobriedade por fio). A trajetória de cobertura ESG 10%→100% (2013–2023) é a própria história → justifica o gráfico-tese com anotação viva no salto de 89% (2016) e no platô de 100% (2020).
-momento-wow: W5 View Transitions entre views (cross-fade same-document, com guard — sem reload) + W3 manchete de view cinética contida (Literata opsz, overflow:clip, link range, base = estado final) + W8 anotação viva no gráfico de cobertura ESG (banda + leader-line no afterDatasetsDraw; estática no 1º render, crosshair no hover). Materialidade por fio + grão estático; régua de craft (.no-transitions no toggle).
+momento-wow: W5 View Transitions entre views (cross-fade same-document, com guard — sem reload) + W3 manchete de view cinética contida (Literata opsz, overflow:clip, link range, base = estado final) + W8 anotação viva no gráfico de cobertura ESG (banda + leader-line no afterDatasetsDraw; estática no 1º render, crosshair no hover) + W21 scroll-hue drift ambiente (fio do masthead migra de temperatura quente→frio→quente, S/L travados; tecido conectivo sóbrio) + W29 blur-to-sharp focus na figura-tese (racking focus na entrada — sistema material, não momento). Materialidade por fio + grão estático; régua de craft (.no-transitions no toggle).
 nao-vai-ter: glow-radial; kicker-dot; grid-3-cards; spring-bouncy; cursor-proximity; WebGL; conic-glow (teto sóbrio do registro institucional-impresso)
 serie: familia itau-asset (institucional-clássico)
 -->
@@ -219,6 +219,35 @@ li::marker{ color:var(--color-fg-subtle); }
 [data-reveal]{ opacity:0; transition:opacity 350ms var(--ease-out); }
 [data-reveal].is-visible{ opacity:1; }
 
+/* ─── W21 · Scroll-hue drift (sistema ambiente, 1 por doc) — tecido conectivo ──
+   O acento ambiente migra de temperatura conforme o scroll do root: quente (laranja
+   Itaú, hue 24) na abertura → frio (hue 210) no miolo da história → quente no fecho.
+   S/L TRAVADOS (só o hue muda). Aplicado a UM detalhe ambiente (o fio do masthead),
+   nunca a texto de leitura — continuidade sóbria, legítima na voz fiduciária.
+   invariante 2 — base = hue fixo da marca; invariante 1 — reduced-motion trava. */
+@property --doc-hue{ syntax:'<number>'; inherits:true; initial-value:24; }
+html{ --doc-hue:24; }
+@supports (animation-timeline: scroll()){
+  @media (prefers-reduced-motion: no-preference){
+    html{ animation:hueDrift linear both; animation-timeline:scroll(root); }
+    @keyframes hueDrift{ 45%{ --doc-hue:210; } 100%{ --doc-hue:24; } }
+  }
+}
+.topbar{ border-bottom-color:hsl(var(--doc-hue) 50% 34%); }
+[data-theme="dark"] .topbar{ border-bottom-color:hsl(var(--doc-hue) 42% 68%); }
+
+/* ─── W29 · Blur-to-sharp focus (sistema, não momento) — figura-tese ──
+   A figura-tese entra levemente borrada/dessaturada e "racking focus" ao chegar na
+   leitura. Consistência material sóbria. invariante 2 — base = nítido (sem suporte/
+   sem JS nasce limpo); invariante 1 — reduced-motion = nítido instantâneo. */
+.focus-reveal{ filter:none; }
+@supports (animation-timeline: view()){
+  @media (prefers-reduced-motion: no-preference){
+    .focus-reveal{ animation:focusIn linear both; animation-timeline:view(); animation-range:entry 8% entry 58%; }
+    @keyframes focusIn{ from{ filter:blur(12px) saturate(.5); opacity:.5; } to{ filter:blur(0) saturate(1); opacity:1; } }
+  }
+}
+
 /* ─── Capa home: split assimétrico 2fr/1fr ────────────────────────── */
 .cover{ display:grid; grid-template-columns:2fr 1fr; gap:var(--space-8); align-items:start; margin-bottom:var(--space-8); padding-bottom:var(--space-8); border-bottom:1px solid var(--color-border); }
 .cover__title{ margin:0 0 var(--space-5); }
@@ -333,9 +362,29 @@ li::marker{ color:var(--color-fg-subtle); }
 
 .fineprint{ font-size:var(--size-xs); color:var(--color-fg-subtle); }
 
+/* ─── W30 · Flip-in 3D (split-flap) — UMA manchete-display (pull-quote home) ──
+   As letras giram de plano (rotateX(-90deg)) como placa de aeroporto. Aplicado à
+   pull-quote da home (display, NÃO duplica o W3 kinetic da capa). JS divide em
+   letras com --i e mantém aria-label. invariante 2 — base = letras visíveis (sem
+   JS a manchete aparece normal); invariante 1 — reduced-motion = opacidade plena. */
+[data-flip-in] span{ display:inline-block; transform-origin:bottom; }
+@media (prefers-reduced-motion: no-preference){
+  [data-flip-in] span{ animation:flipIn .5s var(--ease-out-strong, cubic-bezier(.2,.7,.2,1)) both; animation-delay:calc(var(--i,0) * 38ms); }
+  @keyframes flipIn{ from{ transform:perspective(400px) rotateX(-90deg); opacity:0; } to{ transform:none; opacity:1; } }
+}
+
+/* ─── W24 · 3D tilt scene (card-herói) — 1-2 cards (pilares da home) ──────────
+   O card inclina rumo ao cursor em perspectiva real; a camada interna ganha
+   profundidade com translateZ. Só desktop+mouse (guard JS hover/pointer) e
+   desliga em reduced-motion. invariante 2 — base = card plano legível. */
+[data-tilt]{ transform:perspective(800px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)); transform-style:preserve-3d;
+  transition:transform 200ms var(--ease-out, ease-out); }
+[data-tilt] > .tilt-layer{ transform:translateZ(40px); }
+
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{ transition-duration:0.01ms !important; animation-duration:0.01ms !important; }
   [data-reveal]{ opacity:1; }
+  .focus-reveal{ filter:none !important; opacity:1 !important; }   /* W29: nítido instantâneo */
   .kinetic-h{ font-variation-settings:'opsz' 52,'wght' 760; }   /* manchete estática, legível */
 }
 @media print{
@@ -352,7 +401,7 @@ li::marker{ color:var(--color-fg-subtle); }
 </style>
 </head>
 
-<body>
+<body data-showcase>
 
 <header class="topbar">
   <a href="#home" class="topbar__brand">
@@ -404,14 +453,14 @@ li::marker{ color:var(--color-fg-subtle); }
       <h2>Quem somos</h2>
       <p>A Itaú Asset Management é a área especializada em gestão de recursos do Itaú Unibanco. Reúne mais de 60 anos de experiência, equipe de mais de 300 profissionais e atua no Brasil e no exterior — com presença em Nova York, Argentina e Chile.</p>
 
-      <blockquote class="pull-quote">Sofisticada no modelo, democrática no acesso, internacional nas possibilidades.</blockquote>
+      <blockquote class="pull-quote" data-flip-in>Sofisticada no modelo, democrática no acesso, internacional nas possibilidades.</blockquote>
     </section>
 
     <section>
       <h2>Três pilares</h2>
       <div class="ed-cols">
-        <div class="ed-col"><p class="ed-col__kicker">Pilar 01</p><h3 class="ed-col__title">Sofisticada no modelo</h3><p class="ed-col__desc">Estratégias de gestão ativa antes restritas a uma elite financeira, agora em escala industrial.</p></div>
-        <div class="ed-col"><p class="ed-col__kicker">Pilar 02</p><h3 class="ed-col__title">Democrática no acesso</h3><p class="ed-col__desc">2,6 milhões de clientes acessam a mesma plataforma usada por institucionais.</p></div>
+        <div class="ed-col" data-tilt><div class="tilt-layer"><p class="ed-col__kicker">Pilar 01</p><h3 class="ed-col__title">Sofisticada no modelo</h3><p class="ed-col__desc">Estratégias de gestão ativa antes restritas a uma elite financeira, agora em escala industrial.</p></div></div>
+        <div class="ed-col" data-tilt><div class="tilt-layer"><p class="ed-col__kicker">Pilar 02</p><h3 class="ed-col__title">Democrática no acesso</h3><p class="ed-col__desc">2,6 milhões de clientes acessam a mesma plataforma usada por institucionais.</p></div></div>
         <div class="ed-col"><p class="ed-col__kicker">Pilar 03</p><h3 class="ed-col__title">Internacional nas possibilidades</h3><p class="ed-col__desc">Acesso simplificado a alternativas internacionais via plataforma global.</p></div>
       </div>
     </section>
@@ -609,7 +658,7 @@ li::marker{ color:var(--color-fg-subtle); }
       </ul>
 
       <h2>Histórico — cobertura ESG (%)</h2>
-      <figure class="chart-tese" data-reveal>
+      <figure class="chart-tese focus-reveal" data-reveal>
         <figcaption class="chart-tese__cap">Cobertura socioambiental dos ativos sob gestão · 2013–2023</figcaption>
         <div class="chart-tese__canvas-wrap">
           <canvas id="chart-esg" aria-label="Evolução da cobertura ESG de 10% em 2013 a 100% em 2020, mantida até 2023. Salto para 89% em 2016."></canvas>
@@ -790,6 +839,23 @@ const rio = new IntersectionObserver(es => {
   es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); rio.unobserve(e.target); } });
 }, { threshold: 0.10 });
 document.querySelectorAll('[data-reveal]').forEach(el => rio.observe(el));
+
+/* ─── W30 · Flip-in 3D — divide a manchete-display em letras (--i) + aria-label ──
+   Roda 1× no load; o guard el._flip evita re-split. Sem JS a manchete fica visível. */
+document.querySelectorAll('[data-flip-in]').forEach(el => {
+  if (el._flip) return; el._flip = true;
+  const t = el.textContent; el.setAttribute('aria-label', t);
+  el.innerHTML = [...t].map((c,i) => `<span aria-hidden="true" style="--i:${i}">${c===' '?'&nbsp;':c}</span>`).join('');
+});
+
+/* ─── W24 · 3D tilt — só desktop+mouse; desliga em reduced-motion ─────── */
+document.querySelectorAll('[data-tilt]').forEach(el => {
+  if (!matchMedia('(hover:hover) and (pointer:fine)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  el.addEventListener('pointermove', e => { const r = el.getBoundingClientRect();
+    el.style.setProperty('--rx', ((.5 - (e.clientY - r.top) / r.height) * 10).toFixed(2) + 'deg');
+    el.style.setProperty('--ry', (((e.clientX - r.left) / r.width - .5) * 10).toFixed(2) + 'deg'); });
+  el.addEventListener('pointerleave', () => { el.style.setProperty('--rx','0deg'); el.style.setProperty('--ry','0deg'); });
+});
 
 /* ─── Gráfico-tese de cobertura ESG + W8 (anotação viva) ─────────────── */
 let esgChart = null;

@@ -629,6 +629,85 @@
       }
     }
 
+    /* ════════════════════════════════════════════════════════════════
+       W21 — SCROLL-HUE DRIFT (wow-components.md) — sistema ambiente, global.
+       Tecido conectivo: a temperatura migra quente (intro) → frio (dados) →
+       quente (fecho), atada ao scroll(root). S/L TRAVADOS — só o hue migra
+       (mexer em S/L vira brinquedo). Aplicado SÓ a um detalhe-acento (o fio
+       da capa + o fio que abre cada ato via .accent-dynamic), NUNCA a texto
+       de leitura. Sóbrio por princípio do registro relatorio-de-bancada.
+       Invariantes: @supports + estado-final-base (hue fixo da marca);
+       reduced-motion TRAVA o hue. ════════════════════════════════════ */
+    @property --doc-hue { syntax: '<number>'; inherits: true; initial-value: 24; }   /* 24 = laranja Itaú */
+    html { --doc-hue: 24; }
+    /* detalhe-acento que colhe o hue migrante — hairline/fio, jamais corpo */
+    .accent-dynamic { border-color: hsl(var(--doc-hue) 95% 50%); }
+    @supports (animation-timeline: scroll()) {
+      @media (prefers-reduced-motion: no-preference) {
+        html { animation: hueDrift linear both; animation-timeline: scroll(root block); }
+        @keyframes hueDrift { 45% { --doc-hue: 210; } 100% { --doc-hue: 24; } }
+      }
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       W29 — BLUR-TO-SHARP FOCUS (wow-components.md) — sistema ambiente.
+       A "física da casa" para as figuras de gráfico: entram desfocadas e
+       dessaturadas e "racking focus" ao chegar na leitura. NÃO é momento —
+       é consistência, em toda figura-tese. Coexiste com o [data-reveal]
+       opacity já existente: este adiciona o blur→nítido por sua própria
+       view-timeline. Invariantes: base = nítido (filter:none);
+       reduced-motion → nítido instantâneo. ══════════════════════════ */
+    .focus-reveal { filter: none; }                           /* base = nítido */
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        .focus-reveal { animation: focusIn linear both; animation-timeline: view(); animation-range: entry 8% entry 58%; }
+        @keyframes focusIn { from { filter: blur(14px) saturate(.4); opacity: .4; } to { filter: blur(0) saturate(1); opacity: 1; } }
+      }
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       W25 — DATA CHOREOGRAPHY (wow-components.md) — UM grupo de métricas.
+       O número-tese conta ENQUANTO a barra de magnitude enche e a legenda
+       sobe — mesmo gatilho de scroll, em cascata. Aplicado SÓ ao número-tese
+       do friso do Ato 1 (Resultado 1T26 · R$ 12,3 bi), espaçado dos demais
+       momentos (zona de silêncio do registro). SÓBRIO: a `--spring` com
+       overshoot é PROIBIDA pelo parti (nao-vai-ter: spring-bouncy) — uso
+       --ease-out-strong (sem overshoot). Invariantes: número real em texto
+       no HTML (base); reduced-motion → estado final. ═══════════════════ */
+    @property --cn { syntax: '<integer>'; inherits: false; initial-value: 0; }
+    [data-choreo] .num { counter-reset: cn var(--cn); }        /* base: número real em texto no HTML também */
+    [data-choreo] .bar {
+      display: block; height: 2px; margin-top: var(--space-2);
+      background: var(--color-accent);
+      transform: scaleX(1); transform-origin: left;            /* base = cheia */
+    }
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        [data-choreo] { animation-timeline: view(); animation-range: entry 20% entry 70%; }
+        /* SEM overshoot — --ease-out-strong (cubic-bezier 0.23,1,0.32,1) no lugar da --spring saltitante */
+        [data-choreo] .bar { transform: scaleX(0); animation: choreoFill 1s var(--ease-out-strong) .15s both; }
+        [data-choreo] .cap { opacity: 0; animation: choreoRise .6s var(--ease-out) .4s both; }
+        @keyframes choreoFill { to { transform: scaleX(1); } }
+        @keyframes choreoRise { to { opacity: 1; transform: none; } }
+      }
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       W10 — MASK-REVEAL (clip-path wipe no scroll) — UM hero-fato.
+       Aplicado ao numeral broadsheet "18 países" (figura-fato sem outra
+       animação de scroll). O recorte abre da esquerda à medida que o fato
+       entra — abertura de página, não enfeite. NUNCA overflow:hidden no
+       ancestral (congela a view-timeline); usar overflow:clip se preciso.
+       Invariantes: base = recorte aberto (inset 0); reduced-motion → estático.
+       ════════════════════════════════════════════════════════════════ */
+    .mask-reveal { clip-path: inset(0 0 0 0); }
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        .mask-reveal { animation: maskWipe linear both; animation-timeline: view(); animation-range: entry 5% cover 35%; }
+        @keyframes maskWipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+      }
+    }
+
     /* ─── Responsivo ───────────────────────────────────────────────── */
     @media (max-width: 900px) {
       .story { display: block; }
@@ -663,6 +742,10 @@
       [data-reveal] { opacity: 1; transition: none; }
       /* manchete cinética não se aplica (gated em no-preference); garante estado final */
       .capa h1 { font-variation-settings: 'opsz' 72, 'wght' 800; }
+      /* W21 — hue TRAVADO no laranja da marca (sem deriva) */
+      html { --doc-hue: 24; animation: none; }
+      /* W29 — figuras nítidas instantâneas (sem rack-focus) */
+      .focus-reveal { filter: none; }
     }
 
     /* ─── Print ────────────────────────────────────────────────────── */
@@ -677,7 +760,7 @@
     }
   </style>
 </head>
-<body>
+<body data-showcase>
   <div class="progress" aria-hidden="true"><div class="progress__bar" id="progress-bar"></div></div>
 
   <header class="topbar">
@@ -692,7 +775,7 @@
     <!-- ═══ Capa: manchete-broadsheet ═══ -->
     <header class="capa">
       <p class="rotulo">RI · 1º Trimestre de 2026 · R$&nbsp;12,3&nbsp;bi recorrente</p>
-      <hr class="capa__fio">
+      <hr class="capa__fio accent-dynamic">
       <h1>O <em>maior banco</em> da América Latina, em 101&nbsp;anos.</h1>
       <p class="capa__dateline">Itaú Unibanco Holding S.A. · Relações com Investidores · Divulgação de resultados — 1T26</p>
       <p class="lead">Uma narrativa em sete atos: dos números-âncora à cultura Ituber, da jornada centenária à tecnologia em escala, dos pilares ESG ao guidance 2026. Tudo o que define o Itaú Unibanco como instituição.</p>
@@ -713,14 +796,14 @@
         <div class="metric"><p class="metric__kicker">ROE recorrente</p><p class="metric__val">24,8%</p><p class="metric__label">retorno sobre patrimônio</p></div>
         <div class="metric"><p class="metric__kicker">Eficiência</p><p class="metric__val">36,2%</p><p class="metric__label">Brasil · 12m findos mar/26</p></div>
         <div class="metric"><p class="metric__kicker">Colaboradores</p><p class="metric__val">91,5&nbsp;mil</p><p class="metric__label">no conglomerado</p></div>
-        <div class="metric metric--tese"><p class="metric__kicker">Resultado 1T26</p><p class="metric__val">R$&nbsp;12,3&nbsp;bi</p><p class="metric__label">94,6% Brasil · 5,4% AL</p></div>
+        <div class="metric metric--tese" data-choreo><p class="metric__kicker">Resultado 1T26</p><p class="metric__val num">R$&nbsp;12,3&nbsp;bi</p><span class="bar" aria-hidden="true"></span><p class="metric__label cap">94,6% Brasil · 5,4% AL</p></div>
         <div class="metric"><p class="metric__kicker">Marca</p><p class="metric__val">US$&nbsp;9,9&nbsp;bi</p><p class="metric__label">a mais valiosa da AL</p></div>
       </div>
     </section>
 
     <!-- ═══ Fato: 18 países ═══ -->
     <section class="fato">
-      <p class="fato__val">18 <em>países</em></p>
+      <p class="fato__val mask-reveal">18 <em>países</em></p>
       <p class="fato__label">com operações de varejo na América Latina. <strong>Banco universal</strong> obstinado por encantar o cliente em todas as dimensões: pessoa física, jurídica e atacado.</p>
     </section>
 
@@ -808,7 +891,7 @@
       <h3>Eficiência operacional — mais entrega, melhor custo</h3>
       <p>Investimento em desenvolvimento de soluções cresceu mais de <strong>3x</strong> desde 2018, com <strong>−31% nos custos de infraestrutura</strong>. Uma cultura de questionamento contínuo e revisão de processos sustenta o ganho.</p>
 
-      <figure class="figura" data-reveal>
+      <figure class="figura focus-reveal" data-reveal>
         <figcaption>
           <p class="figura__title">Índice de eficiência</p>
           <p class="figura__sub">Acumulado 12 meses e trimestre isolado, consolidado e Brasil — 4T24 ao 1T26 (%)</p>
@@ -855,7 +938,7 @@
     <section class="fato">
       <p class="fato__val">R$&nbsp;1 <em>tri</em></p>
       <p class="fato__label">em finanças sustentáveis até <strong>2030</strong>. <strong>R$&nbsp;577,6&nbsp;bi</strong> direcionados entre jan/20 e fev/26.</p>
-      <figure class="figura" data-reveal>
+      <figure class="figura focus-reveal" data-reveal>
         <figcaption>
           <p class="figura__title">Finanças sustentáveis — progresso rumo à meta</p>
           <p class="figura__sub">% da meta de R$&nbsp;1&nbsp;tri até 2030, posições de dez/23 a fev/26</p>
@@ -1384,5 +1467,6 @@
       valorChart.update();
     });
   </script>
+<script>/* nohashjump-fix: a[href="#"] (brand/breadcrumb/CTA decorativo) não deve pular pro topo/capa */document.querySelectorAll('a[href="#"]').forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();});});</script>
 </body>
 </html>

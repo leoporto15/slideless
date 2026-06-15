@@ -14,7 +14,7 @@
   motion: editorial (reveal de opacidade SÓ nos blocos do painel ao abrir; índice e cards nunca animam entrada; 1 gesto, 350ms)
   assinatura: M0 — o índice-mestre dos temas/choques na capa É o protagonista compositivo (fólios tabulares + fio duplo contábil sob a manchete-tese ~70%), sem motion; força vem da hierarquia, não do movimento
   ambicao: A2-elevado (central noticiosa — abrir um tema deve ter continuidade, não corte seco). Justificativa: a cronologia de choques tarifários e a substituição 2018-20 SÃO a história → continuidade card↔painel + anotação viva nos despachos.
-  momento-wow: W5 View Transitions (índice/card morfa no header do painel — mesmo view-transition-name 'dispatch', limpo antes/depois) + W8 anotação viva nos gráficos-tese (banda guerra-comercial na soja, pico TPU 2024, linha de equilíbrio no saldo EUA-BR; crosshair de leitura no hover) + W7 materialidade noticiosa (grão feTurbulence soft-light + borda de luz no painel aberto; NÃO glass saturado — registro pede despacho)
+  momento-wow: W5 View Transitions (índice/card morfa no header do painel — mesmo view-transition-name 'dispatch', limpo antes/depois) + W8 anotação viva nos gráficos-tese (banda guerra-comercial na soja, pico TPU 2024, linha de equilíbrio no saldo EUA-BR; crosshair de leitura no hover) + W7 materialidade noticiosa (grão feTurbulence soft-light + borda de luz no painel aberto; NÃO glass saturado — registro pede despacho) + W24 3D tilt nas 2 manchetes-âncora do índice (soja ~70% e conclusão; guard hover+pointer fino + reduced-motion) + W27 marquee de despacho (fita de stats-chave entre seção 02 e 03; para no reduced-motion) + W21 hue-drift ambiente (acento de detalhe migra com o scroll; S/L travados)
   ambicao-invariantes: (W5) guard if(!startViewTransition||reduce){updateDOM;return} + nome único por snapshot (clearMorphNames antes/depois) + origem espacial no painel; (W8) banda desenhada no 1º render, hover só ACENDE; (W7) @media print esconde grão + fallback sólido; régua de craft (.no-transitions no toggle, curvas nomeadas, teto 320ms)
   nao-vai-ter: glow-radial; kicker-dot; hover-lift; glass-saturado; spring-bouncy; cursor-proximity; WebGL
   serie: familia itau-trump2 (condensada-noticiosa)
@@ -122,6 +122,8 @@
       --dur-ui: 220ms; --dur-modal: 320ms;                /* teto p/ UI: 320ms */
       /* [AMBIÇÃO A2] materialidade noticiosa — grão de papel-jornal (W7) */
       --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      /* [AMBIÇÃO A2 · W26] tinta da máscara — canal alpha/luminância (não-temável) */
+      --spot-ink: #000;
     }
     [data-theme="dark"] {
       --color-bg: #14110d; --color-bg-elevated: #1c1814; --color-bg-sunken: #221d18;
@@ -529,6 +531,60 @@
     .vectors p { font-size: var(--size-small); color: var(--color-fg-muted); margin: 0; max-width: none; }
     @media (max-width: 720px) { .vectors { grid-template-columns: 1fr; } }
 
+    /* ════════ [AMBIÇÃO A2 · W21] SCROLL-HUE DRIFT — temperatura migra com o scroll ════════
+       Só em DETALHE de acento (fólio da manchete-âncora); S/L travados, nunca em texto de leitura. */
+    @property --doc-hue { syntax: '<number>'; inherits: true; initial-value: 24; }   /* 24 = laranja Itaú */
+    html { --doc-hue: 24; }
+    @supports (animation-timeline: scroll()) {
+      @media (prefers-reduced-motion: no-preference) {
+        html { animation: hueDrift linear both; animation-timeline: scroll(root); }
+        @keyframes hueDrift { 45% { --doc-hue: 210; } 100% { --doc-hue: 24; } }
+      }
+    }
+    .accent-dynamic { color: hsl(var(--doc-hue) 95% 50%); }
+
+    /* ════════ [AMBIÇÃO A2 · W24] 3D TILT — manchete-âncora inclina rumo ao cursor ════════
+       Só nas 2 manchetes-herói do índice (soja ~70% e conclusão); guard hover+pointer fino
+       + reduced-motion no JS. Affordance editorial, não slop — NÃO em todo card. */
+    @media (hover: hover) and (pointer: fine) {
+      [data-tilt] { transform: perspective(800px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)); transform-style: preserve-3d;
+        transition: transform 200ms var(--ease-out, ease-out); }
+      [data-tilt] > .tilt-layer { transform: translateZ(40px); }
+    }
+
+    /* ════════ [AMBIÇÃO A2 · W27] MARQUEE — fita de despacho entre seções ════════
+       Stats-chave reais correndo como ticker noticioso. Para no reduced-motion (linha estática). */
+    .marquee {
+      overflow: clip; margin: var(--space-7) 0;
+      border-top: 2px solid var(--color-fg); border-bottom: 2px solid var(--color-fg);
+      padding: var(--space-3) 0; background: var(--color-bg-sunken);
+    }
+    .marquee__track {
+      display: inline-flex; gap: 2rem; white-space: nowrap; will-change: transform;
+      font-family: var(--font-mono); font-size: 0.8rem; font-weight: 600;
+      letter-spacing: 0.04em; color: var(--color-fg-muted);
+    }
+    .marquee__track b { color: var(--color-accent); font-weight: 700; }
+    .marquee__track span[aria-hidden] { color: var(--color-fg-subtle); }
+    @media (prefers-reduced-motion: no-preference) { .marquee__track { animation: marq 32s linear infinite; } }
+    @keyframes marq { to { transform: translateX(-50%); } }
+    @media (prefers-reduced-motion: reduce) { .marquee__track { animation: none; } }
+    @media print { .marquee { display: none; } }
+
+    /* ════════ [AMBIÇÃO A2 · W26] SPOT-MASK — cursor revela ênfase nítida nos vetores ════════
+       1 por doc, FORA do viewport das manchetes-âncora com data-tilt (fica no painel de
+       conclusão). Máscara DIM (fade 35%, nunca transparente total) → nenhum conteúdo some;
+       em touch/sem-máscara/reduced-motion tudo permanece plenamente legível (fallback). */
+    [data-spot-mask] { --mx:50%; --my:50%; }
+    @media (hover:hover) and (pointer:fine) {
+      [data-spot-mask] {
+        -webkit-mask: radial-gradient(circle 150px at var(--mx) var(--my), var(--spot-ink) 0 99%, color-mix(in srgb, var(--spot-ink) 35%, transparent) 100%);
+                mask: radial-gradient(circle 150px at var(--mx) var(--my), var(--spot-ink) 0 99%, color-mix(in srgb, var(--spot-ink) 35%, transparent) 100%);
+      }
+    }
+    @supports not (mask: radial-gradient(circle at 0 0, var(--spot-ink), transparent)) { [data-spot-mask] { -webkit-mask:none; mask:none; } }
+    @media (prefers-reduced-motion: reduce) { [data-spot-mask] { -webkit-mask:none; mask:none; } }
+
     /* ════════════ AUTHORS FOOTER — colofão de despacho ════════════ */
     .authors-footer {
       margin: var(--space-12) 0 0;
@@ -564,7 +620,7 @@
     }
   </style>
 </head>
-<body>
+<body data-showcase>
   <header class="topbar">
     <a href="#" class="topbar__brand">
       <span class="topbar__logo" aria-hidden="true">i</span>
@@ -616,8 +672,8 @@
       <span class="index-head__count">5 temas</span>
     </div>
     <div class="index">
-      <a class="card card--lead card--accent" href="#panel-soja" data-category="commodity" data-target="panel-soja">
-        <span class="card__folio" aria-hidden="true">01.1</span>
+      <a class="card card--lead card--accent" data-tilt href="#panel-soja" data-category="commodity" data-target="panel-soja">
+        <span class="card__folio accent-dynamic" aria-hidden="true">01.1</span>
         <div class="card__main">
           <p class="card__label">Soja · commodity-chave</p>
           <h3 class="card__title">A maior parte já <span class="hl">vai pra China</span></h3>
@@ -700,6 +756,24 @@
       </a>
     </div>
 
+    <!-- ── [W27] MARQUEE — fita de despacho com os stats-chave da tese (tecido entre seções) ── -->
+    <div class="marquee" role="presentation">
+      <div class="marquee__track">
+        <span><b>~70%</b> da soja chinesa já vem do Brasil</span><span aria-hidden="true">·</span>
+        <span><b>54%</b> das exportações de aço vão aos EUA</span><span aria-hidden="true">·</span>
+        <span>tarifa universal <b>10%</b> na mesa</span><span aria-hidden="true">·</span>
+        <span>Brasil tarifa <b>11,2%</b> · EUA tarifam <b>1,5%</b></span><span aria-hidden="true">·</span>
+        <span>pico do <b>TPU</b> em 2024</span><span aria-hidden="true">·</span>
+        <span>China é <b>28%</b> do destino · EUA <b>12%</b></span><span aria-hidden="true">·</span>
+        <span aria-hidden="true"><b>~70%</b> da soja chinesa já vem do Brasil</span><span aria-hidden="true">·</span>
+        <span aria-hidden="true"><b>54%</b> das exportações de aço vão aos EUA</span><span aria-hidden="true">·</span>
+        <span aria-hidden="true">tarifa universal <b>10%</b> na mesa</span><span aria-hidden="true">·</span>
+        <span aria-hidden="true">Brasil tarifa <b>11,2%</b> · EUA tarifam <b>1,5%</b></span><span aria-hidden="true">·</span>
+        <span aria-hidden="true">pico do <b>TPU</b> em 2024</span><span aria-hidden="true">·</span>
+        <span aria-hidden="true">China é <b>28%</b> do destino · EUA <b>12%</b></span><span aria-hidden="true">·</span>
+      </div>
+    </div>
+
     <!-- ── SEÇÃO 03 · CONTEXTO — todas como índice (base de mercado) ── -->
     <div class="index-head">
       <span class="index-head__num">03</span>
@@ -754,8 +828,8 @@
       <span class="index-head__count">2 temas</span>
     </div>
     <div class="index">
-      <a class="card card--lead card--accent" href="#panel-conclusao" data-category="conclusao" data-target="panel-conclusao">
-        <span class="card__folio" aria-hidden="true">04.1</span>
+      <a class="card card--lead card--accent" data-tilt href="#panel-conclusao" data-category="conclusao" data-target="panel-conclusao">
+        <span class="card__folio accent-dynamic" aria-hidden="true">04.1</span>
         <div class="card__main">
           <p class="card__label">Conclusão · a tese</p>
           <h3 class="card__title">Balanço <span class="hl">assimétrico</span> de riscos</h3>
@@ -1049,7 +1123,9 @@
       <p class="panel__kicker">Conclusão</p>
       <h2>Em suma, balanço <span class="hl">assimétrico</span> de riscos</h2>
       <p>Riscos positivos limitados vs riscos negativos crescentes para o Brasil. Três vetores resumem a tese:</p>
-      <div class="vectors">
+      <!-- [W26] spot-mask — no desktop o cursor revela ênfase mais nítida sobre os 3 vetores
+           (fora do viewport das manchetes-âncora com data-tilt; em touch/RM tudo permanece legível) -->
+      <div class="vectors" data-spot-mask>
         <div>
           <p class="vectors__num">01 · Ganhos limitados</p>
           <h3>Pouco espaço a ganhar</h3>
@@ -1157,7 +1233,10 @@
         document.querySelectorAll('.panel').forEach(p => p.classList.toggle('is-open', p === tgt));
       });
       openedPanelId = id;
-      tgt.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // scroll SÓ depois do updateDOM do view-transition aplicar is-open (painel
+      // vira display:block) — senão rola pro card fechado e parece "clique sem efeito".
+      requestAnimationFrame(() => requestAnimationFrame(() =>
+        tgt.scrollIntoView({ behavior: 'smooth', block: 'start' })));
       // render charts inside opened panel (lazy) + limpa nomes após o morph assentar
       requestAnimationFrame(() => requestAnimationFrame(() => { renderChartsForOpenPanel(); clearMorphNames(); }));
     }));
@@ -1178,6 +1257,24 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
       requestAnimationFrame(() => requestAnimationFrame(() => clearMorphNames()));
     }));
+
+    /* ═════ [W24] 3D TILT — manchete-âncora inclina rumo ao cursor (verbatim wow-components) ═════
+       Só nas 2 manchetes-herói; guard hover+pointer fino + reduced-motion (sem tilt em touch/RM). */
+    document.querySelectorAll('[data-tilt]').forEach(el => {
+      if (!matchMedia('(hover:hover) and (pointer:fine)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      el.addEventListener('pointermove', e => { const r = el.getBoundingClientRect();
+        el.style.setProperty('--rx', ((.5 - (e.clientY - r.top) / r.height) * 10).toFixed(2) + 'deg');
+        el.style.setProperty('--ry', (((e.clientX - r.left) / r.width - .5) * 10).toFixed(2) + 'deg'); });
+      el.addEventListener('pointerleave', () => { el.style.setProperty('--rx','0deg'); el.style.setProperty('--ry','0deg'); });
+    });
+
+    /* ═════ [W26] SPOT-MASK — cursor move o foco da máscara radial (guard hover+pointer fino) ═════ */
+    document.querySelectorAll('[data-spot-mask]').forEach(el => {
+      if (!matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+      el.addEventListener('pointermove', e => { const r = el.getBoundingClientRect();
+        el.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+        el.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%'); });
+    });
 
     /* ═════ CHARTS ═════ */
     const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
@@ -1606,5 +1703,6 @@
       });
     }
   </script>
+<script>/* nohashjump-fix: a[href="#"] (brand/breadcrumb/CTA decorativo) não deve pular pro topo/capa */document.querySelectorAll('a[href="#"]').forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();});});</script>
 </body>
 </html>

@@ -15,6 +15,7 @@ Não carregar inline. Abrir só quando o trabalho exigir:
 - **Direção de arte (o Parti — LER ANTES DE GERAR):** [references/direcao-de-arte.md](references/direcao-de-arte.md)
 - Kits tipográficos + fontes banidas: [references/type-kits.md](references/type-kits.md)
 - Ambição (teto cutting-edge A1/A2/A3 + momentos-wow): [references/ambicao.md](references/ambicao.md)
+- **Wow components (drop-ins copy-paste W1-W31 — o CÓDIGO dos momentos-wow, colar verbatim):** [references/wow-components.md](references/wow-components.md)
 - Design system, tokens, dark mode, boot script: [references/design-system.md](references/design-system.md)
 - Componentes reutilizáveis: [references/componentes.md](references/componentes.md)
 - Padrões CSS (gráficos, tabelas, depth tiers, Mermaid): [references/css-patterns.md](references/css-patterns.md)

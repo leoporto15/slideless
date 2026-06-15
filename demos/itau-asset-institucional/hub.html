@@ -17,7 +17,7 @@ nao-vai-ter: glow-radial; kicker-dot; hover-lift; glass-saturado; aurora; cursor
 serie: familia itau-asset
 
 ambicao: A2-elevado (central institucional — abrir um mandato deve ter continuidade, abrir um catálogo é abrir um registro fiduciário que se mantém; sobriedade por fio). Justificativa: o índice-mestre dos mandatos por AuM É a obra (assinatura M0) → a continuidade fólio↔painel + a curva de cobertura ESG 2013→2023 (10%→100%, a única série temporal completa da fonte) sustentam o nível sem nunca virar saltitante (registro impresso é o teto de exuberância).
-momento-wow: W5 View Transitions (a ENTRADA-FÓLIO do índice morfa no header do painel — mesmo view-transition-name 'folio', único por snapshot, limpo antes/depois; morph reverso volta à linha de origem) + W8 anotação viva no gráfico-tese do painel ESG (banda no salto 2015→2016 de 25%→89% + linha de meta 100% + crosshair de leitura no hover) + W7 materialidade por fio (grão feTurbulence estático soft-light freq 0.85 — papel institucional + borda de luz specular em fio DUPLO vertical no painel aberto, eco do 3px double contábil; NÃO glass — registro sóbrio).
+momento-wow: W5 View Transitions (a ENTRADA-FÓLIO do índice morfa no header do painel — mesmo view-transition-name 'folio', único por snapshot, limpo antes/depois; morph reverso volta à linha de origem) + W8 anotação viva no gráfico-tese do painel ESG (banda no salto 2015→2016 de 25%→89% + linha de meta 100% + crosshair de leitura no hover) + W7 materialidade por fio (grão feTurbulence estático soft-light freq 0.85 — papel institucional + borda de luz specular em fio DUPLO vertical no painel aberto, eco do 3px double contábil; NÃO glass — registro sóbrio) + W21 hue-drift ambiente (só o fio inferior da dateline .accent-dynamic migra de temperatura quente→fria→quente pelo scroll; S/L travados, nunca em texto de leitura; fallback = hue fixo da marca) + W29 focus-reveal ambiente nas figuras-tese (gráfico ESG + sub-grids entram em leve blur+dessaturação e fazem rack-focus ao chegar à leitura; base nítida fallback-safe — sistema consistente em figuras, não momento).
 ambicao-invariantes: (W5) guard if(!startViewTransition||reduce){updateDOM;return} + nome único por snapshot (clearMorphNames antes/depois) + origem espacial (o painel cresce da entrada-fólio que o abriu); (W8) banda+linha-meta desenhadas no 1º render (fallback-safe), hover só ACENDE o crosshair; (W7) @media print esconde grão + estado-final-base sólido; régua de craft (.no-transitions no toggle, curvas nomeadas, teto 320ms).
 anti-isomorfismo: morph 'folio' (≠ 'vt-painel' do 1T26, ≠ 'dispatch' do trump2); grão 0.85 (≠ 0.8 / 0.82); fio de luz DUPLO vertical contábil (≠ fio horizontal único dos irmãos); gráfico-tese = cobertura ESG (≠ criação de valor / fluxo de comércio).
 -->
@@ -374,6 +374,64 @@ li::marker{ color:var(--color-fg-subtle); }
 
 .foot-note{ font-size:var(--size-xs); color:var(--color-fg-subtle); }
 
+/* ─── [AMBIÇÃO A2 · W21] Scroll-hue drift — sistema ambiente, 1 por doc ─────
+   O acento migra de temperatura ao longo do scroll (quente intro → frio dados
+   → quente fecho), atado ao progresso. Aplicado SÓ a um detalhe de acento (o fio
+   da dateline via .accent-dynamic) — nunca a texto de leitura. S/L travados:
+   só a matiz muda. Sóbrio: 1px de fio, sem glow. Fallback = hue fixo da marca. */
+@property --doc-hue { syntax: '<number>'; inherits: true; initial-value: 24; }   /* 24 = laranja Itaú */
+html { --doc-hue: 24; }
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    html { animation: hueDrift linear both; animation-timeline: scroll(root); }
+    @keyframes hueDrift { 45% { --doc-hue: 210; } 100% { --doc-hue: 24; } }
+  }
+}
+/* detalhe de acento dinâmico: o fio inferior da dateline acompanha a temperatura */
+.accent-dynamic { border-bottom-color: hsl(var(--doc-hue) 95% 50%); }
+
+/* ─── [AMBIÇÃO A2 · W29] Blur-to-sharp focus — sistema ambiente em FIGURAS ──
+   Figuras-tese (gráfico ESG + sub-grids) entram levemente desfocadas e fazem
+   rack-focus ao chegar na leitura. Sistema (consistente em figuras), NÃO momento.
+   Base = nítido (fallback-safe). Único sistema de blur do doc (§STACKING). */
+.focus-reveal { filter: none; }                           /* base = nítido */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .focus-reveal { animation: focusIn linear both; animation-timeline: view(); animation-range: entry 8% entry 58%; }
+    @keyframes focusIn { from { filter: blur(14px) saturate(.4); opacity:.4; } to { filter: blur(0) saturate(1); opacity:1; } }
+  }
+}
+
+/* ─── [SHOWCASE · W13] Scroll horizontal fixado — sequência cinemática ──────
+   A jornada 1957→2022 (11 marcos cronológicos REAIS) é a única sequência
+   horizontal-friendly do doc → vira o herói pinned ÚNICO (§STACKING regra 6).
+   Base = carrossel scroll-snap usável sem JS / sem timeline (dedo + teclado).
+   O pin só acontece dentro do @supports (animation-timeline: scroll()). */
+.h-pin { position: sticky; top:0; height:100vh; overflow-x:auto; scroll-snap-type:x mandatory; }
+.h-track { display:flex; gap:var(--space-6); }
+.h-track > * { flex:0 0 80vw; scroll-snap-align:center; }
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .h-pin-outer { height:300vh; }                             /* dá curso ao pin */
+    .h-pin { overflow:clip; }
+    .h-track { animation: hscroll linear both; animation-timeline: scroll(nearest block); }
+    @keyframes hscroll { to { transform: translateX(calc(-100% + 100vw)); } }
+  }
+}
+/* enquadramento editorial de cada marco da jornada na faixa horizontal */
+.h-track .jornada-card{ display:flex; flex-direction:column; justify-content:center; align-self:center; padding:var(--space-6) var(--space-5); border-left:2px solid var(--color-border-strong); min-width:0; }
+.h-track .jornada-card .mini-timeline__date{ font-family:var(--font-display); font-size:clamp(2.4rem,1.6rem + 3.5vw,4.2rem); font-weight:800; line-height:1; letter-spacing:-0.03em; color:var(--color-fg); margin:0 0 var(--space-3); }
+.h-track .jornada-card p{ font-size:var(--size-lead); color:var(--color-fg-muted); margin:0; max-width:28ch; }
+.h-rail-note{ font-family:var(--font-ui, var(--font-text)); font-size:var(--size-xs); font-variant-caps:all-small-caps; letter-spacing:0.1em; color:var(--color-fg-subtle); margin:0 0 var(--space-2); }
+
+/* ─── [SHOWCASE · W24] 3D tilt — só os 2 mandatos-herói (maior AuM) ─────────
+   Sinal premium mais rápido, sem virar slop: tilt SÓ nas 2 entradas-folha de
+   maior peso (Renda Fixa Ativa + Estratégias Beta), nunca em toda a lista.
+   Cursor-reativo único do doc (§STACKING regra 6: sem W26 spot-mask junto). */
+[data-tilt] { transform: perspective(800px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)); transform-style: preserve-3d;
+  transition: transform 200ms var(--ease-out, ease-out); }
+[data-tilt] > .tilt-layer { transform: translateZ(40px); }
+
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{ transition-duration:0.01ms !important; animation-duration:0.01ms !important; }
   .panel.is-open .panel__inner{ animation:none; }
@@ -385,7 +443,7 @@ li::marker{ color:var(--color-fg-subtle); }
 }
 </style>
 </head>
-<body>
+<body data-showcase>
 
 <header class="topbar">
   <a href="#" class="topbar__brand">
@@ -399,7 +457,7 @@ li::marker{ color:var(--color-fg-subtle); }
 <main class="page">
 
   <section class="masthead">
-    <p class="dateline">Itaú Asset Management &nbsp;·&nbsp; Gestão de Recursos &nbsp;·&nbsp; <b>Edição 2024</b></p>
+    <p class="dateline accent-dynamic">Itaú Asset Management &nbsp;·&nbsp; Gestão de Recursos &nbsp;·&nbsp; <b>Edição 2024</b></p>
     <h1>A maior gestora privada da América&nbsp;Latina</h1>
     <p class="lead">Catálogo institucional dos mandatos, mesas e marcos da Casa. O índice a seguir abre cada painel in-page — dos maiores mandatos por ativos sob gestão às áreas de inteligência, governança e atendimento.</p>
 
@@ -437,9 +495,9 @@ li::marker{ color:var(--color-fg-subtle); }
   <ul class="idx-lead">
 
     <li data-category="gestao">
-      <button class="idx-lead__row" type="button" data-target="panel-rf">
+      <button class="idx-lead__row" type="button" data-target="panel-rf" data-tilt>
         <span class="idx-lead__folio">02</span>
-        <span class="idx-lead__body">
+        <span class="idx-lead__body tilt-layer">
           <span class="idx-lead__cat">Áreas de Gestão</span>
           <span class="idx-lead__title">Renda Fixa Ativa</span>
           <span class="idx-lead__desc">R$&nbsp;647&nbsp;bi em títulos públicos (12,2% da dívida brasileira) e R$&nbsp;355&nbsp;bi em títulos privados.</span>
@@ -449,9 +507,9 @@ li::marker{ color:var(--color-fg-subtle); }
     </li>
 
     <li data-category="gestao">
-      <button class="idx-lead__row" type="button" data-target="panel-beta">
+      <button class="idx-lead__row" type="button" data-target="panel-beta" data-tilt>
         <span class="idx-lead__folio">01</span>
-        <span class="idx-lead__body">
+        <span class="idx-lead__body tilt-layer">
           <span class="idx-lead__cat">Áreas de Gestão</span>
           <span class="idx-lead__title">Estratégias Beta</span>
           <span class="idx-lead__desc">Gestão indexada e ETFs listados — nove famílias de fundos e quatro ETFs.</span>
@@ -629,7 +687,7 @@ li::marker{ color:var(--color-fg-subtle); }
     <div class="panel__inner">
       <p class="lead">Amplo acesso ao mercado de crédito brasileiro, com mesa dedicada a quatro segmentos de Crédito Estruturado.</p>
       <h3>Segmentos cobertos</h3>
-      <div class="sub-grid">
+      <div class="sub-grid focus-reveal">
         <div class="sub-card sub-card--teal"><p class="sub-card__title">Infraestrutura</p><p class="sub-card__desc">Debêntures incentivadas, projetos.</p></div>
         <div class="sub-card sub-card--teal"><p class="sub-card__title">Agronegócio</p><p class="sub-card__desc">CRA e operações ligadas ao agro.</p></div>
         <div class="sub-card sub-card--teal"><p class="sub-card__title">Imobiliário</p><p class="sub-card__desc">CRI e fundos imobiliários.</p></div>
@@ -666,7 +724,7 @@ li::marker{ color:var(--color-fg-subtle); }
     <div class="panel__inner">
       <p class="lead">“Holding de assets independentes”: cada mesa tem autonomia de decisão, com infraestrutura compartilhada. Em 2022 ultrapassou R$&nbsp;100&nbsp;bi consolidados.</p>
       <h3>AuM por categoria</h3>
-      <div class="sub-grid">
+      <div class="sub-grid focus-reveal">
         <div class="sub-card"><p class="sub-card__title">R$&nbsp;113,5&nbsp;bi</p><p class="sub-card__desc">Retorno Absoluto</p></div>
         <div class="sub-card sub-card--teal"><p class="sub-card__title">R$&nbsp;89,8&nbsp;bi</p><p class="sub-card__desc">Crédito Estruturado + RF Unconstrained</p></div>
         <div class="sub-card sub-card--info"><p class="sub-card__title">R$&nbsp;18,5&nbsp;bi</p><p class="sub-card__desc">Macro</p></div>
@@ -729,7 +787,7 @@ li::marker{ color:var(--color-fg-subtle); }
         <li><strong>Educação dos investidores</strong></li>
       </ul>
       <h3>8 Produtos ESG dedicados</h3>
-      <div class="sub-grid">
+      <div class="sub-grid focus-reveal">
         <div class="sub-card"><p class="sub-card__title">Active Fix ESG</p></div>
         <div class="sub-card sub-card--info"><p class="sub-card__title">ISUS11</p></div>
         <div class="sub-card sub-card--teal"><p class="sub-card__title">GOVE11</p></div>
@@ -749,7 +807,7 @@ li::marker{ color:var(--color-fg-subtle); }
            (10%→100%) é a única série temporal completa da fonte. Banda no salto
            2015→2016 + linha de meta 100% desenhadas no 1º render; crosshair acende
            no hover. A tabela abaixo permanece (fidelidade: todas as linhas). -->
-      <figure class="chart-figure">
+      <figure class="chart-figure focus-reveal">
         <figcaption class="chart-figure__cap">Cobertura ESG dos ativos · 2013 → 2023 · banda = salto 2015→2016</figcaption>
         <div class="chart-box"><canvas id="c-esg" aria-label="Evolução da cobertura ESG dos ativos, de 10% em 2013 a 100% em 2020, mantida até 2023. Salto de 25% para 89% entre 2015 e 2016."></canvas></div>
       </figure>
@@ -813,19 +871,27 @@ li::marker{ color:var(--color-fg-subtle); }
     </div>
     <div class="panel__inner">
       <p class="lead">Onze marcos resumem a trajetória de pioneirismo da Itaú Asset Management ao longo de seis décadas.</p>
-      <ul class="mini-timeline">
-        <li><span class="mini-timeline__date">1957</span><span>1º fundo de Renda Variável do Brasil</span></li>
-        <li><span class="mini-timeline__date">1997</span><span>Itaú K2 — primeiro multimercado da Casa</span></li>
-        <li><span class="mini-timeline__date">2004</span><span>PIBB — 1º ETF do Brasil; aquisição ABN Argentina</span></li>
-        <li><span class="mini-timeline__date">2005</span><span>Início da mesa de Retorno Absoluto</span></li>
-        <li><span class="mini-timeline__date">2011</span><span>Itaú Asset Nova York</span></li>
-        <li><span class="mini-timeline__date">2013</span><span>ETF IPSA — 1º ETF do Chile</span></li>
-        <li><span class="mini-timeline__date">2016</span><span>Mais de R$&nbsp;500&nbsp;bi sob gestão</span></li>
-        <li><span class="mini-timeline__date">2019</span><span>Modelo Multimesas + 40 talentos + IMAB11</span></li>
-        <li><span class="mini-timeline__date">2020</span><span>Líderes em Retorno Absoluto</span></li>
-        <li><span class="mini-timeline__date">2021</span><span>6 ETFs Temáticos Internacionais</span></li>
-        <li><span class="mini-timeline__date">2022</span><span>+R$&nbsp;100&nbsp;bi em Multimesas</span></li>
-      </ul>
+      <!-- [SHOWCASE · W13] Scroll horizontal fixado — sequência REAL (11 marcos
+           cronológicos 1957→2022). Base = carrossel scroll-snap usável sem JS;
+           o pin/scrub só dentro do @supports (animation-timeline: scroll()). -->
+      <p class="h-rail-note">Role para percorrer a linha do tempo &nbsp;·&nbsp; 1957 → 2022</p>
+      <div class="h-pin-outer">
+        <div class="h-pin">
+          <div class="h-track">
+            <article class="jornada-card"><span class="mini-timeline__date">1957</span><p>1º fundo de Renda Variável do Brasil</p></article>
+            <article class="jornada-card"><span class="mini-timeline__date">1997</span><p>Itaú K2 — primeiro multimercado da Casa</p></article>
+            <article class="jornada-card"><span class="mini-timeline__date">2004</span><p>PIBB — 1º ETF do Brasil; aquisição ABN Argentina</p></article>
+            <article class="jornada-card"><span class="mini-timeline__date">2005</span><p>Início da mesa de Retorno Absoluto</p></article>
+            <article class="jornada-card"><span class="mini-timeline__date">2011</span><p>Itaú Asset Nova York</p></article>
+            <article class="jornada-card"><span class="mini-timeline__date">2013</span><p>ETF IPSA — 1º ETF do Chile</p></article>
+            <article class="jornada-card"><span class="mini-timeline__date">2016</span><p>Mais de R$&nbsp;500&nbsp;bi sob gestão</p></article>
+            <article class="jornada-card"><span class="mini-timeline__date">2019</span><p>Modelo Multimesas + 40 talentos + IMAB11</p></article>
+            <article class="jornada-card"><span class="mini-timeline__date">2020</span><p>Líderes em Retorno Absoluto</p></article>
+            <article class="jornada-card"><span class="mini-timeline__date">2021</span><p>6 ETFs Temáticos Internacionais</p></article>
+            <article class="jornada-card"><span class="mini-timeline__date">2022</span><p>+R$&nbsp;100&nbsp;bi em Multimesas</p></article>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -957,7 +1023,7 @@ li::marker{ color:var(--color-fg-subtle); }
       if (panelHead) panelHead.style.viewTransitionName = 'folio';
       document.querySelectorAll('.panel').forEach(p => p.classList.toggle('is-open', p === tgt));
     });
-    requestAnimationFrame(() => tgt.scrollIntoView({ behavior: scrollMode, block: 'start' }));
+    requestAnimationFrame(() => requestAnimationFrame(() => tgt.scrollIntoView({ behavior: scrollMode, block: 'start' })));
     // render lazy do gráfico-tese do painel aberto + limpa nomes após o morph assentar
     requestAnimationFrame(() => requestAnimationFrame(() => { renderChartsForOpenPanel(); clearMorphNames(); }));
   }
@@ -1123,5 +1189,18 @@ li::marker{ color:var(--color-fg-subtle); }
 })();
 </script>
 
+<!-- [SHOWCASE · W24] 3D tilt — drop-in verbatim. Guard hover+pointer fine +
+     reduced-motion (sibling block; nunca aninhado). Só os 2 cards-herói. -->
+<script>
+document.querySelectorAll('[data-tilt]').forEach(el => {
+  if (!matchMedia('(hover:hover) and (pointer:fine)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  el.addEventListener('pointermove', e => { const r = el.getBoundingClientRect();
+    el.style.setProperty('--rx', ((.5-(e.clientY-r.top)/r.height)*10).toFixed(2)+'deg');
+    el.style.setProperty('--ry', (((e.clientX-r.left)/r.width-.5)*10).toFixed(2)+'deg'); });
+  el.addEventListener('pointerleave', () => { el.style.setProperty('--rx','0deg'); el.style.setProperty('--ry','0deg'); });
+});
+</script>
+
+<script>/* nohashjump-fix: a[href="#"] (brand/breadcrumb/CTA decorativo) não deve pular pro topo/capa */document.querySelectorAll('a[href="#"]').forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();});});</script>
 </body>
 </html>

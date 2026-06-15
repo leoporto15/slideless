@@ -10,8 +10,9 @@ registro: institucional-impresso (gestora de recursos; material assinado que vir
 kit: 02-relatorio-anual (Literata display + Public Sans corpo + Spline Sans Mono — registro formal bom de imprimir, números protagonistas com tnum)
 capa: frontispicio (folha de rosto centrada, simétrica, fio duplo — gestora institucional clássica)
 superficie: flat (impressão é o destino; profundidade por fio 1px e contraste, luz flat — zero sombra difusa)
-motion: estatico (ZERO @keyframes de entrada no arquivo; única transição: toggle de tema)
-ambicao: A1-contido (institucional de gestora que vira PDF — sobriedade é requisito; materialidade por fio)
+motion: reveal-contido (scroll-driven, atrás de @supports + estado-final-base; reduced-motion zera; toggle de tema é a única transição de UI)
+ambicao: A1-contido (institucional de gestora que vira PDF — sobriedade é requisito; craft v7 só por famílias não-premium)
+momento-wow: W22 draw-on (espinha da jornada 1957→2024, seção 02) · W25 data-choreography (KPIs-âncora do sumário) · W29 blur-focus (2 figuras) · W21 hue-drift (fio de seção, ambiente) · W6 text-reveal (tese do sumário executivo)
 assinatura: M0 — a estrutura institucional (12 diretorias / 8 mesas Multimesas / AuM por bloco) em tabela full-bleed broadsheet com fio duplo no total, protagonista compositivo da seção 05
 nao-vai-ter: glow-radial; fade-up; sombra-difusa-em-tudo
 serie: familia itau-asset
@@ -789,6 +790,64 @@ serie: familia itau-asset
     align-self: start;
   }
 
+  /* ═══ v7 SÓBRIO — craft não-premium (contido, atrás de @supports) ════
+     W21 hue-drift (ambiente), W22 draw-on (espinha da jornada 1957→2024),
+     W25 data-choreography (KPIs-âncora do sumário), W29 blur-focus (figuras).
+     Single-file, estado-final = base, branch reduced-motion. Nenhum efeito
+     premium (gateado em registro sóbrio). */
+
+  /* W21 — scroll-hue drift: a temperatura do acento migra por capítulo,
+     S/L travados; só aplica ao fio do header de seção (detalhe, não texto). */
+  @property --doc-hue { syntax: '<number>'; inherits: true; initial-value: 24; }
+  html { --doc-hue: 24; }                    /* 24 = laranja Itaú */
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+      html { animation: hueDrift linear both; animation-timeline: scroll(root); }
+      @keyframes hueDrift { 45% { --doc-hue: 28; } 100% { --doc-hue: 24; } }
+    }
+  }
+  .section-header { border-bottom-color: hsl(var(--doc-hue) 90% 48% / 0.32); }
+
+  /* W22 — draw-on SVG: a espinha da jornada (1957 → 2024) se desenha ao entrar */
+  .era-spine { display: block; width: 100%; height: 8px; margin: var(--space-2) 0 var(--space-5); overflow: visible; }
+  .era-spine path { fill: none; stroke: var(--color-accent); stroke-width: 2; }
+  .draw-on { stroke-dasharray: var(--len, 1200); stroke-dashoffset: 0; }   /* base = desenhado */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .draw-on { stroke-dashoffset: var(--len, 1200); animation: drawPath 1.2s ease both;
+                 animation-timeline: view(); animation-range: cover 8% cover 42%; }
+      @keyframes drawPath { to { stroke-dashoffset: 0; } }
+    }
+  }
+
+  /* W25 — data choreography nos KPIs-âncora: número aparece (mola) + barra
+     enche por scaleX + legenda sobe, no MESMO gatilho. Uma física (--spring). */
+  :root { --spring: linear(0, 0.5 30%, 1.02 62%, 0.995, 1); }   /* contido (registro sóbrio) */
+  .kpi__bar {
+    display: block; height: 2px; margin-top: var(--space-2);
+    background: var(--color-accent); transform: scaleX(1); transform-origin: left;
+  }
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      [data-choreo] { animation-timeline: view(); animation-range: entry 18% entry 68%; }
+      [data-choreo] .kpi__val { animation: choreoIn 0.7s var(--spring) both; }
+      [data-choreo] .kpi__bar { transform: scaleX(0); animation: choreoFill 0.9s var(--spring) 0.12s both; }
+      [data-choreo] .kpi__label { animation: choreoIn 0.6s ease 0.32s both; }
+      @keyframes choreoFill { to { transform: scaleX(1); } }
+      @keyframes choreoIn { from { opacity: 0.2; } to { opacity: 1; } }
+    }
+  }
+
+  /* W29 — blur-to-sharp focus: as figuras (gráficos) entram desfocadas e focam.
+     Sistema ambiente; estado-final = nítido. */
+  .focus-reveal { filter: none; }
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .focus-reveal { animation: focusIn linear both; animation-timeline: view(); animation-range: entry 8% entry 56%; }
+      @keyframes focusIn { from { filter: blur(10px) saturate(0.6); opacity: 0.5; } to { filter: blur(0) saturate(1); opacity: 1; } }
+    }
+  }
+
   /* ═══ @media print — A4, rigoroso (contrato do modelo report) ════════ */
   @media print {
     @page { size: A4; margin: 2cm; }
@@ -817,6 +876,7 @@ serie: familia itau-asset
     }
     h1, h2, h3, h4 { color: #000 !important; }
     p, li { color: #1a1a1a !important; }
+    .w, .w-i { overflow: visible; transform: none !important; }  /* W6: papel mostra a tese estática */
     a { color: #000000; text-decoration: none; }
     /* URLs externas explicitadas; âncoras internas não */
     a[href^="#"]::after { content: none; }
@@ -846,6 +906,10 @@ serie: familia itau-asset
     /* full-bleed volta para a mancha da página */
     .bleed { width: 100%; margin-left: 0; }
 
+    /* v7 sóbrio: no papel o fio volta a tinta neutra; espinha vira preto */
+    .section-header { border-bottom-color: rgba(0, 0, 0, 0.55) !important; }
+    .era-spine path { stroke: #000000 !important; }
+
     /* footnotes ao fim, com fio simples; fechamento com fio duplo preto */
     .report-footnotes { border-top: 1px solid #000000; }
     .report-footer { border-top: 3px double #000000; padding-bottom: 0; }
@@ -861,6 +925,19 @@ serie: familia itau-asset
     }
   }
 
+  /* W6 — text reveal editorial: a tese do sumário sobe palavra-a-palavra ao
+     entrar. Sistema de entrada (tipo), 1 manchete só. Base = visível. */
+  .w { display: inline-block; overflow: clip; vertical-align: top; }
+  .w-i { display: inline-block; transform: none; }               /* INVARIANTE 2: base = visível */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      [data-split] { view-timeline-name: --r; view-timeline-axis: block; }
+      .w-i { animation: riseWord linear both; animation-timeline: --r;
+             animation-range: entry 0% entry 70%; animation-delay: calc(var(--i, 0) * 50ms); }
+      @keyframes riseWord { from { transform: translateY(110%); } to { transform: none; } }
+    }
+  }
+
   /* ═══ Reduced motion (perfil já é estático; zera o restante) ═════════ */
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
@@ -870,7 +947,7 @@ serie: familia itau-asset
   }
 </style>
 </head>
-<body>
+<body data-showcase>
 
 <!-- ═══ TOPBAR (tela apenas) ═════════════════════════════════════════ -->
 <header class="report-topbar">
@@ -899,7 +976,7 @@ serie: familia itau-asset
 <!-- ═══ SUMÁRIO EXECUTIVO ════════════════════════════════════════════ -->
 <section class="report-summary" aria-label="Sumário executivo">
   <p class="label-caps">Sumário executivo</p>
-  <h2 class="report-summary__h">A maior gestora privada do Brasil em escala, alcance e sofisticação.</h2>
+  <h2 class="report-summary__h" data-split>A maior gestora privada do Brasil em escala, alcance e sofisticação.</h2>
 
   <div class="report-summary__body">
     <p>
@@ -916,20 +993,24 @@ serie: familia itau-asset
   </div>
 
   <ul class="report-kpis" aria-label="Indicadores-âncora">
-    <li class="kpi">
+    <li class="kpi" data-choreo>
       <span class="kpi__val">R$&nbsp;1,19&nbsp;tri</span>
+      <span class="kpi__bar" aria-hidden="true"></span>
       <p class="kpi__label">em ativos sob gestão ao final de 2024</p>
     </li>
-    <li class="kpi">
+    <li class="kpi" data-choreo>
       <span class="kpi__val">14,5%</span>
+      <span class="kpi__bar" aria-hidden="true"></span>
       <p class="kpi__label">de market share entre gestoras privadas</p>
     </li>
-    <li class="kpi">
+    <li class="kpi" data-choreo>
       <span class="kpi__val">2,6&nbsp;mi</span>
+      <span class="kpi__bar" aria-hidden="true"></span>
       <p class="kpi__label">de clientes atendidos por toda a casa</p>
     </li>
-    <li class="kpi">
+    <li class="kpi" data-choreo>
       <span class="kpi__val">+300</span>
+      <span class="kpi__bar" aria-hidden="true"></span>
       <p class="kpi__label">profissionais dedicados à gestão e pesquisa</p>
     </li>
   </ul>
@@ -1026,7 +1107,7 @@ serie: familia itau-asset
       <p class="chart-title">Composição agregada do AuM por grandes blocos</p>
       <p class="chart-subtitle">Figura&nbsp;1 · Distribuição estimada considerando títulos públicos, títulos privados, retorno absoluto, beta e demais estratégias</p>
       <div class="chart-inner">
-        <canvas id="chartCompAuM" aria-label="Gráfico de rosca: composição estimada do AuM por bloco, em R$ bilhões — títulos públicos federais 647, títulos privados 355, gestão Beta 174,49, retorno absoluto 113,5, ETFs 18,77, demais estratégias 60" role="img"></canvas>
+        <canvas id="chartCompAuM" class="focus-reveal" aria-label="Gráfico de rosca: composição estimada do AuM por bloco, em R$ bilhões — títulos públicos federais 647, títulos privados 355, gestão Beta 174,49, retorno absoluto 113,5, ETFs 18,77, demais estratégias 60" role="img"></canvas>
       </div>
       <figcaption><strong>Figura&nbsp;1.</strong> Composição estimada do AuM em R$&nbsp;bilhões. Fonte: indicadores institucionais consolidados em dezembro de 2024.</figcaption>
     </figure>
@@ -1042,6 +1123,11 @@ serie: familia itau-asset
     <p class="lead">
       Mais de seis décadas de pioneirismo no mercado brasileiro de gestão de recursos: o primeiro fundo de renda variável (1957), o primeiro multimercado (1997), o primeiro ETF do Brasil (2004) e do Chile (2013), e a consolidação do modelo Multimesas em 2019.
     </p>
+
+    <!-- W22 draw-on: a espinha da jornada (1957 → 2024) se desenha ao entrar -->
+    <svg class="era-spine" viewBox="0 0 1000 8" preserveAspectRatio="none" role="img" aria-label="Espinha cronológica da jornada, de 1957 a 2024">
+      <path class="draw-on" d="M2 4 H998" />
+    </svg>
 
     <table class="broadsheet">
       <caption>Linha do tempo dos marcos da Itaú Asset</caption>
@@ -1417,7 +1503,7 @@ serie: familia itau-asset
       <p class="chart-title">Evolução do AuM ESG e da cobertura sobre o total da casa</p>
       <p class="chart-subtitle">Figura&nbsp;2 · Barras: AuM em fundos dedicados ESG (R$&nbsp;bi). Linha: cobertura ESG (% sobre total ex-FoF), 2013–2023</p>
       <div class="chart-inner-tall">
-        <canvas id="chartESG" aria-label="Gráfico misto barras e linha: AuM em fundos ESG (R$ bi) sobe de 4,5 em 2013 para 118,2 em 2023; cobertura ESG sobe de 10% em 2013 para 100% a partir de 2020" role="img"></canvas>
+        <canvas id="chartESG" class="focus-reveal" aria-label="Gráfico misto barras e linha: AuM em fundos ESG (R$ bi) sobe de 4,5 em 2013 para 118,2 em 2023; cobertura ESG sobe de 10% em 2013 para 100% a partir de 2020" role="img"></canvas>
       </div>
       <figcaption><strong>Figura&nbsp;2.</strong> Cobertura ESG saiu de 10% em 2013 para 100% em 2020 (mantida em 2021, 2022 e 2023). Fonte: indicadores institucionais ESG. <strong>*</strong> 100% dos ativos excluindo Fundos de Fundos.</figcaption>
     </figure>
@@ -1809,6 +1895,11 @@ serie: familia itau-asset
     _themeBeforePrint = null;
   });
 
+  // ── W22 draw-on: medir comprimento real do path (1x, no load) ──────
+  document.querySelectorAll('.draw-on').forEach(p => {
+    try { p.style.setProperty('--len', Math.ceil(p.getTotalLength())); } catch (e) {}
+  });
+
   // ── TOC + scrollspy (gerada dos h2 dentro de .report-section[id]) ───
   document.addEventListener('DOMContentLoaded', () => {
     const toc = document.querySelector('.report-toc__list');
@@ -1839,6 +1930,14 @@ serie: familia itau-asset
       });
     }, { rootMargin: '-25% 0px -65% 0px' });
     sections.forEach(s => spy.observe(s));
+  });
+
+  // ── W6 text reveal: split grapheme-safe pt-BR na tese do sumário ─────
+  document.querySelectorAll('[data-split]').forEach(el => {
+    const seg = new Intl.Segmenter('pt', { granularity: 'word' });
+    let i = 0;
+    el.innerHTML = [...seg.segment(el.textContent)]
+      .map(s => s.isWordLike ? `<span class="w"><span class="w-i" style="--i:${i++}">${s.segment}</span></span>` : s.segment).join('');
   });
 </script>
 </body>

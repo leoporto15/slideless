@@ -40,7 +40,9 @@
     .hero { margin-bottom: var(--space-8); }
 
     .filters { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: var(--space-6) 0 var(--space-7); }
-    .filter { padding: var(--space-2) var(--space-4); background: transparent; border: 1px solid var(--color-border); border-radius: 999px; font: inherit; font-size: var(--size-small); color: var(--color-fg-muted); cursor: pointer; transition: all var(--duration-fast); }
+    .filter { padding: var(--space-2) var(--space-4); background: transparent; border: 1px solid var(--color-border); border-radius: 999px; font: inherit; font-size: var(--size-small); color: var(--color-fg-muted); cursor: pointer; transition: color var(--duration-fast), border-color var(--duration-fast), background var(--duration-fast); }
+    /* WOW W5 — opcional: nomear card-herói e header do painel p/ morph dirigido (wow-components.md#W5) */
+    @media (prefers-reduced-motion: reduce) { ::view-transition-group(*) { animation: none !important; } }
     .filter:hover { color: var(--color-fg); border-color: var(--color-border-strong); }
     .filter.is-active { background: var(--color-accent); color: var(--color-accent-fg); border-color: var(--color-accent); }
 
@@ -128,17 +130,28 @@
       });
     }));
 
+    /* WOW W5 — morph card→painel (View Transitions). Guard: sem suporte/reduced → instantâneo.
+       Ver wow-components.md#W5. */
+    function navigate(updateDOM) {
+      if (!document.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches) { updateDOM(); return; }
+      document.startViewTransition(updateDOM);
+    }
     document.querySelectorAll('.card[data-target]').forEach(card => card.addEventListener('click', e => {
       e.preventDefault();
       const tgt = document.getElementById(card.dataset.target);
       if (!tgt) return;
-      document.querySelectorAll('.panel').forEach(p => p.classList.toggle('is-open', p === tgt));
-      tgt.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      navigate(() => { document.querySelectorAll('.panel').forEach(p => p.classList.toggle('is-open', p === tgt)); });
+      /* scroll SÓ depois do updateDOM do view-transition aplicar is-open (painel vira
+         display:block); imediato rolaria pro card fechado → parece "clique sem efeito". */
+      requestAnimationFrame(() => requestAnimationFrame(() =>
+        tgt.scrollIntoView({ behavior: 'smooth', block: 'start' })));
     }));
     document.querySelectorAll('.panel__close').forEach(b => b.addEventListener('click', e => {
-      e.currentTarget.closest('.panel').classList.remove('is-open');
+      const panel = e.currentTarget.closest('.panel');
+      navigate(() => { panel.classList.remove('is-open'); });
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }));
   </script>
+<script>/* nohashjump-fix: a[href="#"] (brand/breadcrumb/CTA decorativo) não deve pular pro topo/capa */document.querySelectorAll('a[href="#"]').forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();});});</script>
 </body>
 </html>

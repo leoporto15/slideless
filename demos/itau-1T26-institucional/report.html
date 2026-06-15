@@ -10,8 +10,9 @@ registro: relatorio-de-bancada (vai virar PDF de RI; o documento argumenta com d
 kit: 01-broadsheet (Newsreader + Archivo + IBM Plex Mono — números protagonistas pedem serif de jornal + tnum)
 capa: manchete-broadsheet (capa de jornal financeiro: manchete peso 800 + dateline + fio — a manchete É o resultado do trimestre)
 superficie: flat + fio de coluna 1px; luz flat (profundidade por fio e contraste, zero sombra)
-motion: estatico (ZERO keyframes de entrada no arquivo; única transição: toggle de tema)
-ambicao: A1-contido (RI que vira PDF de resultados — sobriedade é requisito; materialidade por fio)
+motion: reveal-contido (scroll-driven, atrás de @supports + estado-final-base; reduced-motion zera; toggle de tema é a única transição de UI)
+ambicao: A1-contido (RI que vira PDF de resultados — sobriedade é requisito; craft v7 só por famílias não-premium)
+momento-wow: W22 draw-on (espinha da cronologia, seção 03) · W25 data-choreography (KPIs do sumário) · W29 blur-focus (3 figuras) · W21 hue-drift (fio de seção, ambiente)
 assinatura: M0 — a tabela de resultados consolidados (seção 07, performance financeira do trimestre) em full-bleed broadsheet com fio duplo no total (R$ 12,3 bi)
 nao-vai-ter: glow-radial; fade-up; sombra-difusa-em-tudo
 serie: familia itau-1T26
@@ -813,6 +814,78 @@ serie: familia itau-1T26
     .num-positive { color: var(--color-success); font-weight: 600; }
     .num-negative { color: var(--color-danger); font-weight: 600; }
 
+    /* ═══ v7 SÓBRIO — craft não-premium (contido, atrás de @supports) ════
+       W21 hue-drift (ambiente), W22 draw-on (espinha da cronologia),
+       W25 data-choreography (KPIs do sumário), W29 blur-focus (figuras).
+       Tudo single-file, estado-final = base, branch reduced-motion. Nenhum
+       efeito premium (gateado em registro sóbrio). */
+
+    /* W21 — scroll-hue drift: a temperatura do acento migra por capítulo.
+       Sistema ambiente, S/L travados; só aplica a detalhes (fio de seção). */
+    @property --doc-hue { syntax: '<number>'; inherits: true; initial-value: 24; }
+    html { --doc-hue: 24; }                    /* 24 = laranja Itaú */
+    @supports (animation-timeline: scroll()) {
+      @media (prefers-reduced-motion: no-preference) {
+        html { animation: hueDrift linear both; animation-timeline: scroll(root); }
+        @keyframes hueDrift { 45% { --doc-hue: 28; } 100% { --doc-hue: 24; } }
+      }
+    }
+    /* fio do header de seção ganha a temperatura do documento (detalhe, não texto) */
+    .section-header { border-bottom-color: hsl(var(--doc-hue) 90% 48% / 0.32); }
+
+    /* W22 — draw-on SVG: a espinha da cronologia (três eras) se desenha */
+    .era-spine { display: block; width: 100%; height: 8px; margin: var(--space-2) 0 var(--space-5); overflow: visible; }
+    .era-spine path { fill: none; stroke: var(--color-accent); stroke-width: 2; }
+    .draw-on { stroke-dasharray: var(--len, 1200); stroke-dashoffset: 0; }   /* base = desenhado */
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        .draw-on { stroke-dashoffset: var(--len, 1200); animation: drawPath 1.2s ease both;
+                   animation-timeline: view(); animation-range: cover 8% cover 42%; }
+        @keyframes drawPath { to { stroke-dashoffset: 0; } }
+      }
+    }
+
+    /* W25 — data choreography: número rola + barra enche + legenda sobe, em cascata,
+       no MESMO gatilho de scroll. Uma física só (--spring) p/ o doc inteiro. */
+    :root { --spring: linear(0, 0.5 30%, 1.02 62%, 0.995, 1); }   /* contido (registro sóbrio) */
+    @property --cn { syntax: '<integer>'; inherits: false; initial-value: 0; }
+    .summary-kpi__bar {
+      display: block; height: 2px; margin-top: var(--space-2);
+      background: var(--color-accent); transform: scaleX(1); transform-origin: left;
+    }
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        [data-choreo] { animation-timeline: view(); animation-range: entry 18% entry 68%; }
+        [data-choreo] .summary-kpi__val { animation: choreoIn 0.7s var(--spring) both; }
+        [data-choreo] .summary-kpi__bar { transform: scaleX(0); animation: choreoFill 0.9s var(--spring) 0.12s both; }
+        [data-choreo] .summary-kpi__label { animation: choreoIn 0.6s ease 0.32s both; }
+        @keyframes choreoFill { to { transform: scaleX(1); } }
+        @keyframes choreoIn { from { opacity: 0.2; } to { opacity: 1; } }
+      }
+    }
+
+    /* W29 — blur-to-sharp focus: as figuras (gráficos) entram desfocadas e focam.
+       Sistema ambiente, não momento; estado-final = nítido. */
+    .focus-reveal { filter: none; }
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        .focus-reveal { animation: focusIn linear both; animation-timeline: view(); animation-range: entry 8% entry 56%; }
+        @keyframes focusIn { from { filter: blur(10px) saturate(0.6); opacity: 0.5; } to { filter: blur(0) saturate(1); opacity: 1; } }
+      }
+    }
+
+    /* W10 — mask-reveal: o título da seção-assinatura (07, resultados) é
+       revelado por um clip-path wipe lateral ao entrar. Estado-base = visível
+       (clip-path inset 0); animação atrás de @supports + reduced-motion; no
+       papel não aplica (print ≠ screen) — nada é cortado. Toque discreto único. */
+    .mask-reveal { clip-path: inset(0 0 0 0); }
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        .mask-reveal { animation: maskWipe linear both; animation-timeline: view(); animation-range: entry 5% cover 35%; }
+        @keyframes maskWipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+      }
+    }
+
     /* ═══ @media print — A4, rigoroso (contrato do modelo report) ═══ */
     @media print {
       @page { size: A4; margin: 2cm; }
@@ -865,6 +938,10 @@ serie: familia itau-1T26
       /* full-bleed volta para a mancha da página */
       .bleed { width: 100%; margin-left: 0; }
 
+      /* v7 sóbrio: no papel o fio volta a tinta neutra; espinha vira preto */
+      .section-header { border-bottom-color: rgba(0, 0, 0, 0.55) !important; }
+      .era-spine path { stroke: #000000 !important; }
+
       /* semânticas de variação em tinta de papel */
       .num-positive, .num-negative { color: #000000; }
       .badge-accent, .badge-info, .badge-success, .badge-teal,
@@ -909,7 +986,7 @@ serie: familia itau-1T26
     }
   </style>
 </head>
-<body>
+<body data-showcase>
 
   <!-- ═══════════════ HEADER (tela apenas) ═══════════════ -->
   <header class="report-header">
@@ -970,20 +1047,24 @@ serie: familia itau-1T26
     <p>Este relatório consolida em oito seções o retrato institucional do banco: visão geral, cultura (jeito Ituber), presença e escala, ecossistema de produtos e atendimento, sustentabilidade e ESG, transformação digital, resultados financeiros do 1T26 e estratégia/guidance para o ano. O encerramento traz os canais de RI para diálogo com a comunidade investidora.</p>
 
     <div class="report-summary__kpis">
-      <div class="summary-kpi">
+      <div class="summary-kpi" data-choreo>
         <p class="summary-kpi__val">R$&nbsp;12,3&nbsp;bi</p>
+        <span class="summary-kpi__bar" aria-hidden="true"></span>
         <p class="summary-kpi__label">Resultado recorrente 1T26 (+10,4% YoY)</p>
       </div>
-      <div class="summary-kpi">
+      <div class="summary-kpi" data-choreo>
         <p class="summary-kpi__val">24,8%</p>
+        <span class="summary-kpi__bar" aria-hidden="true"></span>
         <p class="summary-kpi__label">ROE recorrente</p>
       </div>
-      <div class="summary-kpi">
+      <div class="summary-kpi" data-choreo>
         <p class="summary-kpi__val">R$&nbsp;1.483&nbsp;bi</p>
+        <span class="summary-kpi__bar" aria-hidden="true"></span>
         <p class="summary-kpi__label">Carteira de crédito (+7,2% YoY)</p>
       </div>
-      <div class="summary-kpi">
+      <div class="summary-kpi" data-choreo>
         <p class="summary-kpi__val">R$&nbsp;1&nbsp;tri</p>
+        <span class="summary-kpi__bar" aria-hidden="true"></span>
         <p class="summary-kpi__label">Compromisso em finanças sustentáveis até 2030</p>
       </div>
     </div>
@@ -1094,6 +1175,11 @@ serie: familia itau-1T26
       <p>O Itaú Unibanco opera com varejo em <strong>18 países</strong> da América Latina, atuando como <em>banco universal</em> obstinado por encantar o cliente em todas as dimensões — pessoa física, jurídica e atacado. A presença geográfica é sustentada por uma jornada de 101 anos que combina origem familiar, consolidação por aquisições e reinvenção digital contínua.</p>
 
       <h3>3.1 Linha do tempo — três eras</h3>
+
+      <!-- W22 draw-on: a espinha da jornada (1924 → 2026) se desenha ao entrar -->
+      <svg class="era-spine" viewBox="0 0 1000 8" preserveAspectRatio="none" role="img" aria-label="Espinha cronológica das três eras, de 1924 a 2026">
+        <path class="draw-on" d="M2 4 H998" />
+      </svg>
 
       <h4>Era 1: Fundação e pioneirismo digital (1924–2000)</h4>
       <ul class="timeline-list">
@@ -1387,7 +1473,7 @@ serie: familia itau-1T26
         <p class="report-figure__title">Figura 1. Progresso acumulado — finanças sustentáveis</p>
         <p class="report-figure__subtitle">% direcionado vs meta de R$ 1 trilhão até 2030</p>
         <div class="chart-inner">
-          <canvas id="chart-fin-sust" aria-label="Progresso acumulado de finanças sustentáveis" role="img"></canvas>
+          <canvas id="chart-fin-sust" class="focus-reveal" aria-label="Progresso acumulado de finanças sustentáveis" role="img"></canvas>
         </div>
         <figcaption><strong>Fonte:</strong> Itaú Unibanco · Apresentação Institucional 1T26. R$&nbsp;577,6&nbsp;bi direcionados entre jan/20 e fev/26 (57,7% da meta).</figcaption>
       </figure>
@@ -1469,7 +1555,7 @@ serie: familia itau-1T26
         <p class="report-figure__title">Figura 2. Índice de eficiência</p>
         <p class="report-figure__subtitle">% — quatro recortes · 4T24 → 1T26</p>
         <div class="chart-inner">
-          <canvas id="chart-eficiencia" aria-label="Índice de Eficiência" role="img"></canvas>
+          <canvas id="chart-eficiencia" class="focus-reveal" aria-label="Índice de Eficiência" role="img"></canvas>
         </div>
         <figcaption><strong>Fonte:</strong> Itaú Unibanco · 1T26 Apresentação Institucional. Acumulado 12m total e Brasil; índice do trimestre total e Brasil. Escala 30–42%.</figcaption>
       </figure>
@@ -1479,7 +1565,7 @@ serie: familia itau-1T26
     <section class="report-section" id="s7">
       <div class="section-header">
         <span class="section-num" aria-hidden="true">07</span>
-        <h2>Resultados financeiros 1T26</h2>
+        <h2 class="mask-reveal">Resultados financeiros 1T26</h2>
       </div>
 
       <p>O resultado recorrente gerencial do <strong>1T26 totalizou R$&nbsp;12,3 bilhões</strong>, alta de 10,4% versus o 1T25. A margem financeira com clientes alcançou R$&nbsp;31,5&nbsp;bi (+4,5% YoY); a receita de serviços e seguros, R$&nbsp;14,0&nbsp;bi (+5,3% YoY); e o custo do crédito, R$&nbsp;10,0&nbsp;bi. O balanço permanece sólido, com NPL 90 dias estável em 1,9% e capital nível 1 em 13,4%.</p>
@@ -1517,7 +1603,7 @@ serie: familia itau-1T26
         <p class="report-figure__title">Figura 3. Geração de valor — 2013 → 1T26</p>
         <p class="report-figure__subtitle">Resultado recorrente gerencial decomposto + ROE e custo de capital</p>
         <div class="chart-inner-tall">
-          <canvas id="chart-valor" aria-label="Geração de valor consistente" role="img"></canvas>
+          <canvas id="chart-valor" class="focus-reveal" aria-label="Geração de valor consistente" role="img"></canvas>
         </div>
         <figcaption><strong>Fonte:</strong> Itaú Unibanco · 1T26. Resultado recorrente gerencial = custo de capital + criação de valor (R$ bi, eixo esquerdo). ROE e custo de capital médio em % no eixo direito. +26% na criação de valor 1T26 × 1T25.</figcaption>
       </figure>
@@ -1731,6 +1817,11 @@ serie: familia itau-1T26
         });
       }, { rootMargin: '-30% 0px -60% 0px' });
       sections.forEach(s => spy.observe(s));
+    });
+
+    // ═══ W22 draw-on: medir comprimento real do path (1x, no load) ═══
+    document.querySelectorAll('.draw-on').forEach(p => {
+      try { p.style.setProperty('--len', Math.ceil(p.getTotalLength())); } catch (e) {}
     });
 
     // ═══ Re-tematização dos gráficos (toggle de tema + print) ═══

@@ -23,7 +23,7 @@
   motion: editorial (único reveal: painel ao abrir, opacity 350ms; índice, tabelas e texto corrido nunca animam)
   assinatura: M0 — o índice-mestre dos indicadores como protagonista compositivo: fio duplo contábil abre os destaques da capa e ecoa no topo de cada painel e no total da tabela de performance
   ambicao: A2-elevado (central de resultados — abrir um indicador com continuidade; sobriedade por fio). Justificativa: a geração de valor consistente 2013→1T26 (+26%) É a história da casa → continuidade índice↔painel + anotação viva na curva de criação de valor (registro de bancada, nunca saltitante).
-  momento-wow: W5 View Transitions (card/índice morfa no header do painel — mesmo view-transition-name 'vt-painel', limpo antes/depois) + W8 anotação viva no gráfico-tese do painel Geração de valor (banda 2020 na queda de criação de valor + linha de custo de capital médio + crosshair de leitura no hover) + W7 materialidade por fio (grão feTurbulence estático soft-light + borda de luz 1px specular no painel aberto; NÃO glass — registro sóbrio)
+  momento-wow: W5 View Transitions (card/índice morfa no header do painel — mesmo view-transition-name 'vt-painel', limpo antes/depois) + W8 anotação viva no gráfico-tese do painel Geração de valor (banda 2020 na queda de criação de valor + linha de custo de capital médio + crosshair de leitura no hover) + W7 materialidade por fio (grão feTurbulence estático soft-light + borda de luz 1px specular no painel aberto; NÃO glass — registro sóbrio) + W21 hue-drift (tecido conectivo ambiente: --doc-hue migra quente→frio→quente por scroll; só acentos de detalhe via .accent-dynamic, S/L travados, texto de leitura intocado) + W25 data-choreo (8 KPIs-âncora do painel 01 assentam com UMA --spring enquanto régua-base enche e legenda sobe; número real em texto, counter mudo p/ fidelidade de decimais)
   ambicao-invariantes: (W5) guard if(!startViewTransition||reduce){updateDOM;return} + nome único por snapshot (clearMorphNames antes/depois) + origem espacial (painel cresce do índice); (W8) banda+linha desenhadas no 1º render, hover só ACENDE; (W7) @media print esconde grão + estado-final-base; régua de craft (.no-transitions no toggle, curvas nomeadas, teto 320ms)
   nao-vai-ter: glow-radial; kicker-dot; hover-lift; glass-saturado; aurora; spring-bouncy; cursor-proximity; WebGL
   serie: familia itau-1T26
@@ -194,6 +194,23 @@ body::after {
 
 /* ─── [AMBIÇÃO A2] régua de craft: toggle de tema NÃO dispara transitions ──── */
 .no-transitions *, .no-transitions *::before, .no-transitions *::after { transition: none !important; }
+
+/* ════ [AMBIÇÃO A2 · W21] SCROLL-HUE DRIFT — tecido conectivo ambiente ════
+   O acento migra de temperatura ao longo do scroll (quente intro → frio dados
+   → quente fecho). Sistema ambiente, NÃO momento. S/L travados; só acentos de
+   detalhe (.accent-dynamic em fio/eyebrow) referenciam — texto de leitura nunca.
+   Registro sóbrio: aplicação leve, atada ao progresso. */
+@property --doc-hue { syntax: '<number>'; inherits: true; initial-value: 24; }   /* 24 = laranja Itaú */
+html { --doc-hue: 24; }
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    html { animation: hueDrift linear both; animation-timeline: scroll(root); }
+    @keyframes hueDrift { 45% { --doc-hue: 210; } 100% { --doc-hue: 24; } }
+  }
+}
+/* usar onde fizer sentido: acentos/detalhes referenciam o hue — manter S/L travados */
+.accent-dynamic { color: hsl(var(--doc-hue) 95% 42%); }
+[data-theme="dark"] .accent-dynamic { color: hsl(var(--doc-hue) 90% 62%); }
 
 :focus-visible {
   outline: 2px solid var(--color-accent);
@@ -512,6 +529,34 @@ a { color: inherit; }
 .metric__val span { color: inherit; }
 .metric__label { font-size: 0.85rem; color: var(--color-fg-muted); margin: 0; max-width: 28ch; line-height: 1.45; }
 
+/* ════ [AMBIÇÃO A2 · W25] DATA CHOREOGRAPHY — números-âncora do painel 01 ════
+   Cada KPI é coreografado ao entrar na viewport: o número assenta com mola
+   ENQUANTO uma régua-base (.bar) enche e a legenda (.cap) sobe — mesmo gatilho,
+   em cascata. UMA física (--spring) p/ o doc inteiro. Sistema de dados do parti.
+   FIDELIDADE: o número permanece TEXTO REAL no HTML (decimais pt-BR preservados);
+   o mecanismo de counter do W25 é desligado p/ não duplicar/zerar o valor real. */
+:root { --spring: linear(0, .5 30%, 1.08 60%, .98, 1); }   /* UMA física p/ o doc inteiro */
+@property --cn { syntax: '<integer>'; inherits: false; initial-value: 0; }
+[data-choreo] .num::after { content: counter(cn); }
+[data-choreo] .num { counter-reset: cn var(--cn); }        /* base: número real em texto no HTML também */
+[data-choreo] .bar { transform: scaleX(1); transform-origin: left; }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-choreo] { animation-timeline: view(); animation-range: entry 20% entry 70%; }
+    [data-choreo] .num { animation: choreoCount 1s var(--spring) both; }
+    [data-choreo] .bar { transform: scaleX(0); animation: choreoFill 1s var(--spring) .15s both; }
+    [data-choreo] .cap { opacity: 0; animation: choreoRise .6s ease .4s both; }
+    @keyframes choreoCount { to { --cn: 3200; } }          /* trocar pelo valor real */
+    @keyframes choreoFill { to { transform: scaleX(1); } }
+    @keyframes choreoRise { to { opacity: 1; transform: none; } }
+  }
+}
+/* este doc usa o número REAL em texto (decimais), então o counter ::after fica mudo */
+.metric.num::after, .metric[data-choreo] .num::after { content: ""; }
+/* régua-base do KPI: fio contábil de 2px sob o número (eco da M0), enche no choreo */
+.metric .bar { display: block; height: 2px; width: 100%; margin: var(--space-2) 0; background: var(--color-border-strong); }
+.metric .cap { display: block; }
+
 /* ─── Tabelas broadsheet — protagonistas, sem caixa ───────────────── */
 .table-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: var(--space-6) 0; }
 .data-table {
@@ -624,9 +669,55 @@ a { color: inherit; }
     scroll-behavior: auto !important;
   }
 }
+
+/* ════ [SHOWCASE] wow premium — W24 tilt · W27 marquee · W11 magnético · W12 spotlight ════
+   Componentes liberados pelo data-showcase. Cada efeito cursor-reativo (W11/W12/W24)
+   guarda @media (hover:hover) and (pointer:fine) no JS; aqui só a mecânica visual. */
+
+/* ─── [W24] 3D tilt — só nos 4 cards-destaque (parcimônia §STACKING) ───────── */
+@media (hover: hover) and (pointer: fine) {
+  [data-tilt] {
+    transform: perspective(800px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transform-style: preserve-3d;
+    transition: transform 200ms var(--ease-out, ease-out);
+  }
+  [data-tilt] > .tilt-layer { transform: translateZ(40px); }
+}
+
+/* ─── [W27] marquee — ticker de stats como tecido conectivo (1 só) ─────────── */
+.marquee {
+  overflow: clip;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-2) 0;
+  margin: var(--space-6) 0 0;
+  font-family: var(--font-ui);
+  font-size: 0.71rem; font-weight: 500;
+  letter-spacing: 0.09em; text-transform: uppercase;
+  color: var(--color-fg-muted);
+  font-variant-numeric: lining-nums;
+}
+.marquee__track { display: inline-flex; gap: 2rem; white-space: nowrap; will-change: transform; }
+.marquee__track span::before { content: '·'; margin-right: 2rem; color: var(--color-accent); }
+@media (prefers-reduced-motion: no-preference) { .marquee__track { animation: marq 32s linear infinite; } }
+@keyframes marq { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .marquee__track { animation: none; } }
+
+/* ─── [W11] magnético — só nos chips de filtro (parcimônia) ────────────────── */
+[data-magnetic] { transition: transform 160ms var(--ease-out-strong, cubic-bezier(0.23, 1, 0.32, 1)); }
+
+/* ─── [W12] spotlight — UM bloco-herói (o masthead) ────────────────────────── */
+[data-spotlight] { --mx: 50%; --my: 50%; position: relative; }
+[data-spotlight]::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+  background: radial-gradient(220px circle at var(--mx) var(--my), color-mix(in srgb, var(--color-accent) 18%, transparent), transparent 60%);
+  opacity: 0; transition: opacity 200ms;
+}
+[data-spotlight]:hover::after { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { [data-spotlight]::after { transition: none; } }
   </style>
 </head>
-<body>
+<body data-showcase>
   <header class="topbar">
     <a href="#" class="topbar__brand">
       <span class="topbar__logo" aria-hidden="true"></span>
@@ -637,30 +728,35 @@ a { color: inherit; }
   </header>
 
   <main class="page">
-    <header class="masthead">
+    <header class="masthead" data-spotlight>
       <p class="dateline">RI · 1º Trimestre de 2026 · Resultado Recorrente Gerencial R$&nbsp;12,3&nbsp;bi</p>
       <h1 class="masthead__title"><span class="w-800">Itaú 1T26</span> — Hub Institucional</h1>
       <p class="lead">Com <strong>101 anos de história</strong>, somos o maior banco da América Latina. Navegue pelos cards para explorar cada dimensão da apresentação institucional: princípios, jornada, ecossistema, tecnologia, ESG e performance.</p>
     </header>
 
     <nav class="filters" aria-label="Filtros por dimensão">
-      <button class="filter is-active" type="button" data-filter="all" aria-pressed="true">Todos</button>
-      <button class="filter" type="button" data-filter="visao" aria-pressed="false">Visão geral</button>
-      <button class="filter" type="button" data-filter="cultura" aria-pressed="false">Jeito Ituber</button>
-      <button class="filter" type="button" data-filter="jornada" aria-pressed="false">Jornada</button>
-      <button class="filter" type="button" data-filter="ecossistema" aria-pressed="false">Ecossistema</button>
-      <button class="filter" type="button" data-filter="tecnologia" aria-pressed="false">Tecnologia</button>
-      <button class="filter" type="button" data-filter="esg" aria-pressed="false">ESG</button>
-      <button class="filter" type="button" data-filter="performance" aria-pressed="false">Performance</button>
+      <button class="filter is-active" type="button" data-filter="all" aria-pressed="true" data-magnetic>Todos</button>
+      <button class="filter" type="button" data-filter="visao" aria-pressed="false" data-magnetic>Visão geral</button>
+      <button class="filter" type="button" data-filter="cultura" aria-pressed="false" data-magnetic>Jeito Ituber</button>
+      <button class="filter" type="button" data-filter="jornada" aria-pressed="false" data-magnetic>Jornada</button>
+      <button class="filter" type="button" data-filter="ecossistema" aria-pressed="false" data-magnetic>Ecossistema</button>
+      <button class="filter" type="button" data-filter="tecnologia" aria-pressed="false" data-magnetic>Tecnologia</button>
+      <button class="filter" type="button" data-filter="esg" aria-pressed="false" data-magnetic>ESG</button>
+      <button class="filter" type="button" data-filter="performance" aria-pressed="false" data-magnetic>Performance</button>
     </nav>
 
+    <div class="marquee" aria-hidden="true"><div class="marquee__track">
+      <span>ROE 24,8%</span><span>Resultado R$ 12,3 bi</span><span>Eficiência Brasil 36,2%</span><span>Ativos R$ 3.200 bi</span><span>Criação de valor +26%</span><span>NPL 1,9%</span><span>Capital nível 1 13,4%</span><span>Finanças sustentáveis R$ 577,6 bi</span><span>91,5 mil colaboradores</span><span>18 países</span>
+      <span>ROE 24,8%</span><span>Resultado R$ 12,3 bi</span><span>Eficiência Brasil 36,2%</span><span>Ativos R$ 3.200 bi</span><span>Criação de valor +26%</span><span>NPL 1,9%</span><span>Capital nível 1 13,4%</span><span>Finanças sustentáveis R$ 577,6 bi</span><span>91,5 mil colaboradores</span><span>18 países</span>
+    </div></div>
+
     <section class="indice" aria-label="Índice de painéis">
-      <p class="indice__label">Índice · 21 painéis</p>
+      <p class="indice__label accent-dynamic">Índice · 21 painéis</p>
 
       <div class="destaques">
-        <a class="card card--lead card--manchete" href="#panel-numeros" data-category="visao" data-target="panel-numeros">
+        <a class="card card--lead card--manchete" href="#panel-numeros" data-category="visao" data-target="panel-numeros" data-tilt>
           <span class="card__n" aria-hidden="true">01</span>
-          <span>
+          <span class="tilt-layer">
             <span class="card__label">Visão geral</span>
             <h3 class="card__title">Números-âncora 1T26</h3>
             <p class="card__desc">8 KPIs principais: US$&nbsp;96&nbsp;bi de valor de mercado, R$&nbsp;3.200&nbsp;bi de ativos, ROE 24,8%.</p>
@@ -668,9 +764,9 @@ a { color: inherit; }
           </span>
         </a>
 
-        <a class="card card--lead" href="#panel-valor" data-category="performance" data-target="panel-valor">
+        <a class="card card--lead" href="#panel-valor" data-category="performance" data-target="panel-valor" data-tilt>
           <span class="card__n" aria-hidden="true">17</span>
-          <span>
+          <span class="tilt-layer">
             <span class="card__label">Geração de valor</span>
             <h3 class="card__title">+26% no 1T26 × 1T25</h3>
             <p class="card__desc">Resultado recorrente gerencial = Custo de capital + Criação de valor. Consistência 2013→2026.</p>
@@ -678,9 +774,9 @@ a { color: inherit; }
           </span>
         </a>
 
-        <a class="card card--lead" href="#panel-performance" data-category="performance" data-target="panel-performance">
+        <a class="card card--lead" href="#panel-performance" data-category="performance" data-target="panel-performance" data-tilt>
           <span class="card__n" aria-hidden="true">18</span>
-          <span>
+          <span class="tilt-layer">
             <span class="card__label">Performance 1T26</span>
             <h3 class="card__title">R$&nbsp;12,3&nbsp;bi recorrente</h3>
             <p class="card__desc">Margem clientes R$&nbsp;31,5&nbsp;bi · Custo crédito R$&nbsp;10,0&nbsp;bi · Receita serviços R$&nbsp;14,0&nbsp;bi.</p>
@@ -688,9 +784,9 @@ a { color: inherit; }
           </span>
         </a>
 
-        <a class="card card--lead" href="#panel-guidance" data-category="performance" data-target="panel-guidance">
+        <a class="card card--lead" href="#panel-guidance" data-category="performance" data-target="panel-guidance" data-tilt>
           <span class="card__n" aria-hidden="true">21</span>
-          <span>
+          <span class="tilt-layer">
             <span class="card__label">Guidance</span>
             <h3 class="card__title">Projeções 2026</h3>
             <p class="card__desc">Crédito Brasil 6,5–10,5% · Margem clientes 5–9% · Custo crédito R$&nbsp;38,5–43,5&nbsp;bi · IR/CS 29,5–32,5%.</p>
@@ -867,14 +963,14 @@ a { color: inherit; }
       </div>
       <p class="lead">Síntese dos principais indicadores institucionais. Valor de mercado em 30/04/2026; demais em 31/03/2026.</p>
       <div class="metrics">
-        <div class="metric"><p class="metric__kicker">Valor de mercado</p><p class="metric__val">US$&nbsp;<span>96</span>&nbsp;bi</p><p class="metric__label">em 30/04/2026</p></div>
-        <div class="metric"><p class="metric__kicker">Ativos totais</p><p class="metric__val">R$&nbsp;<span>3.200</span>&nbsp;bi</p><p class="metric__label">em 31/03/2026</p></div>
-        <div class="metric"><p class="metric__kicker">Carteira de crédito</p><p class="metric__val">R$&nbsp;<span>1.483</span>&nbsp;bi</p><p class="metric__label">com garantias e títulos privados</p></div>
-        <div class="metric"><p class="metric__kicker">ROE recorrente</p><p class="metric__val"><span>24,8</span>%</p><p class="metric__label">retorno sobre patrimônio</p></div>
-        <div class="metric"><p class="metric__kicker">Índice de eficiência</p><p class="metric__val"><span>36,2</span>%</p><p class="metric__label">Brasil · 12m findos mar/26</p></div>
-        <div class="metric"><p class="metric__kicker">Colaboradores</p><p class="metric__val"><span>91,5</span>&nbsp;mil</p><p class="metric__label">no conglomerado</p></div>
-        <div class="metric"><p class="metric__kicker">Resultado 1T26</p><p class="metric__val">R$&nbsp;<span>12,3</span>&nbsp;bi</p><p class="metric__label">94,6% Brasil · 5,4% AL</p></div>
-        <div class="metric"><p class="metric__kicker">Valor da marca</p><p class="metric__val">US$&nbsp;<span>9,9</span>&nbsp;bi</p><p class="metric__label">marca mais valiosa da AL</p></div>
+        <div class="metric" data-choreo><p class="metric__kicker">Valor de mercado</p><p class="metric__val num">US$&nbsp;<span>96</span>&nbsp;bi</p><span class="bar" aria-hidden="true"></span><p class="metric__label cap">em 30/04/2026</p></div>
+        <div class="metric" data-choreo><p class="metric__kicker">Ativos totais</p><p class="metric__val num">R$&nbsp;<span>3.200</span>&nbsp;bi</p><span class="bar" aria-hidden="true"></span><p class="metric__label cap">em 31/03/2026</p></div>
+        <div class="metric" data-choreo><p class="metric__kicker">Carteira de crédito</p><p class="metric__val num">R$&nbsp;<span>1.483</span>&nbsp;bi</p><span class="bar" aria-hidden="true"></span><p class="metric__label cap">com garantias e títulos privados</p></div>
+        <div class="metric" data-choreo><p class="metric__kicker">ROE recorrente</p><p class="metric__val num"><span>24,8</span>%</p><span class="bar" aria-hidden="true"></span><p class="metric__label cap">retorno sobre patrimônio</p></div>
+        <div class="metric" data-choreo><p class="metric__kicker">Índice de eficiência</p><p class="metric__val num"><span>36,2</span>%</p><span class="bar" aria-hidden="true"></span><p class="metric__label cap">Brasil · 12m findos mar/26</p></div>
+        <div class="metric" data-choreo><p class="metric__kicker">Colaboradores</p><p class="metric__val num"><span>91,5</span>&nbsp;mil</p><span class="bar" aria-hidden="true"></span><p class="metric__label cap">no conglomerado</p></div>
+        <div class="metric" data-choreo><p class="metric__kicker">Resultado 1T26</p><p class="metric__val num">R$&nbsp;<span>12,3</span>&nbsp;bi</p><span class="bar" aria-hidden="true"></span><p class="metric__label cap">94,6% Brasil · 5,4% AL</p></div>
+        <div class="metric" data-choreo><p class="metric__kicker">Valor da marca</p><p class="metric__val num">US$&nbsp;<span>9,9</span>&nbsp;bi</p><span class="bar" aria-hidden="true"></span><p class="metric__label cap">marca mais valiosa da AL</p></div>
       </div>
     </section>
 
@@ -1425,7 +1521,7 @@ a { color: inherit; }
         if (panelHead) panelHead.style.viewTransitionName = 'vt-painel';
         document.querySelectorAll('.panel').forEach(p => p.classList.toggle('is-open', p === tgt));
       });
-      requestAnimationFrame(() => tgt.scrollIntoView({ behavior: scrollMode, block: 'start' }));
+      requestAnimationFrame(() => requestAnimationFrame(() => tgt.scrollIntoView({ behavior: scrollMode, block: 'start' })));
       // render charts do painel aberto (lazy) + limpa nomes após o morph assentar
       requestAnimationFrame(() => requestAnimationFrame(() => { renderChartsForOpenPanel(); clearMorphNames(); }));
     }
@@ -1586,6 +1682,42 @@ a { color: inherit; }
         chartInstances[id] = new Chart(canvas, builder());
       });
     }
+
+    /* ═════ [SHOWCASE] wow premium — W24 tilt · W11 magnético · W12 spotlight ═════
+       Cada efeito cursor-reativo guarda (hover:hover) and (pointer:fine) + reduced-motion. */
+
+    /* [W24] 3D tilt — só nos 4 cards-destaque */
+    document.querySelectorAll('[data-tilt]').forEach(el => {
+      if (!matchMedia('(hover:hover) and (pointer:fine)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      el.addEventListener('pointermove', e => { const r = el.getBoundingClientRect();
+        el.style.setProperty('--rx', ((.5 - (e.clientY - r.top) / r.height) * 10).toFixed(2) + 'deg');
+        el.style.setProperty('--ry', (((e.clientX - r.left) / r.width - .5) * 10).toFixed(2) + 'deg'); });
+      el.addEventListener('pointerleave', () => { el.style.setProperty('--rx', '0deg'); el.style.setProperty('--ry', '0deg'); });
+    });
+
+    /* [W11] magnético — chips de filtro */
+    document.querySelectorAll('[data-magnetic]').forEach(el => {
+      if (!matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const S = 0.3; let raf = 0, lx = 0, ly = 0;
+      el.addEventListener('pointermove', e => {
+        const r = el.getBoundingClientRect();
+        lx = (e.clientX - (r.left + r.width / 2)) * S; ly = (e.clientY - (r.top + r.height / 2)) * S;
+        if (!raf) raf = requestAnimationFrame(() => { raf = 0; el.style.transform = `translate(${lx}px, ${ly}px)`; });
+      });
+      el.addEventListener('pointerleave', () => { el.style.transform = 'translate(0,0)'; });
+    });
+
+    /* [W12] spotlight — masthead */
+    document.querySelectorAll('[data-spotlight]').forEach(el => {
+      if (!matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+      el.addEventListener('pointermove', e => {
+        const r = el.getBoundingClientRect();
+        el.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+        el.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+      });
+    });
   </script>
+<script>/* nohashjump-fix: a[href="#"] (brand/breadcrumb/CTA decorativo) não deve pular pro topo/capa */document.querySelectorAll('a[href="#"]').forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();});});</script>
 </body>
 </html>

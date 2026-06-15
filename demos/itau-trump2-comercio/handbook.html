@@ -645,9 +645,10 @@
       counter-reset: num-counter;
     }
     .num-list li {
-      display: grid; grid-template-columns: 36px 1fr;
-      gap: var(--space-4); align-items: start;
-      padding: var(--space-3) var(--space-4);
+      /* counter absoluto (NÃO grid): com grid 36px/1fr o <strong> e o nó de texto
+         viram grid-items separados e o texto cai na coluna de 36px → quebra por-caractere */
+      position: relative;
+      padding: var(--space-3) var(--space-4) var(--space-3) calc(var(--space-4) + 44px);
       background: var(--color-bg-elevated);
       border: 2px solid var(--color-border-strong);
       border-radius: var(--radius);
@@ -656,6 +657,7 @@
     .num-list li::before {
       content: counter(num-counter);
       counter-increment: num-counter;
+      position: absolute; left: var(--space-4); top: var(--space-3);
       width: 30px; height: 30px;
       display: grid; place-items: center;
       border-radius: var(--radius-sm);
@@ -710,18 +712,126 @@
       [data-reveal] { opacity: 1; transition: none; }
     }
 
+    /* ═══════════════════════════════════════════════════════════════════
+       REPERTÓRIO v7 — sistemas ambientes + reveal editorial + draw-on + choreo
+       §STACKING: 2 sistemas ambientes na mesma física (W21 hue + W29 blur-focus)
+       + momentos espaçados (W6 h2-rise · W22 draw-on · W25 KPI choreo). Tudo
+       @supports + estado-final-base + branch reduced-motion. Despacho, não cassino.
+       ═══════════════════════════════════════════════════════════════════ */
+
+    /* ── W21 — scroll-hue drift (sistema ambiente global) ──
+       Matiz do acento migra quente→frio→quente por capítulo; S/L travados;
+       só detalhes-fio (border-top de h2/figuras), nunca texto de leitura. */
+    @property --doc-hue { syntax: '<number>'; inherits: true; initial-value: 24; }   /* 24 = laranja */
+    html { --doc-hue: 24; }
+    @supports (animation-timeline: scroll()) {
+      @media (prefers-reduced-motion: no-preference) {
+        html { animation: hueDrift linear both; animation-timeline: scroll(root); }
+        @keyframes hueDrift { 45% { --doc-hue: 210; } 100% { --doc-hue: 24; } }
+      }
+    }
+    h2 { border-top-color: hsl(var(--doc-hue) 90% 42%); }
+    [data-theme="dark"] h2 { border-top-color: hsl(var(--doc-hue) 95% 58%); }
+
+    /* ── W6 — text reveal condensado: o h2 sobe de dentro do overflow:clip ──
+       SÓ o h2 de seção (texto corrido, listas e tabelas nunca animam).
+       BASE = visível em transform:none (degrada trivial). */
+    .content h2 { overflow: clip; }
+    .h2-rise { display: block; }
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        .content h2 { view-timeline-name: --h2r; view-timeline-axis: block; }
+        .h2-rise { animation: h2Rise linear both; animation-timeline: --h2r; animation-range: entry 0% entry 70%; }
+        @keyframes h2Rise { from { transform: translateY(104%); } to { transform: none; } }
+      }
+    }
+
+    /* ── W6 — text reveal editorial (per-word, grapheme-safe pt-BR) ──
+       Intl.Segmenter embrulha cada palavra em .w/.w-i; as palavras sobem de
+       overflow:clip nas manchetes-chave (lead + h2s que abrem seções maiores).
+       SÓ headings/lead — texto corrido e tabelas NUNCA recebem data-split.
+       BASE = .w-i em transform:none = texto totalmente visível (degrada trivial). */
+    .w { display: inline-block; overflow: clip; vertical-align: top; }
+    .w-i { display: inline-block; transform: none; }
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        [data-split] { view-timeline-name: --r; view-timeline-axis: block; }
+        .w-i { animation: riseWord linear both; animation-timeline: --r; animation-range: entry 0% entry 70%; }
+        @keyframes riseWord { from { transform: translateY(110%); } to { transform: none; } }
+      }
+    }
+
+    /* ── W29 — blur-to-sharp focus (sistema ambiente dos gráficos) ──
+       Os gráficos-tese entram desfocados/dessaturados e focam na leitura.
+       BASE = nítido; reduced-motion / Chrome travado nunca borram o dado. */
+    .focus-reveal { filter: none; }
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        .focus-reveal { animation: focusIn linear both; animation-timeline: view(); animation-range: entry 8% entry 58%; }
+        @keyframes focusIn { from { filter: blur(12px) saturate(.5); opacity: .5; } to { filter: blur(0) saturate(1); opacity: 1; } }
+      }
+    }
+
+    /* ── W25 — data choreography no KPI-tese (número rola + barra de magnitude enche) ──
+       UMA física (--spring) para todo o doc. BASE = valor real em texto + barra cheia. */
+    :root { --spring: linear(0, .5 30%, 1.08 60%, .98, 1); }
+    @property --cn { syntax: '<integer>'; inherits: false; initial-value: 0; }
+    [data-choreo] .choreo-num { counter-reset: cn var(--cn); }
+    [data-choreo] .choreo-num::after { content: '~' counter(cn) '%'; }   /* literais ~ e % estáticos */
+    [data-choreo] .choreo-num .choreo-num__base { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }   /* valor real p/ leitor de tela / sem-JS */
+    [data-choreo] .choreo-bar { display: block; height: 4px; background: hsl(var(--doc-hue) 90% 46%); transform: scaleX(1); transform-origin: left; margin-top: var(--space-3); }
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        [data-choreo] { animation-timeline: view(); animation-range: entry 20% entry 70%; }
+        [data-choreo] .choreo-num { animation: choreoCount 1s var(--spring) both; }
+        [data-choreo] .choreo-bar { transform: scaleX(0); animation: choreoFill 1s var(--spring) .15s both; }
+        @keyframes choreoCount { to { --cn: 70; } }           /* valor real = ~70% */
+        @keyframes choreoFill  { to { transform: scaleX(1); } }
+      }
+    }
+
+    /* ── W22 — draw-on SVG: o fluxo dos cinco eixos do argumento se desenha ──
+       BASE = desenhado (stroke-dashoffset:0). */
+    .axes-flow { width: 100%; height: auto; display: block; margin: var(--space-5) 0 var(--space-3); overflow: visible; }
+    .axes-flow text { font-family: var(--font-ui); fill: var(--color-fg); }
+    .axes-flow .af-num { font-family: var(--font-display); font-weight: 900; fill: hsl(var(--doc-hue) 90% 46%); }
+    .axes-flow .af-node { fill: var(--color-bg); stroke: hsl(var(--doc-hue) 90% 46%); stroke-width: 1.5; }
+    .draw-on { stroke-dasharray: var(--len, 1000); stroke-dashoffset: 0; }
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        .draw-on { stroke-dashoffset: var(--len, 1000); animation: drawPath 1.2s ease both;
+                   animation-timeline: view(); animation-range: cover 8% cover 42%; }
+        @keyframes drawPath { to { stroke-dashoffset: 0; } }
+      }
+    }
+
     @media print {
       body { background-image: none; }
       .topbar, .sidebar, .toc, .theme-toggle { display: none; }
       .layout { display: block; }
       .content { padding: 0; max-width: 100%; }
-      h2 { page-break-after: avoid; }
+      h2 { page-break-after: avoid; border-top-color: var(--color-fg) !important; overflow: visible; }
+      .h2-rise { transform: none !important; animation: none !important; }
+      .w-i { transform: none !important; animation: none !important; }
+      .focus-reveal { filter: none !important; animation: none !important; }
+      .draw-on { stroke-dashoffset: 0 !important; animation: none !important; }
+      [data-choreo] .choreo-bar { transform: scaleX(1) !important; animation: none !important; }
       .callout, .commodity-card, .conclusion-card, .chart-box { break-inside: avoid; }
       .kpi-hero { box-shadow: none; }
     }
+
+    /* reduced-motion: tudo aterrissa no estado final, nada preso fora da viewport */
+    @media (prefers-reduced-motion: reduce) {
+      .h2-rise { transform: none !important; }
+      .w-i { transform: none !important; animation: none !important; }
+      .focus-reveal { filter: none !important; }
+      .draw-on { stroke-dashoffset: 0 !important; }
+      [data-choreo] .choreo-bar { transform: scaleX(1) !important; }
+      [data-choreo] .choreo-num::after { content: '~70%'; }   /* valor real sem contagem */
+    }
   </style>
 </head>
-<body>
+<body data-showcase>
   <header class="topbar">
     <a href="#" class="topbar__brand">
       <span class="topbar__logo" aria-hidden="true">i</span>
@@ -785,22 +895,35 @@
             MACRO INSIGHTS · Janeiro 2025
           </p>
           <h1>Brasil: como fica o comércio exterior no governo Trump 2?</h1>
-          <p class="lead">Tese de pesquisa: balanço de riscos assimétrico para o lado negativo. Ganhos limitados pela alta participação brasileira nas importações chinesas; riscos crescentes via tarifas universais ou equiparação.</p>
+          <p class="lead" data-split>Tese de pesquisa: balanço de riscos assimétrico para o lado negativo. Ganhos limitados pela alta participação brasileira nas importações chinesas; riscos crescentes via tarifas universais ou equiparação.</p>
         </div>
 
         <section id="visao-geral">
-          <h2>Ganhos menores que em 2018, riscos maiores que em 2018</h2>
+          <h2 data-split>Ganhos menores que em 2018, riscos maiores que em 2018</h2>
           <p>Com a posse do segundo governo Trump, o Brasil entra em um cenário onde os <strong>ganhos potenciais</strong> de uma nova guerra comercial EUA-China são menores do que em 2018, enquanto os <strong>riscos negativos</strong> são maiores. O ponto central é simples: o Brasil já capturou boa parte do espaço de substituição em commodities-chave (especialmente soja, com cerca de 70% das importações chinesas), e ao mesmo tempo passou a aparecer no radar de tarifas universais ou esquemas de equiparação tarifária defendidos por nomes do governo Trump 2.</p>
           <p>Este handbook estrutura o argumento em cinco eixos: o tamanho e a composição do mercado chinês para commodities; o detalhamento por produto (soja, milho, aço, petróleo, minério de ferro); o histórico tarifário do primeiro mandato Trump; o cenário simétrico de equiparação tarifária; e o contraponto do superávit comercial dos EUA com o Brasil.</p>
+
+          <!-- W22 — draw-on: os cinco eixos do argumento se desenham ao entrar (espelha o texto acima) -->
+          <svg class="axes-flow bleed" viewBox="0 0 760 72" role="img" aria-label="Cinco eixos do argumento: 1 mercado chinês, 2 produto a produto, 3 histórico tarifário Trump 1, 4 cenário de equiparação, 5 superávit EUA-Brasil">
+            <line class="draw-on" x1="40" y1="36" x2="720" y2="36" stroke="hsl(var(--doc-hue) 90% 46%)" stroke-width="1.5"/>
+            <g text-anchor="middle">
+              <circle class="af-node" cx="40" cy="36" r="13"/><text class="af-num" x="40" y="41" font-size="14">1</text><text x="40" y="64" font-size="9.5">Mercado chinês</text>
+              <circle class="af-node" cx="210" cy="36" r="13"/><text class="af-num" x="210" y="41" font-size="14">2</text><text x="210" y="64" font-size="9.5">Produto a produto</text>
+              <circle class="af-node" cx="380" cy="36" r="13"/><text class="af-num" x="380" y="41" font-size="14">3</text><text x="380" y="64" font-size="9.5">Histórico Trump 1</text>
+              <circle class="af-node" cx="550" cy="36" r="13"/><text class="af-num" x="550" y="41" font-size="14">4</text><text x="550" y="64" font-size="9.5">Equiparação</text>
+              <circle class="af-node" cx="720" cy="36" r="13"/><text class="af-num" x="720" y="41" font-size="14">5</text><text x="720" y="64" font-size="9.5">Superávit EUA-BR</text>
+            </g>
+          </svg>
         </section>
 
         <section id="numero-chave">
           <h2>~70% da soja que a China importa já é brasileira</h2>
-          <div class="kpi-hero" data-reveal>
-            <div class="kpi-hero__val">~70%</div>
+          <div class="kpi-hero" data-reveal data-choreo>
+            <div class="kpi-hero__val choreo-num" aria-label="~70%"><span class="choreo-num__base">~70%</span></div>
             <div class="kpi-hero__body">
               <p class="kpi-hero__label">Participação Brasil em soja chinesa</p>
               <p class="kpi-hero__desc">das importações chinesas de <strong>soja</strong> já têm origem brasileira. O espaço para novos ganhos numa eventual segunda guerra comercial é <strong>limitado</strong>.</p>
+              <span class="choreo-bar" aria-hidden="true"></span>
             </div>
           </div>
           <p class="footnote">Fonte: USDA, GACC, Comex Stat · Pesquisa Macro Itaú</p>
@@ -889,11 +1012,11 @@
           <div class="chart-pair">
             <div>
               <p class="chart-box__title">Top 10 produtos exportados (% da pauta)</p>
-              <div class="chart-box" data-reveal><canvas id="c-pauta-produtos"></canvas></div>
+              <div class="chart-box focus-reveal" data-reveal><canvas id="c-pauta-produtos"></canvas></div>
             </div>
             <div>
               <p class="chart-box__title">Top 12 destinos das exportações (%)</p>
-              <div class="chart-box" data-reveal><canvas id="c-pauta-destinos"></canvas></div>
+              <div class="chart-box focus-reveal" data-reveal><canvas id="c-pauta-destinos"></canvas></div>
             </div>
           </div>
           <p class="footnote">Fonte: Comex Stat · Secex/MDIC, 2023.</p>
@@ -906,11 +1029,11 @@
           <div class="chart-pair">
             <div>
               <p class="chart-box__title">Top 8 produtos exportados para os EUA</p>
-              <div class="chart-box" data-reveal><canvas id="c-eua-export"></canvas></div>
+              <div class="chart-box focus-reveal" data-reveal><canvas id="c-eua-export"></canvas></div>
             </div>
             <div>
               <p class="chart-box__title">Top 8 produtos importados dos EUA</p>
-              <div class="chart-box" data-reveal><canvas id="c-eua-import"></canvas></div>
+              <div class="chart-box focus-reveal" data-reveal><canvas id="c-eua-import"></canvas></div>
             </div>
           </div>
           <p class="footnote">Fonte: Comex Stat · Secex/MDIC. Pauta bilateral Brasil-EUA 2023.</p>
@@ -923,11 +1046,11 @@
           <div class="chart-pair">
             <div>
               <p class="chart-box__title">Fluxo de comércio (% PIB) — Brasil vs Global, 2000-2023</p>
-              <div class="chart-box" data-reveal><canvas id="c-fluxo"></canvas></div>
+              <div class="chart-box focus-reveal" data-reveal><canvas id="c-fluxo"></canvas></div>
             </div>
             <div>
               <p class="chart-box__title">Índice de Incerteza no Comércio (TPU), 2014-2024</p>
-              <div class="chart-box" data-reveal><canvas id="c-incerteza"></canvas></div>
+              <div class="chart-box focus-reveal" data-reveal><canvas id="c-incerteza"></canvas></div>
             </div>
           </div>
           <p class="footnote">Fonte: World Bank (% PIB), Trade Policy Uncertainty Index (Federal Reserve Board / Caldara et al.). Pico recente em 2024 reflete antecipação ao 2º mandato Trump.</p>
@@ -940,7 +1063,7 @@
           <div class="chart-pair">
             <div>
               <p class="chart-box__title">Origem das importações chinesas de soja — Brasil vs EUA (%)</p>
-              <div class="chart-box" data-reveal><canvas id="c-soja-origem"></canvas></div>
+              <div class="chart-box focus-reveal" data-reveal><canvas id="c-soja-origem"></canvas></div>
             </div>
             <div>
               <p class="chart-box__title">Balanço mundial de soja 2024/25 Proj. (mm ton)</p>
@@ -971,11 +1094,11 @@
           <div class="chart-pair">
             <div>
               <p class="chart-box__title">Origem das importações chinesas — Brasil vs EUA (%)</p>
-              <div class="chart-box" data-reveal><canvas id="c-milho-origem"></canvas></div>
+              <div class="chart-box focus-reveal" data-reveal><canvas id="c-milho-origem"></canvas></div>
             </div>
             <div>
               <p class="chart-box__title">Produção, importação e estoque final na China (mm ton)</p>
-              <div class="chart-box" data-reveal><canvas id="c-milho-china"></canvas></div>
+              <div class="chart-box focus-reveal" data-reveal><canvas id="c-milho-china"></canvas></div>
             </div>
           </div>
           <p class="footnote">Fonte: GACC, USDA. A produção doméstica chinesa cresceu de 200 mm ton (2011) para ~295 mm ton (2025 est.). Importações caíram desde o pico de 2020-21.</p>
@@ -988,7 +1111,7 @@
           <div class="chart-pair">
             <div>
               <p class="chart-box__title">Origem das importações de aço dos EUA — 5 principais (%)</p>
-              <div class="chart-box" data-reveal><canvas id="c-aco-origem"></canvas></div>
+              <div class="chart-box focus-reveal" data-reveal><canvas id="c-aco-origem"></canvas></div>
             </div>
             <div>
               <p class="chart-box__title">Destinos das exportações brasileiras de aço — top 10 (%)</p>
@@ -1021,7 +1144,7 @@
           <div class="chart-pair">
             <div>
               <p class="chart-box__title">Origem das importações chinesas — 5 regiões (%)</p>
-              <div class="chart-box" data-reveal><canvas id="c-petroleo-origem"></canvas></div>
+              <div class="chart-box focus-reveal" data-reveal><canvas id="c-petroleo-origem"></canvas></div>
             </div>
             <div>
               <p class="chart-box__title">Destinos das exportações brasileiras — top 8 (%)</p>
@@ -1052,7 +1175,7 @@
           <div class="chart-pair">
             <div>
               <p class="chart-box__title">Origem das importações chinesas (%)</p>
-              <div class="chart-box" data-reveal><canvas id="c-minerio-origem"></canvas></div>
+              <div class="chart-box focus-reveal" data-reveal><canvas id="c-minerio-origem"></canvas></div>
             </div>
             <div>
               <p class="chart-box__title">Destinos das exportações brasileiras — top 10 (%)</p>
@@ -1086,14 +1209,14 @@
         <section id="tarifas-historicas">
           <h2>Tarifas: manufaturados (+1,5pp) e químicos (+2,4pp) lideraram</h2>
           <p>Olhando para o primeiro mandato Trump, é possível mapear quais setores brasileiros foram mais tarifados. A média ponderada por exportações, % das tarifas aplicadas pelos EUA em produtos brasileiros, mostra um movimento concentrado em manufaturados e produtos químicos:</p>
-          <div class="chart-box" data-reveal style="height: 460px"><canvas id="c-tarifas-hist"></canvas></div>
+          <div class="chart-box focus-reveal" data-reveal style="height: 460px"><canvas id="c-tarifas-hist"></canvas></div>
           <p class="footnote">Fonte: World Integrated Trade Solution (WITS) · USTR. Maior aumento durante 1º mandato Trump: <strong>Manufaturados (+1,5pp)</strong> e Produtos Químicos (+2,4pp).</p>
         </section>
 
         <section id="tarifas-equiparacao">
           <h2>Se Trump equiparar: manufaturados sobem +10,4pp</h2>
           <p>Num cenário hipotético em que as tarifas dos EUA sobem para o nível brasileiro — ou em que se aplique uma tarifa universal de 10% (linha pontilhada) — a maioria das categorias é atingida. Os setores mais expostos seriam manufaturados (+10,4pp) e diversos (+6,9pp).</p>
-          <div class="chart-box" data-reveal style="height: 460px"><canvas id="c-tarifas-simetrica"></canvas></div>
+          <div class="chart-box focus-reveal" data-reveal style="height: 460px"><canvas id="c-tarifas-simetrica"></canvas></div>
           <aside class="callout callout--warn" role="note">
             <span class="callout__icon">!</span>
             <div class="callout__content">
@@ -1109,11 +1232,11 @@
           <div class="chart-pair">
             <div>
               <p class="chart-box__title">Balança comercial dos EUA com top 16 parceiros (USD bi, 2023)</p>
-              <div class="chart-box" data-reveal><canvas id="c-balanca-eua"></canvas></div>
+              <div class="chart-box focus-reveal" data-reveal><canvas id="c-balanca-eua"></canvas></div>
             </div>
             <div>
               <p class="chart-box__title">Saldo comercial EUA vs Brasil (USD bi, 2002-2024)</p>
-              <div class="chart-box" data-reveal><canvas id="c-saldo-br"></canvas></div>
+              <div class="chart-box focus-reveal" data-reveal><canvas id="c-saldo-br"></canvas></div>
             </div>
           </div>
           <aside class="callout callout--info" role="note">
@@ -1125,7 +1248,7 @@
         </section>
 
         <section id="conclusao">
-          <h2>Em suma, balanço assimétrico de riscos</h2>
+          <h2 data-split>Em suma, balanço assimétrico de riscos</h2>
           <p>Riscos positivos limitados vs riscos negativos crescentes para o Brasil. Três vetores resumem a tese:</p>
           <div class="conclusion-grid">
             <div class="conclusion-card">
@@ -1209,6 +1332,30 @@
       es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); rio.unobserve(e.target); } });
     }, { threshold: 0.10, rootMargin: '0px 0px -60px 0px' });
     document.querySelectorAll('[data-reveal]').forEach(el => rio.observe(el));
+
+    /* W6 — text reveal editorial (per-word): Intl.Segmenter embrulha cada palavra
+       em .w/.w-i para subir de overflow:clip, grapheme-safe p/ acentos pt-BR.
+       SÓ nas manchetes-chave marcadas com data-split (lead + h2s que abrem seções
+       maiores) — texto corrido e tabelas NUNCA recebem data-split. */
+    document.querySelectorAll('[data-split]').forEach(el => {
+      const seg = new Intl.Segmenter('pt', { granularity: 'word' });
+      el.innerHTML = [...seg.segment(el.textContent)]
+        .map(s => s.isWordLike ? `<span class="w"><span class="w-i">${s.segment}</span></span>` : s.segment).join('');
+    });
+
+    /* W6 (legado) — h2 de seção sem data-split: embrulha o TEXTO em .h2-rise
+       (sobe de overflow:clip). SÓ h2 — texto corrido, listas, tabelas, TOC e nav intactos. */
+    document.querySelectorAll('.content h2:not([data-split])').forEach(h => {
+      const span = document.createElement('span');
+      span.className = 'h2-rise';
+      while (h.firstChild) span.appendChild(h.firstChild);
+      h.appendChild(span);
+    });
+
+    /* W22 — mede o comprimento real de cada traço do fluxo (1x) para o draw-on */
+    document.querySelectorAll('.draw-on').forEach(p => {
+      try { p.style.setProperty('--len', Math.ceil(p.getTotalLength())); } catch (e) {}
+    });
 
     /* ═════════════ CHARTS ═════════════ */
     const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
@@ -1647,5 +1794,6 @@
     if (typeof Chart !== 'undefined') renderAllCharts();
     else window.addEventListener('load', renderAllCharts);
   </script>
+<script>/* nohashjump-fix: a[href="#"] (brand/breadcrumb/CTA decorativo) não deve pular pro topo/capa */document.querySelectorAll('a[href="#"]').forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();});});</script>
 </body>
 </html>

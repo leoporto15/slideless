@@ -13,7 +13,7 @@
   superficie: pauta-de-linhas (despacho/telegrama) + luz hard-print (sombra offset dura 4px 4px 0)
   motion: cinematico (físico permitido no overdrive — hero settle + springs linear() com fallback; WebGL particle field é assinatura do hero)
   ambicao: A3-extraordinario (showcase ao vivo — o hero WebGL já existe; soma manchete cinética e anotação viva). data-overdrive no canvas é opt-in deliberado (P10 reconhece).
-  momento-wow: W9 hero material (WebGL particle field já presente, data-overdrive; fallback aurora CSS sem WebGL) + W3 manchete cinética (Archivo wdth/wght se constrói na entrada do slide 01, overflow:clip) + W8 anotação viva na banda do gráfico-tese (slide 09: sweep na entrada + crosshair de leitura no hover)
+  momento-wow: W9 hero material (WebGL particle field já presente, data-overdrive; fallback aurora CSS sem WebGL) + W3 manchete cinética (Archivo wdth/wght se constrói na entrada do slide 01, overflow:clip) + W8 anotação viva na banda do gráfico-tese (slide 09: sweep na entrada + crosshair de leitura no hover) + W15 odômetro no número-tese ~70% (slide 02) + W20 aurora-mesh ambiente atrás do fecho (slide 17) + W24 3D tilt no card-herói de risco assimétrico (slide 04, guard hover/pointer) + W25 data-choreography na comparação real China 44,6% × EUA 12,9% de destino do petróleo (slide 12; número real em texto, choreo só na barra/legenda) + W30 flip-in 3D na manchete do mercado chinês (slide 05) + W31 glitch (1×, spice tonal) na palavra "assimétrico" da banda ink da capa (slide 01)
   assinatura: M2 — a linha do gráfico-tese (origem das importações chinesas de soja, slide 09) se desenha até o dado real; banda de evento "guerra comercial 2018-20" acende anotada e viva (eventBand §5.0b)
   nao-vai-ter: kicker-dot; em-italico-accent; badge-pill
   serie: familia itau-trump2 (noticiosa-condensada — distinta das 2 famílias serif do repo)
@@ -95,6 +95,10 @@
       /* ink — banda de cor da capa (tom escuro quente, não preto puro) */
       --color-ink:           #1a140d;
       --color-ink-fg:        #f7f1ea;
+
+      /* W31 glitch — canais RGB-split (cyan/red canônicos do efeito) */
+      --glitch-cyan:         #0ff;
+      --glitch-red:          #f00;
 
       /* [DIREÇÃO] Fontes via slots do kit — Itau Display/Text prevalecem na rede,
          Kit 05 é o fallback desenhado fora dela. */
@@ -1099,9 +1103,99 @@
       }
       .hero-webgl { display: none !important; }
     }
+
+    /* ════════════════════════════════════════════════════════════════
+       REPERTÓRIO v7 — momentos-wow premium adicionais (A3 stacking)
+       Uma física só p/ o doc: --spring. Todos com fallback ao estado final.
+       ════════════════════════════════════════════════════════════════ */
+    :root { --spring: linear(0, .5 30%, 1.08 60%, .98, 1); }
+
+    /* W20 — aurora mesh animada (@property) · sistema ambiente atrás do fecho */
+    @property --au-x { syntax: '<percentage>'; inherits: false; initial-value: 24%; }
+    .aurora-mesh { position: relative; isolation: isolate; }
+    .aurora-mesh::before {
+      content: ''; position: absolute; inset: -10%; z-index: -1; pointer-events: none; filter: blur(60px);
+      background:
+        radial-gradient(38vw at var(--au-x) 30%, color-mix(in srgb, var(--itau-orange) 40%, transparent), transparent 60%),
+        radial-gradient(42vw at 78% 64%, color-mix(in srgb, var(--itau-blue-3) 26%, transparent), transparent 64%);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .aurora-mesh::before { animation: auDrift 22s var(--ease-out, ease-in-out) infinite alternate; }
+      @keyframes auDrift { to { --au-x: 70%; } }
+    }
+
+    /* W24 — 3D tilt (card-herói inclina sob o cursor; só desktop+mouse) */
+    [data-tilt] { transform: perspective(800px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)); transform-style: preserve-3d;
+      transition: transform 200ms var(--ease-out, ease-out); }
+    [data-tilt] > .tilt-layer { transform: translateZ(40px); }
+
+    /* W30 — flip-in 3D (letras giram como split-flap na entrada da manchete) */
+    [data-flip-in] span { display: inline-block; transform-origin: bottom; }
+    @media (prefers-reduced-motion: no-preference) {
+      [data-flip-in] span { animation: flipIn .5s var(--spring, cubic-bezier(.2,.7,.2,1)) both; animation-delay: calc(var(--i,0) * 38ms); }
+      @keyframes flipIn { from { transform: perspective(400px) rotateX(-90deg); opacity: 0; } to { transform: none; opacity: 1; } }
+    }
+
+    /* W15 — odômetro (dígitos rolam até o valor real ao entrar em vista) */
+    .odometer { display:inline-flex; overflow:clip; line-height:1; font-variant-numeric: tabular-nums lining-nums; }
+    .od-digit { display:inline-block; width:1ch; height: 1em; overflow:clip; }
+    .od-reel { display:flex; flex-direction:column; transition: transform 900ms var(--ease-out-strong, cubic-bezier(0.23,1,0.32,1)); }
+    .od-reel > span { height:1em; }
+    @media (prefers-reduced-motion: reduce) { .od-reel { transition:none; } }
+
+    /* W25 — data choreography (barra enche + legenda sobe na cascata da mola).
+       Número real fica em texto no HTML (.choreo-num) — NÃO usamos counter(cn),
+       evitando duplicar o número na tela. data-choreo orquestra só .bar/.cap. */
+    [data-choreo] .bar { transform: scaleX(1); transform-origin: left; }
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        [data-choreo] { animation-timeline: view(); animation-range: entry 20% entry 70%; }
+        [data-choreo] .bar { transform: scaleX(0); animation: choreoFill 1s var(--spring) .15s both; }
+        [data-choreo] .cap { opacity: 0; animation: choreoRise .6s ease .4s both; }
+        @keyframes choreoFill { to { transform: scaleX(1); } }
+        @keyframes choreoRise { to { opacity: 1; transform: none; } }
+      }
+    }
+    /* KPI tarifa — comparativo de duas magnitudes reais (Brasil 11,2% × EUA 1,5%) */
+    .kpi-choreo {
+      display: grid; gap: var(--space-4);
+      margin-top: var(--space-4);
+      padding: var(--space-5);
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border-strong);
+      border-left: 2px solid var(--color-accent);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-xs);
+    }
+    .kpi-row { display: grid; grid-template-columns: 130px 1fr 96px; gap: var(--space-4); align-items: center; }
+    .kpi-row .cap {
+      font-family: var(--font-ui); font-variation-settings: var(--cond);
+      font-size: 0.82rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-fg);
+    }
+    .kpi-track { height: 14px; background: var(--color-bg-sunken); border: 1px solid var(--color-border); border-radius: var(--radius-sm); overflow: hidden; }
+    .kpi-track .bar { display: block; height: 100%; border-radius: var(--radius-sm); }
+    .kpi-row--br .bar { background: var(--color-accent); }
+    .kpi-row--us .bar { background: var(--color-info); }
+    .choreo-num {
+      font-family: var(--font-mono); font-variant-numeric: tabular-nums lining-nums;
+      font-size: clamp(1.05rem, 0.95rem + 0.5vw, 1.4rem); font-weight: 600; color: var(--color-fg); text-align: right;
+    }
+    .kpi-row--br .choreo-num { color: var(--color-accent); }
+    .kpi-row--us .choreo-num { color: var(--color-info); }
+
+    /* W31 — glitch / RGB-split (1 palavra, zona escura da capa ink) */
+    .glitch { position: relative; }
+    .glitch::before, .glitch::after { content: attr(data-t); position: absolute; inset: 0; }
+    @media (prefers-reduced-motion: no-preference) {
+      .glitch::before { color: var(--glitch-cyan); clip-path: inset(0 0 60% 0); animation: glitchA .4s steps(2) 1 both; }
+      .glitch::after  { color: var(--glitch-red); clip-path: inset(60% 0 0 0); animation: glitchB .4s steps(2) 1 both; }
+      @keyframes glitchA { 0%,100%{transform:none} 50%{transform:translateX(-3px)} }
+      @keyframes glitchB { 0%,100%{transform:none} 50%{transform:translateX(3px)} }
+    }
+    @media (prefers-reduced-motion: reduce) { .glitch::before, .glitch::after { display: none; } }
   </style>
 </head>
-<body>
+<body data-showcase>
 
   <div class="brand-mark" aria-hidden="true">
     <span class="brand-mark__bar"></span>
@@ -1117,7 +1211,7 @@
       <div class="layout-hero">
         <p class="kicker kicker--accent" data-anim style="--i:0">MACRO INSIGHTS</p>
         <h1 class="title-xl kinetic-h" data-anim="hero">Brasil: <b>comércio exterior</b> no governo Trump&nbsp;2</h1>
-        <p class="lead-deck" data-anim style="--i:2; max-width:60ch">Tese de pesquisa: balanço de riscos assimétrico para o lado negativo. Ganhos limitados pela alta participação brasileira nas importações chinesas; riscos crescentes via tarifas universais ou equiparação.</p>
+        <p class="lead-deck" data-anim style="--i:2; max-width:60ch">Tese de pesquisa: balanço de riscos <span class="glitch" data-t="assimétrico">assimétrico</span> para o lado negativo. Ganhos limitados pela alta participação brasileira nas importações chinesas; riscos crescentes via tarifas universais ou equiparação.</p>
         <div class="meta" data-anim style="--i:3">
           <span><strong>Autores</strong>Igor Barreto Rose · Julia Marasca</span>
           <span><strong>Data</strong>Janeiro&nbsp;2025</span>
@@ -1131,7 +1225,7 @@
       <span class="slide-num"><span>02</span> · 17</span>
       <div class="layout-fact">
         <p class="kicker kicker--accent" data-anim style="--i:0">O NÚMERO-CHAVE</p>
-        <p class="fact-val" data-anim style="--i:1"><span data-mark="circle" data-mark-color="#FF6200">~70%</span></p>
+        <p class="fact-val" data-anim style="--i:1"><span data-mark="circle" data-mark-color="#FF6200">~<span class="odometer" data-odometer="70" aria-label="70%">70</span>%</span></p>
         <p class="fact-label" data-anim style="--i:2">das importações chinesas de <strong>soja</strong> já têm origem brasileira. O espaço para novos ganhos numa eventual segunda guerra comercial é <strong data-mark="underline">limitado</strong>.</p>
         <p class="footnote" data-anim style="--i:3">Fonte: USDA, GACC, Comex Stat · Pesquisa Macro Itaú</p>
       </div>
@@ -1194,9 +1288,9 @@
           <div class="num-list__body">A China pode <strong>comprar mais agro americano</strong> para barrar tarifas — fazendo os impactos positivos para o Brasil ainda menores.</div>
         </div>
       </div>
-      <aside class="callout callout--warn" data-anim style="--i:3" role="note">
+      <aside class="callout callout--warn" data-anim style="--i:3" role="note" data-tilt>
         <span class="callout__icon">!</span>
-        <div class="callout__content"><p>Balanço de riscos <strong data-mark="underline" data-mark-color="#b91c1c">assimétrico para o lado negativo</strong> para o Brasil.</p></div>
+        <div class="callout__content tilt-layer"><p>Balanço de riscos <strong data-mark="underline" data-mark-color="#b91c1c">assimétrico para o lado negativo</strong> para o Brasil.</p></div>
       </aside>
     </section>
 
@@ -1204,7 +1298,7 @@
     <section class="slide" data-slide="5">
       <span class="slide-num"><span>05</span> · 17</span>
       <p class="kicker" data-anim style="--i:0">BASE DE MERCADO</p>
-      <h2 class="title-lg" data-anim style="--i:1">Tamanho do mercado <b>chinês</b> em 2022</h2>
+      <h2 class="title-lg" data-anim style="--i:1" data-flip-in>Tamanho do mercado chinês em 2022</h2>
       <p class="lead-deck" data-anim style="--i:2">Importações chinesas de commodities — Brasil é forte fornecedor em soja, minério de ferro e petróleo.</p>
       <div class="table-wrap" data-anim style="--i:3">
         <table class="data-table">
@@ -1374,7 +1468,19 @@
       <span class="slide-num"><span>12</span> · 17</span>
       <p class="kicker" data-anim style="--i:0">PETRÓLEO</p>
       <h2 class="title-md" data-anim style="--i:1"><b>Petróleo</b>: dinâmica menos exposta à guerra comercial</h2>
-      <div class="split" data-anim style="--i:2">
+      <div class="kpi-choreo" data-anim style="--i:2" data-choreo aria-label="Destino das exportações brasileiras de petróleo: China 44,6%, Estados Unidos 12,9%">
+        <div class="kpi-row kpi-row--br">
+          <span class="cap">China</span>
+          <span class="kpi-track"><span class="bar" style="width:100%"></span></span>
+          <span class="choreo-num">44,6%</span>
+        </div>
+        <div class="kpi-row kpi-row--us">
+          <span class="cap">Estados Unidos</span>
+          <span class="kpi-track"><span class="bar" style="width:28.9%"></span></span>
+          <span class="choreo-num">12,9%</span>
+        </div>
+      </div>
+      <div class="split" data-anim style="--i:3">
         <div>
           <p class="split-panel__title">Origem das importações chinesas — 5 regiões (%)</p>
           <div class="chart-box"><canvas id="c-petroleo-origem"></canvas></div>
@@ -1398,7 +1504,7 @@
           </div>
         </div>
       </div>
-      <p class="footnote" data-anim style="--i:3">Fonte: GACC (origem importações chinesas), Comex Stat (destinos brasileiros). Importações chinesas dos EUA cresceram pós-2017, mas Oriente Médio segue dominante.</p>
+      <p class="footnote" data-anim style="--i:4">Fonte: GACC (origem importações chinesas), Comex Stat (destinos brasileiros). Importações chinesas dos EUA cresceram pós-2017, mas Oriente Médio segue dominante.</p>
     </section>
 
     <!-- ═══════════════ Slide 13 — MINÉRIO DE FERRO ═══════════════ -->
@@ -1490,7 +1596,7 @@
     <!-- ═══════════════ Slide 17 — CONCLUSÃO + CONTATO ═══════════════ -->
     <section class="slide" data-slide="17" data-background-color="var(--color-bg-sunken)">
       <span class="slide-num"><span>17</span> · 17</span>
-      <div class="closing">
+      <div class="closing aurora-mesh">
         <p class="kicker kicker--accent" data-anim style="--i:0">CONCLUSÃO</p>
         <h2 class="title-lg" data-anim style="--i:1; margin-bottom: var(--space-2)">Em suma, balanço <b>assimétrico</b> de riscos</h2>
         <p class="lead-deck" data-anim style="--i:2; font-size: 1.1rem">Riscos positivos limitados vs riscos negativos crescentes para o Brasil.</p>
@@ -1852,6 +1958,44 @@
       if (document.visibilityState === 'visible') acquireWakeLock();
     });
     acquireWakeLock();
+
+    /* ════════════════════════════════════════════════════════════════
+       REPERTÓRIO v7 — JS dos momentos-wow premium adicionais
+       ════════════════════════════════════════════════════════════════ */
+
+    /* W24 — 3D tilt (só desktop + mouse, respeita reduced-motion) */
+    document.querySelectorAll('[data-tilt]').forEach(el => {
+      if (!matchMedia('(hover:hover) and (pointer:fine)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      el.addEventListener('pointermove', e => { const r = el.getBoundingClientRect();
+        el.style.setProperty('--rx', ((.5 - (e.clientY - r.top) / r.height) * 10).toFixed(2) + 'deg');
+        el.style.setProperty('--ry', (((e.clientX - r.left) / r.width - .5) * 10).toFixed(2) + 'deg'); });
+      el.addEventListener('pointerleave', () => { el.style.setProperty('--rx','0deg'); el.style.setProperty('--ry','0deg'); });
+    });
+
+    /* W30 — flip-in 3D (divide a manchete em letras, mantém aria-label) */
+    document.querySelectorAll('[data-flip-in]').forEach(el => {
+      if (el._flip) return; el._flip = true;
+      const t = el.textContent; el.setAttribute('aria-label', t);
+      el.innerHTML = [...t].map((c,i) => `<span aria-hidden="true" style="--i:${i}">${c === ' ' ? '&nbsp;' : c}</span>`).join('');
+    });
+
+    /* W15 — odômetro (rola por dígito ao entrar em vista) */
+    function buildOdometer(el){
+      const raw = el.dataset.odometer || el.textContent;
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      el.textContent = '';
+      [...raw].forEach(ch => {
+        if (!/\d/.test(ch)) { el.append(ch); return; }
+        const d = document.createElement('span'); d.className = 'od-digit';
+        const reel = document.createElement('span'); reel.className = 'od-reel';
+        for (let i = 0; i <= 9; i++) { const s = document.createElement('span'); s.textContent = i; reel.append(s); }
+        d.append(reel); el.append(d);
+        const setY = () => { reel.style.transform = `translateY(${-ch}em)`; };
+        if (reduce) setY(); else requestAnimationFrame(() => requestAnimationFrame(setY));
+      });
+    }
+    const odoIO = new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting) { buildOdometer(e.target); odoIO.unobserve(e.target); } }), { threshold: 0.6 });
+    document.querySelectorAll('.odometer').forEach(el => odoIO.observe(el));
 
     /* ════════════════════════════════════════════════════════════════
        CHARTS — Chart.js

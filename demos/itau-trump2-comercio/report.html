@@ -11,8 +11,9 @@
   kit: 05-poster (Archivo wdth Black no display condensado + Source Serif 4 no corpo — manchete de análise pede grotesk expandida contra serif calma)
   capa: manchete-broadsheet (manchete condensada peso 900 multi-linha + dateline + fio fino acima — é capa de análise, não número-protagonista do canônico)
   superficie: pauta-de-linhas (registro de despacho macro); luz hard-print (profundidade por fio e sombra offset dura, nunca difusa)
-  motion: estatico (ZERO keyframe de entrada no arquivo; charts animation:false; única transição: toggle de tema)
-  ambicao: A1-contido (análise macro que vira PDF — sobriedade é requisito; materialidade por fio e pauta)
+  motion: reveal-contido (scroll-driven, atrás de @supports + estado-final-base; charts animation:false; reduced-motion zera; toggle de tema é a única transição de UI)
+  ambicao: A1-contido (análise macro que vira PDF — sobriedade é requisito; craft v7 só por famílias não-premium)
+  momento-wow: W22 draw-on (espinha do arco de choques 2018→2025, seção 06) · W25 data-choreography (takeaways do sumário) · W29 blur-focus (figuras-tese) · W21 hue-drift (numeral de seção, ambiente)
   assinatura: M0 — a tabela-síntese de balanço mundial de soja (5.1) em full-bleed broadsheet com fio duplo contábil no total "Mundo"; reforço compositivo: gráfico-tese Fig 7 (soja origem) com eventBand "guerra comercial 2018-20" desenhada
   nao-vai-ter: glow-radial; fade-up; sombra-difusa-em-tudo
   serie: familia itau-trump2
@@ -1080,6 +1081,64 @@
       text-transform: uppercase;
     }
 
+    /* ═══ v7 SÓBRIO — craft não-premium (contido, atrás de @supports) ════
+       W21 hue-drift (numeral de seção, ambiente), W22 draw-on (espinha do
+       arco de choques 2018→2025), W25 data-choreography (takeaways do
+       sumário), W29 blur-focus (figuras-tese). Single-file, estado-final =
+       base, branch reduced-motion. Nenhum efeito premium. */
+
+    /* W21 — scroll-hue drift: a temperatura do acento migra por capítulo,
+       S/L travados; aplica só ao numeral de seção (detalhe, não texto). */
+    @property --doc-hue { syntax: '<number>'; inherits: true; initial-value: 24; }
+    html { --doc-hue: 24; }                    /* 24 = laranja Itaú */
+    @supports (animation-timeline: scroll()) {
+      @media (prefers-reduced-motion: no-preference) {
+        html { animation: hueDrift linear both; animation-timeline: scroll(root); }
+        @keyframes hueDrift { 45% { --doc-hue: 28; } 100% { --doc-hue: 24; } }
+      }
+    }
+    .section-num { color: hsl(var(--doc-hue) 95% 50%); }
+
+    /* W22 — draw-on SVG: a espinha do arco de choques (2018 → 2025) se desenha */
+    .era-spine { display: block; width: 100%; height: 8px; margin: var(--space-3) 0 var(--space-5); overflow: visible; }
+    .era-spine path { fill: none; stroke: var(--color-accent); stroke-width: 2; }
+    .draw-on { stroke-dasharray: var(--len, 1200); stroke-dashoffset: 0; }   /* base = desenhado */
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        .draw-on { stroke-dashoffset: var(--len, 1200); animation: drawPath 1.2s ease both;
+                   animation-timeline: view(); animation-range: cover 8% cover 42%; }
+        @keyframes drawPath { to { stroke-dashoffset: 0; } }
+      }
+    }
+
+    /* W25 — data choreography nos takeaways do sumário: número aparece (mola)
+       + barra enche (scaleX) + legenda sobe, no MESMO gatilho. Uma física. */
+    :root { --spring: linear(0, 0.5 30%, 1.02 62%, 0.995, 1); }   /* contido (registro sóbrio) */
+    .report-takeaway__bar {
+      display: block; height: 2px; margin: 0 0 var(--space-2);
+      background: var(--color-accent); transform: scaleX(1); transform-origin: left;
+    }
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        [data-choreo] { animation-timeline: view(); animation-range: entry 18% entry 68%; }
+        [data-choreo] .report-takeaway__val { animation: choreoIn 0.7s var(--spring) both; }
+        [data-choreo] .report-takeaway__bar { transform: scaleX(0); animation: choreoFill 0.9s var(--spring) 0.12s both; }
+        [data-choreo] .report-takeaway__label { animation: choreoIn 0.6s ease 0.32s both; }
+        @keyframes choreoFill { to { transform: scaleX(1); } }
+        @keyframes choreoIn { from { opacity: 0.2; } to { opacity: 1; } }
+      }
+    }
+
+    /* W29 — blur-to-sharp focus: as figuras-tese entram desfocadas e focam.
+       Sistema ambiente; estado-final = nítido. */
+    .focus-reveal { filter: none; }
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        .focus-reveal { animation: focusIn linear both; animation-timeline: view(); animation-range: entry 8% entry 56%; }
+        @keyframes focusIn { from { filter: blur(10px) saturate(0.6); opacity: 0.5; } to { filter: blur(0) saturate(1); opacity: 1; } }
+      }
+    }
+
     /* ═══ @print — preservado e reforçado ════════════════════════════ */
     @media print {
       .report-header,
@@ -1143,6 +1202,9 @@
 
       .section-num { font-size: 2.6rem; color: #000 !important; }
 
+      /* v7 sóbrio: a espinha vira tinta preta no papel */
+      .era-spine path { stroke: #000 !important; }
+
       figcaption strong { color: #444 !important; }
 
       @page {
@@ -1182,7 +1244,7 @@
     }
   </style>
 </head>
-<body>
+<body data-showcase>
 
   <!-- ═══ HEADER ═══════════════════════════════════════════════════ -->
   <header class="report-header" role="banner">
@@ -1240,20 +1302,24 @@
         <p class="report-summary__body">O Brasil já capturou a maior parte do espaço de substituição em commodities-chave: detém cerca de 70% das importações chinesas de soja, 45% das de milho (em 2023) e cerca de 20% das de minério de ferro. A capacidade de avanço numa nova rodada de retaliação chinesa é, portanto, limitada. Em contrapartida, ferramentas como o Reciprocal Tariff Act ou uma tarifa universal de 10% — defendidas por nomes do governo Trump 2 — atingiriam diretamente a pauta brasileira de exportações para os EUA, hoje concentrada em petróleo, semi-acabados de aço e aeronaves. Manufaturados, em particular, poderiam ver as tarifas americanas subirem em até 10,4 pontos percentuais num cenário de equiparação plena.</p>
 
         <ul class="report-takeaways">
-          <li class="report-takeaway">
+          <li class="report-takeaway" data-choreo>
             <p class="report-takeaway__val">~70%</p>
+            <span class="report-takeaway__bar" aria-hidden="true"></span>
             <p class="report-takeaway__label">das importações chinesas de soja já têm origem brasileira — espaço de substituição se esgotou</p>
           </li>
-          <li class="report-takeaway">
+          <li class="report-takeaway" data-choreo>
             <p class="report-takeaway__val">11,2% vs 1,5%</p>
+            <span class="report-takeaway__bar" aria-hidden="true"></span>
             <p class="report-takeaway__label">tarifa média brasileira em produtos dos EUA vs tarifa americana em produtos do Brasil</p>
           </li>
-          <li class="report-takeaway">
+          <li class="report-takeaway" data-choreo>
             <p class="report-takeaway__val">+10,4pp</p>
+            <span class="report-takeaway__bar" aria-hidden="true"></span>
             <p class="report-takeaway__label">aumento potencial em manufaturados num cenário de equiparação tarifária plena</p>
           </li>
-          <li class="report-takeaway">
+          <li class="report-takeaway" data-choreo>
             <p class="report-takeaway__val">54,3%</p>
+            <span class="report-takeaway__bar" aria-hidden="true"></span>
             <p class="report-takeaway__label">das exportações brasileiras de aço já vão para os EUA — exposição setorial concentrada</p>
           </li>
         </ul>
@@ -1506,7 +1572,7 @@
               <p class="figure-label">Figura 7 · gráfico-tese</p>
               <p class="figure-title">Origem das importações chinesas de soja — Brasil vs EUA</p>
               <p class="figure-subtitle">% das importações, 2011-2023</p>
-              <div class="chart-inner-tall"><canvas id="c-soja-origem"></canvas></div>
+              <div class="chart-inner-tall"><canvas id="c-soja-origem" class="focus-reveal"></canvas></div>
             </div>
             <figcaption><strong>Fig. 7.</strong> Salto Brasil de 55% para 75% e queda EUA de 35% para 18% em 2018 — substituição parcial durante o primeiro ciclo Trump (banda destacada). Hoje, com Brasil em ~70%, espaço para repetir o movimento é limitado. <strong>Fonte:</strong> USDA, GACC.</figcaption>
           </figure>
@@ -1718,6 +1784,11 @@
 
         <p class="lead">Olhando para o primeiro mandato Trump, é possível mapear quais setores brasileiros foram mais tarifados — e simular o que aconteceria num cenário hipotético de equiparação tarifária ou tarifa universal.</p>
 
+        <!-- W22 draw-on: a espinha do arco de choques (2018 → 2025) se desenha -->
+        <svg class="era-spine" viewBox="0 0 1000 8" preserveAspectRatio="none" role="img" aria-label="Espinha cronológica do arco de choques tarifários, de 2018 a 2025">
+          <path class="draw-on" d="M2 4 H998" />
+        </svg>
+
         <h3>6.1 Histórico — quais setores foram mais afetados</h3>
 
         <p>A média ponderada por exportações, em % das tarifas aplicadas pelos EUA em produtos brasileiros, mostra um movimento concentrado em manufaturados e produtos químicos durante o primeiro mandato. O maior aumento ocorreu em Manufaturados (+1,5pp) e Produtos Químicos (+2,4pp) entre 2016 e 2020<sup><a href="#fn4" class="fn-ref" id="fn-ref-4b">[4]</a></sup>.</p>
@@ -1727,7 +1798,7 @@
             <p class="figure-label">Figura 13</p>
             <p class="figure-title">Tarifas dos EUA em produtos brasileiros por setor</p>
             <p class="figure-subtitle">Média ponderada por exportações (%), 2016 vs 2020 vs Atual</p>
-            <div class="chart-inner-xtall"><canvas id="c-tarifas-hist"></canvas></div>
+            <div class="chart-inner-xtall"><canvas id="c-tarifas-hist" class="focus-reveal"></canvas></div>
           </div>
           <figcaption><strong>Fig. 13.</strong> Movimento mais expressivo em Manufaturados (+1,5pp entre 2016 e 2020) e Produtos Químicos (+2,4pp). Categoria “Diversos” também teve aumento relevante (+1,5pp). Tarifas voltaram a níveis baixos no período pós-Trump. <strong>Fonte:</strong> WITS, USTR.</figcaption>
         </figure>
@@ -1741,7 +1812,7 @@
             <p class="figure-label">Figura 14</p>
             <p class="figure-title">Cenário de equiparação tarifária EUA-Brasil</p>
             <p class="figure-subtitle">Tarifas médias (%) — atual vs cenário simétrico vs universal 10%</p>
-            <div class="chart-inner-xtall"><canvas id="c-tarifas-simetrica"></canvas></div>
+            <div class="chart-inner-xtall"><canvas id="c-tarifas-simetrica" class="focus-reveal"></canvas></div>
           </div>
           <figcaption><strong>Fig. 14.</strong> Brasil tarifa em média 11,2% produtos dos EUA; EUA tarifam apenas 1,5% itens brasileiros. Aumento potencial concentrado em manufaturados (+10,4pp), diversos (+6,9pp) e máquinas (+6,0pp). Linha pontilhada amarela: tarifa universal de 10%. <strong>Fonte:</strong> WITS, USTR<sup><a href="#fn5" class="fn-ref" id="fn-ref-5b">[5]</a></sup>.</figcaption>
         </figure>
@@ -1953,6 +2024,11 @@
         window._reportCharts = [];
         renderAllCharts();
       }
+    });
+
+    /* ═══ W22 draw-on: medir comprimento real do path (1x, no load) ══ */
+    document.querySelectorAll('.draw-on').forEach(p => {
+      try { p.style.setProperty('--len', Math.ceil(p.getTotalLength())); } catch (e) {}
     });
 
     /* ═══ TOC gerada por JS (engine intocado) ═══════════════════════ */

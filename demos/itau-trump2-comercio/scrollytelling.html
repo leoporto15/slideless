@@ -440,17 +440,19 @@
       counter-reset: nl;
     }
     .num-list li {
-      display: grid; grid-template-columns: 34px 1fr;
-      gap: var(--space-4); align-items: start;
-      padding: var(--space-3) var(--space-4);
+      /* counter absoluto (NÃO grid): grid 34px/1fr separa <strong> e texto em
+         grid-items, o texto cai na coluna estreita → quebra por-caractere */
+      position: relative;
+      padding: var(--space-3) var(--space-4) var(--space-3) calc(var(--space-4) + 28px);
       background: var(--color-bg-elevated);
       border: 1px solid var(--color-border); border-radius: var(--radius);
       max-width: none; margin: 0;
     }
     .num-list li::before {
       content: counter(nl) '.'; counter-increment: nl;
+      position: absolute; left: var(--space-4); top: calc(var(--space-3) + 2px);
       font-family: var(--font-mono); font-size: 0.9rem; font-weight: 500;
-      color: var(--color-accent); padding-top: 2px;
+      color: var(--color-accent);
     }
     .num-list li::marker { content: none; }
     .num-list p { margin: 0; max-width: none; }
@@ -644,6 +646,168 @@
       [data-reveal].is-visible { opacity: 1; }
     }
 
+    /* ════════════════════════════════════════════════════════════════
+       v7 — REPERTÓRIO EMPILHADO (showcase). §STACKING: 1 herói pinned
+       (W28 chapter-divider) + 2 sistemas ambientes na MESMA física de scroll
+       (W21 hue-drift + W29 blur-focus) + momentos rank-4 espaçados (W25, W30).
+       Todos com @supports + estado-final-base + branch reduced-motion.
+       ════════════════════════════════════════════════════════════════ */
+
+    /* ─── W21 — Scroll-hue drift (sistema ambiente · 1 por doc, global) ─
+       O acento "respira" de temperatura ao longo do scroll (quente intro →
+       frio dados → quente fecho). Só um DETALHE (fio da capa) referencia o
+       hue dinâmico — texto de leitura e tokens da marca NÃO mudam. */
+    @property --doc-hue { syntax: '<number>'; inherits: true; initial-value: 24; } /* 24 = laranja Itaú */
+    html { --doc-hue: 24; }
+    @supports (animation-timeline: scroll()) {
+      @media (prefers-reduced-motion: no-preference) {
+        html { animation: hueDrift linear both; animation-timeline: scroll(root); }
+        @keyframes hueDrift { 45% { --doc-hue: 210; } 100% { --doc-hue: 24; } }
+      }
+    }
+    /* detalhe que colhe o hue ambiente — S/L travados (W21: nunca mexer em S/L) */
+    .capa__fio { border-top-color: hsl(var(--doc-hue) 90% 48%); }
+
+    /* ─── W29 — Blur-to-sharp focus (sistema ambiente · TODAS as figuras) ─
+       As figuras-gráfico entram levemente desfocadas/dessaturadas e "racking
+       focus" ao chegar à leitura. Base = nítido. Mesma física do W21. */
+    .focus-reveal { filter: none; }                           /* base = nítido */
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        .focus-reveal { animation: focusIn linear both; animation-timeline: view(); animation-range: entry 8% entry 58%; }
+        @keyframes focusIn { from { filter: blur(14px) saturate(.4); opacity: .4; } to { filter: blur(0) saturate(1); opacity: 1; } }
+      }
+    }
+
+    /* ─── W25 — Data choreography (momento rank-4 · friso da conclusão) ─
+       O número rola com mola ENQUANTO a barra enche e a legenda sobe —
+       mesmo gatilho de scroll, em cascata. UMA física --spring p/ o doc.
+       spring-bouncy NÃO está banido neste parti → overshoot permitido. */
+    :root { --spring: linear(0, .5 30%, 1.08 60%, .98, 1); }  /* UMA física p/ o doc inteiro */
+    @property --cn { syntax: '<integer>'; inherits: false; initial-value: 0; }
+    .choreo .bar { transform: scaleX(1); transform-origin: left; }
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        .choreo { animation-timeline: view(); animation-range: entry 20% entry 70%; }
+        /* o counter SÓ existe aqui; o texto-base some — nunca os dois (anti-"7070") */
+        .choreo .ch-num__base { display: none; }
+        .choreo .ch-num__count::after { content: counter(cn); }
+        .choreo .ch-num__count { counter-reset: cn var(--cn); animation: choreoCount 1s var(--spring) both; }
+        .choreo .bar { transform: scaleX(0); animation: choreoFill 1s var(--spring) .15s both; }
+        .choreo .cap { opacity: 0; animation: choreoRise .6s ease .4s both; }
+        @keyframes choreoFill { to { transform: scaleX(1); } }
+        @keyframes choreoRise { to { opacity: 1; transform: none; } }
+      }
+    }
+    /* o número-tese de cada métrica: alvo do counter por bloco */
+    .choreo[data-n="70"]  { } .choreo[data-n="54"] { } .choreo[data-n="10"] { }
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        .choreo[data-n="70"] .ch-num__count { animation-name: cn70; }
+        .choreo[data-n="54"] .ch-num__count { animation-name: cn54; }
+        .choreo[data-n="10"] .ch-num__count { animation-name: cn10; }
+        @keyframes cn70 { to { --cn: 70; } }
+        @keyframes cn54 { to { --cn: 54; } }
+        @keyframes cn10 { to { --cn: 10; } }
+      }
+    }
+    .choreo-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-6); margin: var(--space-7) 0 0;
+    }
+    .choreo { border-top: 3px solid var(--color-accent); padding-top: var(--space-3); }
+    .ch-num {
+      font-family: var(--font-display);
+      font-variation-settings: 'wdth' 110, 'wght' 900;
+      font-size: clamp(2.6rem, 6vw, 4rem); line-height: 0.9;
+      letter-spacing: -0.03em; color: var(--color-accent);
+      margin: 0 0 var(--space-3);
+    }
+    .ch-num__count { font-variant-numeric: tabular-nums lining-nums; }
+    .ch-num__unit { font-size: 0.5em; }
+    .choreo .bar {
+      height: 5px; background: var(--color-accent);
+      border-radius: 2px; margin: 0 0 var(--space-3);
+    }
+    .choreo .cap { transform: translateY(8px); }
+    .choreo .cap h4 {
+      font-family: var(--font-display);
+      font-variation-settings: 'wdth' 100, 'wght' 900;
+      font-size: 1.1rem; margin: 0 0 var(--space-2); letter-spacing: -0.02em;
+    }
+    .choreo .cap p { font-size: var(--size-small); color: var(--color-fg-muted); margin: 0; max-width: none; line-height: 1.5; }
+
+    /* ─── W30 — Flip-in 3D (momento rank-4 · 1 manchete-herói) ─────────
+       As letras da manchete do friso final entram girando como split-flap.
+       Base sem JS = manchete visível; aria-label preserva o texto. */
+    [data-flip-in] span { display: inline-block; transform-origin: bottom; }
+    @media (prefers-reduced-motion: no-preference) {
+      [data-flip-in] span { animation: flipIn .5s var(--spring, cubic-bezier(.2,.7,.2,1)) both; animation-delay: calc(var(--i,0) * 38ms); }
+      @keyframes flipIn { from { transform: perspective(400px) rotateX(-90deg); opacity: 0; } to { transform: none; opacity: 1; } }
+    }
+
+    /* ─── W28 — Chapter divider (HERÓI PINNED ÚNICO · act-breaks) ──────
+       Entre atos a tela prende num título full-bleed; ao rolar ATRAVÉS o
+       fundo varre e o tipo escala (scrub). Único sistema named-pinned do doc
+       (as cenas sticky usam position:sticky simples, não contam no orçamento).
+       NÃO coexiste com W18 (§STACKING: nunca 2 pinned). */
+    .chapter-divider { height: 200vh; max-width: none; margin: var(--space-12) 0; }  /* runway de scroll */
+    .chapter-divider__inner {
+      position: sticky; top: 0; height: 100vh;
+      display: grid; place-items: center; overflow: clip; text-align: center;
+    }
+    .chapter-divider__big { font-variant-numeric: tabular-nums; }     /* base = título estático full-bleed */
+    .chapter-divider__kicker {
+      font-family: var(--font-mono); font-size: var(--size-xs);
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--color-fg-muted); margin: 0 0 var(--space-4);
+    }
+    .chapter-divider__act {
+      font-family: var(--font-display);
+      font-variation-settings: 'wdth' 62, 'wght' 900;
+      font-size: clamp(4rem, 16vw, 11rem); line-height: 0.82;
+      letter-spacing: -0.04em; color: var(--color-accent);
+      margin: 0 0 var(--space-4);
+    }
+    .chapter-divider__title {
+      font-family: var(--font-display);
+      font-variation-settings: 'wdth' 118, 'wght' 900;
+      font-size: var(--size-h2); line-height: 1.02;
+      letter-spacing: -0.025em; color: var(--color-fg);
+      margin: 0 auto; max-width: 20ch;
+    }
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        .chapter-divider__inner > * { animation: chScrub linear both; animation-timeline: view(); animation-range: contain 0% contain 100%; }
+        @keyframes chScrub { from { opacity: .2; transform: scale(.9); } 50% { opacity: 1; transform: none; } to { opacity: .2; transform: scale(1.05); } }
+      }
+    }
+
+    /* ─── W16 — type reativa à velocidade de scroll (cobertura de família) ──
+       Sem Roboto Flex no kit (Archivo/Source Serif/IBM Plex) → fallback seguro:
+       o tracking de UMA manchete (título do Ato III) reage ao --scroll-vel.
+       Base / no-support / reduced-motion = estado final estático (tracking 0).
+       Nunca aplica em corpo de texto — só nesta manchete. */
+    .vel-type { letter-spacing: -0.025em; }
+    @media (prefers-reduced-motion: no-preference) {
+      .vel-type { letter-spacing: calc(-0.025em + var(--scroll-vel, 0) * 0.02em); transition: letter-spacing 120ms linear; }
+    }
+
+    /* ─── W23 — gooey morph (a spice · 1x · acento no act-break do Ato III) ──
+       §STACKING: vive numa zona calma (chapter-divider), longe de qualquer
+       focus-reveal (W29) / blur. Base sem-suporte = sem filtro (blobs simples). */
+    .goo { filter: url(#goo); position: relative; height: 120px; width: 100%; margin: var(--space-6) auto 0; pointer-events: none; }
+    .goo > i { display: block; position: absolute; width: 90px; height: 90px; border-radius: 50%; background: var(--color-accent); left: 40%; top: 15px; }
+    .goo > i:nth-child(2) { left: 50%; }
+    .goo > i:nth-child(3) { left: 60%; }
+    @media (prefers-reduced-motion: no-preference) {
+      .goo > i { animation: gooMove 6s var(--ease-out, ease-in-out) infinite alternate; }
+      .goo > i:nth-child(2) { animation-delay: -2s; }
+      .goo > i:nth-child(3) { animation-delay: -4s; }
+    }
+    @keyframes gooMove { to { transform: translate(60px, -30px) scale(1.15); } }
+    @supports not (filter: url(#goo)) { .goo { filter: none; } }
+
     /* ─── Responsivo ───────────────────────────────────────────────── */
     @media (max-width: 920px) {
       .story { display: block; }
@@ -677,6 +841,17 @@
       .progress__bar { animation: none; }
       /* manchete no estado final legível (sem construção cinética) */
       .capa h1 { animation: none; font-variation-settings: 'wdth' 118, 'wght' 900; letter-spacing: -0.035em; }
+      /* v7: sistemas/momentos travados no estado final, nada se move */
+      html { animation: none; --doc-hue: 24; }
+      .focus-reveal { filter: none; opacity: 1; animation: none; }
+      .choreo .bar { transform: scaleX(1); animation: none; }
+      .choreo .ch-num__count { animation: none; }
+      .choreo .cap { opacity: 1; transform: none; animation: none; }
+      [data-flip-in] span { animation: none; transform: none; opacity: 1; }
+      .chapter-divider__inner > * { animation: none; opacity: 1; transform: none; }
+      /* W16: tracking estático no estado final. W23: blobs parados. */
+      .vel-type { letter-spacing: -0.025em; transition: none; }
+      .goo > i { animation: none; }
     }
 
     /* ─── Print ────────────────────────────────────────────────────── */
@@ -690,10 +865,24 @@
       /* sem timeline no papel: trava gestos A2 no estado final legível */
       [data-reveal] { opacity: 1 !important; transform: none !important; animation: none !important; }
       .capa h1 { animation: none !important; font-variation-settings: 'wdth' 118, 'wght' 900; letter-spacing: -0.035em; }
+      /* v7: dividers viram seção título normal; figuras nítidas; números cheios */
+      .focus-reveal { filter: none !important; opacity: 1 !important; animation: none !important; }
+      .chapter-divider { height: auto; break-inside: avoid; }
+      .chapter-divider__inner { position: static; height: auto; min-height: 0; padding: var(--space-8) 0; }
+      .chapter-divider__inner > * { animation: none !important; opacity: 1 !important; transform: none !important; }
+      .choreo .bar { transform: scaleX(1) !important; animation: none !important; }
+      .choreo .cap { opacity: 1 !important; transform: none !important; animation: none !important; }
+      [data-flip-in] span { animation: none !important; transform: none !important; opacity: 1 !important; }
+      /* W16/W23: estado final no papel — sem acento gooey, tracking neutro */
+      .vel-type { letter-spacing: -0.025em !important; }
+      .goo { display: none !important; }
     }
   </style>
 </head>
-<body>
+<body data-showcase>
+
+  <!-- W23 — filtro gooey (uma vez no doc; alimenta o acento do act-break do Ato III) -->
+  <svg width="0" height="0" aria-hidden="true"><filter id="goo"><feGaussianBlur in="SourceGraphic" stdDeviation="10" result="b"/><feColorMatrix in="b" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9"/></filter></svg>
 
   <div class="progress" aria-hidden="true"><div class="progress__bar" id="progress-bar"></div></div>
 
@@ -812,6 +1001,15 @@
       <p class="footnote">Fonte: General Administration of Customs of China (GACC), 2022.</p>
     </section>
 
+    <!-- ═══ W28 — Chapter divider · ato I (herói pinned único do doc) ═══ -->
+    <section class="chapter-divider" aria-label="Ato I — As sete commodities">
+      <div class="chapter-divider__inner chapter-divider__big">
+        <p class="chapter-divider__kicker">Ato I · Ganhos limitados</p>
+        <p class="chapter-divider__act">01</p>
+        <p class="chapter-divider__title">As sete commodities, uma a uma</p>
+      </div>
+    </section>
+
     <!-- ════════════════════════════════════════════════════════════
          STORY 1 — SOJA · gráfico sticky #chart-soja (ASSINATURA M5)
          ════════════════════════════════════════════════════════════ -->
@@ -831,7 +1029,7 @@
         </section>
       </div>
       <div class="story__chart">
-        <figure class="figura" data-reveal>
+        <figure class="figura focus-reveal" data-reveal>
           <figcaption>
             <p class="figura__title">Origem das importações chinesas de soja — Brasil vs EUA (%)</p>
             <p class="figura__sub">Participação anual · 2011 a 2023</p>
@@ -860,7 +1058,7 @@
         </section>
       </div>
       <div class="story__chart">
-        <figure class="figura" data-reveal>
+        <figure class="figura focus-reveal" data-reveal>
           <figcaption>
             <p class="figura__title">Produção, importação e estoque final na China (mm ton)</p>
             <p class="figura__sub">Série anual · 2011 a 2025 (est.)</p>
@@ -890,7 +1088,7 @@
         </section>
       </div>
       <div class="story__chart">
-        <figure class="figura" data-reveal>
+        <figure class="figura focus-reveal" data-reveal>
           <figcaption>
             <p class="figura__title">Origem das importações de aço dos EUA — 5 principais (%)</p>
             <p class="figura__sub">Participação anual · 2015 a 2024</p>
@@ -920,7 +1118,7 @@
         </section>
       </div>
       <div class="story__chart">
-        <figure class="figura" data-reveal>
+        <figure class="figura focus-reveal" data-reveal>
           <figcaption>
             <p class="figura__title">Origem das importações chinesas de petróleo — 5 regiões (%)</p>
             <p class="figura__sub">Participação anual · 2013 a 2023</p>
@@ -952,7 +1150,7 @@
         </section>
       </div>
       <div class="story__chart">
-        <figure class="figura" data-reveal>
+        <figure class="figura focus-reveal" data-reveal>
           <figcaption>
             <p class="figura__title">Origem das importações chinesas de minério (%)</p>
             <p class="figura__sub">Participação anual · 2011 a 2023</p>
@@ -963,6 +1161,15 @@
       </div>
     </div>
 
+    <!-- ═══ W28 — Chapter divider · ato II ═══ -->
+    <section class="chapter-divider" aria-label="Ato II — O risco tarifário">
+      <div class="chapter-divider__inner chapter-divider__big">
+        <p class="chapter-divider__kicker">Ato II · Riscos crescentes</p>
+        <p class="chapter-divider__act">02</p>
+        <p class="chapter-divider__title">O risco tarifário entra em cena</p>
+      </div>
+    </section>
+
     <!-- ════════════════════════════════════════════════════════════
          TARIFAS — cenário 1 (histórico) — gráfico estático wide
          ════════════════════════════════════════════════════════════ -->
@@ -970,7 +1177,7 @@
       <p class="kicker kicker--accent">Tarifas · cenário 1 · histórico</p>
       <h2>Tarifas — quais setores foram mais afetados?</h2>
       <p>Média ponderada por exportações, % das tarifas aplicadas pelos EUA em produtos brasileiros — comparativo entre início do 1º mandato (2016), fim (2020) e situação atual.</p>
-      <figure class="figura" data-reveal style="height:440px;border-top:2px solid var(--color-fg);">
+      <figure class="figura focus-reveal" data-reveal style="height:440px;border-top:2px solid var(--color-fg);">
         <div class="figura__box" style="margin-top:var(--space-3)"><canvas id="chart-tarifas-hist" role="img" aria-label="Gráfico de barras: tarifas dos EUA sobre produtos brasileiros por setor, em três momentos. Maior aumento no 1º mandato Trump: Manufaturados e Produtos químicos."></canvas></div>
       </figure>
       <p class="footnote">Fonte: World Integrated Trade Solution (WITS) · USTR. Maior aumento durante 1º mandato Trump: <strong>Manufaturados (+1,5pp)</strong> e Produtos Químicos (+2,4pp).</p>
@@ -983,13 +1190,25 @@
       <p class="kicker kicker--accent">Tarifas · cenário 2 · equiparação</p>
       <h2>Se Trump equiparar tarifas...</h2>
       <p>Cenário hipotético: tarifas dos EUA sobem para o nível brasileiro. Tarifa universal de 10% (linha pontilhada) atinge a maioria das categorias.</p>
-      <figure class="figura" data-reveal style="height:440px;border-top:2px solid var(--color-fg);">
+      <figure class="figura focus-reveal" data-reveal style="height:440px;border-top:2px solid var(--color-fg);">
         <div class="figura__box" style="margin-top:var(--space-3)"><canvas id="chart-tarifas-sim" role="img" aria-label="Gráfico de barras: tarifa média do Brasil sobre produtos dos EUA, tarifa média dos EUA sobre produtos do Brasil, e potencial aumento se houver equiparação, por setor. Linha pontilhada marca a tarifa universal de 10%."></canvas></div>
       </figure>
       <aside class="callout callout--warn" role="note">
         <span class="callout__icon" aria-hidden="true">!</span>
         <div class="callout__content"><p>Setores mais expostos à equiparação: <strong>manufaturados (+10,4pp)</strong> e diversos (+6,9pp).</p></div>
       </aside>
+    </section>
+
+    <!-- ═══ W28 — Chapter divider · ato III ═══ -->
+    <section class="chapter-divider" aria-label="Ato III — O contraponto">
+      <div class="chapter-divider__inner chapter-divider__big">
+        <p class="chapter-divider__kicker">Ato III · Diferencial brasileiro</p>
+        <p class="chapter-divider__act">03</p>
+        <!-- W16 — esta manchete reage à velocidade de scroll (tracking via --scroll-vel) -->
+        <p class="chapter-divider__title vel-type">O contraponto: por que o Brasil é diferente</p>
+        <!-- W23 — acento gooey (zona calma do act-break, sem focus-reveal por perto) -->
+        <div class="goo" aria-hidden="true"><i></i><i></i><i></i></div>
+      </div>
     </section>
 
     <!-- ════════════════════════════════════════════════════════════
@@ -1013,7 +1232,7 @@
         </section>
       </div>
       <div class="story__chart">
-        <figure class="figura" data-reveal>
+        <figure class="figura focus-reveal" data-reveal>
           <figcaption>
             <p class="figura__title">Balança comercial dos EUA com top 16 parceiros (USD bi, 2023)</p>
             <p class="figura__sub">Saldo positivo = superávit dos EUA · negativo = déficit</p>
@@ -1031,7 +1250,7 @@
       <p class="kicker kicker--accent">Saldo bilateral · histórico</p>
       <h2>Saldo comercial EUA vs Brasil, 2002-2024</h2>
       <p>O saldo bilateral oscilou entre déficit de USD 10 bi (anos 2000) e superávit de USD 13 bi (2022), terminando em USD 1 bi em 2024. É um padrão muito mais estável e equilibrado do que os parceiros considerados alvos primários da nova administração.</p>
-      <figure class="figura" data-reveal style="height:380px;border-top:2px solid var(--color-fg);">
+      <figure class="figura focus-reveal" data-reveal style="height:380px;border-top:2px solid var(--color-fg);">
         <div class="figura__box" style="margin-top:var(--space-3)"><canvas id="chart-saldo" role="img" aria-label="Gráfico de linha: saldo comercial EUA-Brasil de 2002 a 2024, oscilando entre déficit de 10 bi e superávit de 13 bi (2022), terminando em 1 bi em 2024."></canvas></div>
       </figure>
       <p class="footnote">Fonte: U.S. Census Bureau, Pesquisa Macro Itaú.</p>
@@ -1040,23 +1259,36 @@
     <!-- ═══ Conclusão ═══ -->
     <section class="fecho">
       <p class="kicker kicker--accent">Conclusão</p>
-      <h2>Em suma, balanço assimétrico de riscos</h2>
+      <!-- W30 — flip-in: a manchete-herói do fecho entra letra a letra (split-flap).
+           Base sem JS = título visível; o JS injeta o aria-label preservando o texto. -->
+      <h2 data-flip-in>Em suma, balanço assimétrico de riscos</h2>
       <p>Riscos positivos limitados vs riscos negativos crescentes para o Brasil. Três vetores resumem a tese:</p>
-      <div class="conclusion-grid">
-        <div class="metric">
-          <p class="metric__num">01 · Ganhos limitados</p>
-          <h4>Pouco espaço a ganhar</h4>
-          <p>Brasil já tem alta participação nas importações chinesas de soja (~70%), minério de ferro (~20%) e petróleo. O modelo de substituição 2018-20 não se repete na mesma intensidade.</p>
+      <!-- W25 — data choreography: número rola com mola enquanto a barra enche e a
+           legenda sobe. Números reais em texto no base (fallback/sem-JS/a11y). -->
+      <div class="choreo-grid">
+        <div class="choreo" data-choreo data-n="70">
+          <p class="ch-num"><span class="ch-num__count" aria-hidden="true"><span class="ch-num__base">70</span></span><span class="ch-num__unit">%</span></p>
+          <div class="bar" aria-hidden="true"></div>
+          <div class="cap">
+            <h4>Pouco espaço a ganhar</h4>
+            <p>Brasil já tem alta participação nas importações chinesas de soja (~70%), minério de ferro (~20%) e petróleo. O modelo de substituição 2018-20 não se repete na mesma intensidade.</p>
+          </div>
         </div>
-        <div class="metric">
-          <p class="metric__num">02 · Risco crescente</p>
-          <h4>Tarifas na mesa</h4>
-          <p>Tarifa universal (10%) ou equiparação podem atingir manufaturados (+10,4pp), siderurgia (54% das exportações de aço) e aviação.</p>
+        <div class="choreo" data-choreo data-n="54">
+          <p class="ch-num"><span class="ch-num__count" aria-hidden="true"><span class="ch-num__base">54</span></span><span class="ch-num__unit">%</span></p>
+          <div class="bar" aria-hidden="true"></div>
+          <div class="cap">
+            <h4>Tarifas na mesa</h4>
+            <p>Tarifa universal (10%) ou equiparação podem atingir manufaturados (+10,4pp), siderurgia (54% das exportações de aço) e aviação.</p>
+          </div>
         </div>
-        <div class="metric">
-          <p class="metric__num">03 · Diferencial brasileiro</p>
-          <h4>Pauta básica protege</h4>
-          <p>Pauta brasileira focada em produtos básicos pode adiar a exposição. Brasil não está entre os alvos primários (México, Vietnã, China).</p>
+        <div class="choreo" data-choreo data-n="10">
+          <p class="ch-num"><span class="ch-num__count" aria-hidden="true"><span class="ch-num__base">10</span></span><span class="ch-num__unit">%</span></p>
+          <div class="bar" aria-hidden="true"></div>
+          <div class="cap">
+            <h4>Pauta básica protege</h4>
+            <p>Pauta brasileira focada em produtos básicos pode adiar a exposição. Brasil não está entre os alvos primários (México, Vietnã, China). Tarifa universal de 10% é o gatilho-limite.</p>
+          </div>
         </div>
       </div>
 
@@ -1098,6 +1330,22 @@
       addEventListener('scroll', updateProgress, { passive: true });
       updateProgress();
     }
+
+    /* W30 — flip-in: divide a manchete-herói do fecho em letras (aria-label preserva
+       o texto). Sem JS o título já está visível; reduced-motion neutraliza o flip via CSS. */
+    document.querySelectorAll('[data-flip-in]').forEach(el => {
+      if (el._flip) return; el._flip = true;
+      const t = el.textContent; el.setAttribute('aria-label', t);
+      el.innerHTML = [...t].map((c, i) => `<span aria-hidden="true" style="--i:${i}">${c === ' ' ? '&nbsp;' : c}</span>`).join('');
+    });
+
+    /* W16 — type reativa à velocidade de scroll: alimenta --scroll-vel (0..1).
+       O CSS aplica o tracking só em .vel-type sob no-preference; base = estático. */
+    let lastY16 = scrollY, raf16 = 0;
+    addEventListener('scroll', () => {
+      const v = Math.min(1, Math.abs(scrollY - lastY16) / 60); lastY16 = scrollY;
+      if (!raf16) raf16 = requestAnimationFrame(() => { raf16 = 0; document.documentElement.style.setProperty('--scroll-vel', v.toFixed(3)); });
+    }, { passive: true });
 
     /* Reveal — SÓ figuras/gráficos têm data-reveal. Native (view()) assume quando suportado;
        este IO só acende a figura por classe no fallback. */
@@ -1639,5 +1887,6 @@
       saldoBr.update();
     });
   </script>
+<script>/* nohashjump-fix: a[href="#"] (brand/breadcrumb/CTA decorativo) não deve pular pro topo/capa */document.querySelectorAll('a[href="#"]').forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();});});</script>
 </body>
 </html>

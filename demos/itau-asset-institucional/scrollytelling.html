@@ -518,6 +518,83 @@ li::marker { color: var(--color-fg-subtle); }
 .js-reveal-fallback [data-reveal] { opacity: 0; transition: opacity 350ms var(--ease-out-strong); }
 .js-reveal-fallback [data-reveal].is-visible { opacity: 1; }
 
+/* ════════════════════════════════════════════════════════════════
+   W21 — Scroll-hue drift (sistema ambiente, global) — tecido conectivo.
+   A temperatura do ACENTO migra quente→frio→quente conforme o progresso
+   do scroll. SÓ em um detalhe de hairline/rótulo (figure__sub), NUNCA no
+   texto de leitura. S/L TRAVADOS (sóbrio: só matiz, sem brinquedo de cor).
+   ════════════════════════════════════════════════════════════════ */
+@property --doc-hue { syntax: '<number>'; inherits: true; initial-value: 24; }  /* 24 = laranja Itaú */
+html { --doc-hue: 24; }
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    html { animation: hueDrift linear both; animation-timeline: scroll(root); }
+    @keyframes hueDrift { 45% { --doc-hue: 210; } 100% { --doc-hue: 24; } }
+  }
+}
+/* aplica o matiz que migra SÓ ao rótulo mono da figura (não-texto-de-leitura);
+   S e L fixos — o detalhe muda de temperatura sem virar arco-íris. */
+.figure__sub { color: hsl(var(--doc-hue) 18% 46%); }
+[data-theme="dark"] .figure__sub { color: hsl(var(--doc-hue) 16% 60%); }
+@media (prefers-reduced-motion: reduce) { html { --doc-hue: 24; } }  /* trava o matiz */
+
+/* ════════════════════════════════════════════════════════════════
+   W29 — Blur-to-sharp focus (sistema ambiente): as figuras-gráfico
+   entram desfocadas/dessaturadas e "racking focus" ao chegar na leitura.
+   Convive com o reveal de opacidade do W1 (mesma física scroll-driven).
+   BASE = nítido (Chrome travado nunca borra).
+   ════════════════════════════════════════════════════════════════ */
+.focus-reveal { filter: none; }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .focus-reveal { animation: focusIn linear both; animation-timeline: view(); animation-range: entry 8% entry 58%; }
+    @keyframes focusIn { from { filter: blur(14px) saturate(.4); } to { filter: blur(0) saturate(1); } }
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   W25 — Data choreography (UM grupo de KPI, Ato 05 Multimesas):
+   a barra de magnitude enche e a legenda sobe no MESMO gatilho de scroll,
+   em cascata. NÚMERO real fica em TEXTO no HTML (base). Física SÓBRIA:
+   --ease-out-strong (cubic-bezier, sem overshoot — trava-sobrio).
+   ════════════════════════════════════════════════════════════════ */
+[data-choreo] .bar { display: block; height: 3px; margin-top: var(--space-2);
+  background: var(--color-accent); transform: scaleX(1); transform-origin: left; }
+[data-choreo].metric--teal .bar                          { background: var(--color-teal); }
+[data-choreo].metric--info .bar                           { background: var(--color-info); }
+[data-choreo].metric--success .bar                        { background: var(--color-success); }
+[data-choreo] .cap { opacity: 1; }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-choreo] { animation-timeline: view(); animation-range: entry 20% entry 70%; }
+    [data-choreo] .bar { transform: scaleX(0); animation: choreoFill .9s var(--ease-out-strong) .12s both; }
+    [data-choreo] .cap { opacity: 0; animation: choreoRise .6s var(--ease-out-strong) .34s both; }
+    @keyframes choreoFill { to { transform: scaleX(1); } }
+    @keyframes choreoRise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-choreo] .bar { transform: scaleX(1); }
+  [data-choreo] .cap { opacity: 1; }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   W18 — Sticky stack (herói pinned ÚNICO do doc): os três PILARES do
+   posicionamento (Ato 03) empilham como baralho — cada card prende e o
+   de baixo encolhe/escurece ao sair. É o único mecanismo pinned aqui
+   (§STACKING regra 1 e 6: 1 herói, nunca 2 pinned). Convive com os dois
+   sistemas ambientes (W21 hue-drift + W29 blur-focus) na mesma física.
+   BASE = lista vertical sticky usável (Chrome travado nunca quebra).
+   ════════════════════════════════════════════════════════════════ */
+.stack-wrap { display: grid; gap: 12vh; }
+.stack-card { position: sticky; top: 12vh; }            /* base = lista normal (sem suporte) */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .stack-card { animation: stackShrink linear both; animation-timeline: view(); animation-range: exit 0% exit 140%; }
+    @keyframes stackShrink { to { transform: scale(0.92) translateY(-14px); filter: brightness(0.72); } }
+  }
+}
+
 /* ─── Responsivo ───────────────────────────────────────────────── */
 @media (max-width: 900px) {
   .story { display: block; }
@@ -561,7 +638,7 @@ li::marker { color: var(--color-fg-subtle); }
 </style>
 </head>
 
-<body>
+<body data-showcase>
 
 <div class="progress" aria-hidden="true"><div class="progress__bar" id="progress-bar"></div></div>
 
@@ -641,7 +718,7 @@ li::marker { color: var(--color-fg-subtle); }
       </div>
 
       <div class="story__chart">
-        <figure class="figure" data-reveal>
+        <figure class="figure focus-reveal" data-reveal>
           <figcaption>
             <p class="figure__title">Composição do AuM — R$&nbsp;1,19&nbsp;trilhão</p>
             <p class="figure__sub">Por frente de gestão · R$ bi</p>
@@ -689,10 +766,11 @@ li::marker { color: var(--color-fg-subtle); }
     <p class="pull-quote">Sofisticada no modelo, democrática no acesso, internacional nas possibilidades.</p>
 
     <h3>Três pilares</h3>
-    <div class="cards">
-      <div class="s-card s-card--accent"><p class="s-card__label">Pilar 01</p><h4 class="s-card__title">Sofisticada no modelo</h4><p class="s-card__desc">Estratégias de gestão ativa antes restritas a uma elite financeira, agora em escala industrial.</p></div>
-      <div class="s-card s-card--info"><p class="s-card__label">Pilar 02</p><h4 class="s-card__title">Democrática no acesso</h4><p class="s-card__desc">2,6 milhões de clientes acessam a mesma plataforma usada por institucionais.</p></div>
-      <div class="s-card s-card--teal"><p class="s-card__label">Pilar 03</p><h4 class="s-card__title">Internacional nas possibilidades</h4><p class="s-card__desc">Acesso simplificado a alternativas internacionais via plataforma global.</p></div>
+    <!-- W18 — sticky stack (herói pinned ÚNICO): os três pilares empilham como baralho no scroll -->
+    <div class="stack-wrap">
+      <div class="s-card s-card--accent stack-card"><p class="s-card__label">Pilar 01</p><h4 class="s-card__title">Sofisticada no modelo</h4><p class="s-card__desc">Estratégias de gestão ativa antes restritas a uma elite financeira, agora em escala industrial.</p></div>
+      <div class="s-card s-card--info stack-card"><p class="s-card__label">Pilar 02</p><h4 class="s-card__title">Democrática no acesso</h4><p class="s-card__desc">2,6 milhões de clientes acessam a mesma plataforma usada por institucionais.</p></div>
+      <div class="s-card s-card--teal stack-card"><p class="s-card__label">Pilar 03</p><h4 class="s-card__title">Internacional nas possibilidades</h4><p class="s-card__desc">Acesso simplificado a alternativas internacionais via plataforma global.</p></div>
     </div>
 
     <h3>Sete atributos do modelo</h3>
@@ -748,11 +826,13 @@ li::marker { color: var(--color-fg-subtle); }
       <p class="lead">Em 2019, a Itaú Asset estruturou o modelo Multimesas: cada mesa opera com autonomia de decisão, compartilhando infraestrutura. Em 2022, o AuM consolidado superou R$&nbsp;100&nbsp;bilhões.</p>
     </div>
 
+    <!-- W25 — data choreography: a barra de magnitude (proporcional ao maior, R$ 113,5 bi)
+         enche e o rótulo sobe no mesmo gatilho de scroll. Número real fica em texto no HTML. -->
     <div class="metrics">
-      <div class="metric metric--accent"><p class="metric__val">R$&nbsp;<em>113,5</em>&nbsp;bi</p><p class="metric__label">Retorno Absoluto</p></div>
-      <div class="metric metric--teal"><p class="metric__val">R$&nbsp;<em>89,8</em>&nbsp;bi</p><p class="metric__label">Crédito Estruturado + RF Unconstrained</p></div>
-      <div class="metric metric--info"><p class="metric__val">R$&nbsp;<em>18,5</em>&nbsp;bi</p><p class="metric__label">Macro</p></div>
-      <div class="metric metric--success"><p class="metric__val">R$&nbsp;<em>5,2</em>&nbsp;bi</p><p class="metric__label">Equities</p></div>
+      <div class="metric metric--accent" data-choreo><p class="metric__val num">R$&nbsp;<em>113,5</em>&nbsp;bi</p><span class="bar" style="width:100%"></span><p class="metric__label cap">Retorno Absoluto</p></div>
+      <div class="metric metric--teal" data-choreo><p class="metric__val num">R$&nbsp;<em>89,8</em>&nbsp;bi</p><span class="bar" style="width:79%"></span><p class="metric__label cap">Crédito Estruturado + RF Unconstrained</p></div>
+      <div class="metric metric--info" data-choreo><p class="metric__val num">R$&nbsp;<em>18,5</em>&nbsp;bi</p><span class="bar" style="width:16%"></span><p class="metric__label cap">Macro</p></div>
+      <div class="metric metric--success" data-choreo><p class="metric__val num">R$&nbsp;<em>5,2</em>&nbsp;bi</p><span class="bar" style="width:5%"></span><p class="metric__label cap">Equities</p></div>
     </div>
 
     <h3>Oito mesas</h3>
@@ -812,7 +892,7 @@ li::marker { color: var(--color-fg-subtle); }
     </div>
 
     <h3>Evolução da cobertura ESG — 2013 a 2023</h3>
-    <figure class="figure figure--block" data-reveal>
+    <figure class="figure figure--block focus-reveal" data-reveal>
       <figcaption>
         <p class="figure__title">AuM ESG e cobertura</p>
         <p class="figure__sub">AuM ESG (R$ bi, aprox.) · Cobertura ESG (%)</p>
@@ -1169,5 +1249,6 @@ document.querySelector('.theme-toggle')?.addEventListener('click', () => {
 window.addEventListener('load', renderCharts);
 </script>
 
+<script>/* nohashjump-fix: a[href="#"] (brand/breadcrumb/CTA decorativo) não deve pular pro topo/capa */document.querySelectorAll('a[href="#"]').forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();});});</script>
 </body>
 </html>

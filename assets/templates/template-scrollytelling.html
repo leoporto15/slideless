@@ -142,6 +142,50 @@
       es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); rio.unobserve(e.target); } });
     }, { threshold: 0.2, rootMargin: '0px 0px -60px 0px' });
     document.querySelectorAll('[data-reveal]').forEach(el => rio.observe(el));
+
+    /* ═══ WOW W8 — anotação viva no gráfico-tese (banda/leader-line/marcador acende no step).
+       Plugin registrado e INERTE até haver gráfico + dados. Bloco completo em
+       references/wow-components.md#W8. NÃO recolar o css()/BAND ao gerar — já estão aqui. ═══ */
+    const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+    const BAND = {};
+    if (typeof Chart !== 'undefined') {
+      Chart.register({
+        id: 'annoPlugin',
+        beforeDatasetsDraw(chart) {
+          const st = BAND[chart.canvas.id]; if (!st || !st.band) return;
+          const { ctx, chartArea, scales: { x } } = chart;
+          const x1 = x.getPixelForValue(st.band.from), x2 = x.getPixelForValue(st.band.to);
+          if (isNaN(x1) || isNaN(x2)) return;
+          ctx.save(); ctx.fillStyle = css('--color-warn-dim');
+          ctx.fillRect(x1, chartArea.top, x2 - x1, chartArea.bottom - chartArea.top);
+          ctx.font = '700 11px ' + Chart.defaults.font.family; ctx.fillStyle = css('--color-fg-muted');
+          ctx.fillText(st.band.text, x1 + 6, chartArea.top + 14); ctx.restore();
+        },
+        afterDatasetsDraw(chart) {
+          const st = BAND[chart.canvas.id]; if (!st || !st.mark) return;
+          const { ctx, scales: { x, y } } = chart;
+          const px = x.getPixelForValue(st.mark.x), py = y.getPixelForValue(st.mark.y);
+          if (isNaN(px) || isNaN(py)) return;
+          ctx.save(); ctx.beginPath(); ctx.arc(px, py, 5, 0, Math.PI * 2);
+          ctx.strokeStyle = css('--color-accent'); ctx.lineWidth = 2; ctx.stroke();
+          ctx.strokeStyle = css('--color-border-strong'); ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.moveTo(px, py - 8); ctx.lineTo(px, py - 40); ctx.stroke();
+          ctx.font = '700 12px ' + Chart.defaults.font.family; ctx.fillStyle = css('--color-fg'); ctx.textAlign = 'left';
+          ctx.fillText(st.mark.t1, px - 2, py - 56);
+          ctx.font = '600 11px ' + Chart.defaults.font.family; ctx.fillStyle = css('--color-fg-muted');
+          ctx.fillText(st.mark.t2, px - 2, py - 42); ctx.restore();
+        }
+      });
+    }
+
+    /* WOW W1 — cena scroll-driven: cada [data-step] muta a anotação do gráfico-tese.
+       Preencher applyStep com a mutação REAL (BAND[id] = { band/mark }; chart.update()). */
+    window.applyStep = window.applyStep || function (step) { /* gerar: mutar BAND[id] + chart.update() */ };
+    const stepIO = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) window.applyStep(e.target.dataset.step); });
+    }, { rootMargin: '-50% 0px -50% 0px', threshold: 0 });
+    document.querySelectorAll('[data-step]').forEach(s => stepIO.observe(s));
   </script>
+<script>/* nohashjump-fix: a[href="#"] (brand/breadcrumb/CTA decorativo) não deve pular pro topo/capa */document.querySelectorAll('a[href="#"]').forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();});});</script>
 </body>
 </html>

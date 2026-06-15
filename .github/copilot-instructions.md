@@ -16,6 +16,7 @@ Não carregar inline. Abrir só quando o trabalho exigir:
 - [README.md](../README.md) — onboarding humano, comandos completos
 - [references/direcao-de-arte.md](../references/direcao-de-arte.md) — o Parti: 7 decisões por documento (LER ANTES DE GERAR)
 - [references/ambicao.md](../references/ambicao.md) — teto cutting-edge: eixo A1/A2/A3 + momentos-wow W1-W9
+- [references/wow-components.md](../references/wow-components.md) — drop-ins copy-paste W1-W31 (o CÓDIGO dos momentos-wow + premium): colar verbatim
 - [references/type-kits.md](../references/type-kits.md) — kits tipográficos + fontes banidas
 - [references/anti-patterns.md](../references/anti-patterns.md) — PPT-isms e AI-tells proibidos (ler antes da 1ª geração)
 - [references/design-system.md](../references/design-system.md) — tokens, dark mode, boot script

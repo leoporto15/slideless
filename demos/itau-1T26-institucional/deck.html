@@ -16,7 +16,7 @@
   momento-wow: W2 número+barra sincronizados (ROE 24,8% counter já existe → régua cresce junto, mesmo gatilho) + W3 manchete cinética CONTIDA (Newsreader opsz 6→72 na capa) + W8 anotação viva no gráfico-tese de geração de valor (#s26 — fecha o arco no mesmo 24,8%)
   assinatura: M1 — counter no "24,8%" do ROE recorrente, no slide-capa (#s1) que apresenta o número-tese do trimestre
   invariantes-ambicao: cada W tem (1) branch reduced-motion; (2) @supports + estado-final como base CSS/HTML; (3) só transform/opacity/font-variation. Régua de craft: curvas nomeadas + .no-transitions no toggle de tema
-  nao-vai-ter: glow-radial; kicker-dot; em-italico-accent; aurora-saturada; glass; cursor-proximity; spring-bouncy
+  nao-vai-ter: glow-radial; kicker-dot; em-italico-accent; glass; cursor-proximity; spring-bouncy
   serie: familia itau-1T26 (herda kit/superficie/regime da irmã handbook.html — marca compartilhada, fingerprint não)
   -->
 
@@ -1299,9 +1299,99 @@ body.is-overview .slide [data-anim] {
   }
   body.is-overview .slide { transition: none !important; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Repertório v7 SÓBRIO — famílias permitidas no registro relatorio-de-bancada
+   (não-premium): W25 data-choreo · W22 draw-on · W29 focus-reveal.
+   Cada uma com @supports + estado-final-como-BASE + branch reduced-motion.
+   Em deck (slides position:absolute), animation-timeline: view() raramente
+   dispara → degradam para o estado final visível = conteúdo real correto.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── W25 · Data choreography (número + barra + legenda em cascata) ──
+   No slide-02, o KPI-tese (ROE recorrente 24,8%) coreografa-se: número rola,
+   barra enche, legenda sobe — mesmo gatilho, UMA física. Número em texto real
+   no HTML (base); barra em scaleX(1); legenda visível. */
+:root { --spring: linear(0, .5 30%, 1.08 60%, .98, 1); }   /* UMA física p/ o doc inteiro */
+[data-choreo] .bar { transform: scaleX(1); transform-origin: left; }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-choreo] { animation-timeline: view(); animation-range: entry 20% entry 70%; }
+    [data-choreo] .num { animation: choreoCount 1s var(--spring) both; }
+    [data-choreo] .bar { transform: scaleX(0); animation: choreoFill 1s var(--spring) .15s both; }
+    [data-choreo] .cap { opacity: 0; animation: choreoRise .6s ease .4s both; }
+    @keyframes choreoCount { to { opacity: 1; } }
+    @keyframes choreoFill { to { transform: scaleX(1); } }
+    @keyframes choreoRise { to { opacity: 1; transform: none; } }
+  }
+}
+/* régua do choreo — fio fino, materialidade sóbria (sem card/sombra) */
+.choreo-meter { position: relative; height: 3px; background: var(--color-border); overflow: hidden; margin: var(--space-2) 0; }
+.choreo-meter .bar { position: absolute; inset: 0; background: var(--color-success); }
+
+/* ── W22 · Draw-on SVG (fio honesto que se desenha sob o dado-tese) ──
+   No slide-26 (geração de valor, fecha o arco em +26%), um sublinhado SVG
+   sob o callout se desenha stroke-a-stroke. Base = traçado completo. */
+.draw-on { stroke-dasharray: var(--len, 1000); stroke-dashoffset: 0; }   /* base = desenhado */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .draw-on { stroke-dashoffset: var(--len, 1000); animation: drawPath 1.2s ease both;
+               animation-timeline: view(); animation-range: cover 10% cover 45%; }
+    @keyframes drawPath { to { stroke-dashoffset: 0; } }
+  }
+}
+
+/* ── W29 · Blur-to-sharp focus (figura entra desfocada e foca) ──
+   No slide-19, o gráfico de eficiência "racking focus" ao entrar em leitura.
+   Base = nítido (sistema ambiente, não momento). */
+.focus-reveal { filter: none; }                           /* base = nítido */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .focus-reveal { animation: focusIn linear both; animation-timeline: view(); animation-range: entry 8% entry 58%; }
+    @keyframes focusIn { from { filter: blur(14px) saturate(.4); opacity:.4; } to { filter: blur(0) saturate(1); opacity:1; } }
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   SHOWCASE — wow premium adicionais (data-showcase libera do P-premium-sobrio)
+   W20 aurora-mesh · W30 flip-in · W15 odometer · W24 tilt 3D
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── W20 · aurora-mesh (divider #s7) ── */
+@property --au-x { syntax: '<percentage>'; inherits: false; initial-value: 24%; }
+.aurora-mesh { position: relative; isolation: isolate; }
+.aurora-mesh::before {
+  content: ''; position: absolute; inset: -10%; z-index: -1; pointer-events: none; filter: blur(60px);
+  background:
+    radial-gradient(38vw at var(--au-x) 30%, color-mix(in srgb, var(--itau-orange) 40%, transparent), transparent 60%),
+    radial-gradient(42vw at 78% 64%, color-mix(in srgb, var(--itau-blue-3) 26%, transparent), transparent 64%);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .aurora-mesh::before { animation: auDrift 22s var(--ease-out, ease-in-out) infinite alternate; }
+  @keyframes auDrift { to { --au-x: 70%; } }
+}
+
+/* ── W30 · flip-in (kicker plain #s8) ── */
+[data-flip-in] span { display: inline-block; transform-origin: bottom; }
+@media (prefers-reduced-motion: no-preference) {
+  [data-flip-in] span { animation: flipIn .5s var(--spring, cubic-bezier(.2,.7,.2,1)) both; animation-delay: calc(var(--i, 0) * 38ms); }
+  @keyframes flipIn { from { transform: perspective(400px) rotateX(-90deg); opacity: 0; } to { transform: none; opacity: 1; } }
+}
+
+/* ── W15 · odometer (Ativos Totais 3.200 #s2) ── */
+.odometer { display: inline-flex; overflow: clip; line-height: 1; font-variant-numeric: tabular-nums lining-nums; }
+.od-digit { display: inline-block; width: 1ch; height: 1em; overflow: clip; }
+.od-reel { display: flex; flex-direction: column; transition: transform 900ms var(--ease-out-strong, cubic-bezier(0.23,1,0.32,1)); }
+.od-reel > span { height: 1em; }
+@media (prefers-reduced-motion: reduce) { .od-reel { transition: none; } }
+
+/* ── W24 · tilt 3D (card cultura #s6) ── */
+[data-tilt] { transform: perspective(800px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transform-style: preserve-3d;
+  transition: transform 200ms var(--ease-out, ease-out); }
+[data-tilt] > .tilt-layer { transform: translateZ(40px); }
   </style>
 </head>
-<body>
+<body data-showcase>
 
   <div class="brand-mark" aria-hidden="true">
     <span class="brand-mark__dot"></span>
@@ -1326,7 +1416,7 @@ body.is-overview .slide [data-anim] {
             <!-- W2 · régua que cresce sincronizada com o counter do ROE (mesmo gatilho) -->
             <div class="hero-meter" id="hero-meter" aria-hidden="true">
               <div class="hero-meter__track"><div class="hero-meter__fill"></div></div>
-              <div class="hero-meter__scale"><span>ROE 0%</span><span>30%</span></div>
+              <div class="hero-meter__scale"><span>0%</span><span>ROE · escala 30%</span></div>
             </div>
           </div>
         </div>
@@ -1353,7 +1443,7 @@ body.is-overview .slide [data-anim] {
         </div>
         <div class="metric-d var-info">
           <p class="metric-d__kicker">ATIVOS TOTAIS</p>
-          <p class="metric-d__val">R$ <span>3.200</span> bi</p>
+          <p class="metric-d__val">R$ <span class="odometer" data-odometer="3.200" aria-label="3.200">3.200</span> bi</p>
           <p class="metric-d__label">em 31/03/2026</p>
         </div>
         <div class="metric-d var-teal">
@@ -1361,10 +1451,11 @@ body.is-overview .slide [data-anim] {
           <p class="metric-d__val">R$ <span>1.483</span> bi</p>
           <p class="metric-d__label">com garantias financeiras e títulos privados</p>
         </div>
-        <div class="metric-d var-success">
+        <div class="metric-d var-success" data-choreo>
           <p class="metric-d__kicker">ROE RECORRENTE</p>
-          <p class="metric-d__val">24,8<span>%</span></p>
-          <p class="metric-d__label">retorno sobre patrimônio</p>
+          <p class="metric-d__val num">24,8<span>%</span></p>
+          <div class="choreo-meter" aria-hidden="true"><div class="bar"></div></div>
+          <p class="metric-d__label cap">retorno sobre patrimônio</p>
         </div>
         <div class="metric-d var-sage">
           <p class="metric-d__kicker">ÍNDICE DE EFICIÊNCIA</p>
@@ -1432,10 +1523,12 @@ body.is-overview .slide [data-anim] {
       <p class="kicker" data-anim>JEITO ITUBER</p>
       <h2 class="title-md" data-anim>Pra gente, <em>ética é inegociável</em></h2>
       <div class="grid-cards grid-cards--3" data-anim style="margin-top: var(--space-4)">
-        <div class="card-d card-d--accent">
-          <p class="card-d__label">01 · CLIENTE</p>
-          <h3 class="card-d__title">Trabalha para o cliente</h3>
-          <p class="card-d__desc">Obstinado por encantar · Inovar a partir das necessidades · Simplificar sempre</p>
+        <div class="card-d card-d--accent" data-tilt>
+          <div class="tilt-layer">
+            <p class="card-d__label">01 · CLIENTE</p>
+            <h3 class="card-d__title">Trabalha para o cliente</h3>
+            <p class="card-d__desc">Obstinado por encantar · Inovar a partir das necessidades · Simplificar sempre</p>
+          </div>
         </div>
         <div class="card-d card-d--info">
           <p class="card-d__label">02 · RESULTADO</p>
@@ -1469,7 +1562,7 @@ body.is-overview .slide [data-anim] {
          SLIDE 07 — DIVIDER (Parte 2)
          ════════════════════════════════════════════════════════ -->
     <section class="slide" data-slide="7" data-background-color="var(--itau-orange)">
-      <div class="divider-deck">
+      <div class="divider-deck aurora-mesh">
         <p class="kicker" data-anim style="color:rgba(255,255,255,0.9); border-left-color:#fff">PARTE 02 / 05</p>
         <h2 class="title-mega" style="color:#fff" data-anim="hero">Nossa <em style="color:#fff; font-style:italic">jornada</em></h2>
         <p class="lead-deck" data-anim style="color:rgba(255,255,255,0.92)">101 anos construindo o maior banco da América Latina — da Casa Moreira Salles ao SuperApp.</p>
@@ -1481,7 +1574,7 @@ body.is-overview .slide [data-anim] {
          ════════════════════════════════════════════════════════ -->
     <section class="slide" data-slide="8">
       <span class="slide-num"><span>08</span> · 31</span>
-      <p class="kicker" data-anim>1924 → 2000</p>
+      <p class="kicker" data-anim data-flip-in>1924 → 2000</p>
       <h2 class="title-md" data-anim>Fundação e <em>pioneirismo digital</em></h2>
       <div class="timeline-h" style="--cols:6" data-anim>
         <div class="timeline-h__item">
@@ -1886,7 +1979,7 @@ body.is-overview .slide [data-anim] {
         </div>
         <div class="col-right">
           <p class="col-section-title">ÍNDICE DE EFICIÊNCIA (%)</p>
-          <div class="chart-wrap" style="height:340px">
+          <div class="chart-wrap focus-reveal" style="height:340px">
             <canvas id="chart-eficiencia" aria-label="Índice de Eficiência"></canvas>
           </div>
         </div>
@@ -2145,7 +2238,12 @@ body.is-overview .slide [data-anim] {
       <div class="chart-wrap" data-anim style="height: 56vh; margin-top: var(--space-3)">
         <canvas id="chart-valor" aria-label="Geração de valor consistente"></canvas>
       </div>
-      <div class="callout-box" data-anim style="margin-top:var(--space-4); max-width:60ch"><strong data-mark="underline" data-mark-color="#FF6200">+26%</strong> na criação de valor 1T26 × 1T25</div>
+      <div class="callout-box" data-anim style="margin-top:var(--space-4); max-width:60ch"><strong>+26%</strong> na criação de valor 1T26 × 1T25
+        <!-- W22 · draw-on: fio honesto que se desenha sob o dado-tese (+26%) -->
+        <svg width="220" height="10" viewBox="0 0 220 10" fill="none" aria-hidden="true" style="display:block; margin-top:4px; overflow:visible">
+          <path class="draw-on" d="M2 6 C 60 2, 160 2, 218 6" stroke="var(--color-accent)" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
       <p class="footnote" data-anim>Resultado recorrente gerencial = soma de Custo de capital + Criação de valor. ROE e Custo de capital médio em escala secundária (%).</p>
     </section>
 
@@ -3059,11 +3157,50 @@ body.is-overview .slide [data-anim] {
     const fromHash = parseInt((location.hash.match(/^#s(\d+)$/) || [])[1], 10);
     goto(fromHash ? fromHash - 1 : 0);
 
+    /* ── W22 · medir comprimento real dos paths draw-on (1x, no load) ── */
+    document.querySelectorAll('.draw-on').forEach(p => { try { p.style.setProperty('--len', Math.ceil(p.getTotalLength())); } catch(e){} });
+
     /* ── Renderizar charts iniciais ── */
     requestAnimationFrame(() => {
       renderChartEficiencia();
       renderChartFinSust();
       renderChartValor();
+    });
+
+    /* ═══ SHOWCASE wow premium ═══ */
+
+    /* ── W30 · flip-in (split-flap) — rebuild em spans no load ── */
+    document.querySelectorAll('[data-flip-in]').forEach(el => {
+      if (el._flip) return; el._flip = true;
+      const t = el.textContent; el.setAttribute('aria-label', t);
+      el.innerHTML = [...t].map((c, i) => `<span aria-hidden="true" style="--i:${i}">${c === ' ' ? '&nbsp;' : c}</span>`).join('');
+    });
+
+    /* ── W15 · odometer — rola dígito a dígito quando visível ── */
+    function buildOdometer(el) {
+      const raw = el.dataset.odometer || el.textContent;
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      el.textContent = '';
+      [...raw].forEach(ch => {
+        if (!/\d/.test(ch)) { el.append(ch); return; }
+        const d = document.createElement('span'); d.className = 'od-digit';
+        const reel = document.createElement('span'); reel.className = 'od-reel';
+        for (let i = 0; i <= 9; i++) { const s = document.createElement('span'); s.textContent = i; reel.append(s); }
+        d.append(reel); el.append(d);
+        const setY = () => { reel.style.transform = `translateY(${-ch}em)`; };
+        if (reduce) setY(); else requestAnimationFrame(() => requestAnimationFrame(setY));
+      });
+    }
+    const odoIO = new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting) { buildOdometer(e.target); odoIO.unobserve(e.target); } }), { threshold: 0.6 });
+    document.querySelectorAll('.odometer').forEach(el => odoIO.observe(el));
+
+    /* ── W24 · tilt 3D (só hover+fine pointer, respeita reduced-motion) ── */
+    document.querySelectorAll('[data-tilt]').forEach(el => {
+      if (!matchMedia('(hover:hover) and (pointer:fine)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      el.addEventListener('pointermove', e => { const r = el.getBoundingClientRect();
+        el.style.setProperty('--rx', ((.5 - (e.clientY - r.top) / r.height) * 10).toFixed(2) + 'deg');
+        el.style.setProperty('--ry', (((e.clientX - r.left) / r.width - .5) * 10).toFixed(2) + 'deg'); });
+      el.addEventListener('pointerleave', () => { el.style.setProperty('--rx', '0deg'); el.style.setProperty('--ry', '0deg'); });
     });
   </script>
 </body>
