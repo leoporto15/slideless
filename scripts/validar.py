@@ -575,20 +575,51 @@ def check_ai_wordlist(html: str, report: Report) -> None:
             "vocabulário concreto da fonte."))
 
 
-# Assinaturas técnicas de "ambição entregue" (momentos-wow W1-W9)
-AMBICAO_SIGNATURES = [
-    r"animation-timeline\s*:",          # W1/W2/W3/W6 scroll-driven
-    r"startViewTransition",             # W5 view transitions
-    r"view-transition-name\s*:",        # W5
-    r"font-variation-settings[^;]*var\(", # W3/W4 kinetic type (eixo via var animável)
-    r"@keyframes[^{]*\{[^}]*font-variation-settings",  # W3 eixo animado
-    r"Intl\.Segmenter",                 # W4/W6 split/proximity
-    r"\.aurora\b",                      # W7 aurora
-    r"feTurbulence",                    # W7 grain
-    r"backdrop-filter\s*:\s*blur",      # W7 glass
-    r"@property\s+--ang",               # conic glow
-    r"new\s+Gradient\s*\(",             # W9 minigl
-    r"requestAnimationFrame[\s\S]{0,400}getBoundingClientRect",  # W4 cursor-proximity / W8 crosshair
+# Assinaturas de momento-wow SUBSTANTIVO (W1-W17). Cada par (rótulo, regex).
+#
+# REGRA: materialité (grain feTurbulence, aurora CSS, glass backdrop-filter) NÃO
+# está aqui — é decisão de `superficie` do parti, não momento-wow. Antes, o grain
+# (presente em quase todo template por padrão) quitava sozinho a obrigação de
+# ambição A2/A3, então todo doc "passava" sem entregar nada impressionante. Aqui
+# só entram técnicas que produzem o "uau" de fato, ligadas ao dado-tese.
+#
+# Nota histórica: o regex antigo do W3 (`@keyframes[^{]*\{[^}]*font-variation-settings`)
+# estava MORTO — o `{ from {` aninhado das manchetes cinéticas reais quebra o
+# `[^{]*`. Os decks-bandeira passavam só no grain. Corrigido com `[\s\S]{0,400}?`.
+SUBSTANTIVE_WOW = [
+    # ── W1-W9 (vocabulário existente) ──
+    ("W1/W6-scroll-driven",  r"animation-timeline\s*:\s*(?:view|scroll|--)"),  # cena/reveal por timeline
+    ("W2-counter-sync",      r"@property\s+--n\b|counter-reset\s*:\s*\w+\s+var\(\s*--n\b"),
+    ("W3-kinetic-headline",  r"@keyframes[\s\S]{0,400}?font-variation-settings"),  # eixo animado (regex consertado)
+    ("W3/W4-fvs-var",        r"font-variation-settings[^;]*var\("),  # eixo via var animável
+    ("W4/W6-segmenter",      r"Intl\.Segmenter"),  # split grapheme/word
+    ("W4/W8-pointer-raf",    r"requestAnimationFrame[\s\S]{0,400}getBoundingClientRect"),  # proximity/crosshair
+    ("W5-view-transition",   r"\.startViewTransition\b|view-transition-name\s*:"),
+    ("W8-live-annotation",   r"afterDatasetsDraw\b[\s\S]{0,800}?(?:fillRect|setLineDash|getPixelForValue|leader)"),
+    ("W9-webgl",             r"getContext\(\s*['\"]webgl|new\s+Gradient\s*\("),  # hero minigl/shader
+    # ── W10-W17 (camada de assinatura premium — inerte até os drop-ins existirem) ──
+    ("W10-mask-reveal",      r"clip-path[\s\S]{0,220}?animation-timeline|animation-timeline[\s\S]{0,220}?clip-path"),
+    ("W11-magnetic",         r"pointermove[\s\S]{0,400}?(?:translate3?d?\(|transform\s*=)"),
+    ("W12-spotlight",        r"pointermove[\s\S]{0,300}?--m[xy]\b"),
+    ("W13-horizontal-pin",   r"h-track|h-pin"),
+    ("W15-odometer",         r"\.odometer\b|data-odometer\b"),
+    ("W16-scroll-velocity",  r"--scroll-vel\b|data-scroll-vel\b"),
+    ("W17-scramble",         r"\.scramble\b|data-scramble\b"),
+    # ── W18-W31 (repertório expandido v7 — empilhamento de alto impacto) ──
+    ("W18-sticky-stack",     r"\bstack-card\b"),
+    ("W19-masked-type",      r"\bmasked-type\b"),
+    ("W20-aurora-mesh",      r"\baurora-mesh\b"),
+    ("W21-hue-drift",        r"--doc-hue\b"),
+    ("W22-draw-on",          r"\bdraw-on\b|stroke-dashoffset"),
+    ("W23-gooey",            r"url\(\s*#goo\b"),
+    ("W24-tilt",             r"\bdata-tilt\b"),
+    ("W25-data-choreo",      r"\bdata-choreo\b"),
+    ("W26-spot-mask",        r"\bdata-spot-mask\b"),
+    ("W27-marquee",          r"\bmarquee__track\b|\.marquee\b"),
+    ("W28-chapter-divider",  r"\bchapter-divider\b"),
+    ("W29-focus-reveal",     r"\bfocus-reveal\b"),
+    ("W30-flip-in",          r"\bdata-flip-in\b"),
+    ("W31-glitch",           r"\.glitch\b"),
 ]
 SOBER_REGISTERS = ("institucional-impresso", "relatorio-de-bancada", "relatório-de-bancada")
 
@@ -606,18 +637,105 @@ def _ambicao_level(parti: Optional[dict]) -> Optional[str]:
     return None
 
 
+# Mapa W# → assinatura de ENTREGA (para o cruzamento momento-wow declarado↔entregue, P8).
+# Inclui W7 (materialité: grain/aurora/glass) que NÃO conta como substantivo (P8-floor) mas
+# É uma entrega válida quando declarado explicitamente como momento-wow.
+WOW_DELIVERY = {
+    "W1":  r"animation-timeline\s*:\s*(?:view|scroll|--)",
+    "W2":  r"@property\s+--n\b|counter-reset",
+    "W3":  r"@keyframes[\s\S]{0,400}?font-variation-settings|font-variation-settings[^;]*var\(",
+    "W4":  r"Intl\.Segmenter|pointermove[\s\S]{0,400}?fontVariationSettings",
+    "W5":  r"\.startViewTransition\b|view-transition-name\s*:",
+    "W6":  r"Intl\.Segmenter",
+    "W7":  r"feTurbulence|\.aurora\b|backdrop-filter\s*:\s*blur",
+    "W8":  r"afterDatasetsDraw\b",
+    "W9":  r"getContext\(\s*['\"]webgl|new\s+Gradient\s*\(",
+    "W10": r"clip-path[\s\S]{0,220}?animation-timeline|animation-timeline[\s\S]{0,220}?clip-path",
+    "W11": r"data-magnetic\b",
+    "W12": r"data-spotlight\b|--m[xy]\b",
+    "W13": r"h-track|h-pin",
+    "W14": r"parallax|--plx\b",
+    "W15": r"\.odometer\b|data-odometer\b",
+    "W16": r"--scroll-vel\b|data-scroll-vel\b",
+    "W17": r"\.scramble\b|data-scramble\b",
+    "W18": r"\bstack-card\b", "W19": r"\bmasked-type\b", "W20": r"\baurora-mesh\b",
+    "W21": r"--doc-hue\b", "W22": r"\bdraw-on\b|stroke-dashoffset", "W23": r"url\(\s*#goo\b",
+    "W24": r"\bdata-tilt\b", "W25": r"\bdata-choreo\b", "W26": r"\bdata-spot-mask\b",
+    "W27": r"\bmarquee__track\b|\.marquee\b", "W28": r"\bchapter-divider\b",
+    "W29": r"\bfocus-reveal\b", "W30": r"\bdata-flip-in\b", "W31": r"\.glitch\b",
+}
+# Famílias premium (camada de assinatura "agência premiada") — gateadas a registro expressivo.
+# Os v7 ambientes/editoriais (W21 hue, W22 draw-on, W25 data-choreo, W29 blur-focus) NÃO são
+# premium: são tasteful o bastante para registro sóbrio (report). O resto é gateado.
+PREMIUM_FAMILIES = ("W10", "W11", "W12", "W13", "W15", "W16", "W17",
+                    "W18", "W19", "W20", "W23", "W24", "W26", "W27", "W28", "W30", "W31")
+
+
+def _wow_family(name: str) -> str:
+    """'W3-kinetic-headline' → 'W3'; 'W1/W6-scroll-driven' → 'W1'."""
+    return name.split("-")[0].split("/")[0]
+
+
 def check_ambicao_delivered(html: str, report: Report) -> None:
     """P8 (músculo simétrico do nao-vai-ter): ambição A2/A3 declarada TEM que ser
-    entregue — ao menos um momento-wow tem que existir no HTML."""
+    entregue — momento-wow SUBSTANTIVO no HTML. Onda 3: além do piso, cobra densidade
+    (2-4 por dobra/seção), zona (ligado ao dado) e coerência declarado↔entregue."""
     parti = parse_parti(html)
     level = _ambicao_level(parti)
     if level not in ("A2", "A3"):
         return
     scrubbed = _scrub(html)
-    if not any(re.search(p, scrubbed, re.IGNORECASE) for p in AMBICAO_SIGNATURES):
+    found = [(name, re.search(pat, scrubbed, re.IGNORECASE)) for name, pat in SUBSTANTIVE_WOW]
+    found = [(name, m) for name, m in found if m]
+    names = [name for name, _ in found]
+    if not names:
         report.issues.append(Issue(SEVERITY_ERROR, "P8-ambicao-nao-entregue",
-            f"Parti declara ambicao {level} mas nenhum momento-wow (W1-W9) aparece no HTML. "
-            "Ambição declarada e não entregue = falha. Ver ambicao.md."))
+            f"Parti declara ambicao {level} mas nenhum momento-wow SUBSTANTIVO (W1-W17) aparece "
+            "no HTML. Grain/aurora/glass são materialité (decisão `superficie`), NÃO quitam a "
+            "ambição. Entregar ≥1 técnica de ambicao.md/wow-components.md ligada ao dado-tese."))
+        if "momento-wow" not in (parti or {}):
+            report.issues.append(Issue(SEVERITY_WARN, "P8-sem-campo-momento-wow",
+                f"ambicao {level} sem campo `momento-wow:` no parti — declarar qual W# e onde."))
+        return
+
+    # P8-densidade (v7 — empilhamento): A2 alvo 2-4; A3 empilha 4-6 (≥3 famílias distintas).
+    families = {_wow_family(n) for n in names}
+    minimo = 3 if level == "A3" else 2
+    if len(families) < minimo:
+        alvo = "4-6 (A3 empilha vários: 1 herói + 2 sistemas ambientes + momentos)" if level == "A3" else "2-4 por dobra/seção"
+        report.issues.append(Issue(SEVERITY_WARN, "P8-densidade-baixa",
+            f"ambicao {level} com {len(families)} momento-wow substantivo ({', '.join(sorted(families))}). "
+            f"Alvo: {alvo}, cada um ligado ao dado. Ver §STACKING em wow-components.md."))
+
+    # P8-zone (lenient, WARN) — o wow precisa cair na zona herói/dado, não enterrado.
+    zone_ok = False
+    for _, m in found:
+        ctx = scrubbed[max(0, m.start() - 800):m.start() + 800]
+        if re.search(r"hero|capa|big-num|metric|kpi|fact|chart|title-(?:mega|xl)|story__chart", ctx, re.IGNORECASE):
+            zone_ok = True
+            break
+        if m.start() < len(scrubbed) * 0.45:
+            zone_ok = True
+            break
+    if not zone_ok:
+        report.issues.append(Issue(SEVERITY_WARN, "P8-zone",
+            "Momento-wow presente mas longe da zona herói/primeira-dobra/dado-tese. "
+            "Ligar o wow ao elemento mais importante (capa, número-tese, gráfico)."))
+
+    # momento-wow DECLARADO tem que ser ENTREGUE (gêmeo simétrico do nao-vai-ter).
+    # SÓ para a camada premium (W10-W17): lá os marcadores são precisos (data-magnetic,
+    # .odometer, data-scramble...). W1-W9 têm entrega variada demais (ex.: W2 pode ser
+    # @property --n OU counter JS) — checá-los daria falso-positivo; o piso+densidade já cobrem.
+    declared = sorted(set(re.findall(r"W\d+", (parti.get("momento-wow") or ""))))
+    for w in declared:
+        if w not in PREMIUM_FAMILIES:
+            continue
+        pat = WOW_DELIVERY.get(w)
+        if pat and not re.search(pat, scrubbed, re.IGNORECASE):
+            report.issues.append(Issue(SEVERITY_WARN, "P8-wow-declarado-nao-entregue",
+                f"Parti declara momento-wow premium {w} mas a assinatura técnica não aparece no HTML. "
+                "Colar o drop-in de wow-components.md ou corrigir o parti."))
+
     if "momento-wow" not in (parti or {}):
         report.issues.append(Issue(SEVERITY_WARN, "P8-sem-campo-momento-wow",
             f"ambicao {level} sem campo `momento-wow:` no parti — declarar qual W# e onde."))
@@ -643,6 +761,15 @@ def check_ambicao_fallback(html: str, report: Report) -> None:
             report.issues.append(Issue(SEVERITY_WARN, "P9-glass-sem-fallback",
                 "backdrop-filter sem @supports nem background de base sólido/translúcido. "
                 "Em Chrome antigo o vidro vira invisível — adicionar @supports not ou um background."))
+    # W9: hero WebGL TEM que ter fallback material (intranet/Chrome travado não pode regredir
+    # em silêncio). O fallback canônico é a aurora CSS — seja a classe `.aurora-fallback`
+    # (canvas), o irmão `.hero-aurora` + `.webgl-hero.is-empty` (canvas some, revela a aurora),
+    # ou qualquer `aurora` material no hero. Aceita as duas convenções do corpus.
+    if re.search(r"getContext\(\s*['\"](?:webgl|experimental-webgl)", scrubbed) and not re.search(r"aurora|is-(?:fallback|empty)\b", scrubbed, re.IGNORECASE):
+        report.issues.append(Issue(SEVERITY_ERROR, "P9-webgl-sem-fallback",
+            "Hero WebGL (getContext('webgl')) sem fallback material (aurora CSS / .aurora-fallback / "
+            ".hero-aurora). Sem WebGL/reduced-motion o hero fica preto-morto — colar o fallback do W9 "
+            "(wow-components.md)."))
 
 
 def check_ambicao_coerente(html: str, report: Report) -> None:
@@ -655,12 +782,141 @@ def check_ambicao_coerente(html: str, report: Report) -> None:
         # Exceção: /overdrive é opt-in DELIBERADO (marcado por data-overdrive). O P10
         # protege contra A3 acidental em documento sóbrio, não contra um showcase ao vivo
         # que o usuário pediu explicitamente (ex.: deck-overdrive de resultados ao vivo).
-        if re.search(r"data-overdrive", html):
+        if re.search(r"data-overdrive|data-showcase", html):
             return
         report.issues.append(Issue(SEVERITY_ERROR, "P10-a3-em-registro-sobrio",
             f"ambicao A3-extraordinário declarada em registro sóbrio ('{registro.split('(')[0].strip()}'). "
             "Documento sóbrio sobe via A2 (materialmente mais rico), nunca A3 — salvo /overdrive "
             "deliberado (data-overdrive). Ver ambicao.md."))
+
+
+def check_premium_sobrio(html: str, report: Report) -> None:
+    """P-premium-sobrio: a camada premium (W10-W17, 'agência premiada') é gateada a
+    registros expressivos. Em registro sóbrio (regulatório/RI) é ERRO — salvo /overdrive."""
+    parti = parse_parti(html)
+    if not parti:
+        return
+    registro = (parti.get("registro") or "").lower()
+    if not any(s in registro for s in SOBER_REGISTERS):
+        return
+    # data-overdrive = showcase ao vivo opt-in; data-showcase = peça de DEMONSTRAÇÃO da skill
+    # (o corpus demos/ existe para exibir o palette inteiro, premium incluso, em todo registro).
+    # Em geração real (sem esses flags) a regra continua: documento sóbrio não recebe premium.
+    if re.search(r"data-overdrive|data-showcase", html):
+        return
+    scrubbed = _scrub(html)
+    hits = [name for name, pat in SUBSTANTIVE_WOW
+            if _wow_family(name) in PREMIUM_FAMILIES and re.search(pat, scrubbed, re.IGNORECASE)]
+    if hits:
+        report.issues.append(Issue(SEVERITY_ERROR, "P-premium-sobrio",
+            f"Efeito premium ({', '.join(hits)}) em registro sóbrio ('{registro.split('(')[0].strip()}'). "
+            "A camada premium (W10-W17) é gateada a registros expressivos (deck/site/hub/scrollytelling). "
+            "Documento sóbrio sobe via materialidade/W6/W8 contidos. Ver wow-components.md."))
+
+
+def check_premium_parcimonia(html: str, report: Report) -> None:
+    """P-premium-*: parcimônia da camada premium — dose, não só presença (anti-slop)."""
+    scrubbed = _scrub(html)
+    # 1 spotlight por documento (luz que segue o cursor satura rápido).
+    # Contar só ELEMENTOS HTML com o atributo — não o seletor CSS `[data-spotlight]`
+    # nem o querySelectorAll do JS (senão um uso único legítimo já dispararia).
+    n_spot = len(re.findall(r"<[^>]+\bdata-spotlight\b", html))
+    if n_spot > 1:
+        report.issues.append(Issue(SEVERITY_WARN, "P-premium-spotlight",
+            f"{n_spot} spotlights (W12) — máx 1 por documento. A luz que segue o cursor satura "
+            "se repetida; reservar ao bloco-herói/insight único."))
+    # 1 scramble por documento (decode de número satura)
+    n_scr = len(re.findall(r"<[^>]+\b(?:data-scramble\b|class=\"[^\"]*\bscramble\b)", html))
+    if n_scr > 1:
+        report.issues.append(Issue(SEVERITY_WARN, "P-premium-scramble",
+            f"{n_scr} scrambles (W17) — máx 1 por documento, só no número-tese."))
+    # magnetismo/spotlight/tilt/spot-mask exigem branch hover + reduced-motion no JS (só desktop, acessível)
+    if re.search(r"data-(?:magnetic|spotlight|tilt|spot-mask)\b", html):
+        if not re.search(r"hover\s*:\s*hover", scrubbed):
+            report.issues.append(Issue(SEVERITY_WARN, "P-premium-sem-hover-guard",
+                "Efeito cursor-reativo (W11/W12/W24/W26) sem guard @media (hover:hover) and (pointer:fine). "
+                "Em touch vira comportamento errático — restringir a desktop+mouse. Ver wow-components.md."))
+    # 1 glitch por documento (spice tonal satura)
+    n_glitch = len(re.findall(r"<[^>]+\bclass=\"[^\"]*\bglitch\b", html))
+    if n_glitch > 1:
+        report.issues.append(Issue(SEVERITY_WARN, "P-premium-glitch",
+            f"{n_glitch} glitches (W31) — máx 1 por documento, uma palavra, zonas escuras/tech."))
+    # excesso de mecânicas PINNED (≥3) — fadiga de scroll/enjoo (regra de conflito §STACKING).
+    # Só conta mecânicas que PRENDEM o scroll (sticky/scrub); o hue-drift (scroll(root) ambiente,
+    # sem sticky) NÃO é pinned — por isso usa-se marcadores explícitos, não animation-timeline:scroll genérico.
+    pinned = sum(1 for pat in (r"\bstack-card\b", r"\bchapter-divider\b",
+                               r"\bh-pin\b|\bh-track\b", r"\bscrub-stage\b")
+                 if re.search(pat, scrubbed, re.IGNORECASE))
+    if pinned >= 3:
+        report.issues.append(Issue(SEVERITY_WARN, "P-premium-pinned-excesso",
+            f"{pinned} mecânicas pinned/scrub (sticky-stack/chapter-divider/horizontal/scrub) no doc. "
+            "Regra de ouro: UM herói pinned por documento — duas+ disputam o scroll e enjoam (§STACKING)."))
+
+
+# ─── Checks técnicos de FUNCIONAMENTO (bugs que quebram em silêncio) ──────
+# Adicionados após a sessão de polish v7 que descobriu cada um na prática.
+
+PLACEHOLDERS = [
+    (r">BRAND\b|topbar__brand\">BRAND", "BRAND (marca não preenchida)"),
+    (r"\{\{[A-Z_0-9]+\}\}", "{{...}} (placeholder mustache do template)"),
+    (r"TÍTULO DO |TÍTULO —|>TÍTULO<|TÍTULO DA NARRATIVA", "TÍTULO (título não preenchido)"),
+    (r">Card \d+<|class=\"card__title\">Card \d", "Card N (card de exemplo)"),
+    (r">Cena \d+<", "Cena N (cena de exemplo)"),
+    (r">Seção \d+<|>Seção</", "Seção N (seção de exemplo)"),
+    (r">Coluna [AB]<|>Coluna A</|>Coluna B<", "Coluna A/B (coluna de exemplo)"),
+    (r">Categoria [AB]<|data-filter=\"categoria-[ab]\"", "Categoria A/B (filtro de exemplo)"),
+    (r"Lorem ipsum", "lorem ipsum"),
+    (r"AAAA-MM-DD|AAAA\b(?!-)", "AAAA-MM-DD (data placeholder)"),
+    (r"descrição da métrica|Conteúdo da cena|Conteúdo da seção|Subtítulo descrevendo|Detalhes do recurso|Conteúdo\.</p>", "texto placeholder do template"),
+]
+
+
+def check_placeholders(html: str, report: Report) -> None:
+    """P0-placeholder: marcador do template não preenchido. Documento entregue
+    com BRAND/TÍTULO/{{...}}/Card N = geração incompleta. Roda sobre _scrub (sem
+    comentários): um placeholder em comentário-documentação não é bug renderizado."""
+    scrubbed = _scrub(html)
+    for pat, name in PLACEHOLDERS:
+        m = re.search(pat, scrubbed)
+        if m:
+            report.issues.append(Issue(SEVERITY_ERROR, "P0-placeholder",
+                f"Placeholder do template não preenchido: {name} ('{m.group(0)[:30]}'). "
+                "Geração incompleta — substituir pelo conteúdo real.", _line_of(scrubbed, m.start())))
+
+
+def check_invalid_calc(html: str, report: Report) -> None:
+    """B-css-calc: `+`/`-` sem espaço dentro de calc/clamp/min/max é CSS INVÁLIDO —
+    o navegador DESCARTA a declaração inteira em silêncio (a fonte/tamanho não aplica,
+    cai pro default). Bug clássico: clamp(2rem,2rem+6vw,8rem) deixa o elemento minúsculo."""
+    scrubbed = _scrub(html)
+    m = re.search(r"(?:rem|em|px|vw|vh|ch|fr|vmin|vmax|%)[+\-]\d", scrubbed)
+    if m:
+        report.issues.append(Issue(SEVERITY_ERROR, "B-css-calc-invalido",
+            f"Operador `+`/`-` sem espaço em volta dentro de calc/clamp (ex.: '{m.group(0)}'). "
+            "É CSS inválido — o navegador descarta a regra inteira e o tamanho cai pro default. "
+            "Sempre `2rem + 6vw`, nunca `2rem+6vw`.", _line_of(scrubbed, m.start())))
+
+
+def check_kit_vars(html: str, report: Report) -> None:
+    """B-kit-undefined: <link> de fonte carregado mas `--kit-display:` não definido →
+    o tema usa var(--kit-display, fallback) e cai pro Georgia/sistema; o kit fica inútil."""
+    if re.search(r"fonts\.googleapis\.com|--font-display\s*:\s*[^;]*var\(\s*--kit-display", html):
+        if not re.search(r"--kit-display\s*:", html):
+            report.issues.append(Issue(SEVERITY_ERROR, "B-kit-undefined",
+                "Fonte de kit referenciada (var(--kit-display)) mas `--kit-display:` nunca é "
+                "DEFINIDO num :root. O tema cai pro fallback (Georgia/sistema) e o kit carregado "
+                "via <link> fica inútil. Definir --kit-display/text/ui/mono ANTES do bloco do tema."))
+
+
+def check_nested_script(html: str, report: Report) -> None:
+    """B-nested-script: <script> dentro de outro <script> → 'Unexpected token <' em runtime,
+    que MATA todo o JS do documento (navegação, animações, números). Catch estático do erro
+    que só aparecia ao renderizar."""
+    if re.search(r"<script\b[^>]*>(?:(?!</script>)[\s\S])*?<script\b", html, re.IGNORECASE):
+        report.issues.append(Issue(SEVERITY_ERROR, "B-nested-script",
+            "<script> aninhado dentro de outro <script> — gera SyntaxError 'Unexpected token <' "
+            "em runtime e mata TODO o JavaScript do documento. Cada bloco <script> deve ser "
+            "irmão (fechar um antes de abrir o próximo), nunca aninhado."))
 
 
 def run_p_checks(html: str, report: Report) -> None:
@@ -677,9 +933,11 @@ def run_p_checks(html: str, report: Report) -> None:
     check_em_accent_ratio(html, report)
     check_banned_headlines(html, report)
     check_ai_wordlist(html, report)
-    check_ambicao_delivered(html, report)   # P8
+    check_ambicao_delivered(html, report)   # P8 (entrega + densidade + zona + declarado↔entregue)
     check_ambicao_fallback(html, report)    # P9
     check_ambicao_coerente(html, report)    # P10
+    check_premium_sobrio(html, report)      # P-premium-sobrio (gateamento da estética híbrida)
+    check_premium_parcimonia(html, report)  # P-premium-* (dose)
 
 
 # ─── --stats: telemetria do pool (curadoria viva) ────────────────────────
@@ -698,6 +956,9 @@ def stats_mode(folder: Path) -> int:
 
     axes = ["registro", "kit", "capa", "superficie", "motion", "ambicao", "assinatura"]
     counters = {a: Counter() for a in axes}
+    wow_counter = Counter()     # famílias W# ENTREGUES (anti-uniformidade)
+    wow_docs = 0                # docs A2/A3 considerados
+    mono_wow = []               # docs com um único momento-wow (abaixo da régua 2-4)
     sem_parti = []
     total = 0
 
@@ -716,6 +977,16 @@ def stats_mode(folder: Path) -> int:
                 # normaliza: primeiro token antes de '(' ou '—'
                 val = re.split(r"[(—–]", parti[a])[0].strip().lower()
                 counters[a][val] += 1
+        # anti-uniformidade: que famílias de momento-wow o doc A2/A3 realmente entrega?
+        if _ambicao_level(parti) in ("A2", "A3"):
+            wow_docs += 1
+            scrubbed = _scrub(html)
+            fams = sorted({_wow_family(name) for name, pat in SUBSTANTIVE_WOW
+                           if re.search(pat, scrubbed, re.IGNORECASE)})
+            for fam in fams:
+                wow_counter[fam] += 1
+            if len(fams) <= 1:
+                mono_wow.append((f.name, fams[0] if fams else "—"))
 
     com_parti = total - len(sem_parti)
     print(f"Pasta    : {folder}")
@@ -730,6 +1001,19 @@ def stats_mode(folder: Path) -> int:
             pct = n / com_parti * 100 if com_parti else 0
             flag = "  <-- >40%: candidato a quota/aposentadoria" if pct > 40 and com_parti >= 3 else ""
             print(f"  {n:3d}  {pct:5.1f}%  {val}{flag}")
+    # ── Anti-uniformidade: distribuição de momento-wow ENTREGUE (não declarado).
+    # Fingerprint visível: se >60% dos docs A2/A3 usam a MESMA família única, vira tell.
+    if wow_docs:
+        print(f"\nMOMENTO-WOW ENTREGUE  ({wow_docs} docs A2/A3)")
+        for fam, n in wow_counter.most_common():
+            pct = n / wow_docs * 100
+            flag = "  <-- >60%: vira fingerprint da casa (variar o W#)" if pct > 60 and wow_docs >= 3 else ""
+            print(f"  {n:3d}  {pct:5.1f}%  {fam}{flag}")
+        if mono_wow:
+            print(f"\n  Abaixo da régua (1 momento-wow; alvo 2-4 por dobra/seção):")
+            for name, fam in mono_wow:
+                print(f"    - {name}  ({fam})")
+
     if sem_parti:
         print("\nSEM PARTI (legado):")
         for name in sem_parti:
@@ -742,6 +1026,10 @@ def stats_mode(folder: Path) -> int:
 
 def validate(html_path: Path, strict: bool = False) -> Report:
     html = html_path.read_text(encoding="utf-8")
+    # Blobs base64 de data-URI (logos, fontes, demos embutidas) são DADOS opacos —
+    # neutraliza o conteúdo do blob para os checks não falsarem em "+digito" (calc),
+    # "AAAA" (placeholder) etc. O blob é uma linha só, então os nº de linha não mudam.
+    html = re.sub(r"(;base64,)[A-Za-z0-9+/=]{40,}", r"\1BASE64DATA", html)
     model = identify_model(html)
     theme = identify_theme(html)
     report = Report(file=str(html_path), model=model, theme=theme)
@@ -756,6 +1044,12 @@ def validate(html_path: Path, strict: bool = False) -> Report:
     check_meta_viewport(html, report)
     check_hex_outside_root(html, report)
     check_huge_typography_outside_deck(html, report, model)
+
+    # Checks técnicos de FUNCIONAMENTO (bugs que quebram em silêncio — v7 polish)
+    check_placeholders(html, report)
+    check_invalid_calc(html, report)
+    check_kit_vars(html, report)
+    check_nested_script(html, report)
 
     # Categoria P — Pasteurização / AI-tells (v4)
     run_p_checks(html, report)
@@ -779,6 +1073,14 @@ def validate(html_path: Path, strict: bool = False) -> Report:
 
 
 def main() -> int:
+    # Console Windows costuma ser cp1252 e quebra ao imprimir ≥, ×, → etc. das
+    # mensagens. Forçar UTF-8 na saída evita UnicodeEncodeError em qualquer locale.
+    for _stream in (sys.stdout, sys.stderr):
+        try:
+            _stream.reconfigure(encoding="utf-8", errors="replace")
+        except (AttributeError, ValueError):
+            pass
+
     parser = argparse.ArgumentParser(description="Valida documento slideless")
     parser.add_argument("file", help="Caminho do .html (ou pasta, com --stats)")
     parser.add_argument("--quick", action="store_true", help="Apenas identifica modelo/tema")

@@ -155,7 +155,7 @@
       cursor: pointer;
       color: var(--color-fg);
       font-size: 14px;
-      transition: all var(--duration-fast);
+      transition: background var(--duration-fast), border-color var(--duration-fast);
     }
     .theme-toggle:hover {
       background: var(--color-bg-sunken);
@@ -304,6 +304,10 @@
       flex-shrink: 0;
       user-select: none;
     }
+    /* M0 (report fica A1 — sem wow animado): a força vem da COMPOSIÇÃO estática.
+       Dispositivos em css-patterns.md §14 — numeral-bleed (numeral-tese sangrando a margem)
+       e table-hero (tabela-protagonista full-bleed com fio duplo no total). Colar do §14 o
+       que o dado-tese pedir. Numeral gigante/full-bleed: 1 por seção, no dado mais importante. */
     .report-section h2 {
       font-size: var(--size-h2);
       font-weight: 800;

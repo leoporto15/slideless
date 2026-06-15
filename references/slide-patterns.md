@@ -638,3 +638,4 @@ Plus o template aplica:
 - [ ] Conteúdo 100% da fonte (nada omitido)?
 - [ ] Gráficos onde há dados temporais/comparativos?
 - [ ] Tabelas onde há listas de itens com atributos?
+> **Pitfall (v7):** `data-fragment="current-visible"` é spotlight — mostra UM item por vez e some no load. NÃO usar em conteúdo que precisa aparecer inteiro (comparação antes/depois, duas colunas de info). Reservar para listas onde revelar-um-a-um é intencional.

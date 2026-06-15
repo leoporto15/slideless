@@ -66,6 +66,21 @@
       }
     }
 
+    /* ═══ WOW W6 — text reveal editorial (palavra sobe de dentro) ═══
+       O "uau" calmo do handbook. Aplicar data-split no .lead/h2 (1-2 por doc, nunca
+       em corpo). Bloco completo + variantes em references/wow-components.md#W6.
+       Base = texto visível; só anima dentro de @supports + no-preference. */
+    .w { display: inline-block; overflow: clip; vertical-align: top; }
+    .w-i { display: inline-block; transform: none; }
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        [data-split] { view-timeline-name: --r; view-timeline-axis: block; }
+        .w-i { animation: riseWord linear both; animation-timeline: --r;
+               animation-range: entry 0% entry 70%; animation-delay: calc(var(--i,0) * 50ms); }
+        @keyframes riseWord { from { transform: translateY(110%); } to { transform: none; } }
+      }
+    }
+
     /* ─── Específico do handbook ───────────────────────────────────── */
     .topbar {
       position: sticky; top: 0; z-index: 100;
@@ -98,7 +113,7 @@
     .sidebar__group { margin-bottom: var(--space-5); }
     .sidebar__heading { font-size: var(--size-xs); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--color-fg-subtle); padding: 0 var(--space-3); margin: 0 0 var(--space-2); }
     .sidebar__list { list-style: none; padding: 0; margin: 0; }
-    .sidebar__list a { display: block; padding: var(--space-2) var(--space-3); font-size: var(--size-small); color: var(--color-fg-muted); text-decoration: none; border-radius: var(--radius-sm); border-left: 2px solid transparent; margin-left: -2px; transition: all var(--duration-fast); }
+    .sidebar__list a { display: block; padding: var(--space-2) var(--space-3); font-size: var(--size-small); color: var(--color-fg-muted); text-decoration: none; border-radius: var(--radius-sm); border-left: 2px solid transparent; margin-left: -2px; transition: color var(--duration-fast), border-color var(--duration-fast), background var(--duration-fast); }
     .sidebar__list a:hover { color: var(--color-fg); background: var(--color-bg-elevated); }
     .sidebar__list a.is-active { color: var(--color-accent); font-weight: 500; border-left-color: var(--color-accent); background: var(--color-bg-elevated); }
 
@@ -120,7 +135,7 @@
     .toc { position: sticky; top: calc(var(--header-h) + var(--space-5)); align-self: start; padding: var(--space-6) var(--space-4); font-size: var(--size-small); }
     .toc__heading { font-size: var(--size-xs); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--color-fg-subtle); margin: 0 0 var(--space-2); }
     .toc__list { list-style: none; padding: 0; margin: 0; }
-    .toc__list a { display: block; padding: var(--space-1) var(--space-2); color: var(--color-fg-muted); text-decoration: none; border-left: 2px solid transparent; margin-left: -2px; transition: all var(--duration-fast); }
+    .toc__list a { display: block; padding: var(--space-1) var(--space-2); color: var(--color-fg-muted); text-decoration: none; border-left: 2px solid transparent; margin-left: -2px; transition: color var(--duration-fast), border-color var(--duration-fast), background var(--duration-fast); }
     .toc__list a:hover { color: var(--color-fg); }
     .toc__list a.is-active { color: var(--color-accent); border-left-color: var(--color-accent); }
     @media (max-width: 1024px) { .toc { display: none; } .layout { grid-template-columns: var(--sidebar-w) 1fr; } }
@@ -166,7 +181,8 @@
       <div class="content__inner">
         <p class="content__meta">CATEGORIA · Última atualização AAAA-MM-DD</p>
         <h1>TÍTULO DO HANDBOOK</h1>
-        <p class="lead">Subtítulo descrevendo o propósito deste documento em uma a duas frases.</p>
+        <!-- WOW W6: data-split = reveal palavra-a-palavra (calmo, editorial). Só no lead/h2. -->
+        <p class="lead" data-split>Subtítulo descrevendo o propósito deste documento em uma a duas frases.</p>
 
         <section id="secao-1" data-reveal>
           <h2>Seção 1</h2>
@@ -228,6 +244,16 @@
       es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); rio.unobserve(e.target); } });
     }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
     document.querySelectorAll('[data-reveal]').forEach(el => rio.observe(el));
+
+    /* WOW W6 — split grapheme-safe pt-BR (no-op sem [data-split]). Ver wow-components.md#W6. */
+    document.querySelectorAll('[data-split]').forEach(el => {
+      if (el._split) return; el._split = true;
+      const seg = new Intl.Segmenter('pt', { granularity: 'word' });
+      let i = 0;
+      el.innerHTML = [...seg.segment(el.textContent)].map(s =>
+        s.isWordLike ? `<span class="w"><span class="w-i" style="--i:${i++}">${s.segment}</span></span>` : s.segment).join('');
+    });
   </script>
+<script>/* nohashjump-fix: a[href="#"] (brand/breadcrumb/CTA decorativo) não deve pular pro topo/capa */document.querySelectorAll('a[href="#"]').forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();});});</script>
 </body>
 </html>

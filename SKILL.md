@@ -42,7 +42,7 @@ Skill para gerar **documentos web interativos** em HTML single-file. NÃO é "PP
 6. **WCAG AA.** Foco visível, ARIA correto, keyboard nav, `prefers-reduced-motion` respeitado.
 7. **Fidelidade de dados.** Gráficos completos (todos os pontos da fonte, escala Y começa em 0 para magnitudes, unidades nos ticks, composição preservada — bar+line junto = 1 chart misto). Tabelas com TODAS as linhas (≥4 linhas ou ≥3 colunas → `<table>`, nunca bullets).
 8. **Nenhum HTML antes do parti.** Todo documento nasce do bloco `<!-- slideless:parti -->` no `<head>` — 7 decisões derivadas do CONTEÚDO (registro, kit tipográfico, capa, superfície+luz, motion, **ambição**, momento assinatura) + 3 renúncias (`nao-vai-ter`). Capa, kit e superfície nunca repetem o exemplo canônico do modelo. Mecanismo completo: [references/direcao-de-arte.md](references/direcao-de-arte.md).
-9. **Ambição cutting-edge derivada do conteúdo.** A 7ª decisão `ambicao` (A1-contido / A2-elevado / A3-extraordinário) é ortogonal ao registro: default **A2-elevado** para deck/scrollytelling/hub/site/handbook (materialidade de assinatura, springs, scroll-driven, tipografia cinética, ≥1 momento-wow data-bound) e **A1-contido** para report/regulatório. A2/A3 exige ≥1 momento-wow (W1-W9) ligado ao dado-tese, cada gesto com `@supports`+fallback e branch reduced-motion. A ambição respeita o registro como teto de exuberância. Vocabulário e receitas: [references/ambicao.md](references/ambicao.md).
+9. **Ambição cutting-edge derivada do conteúdo.** A 7ª decisão `ambicao` (A1-contido / A2-elevado / A3-extraordinário) é ortogonal ao registro: default **A2-elevado** para deck/scrollytelling/hub/site/handbook (materialidade de assinatura, springs, scroll-driven, tipografia cinética, ≥1 momento-wow data-bound) e **A1-contido** para report/regulatório. A2/A3 entrega **vários momentos-wow empilhados** (W1-W31; A2 2-4, A3 4-6: 1 herói pinned + 2 sistemas ambientes na mesma `--spring` + momentos espaçados — ver §STACKING em wow-components.md), cada um ligado ao dado-tese, com `@supports`+fallback e branch reduced-motion. **Grain/aurora/glass são materialité (`superficie`), NÃO quitam a ambição** (P8 cobra técnica substantiva). A ambição respeita o registro como teto: a camada premium W10-W17 ("agência premiada") é gateada a registros expressivos. Doutrina: [references/ambicao.md](references/ambicao.md). **CÓDIGO copy-paste: [references/wow-components.md](references/wow-components.md).**
 
 ---
 
@@ -105,7 +105,7 @@ Resumo: **Think → Parti → Structure → Style → Deliver**. Passo-a-passo c
 2. **Parti (obrigatório, antes de qualquer HTML).** Abrir [references/direcao-de-arte.md](references/direcao-de-arte.md), preencher o bloco `<!-- slideless:parti -->` — 7 decisões derivadas do conteúdo (incl. `ambicao` — ver [references/ambicao.md](references/ambicao.md)), cada uma citando a fonte — e colá-lo no `<head>`. Ler o parti do exemplo canônico do modelo e do último documento da pasta (não repetir capa/kit/superfície). Se `ambicao` A2/A3, declarar o(s) `momento-wow`.
 3. **Structure.** Use o template correto em `assets/templates/template-<modelo>.html`. Inventariar elementos discretos (mandatório para deck) — nada pode ficar sem destino.
 4. **Style.** Compor a camada de direção conforme o parti: kit no slot `SLIDELESS:TYPE-KIT`, superfície do cardápio (flat é legítimo; glow nunca é obrigatório), perfil de motion colado como bloco aditivo. Hierarquia via escala+peso+cor. Nunca Inter sozinho — kit de [references/type-kits.md](references/type-kits.md).
-5. **Deliver.** Salvar no diretório indicado, abrir no browser (testar ambos os temas, redimensionar), conferir o checklist de saída do [direcao-de-arte.md](references/direcao-de-arte.md), reportar path + o que foi gerado.
+5. **Deliver.** Salvar no diretório indicado. **Validar SEMPRE antes de entregar**: `python scripts/validar.py <arquivo>` (estrutura) **E** `python scripts/smoke.py <arquivo>` (render — pega JS quebrado, conteúdo invisível e placeholder que o validador estrutural NÃO vê). Os dois precisam passar. Conferir o checklist de saída do [direcao-de-arte.md](references/direcao-de-arte.md), reportar path + o que foi gerado.
 
 ---
 
@@ -144,6 +144,7 @@ Referência completa: [references/slide-patterns.md](references/slide-patterns.m
 - [anti-patterns.md](references/anti-patterns.md) — PPT-isms e AI-tells proibidos (LER PRIMEIRO)
 - [direcao-de-arte.md](references/direcao-de-arte.md) — o Parti: 7 decisões por documento (LER ANTES DE GERAR)
 - [ambicao.md](references/ambicao.md) — o teto cutting-edge: eixo A1/A2/A3 + momentos-wow W1-W9 + régua de craft (LER para A2/A3)
+- [wow-components.md](references/wow-components.md) — **drop-ins copy-paste W1-W31 (o CÓDIGO dos momentos-wow + premium): colar verbatim, não improvisar** (A2/A3)
 - [type-kits.md](references/type-kits.md) — pool de kits tipográficos + fontes (cinéticas) + banidas
 - [design-system.md](references/design-system.md) — tokens, dark mode, boot script
 - [componentes.md](references/componentes.md) — biblioteca de componentes

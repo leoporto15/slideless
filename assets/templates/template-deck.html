@@ -148,6 +148,41 @@
       to   { opacity: 1; filter: blur(0);    transform: translateY(0) scale(1); }
     }
 
+    /* ═══ WOW embutido (ambicao A2/A3) — blocos completos em references/wow-components.md ═══
+       Este é o PISO da técnica, não mandato de usar este W. Se o parti escolheu outro
+       momento-wow, trocar pelo drop-in correspondente. NÃO entregar o placeholder animado
+       e nada mais — ligar ao dado-tese real. Cada @supports já está em no-preference;
+       o bloco reduced-motion global abaixo zera o resto. */
+
+    /* W3 — manchete cinética no hero (h1.kinetic-h). Eixos do Kit 05 (Archivo wght/wdth);
+       trocar pelos eixos do kit escolhido (Newsreader=opsz/wght; Fraunces=opsz/SOFT/WONK).
+       INVARIANTE 2: base = estado final legível — sem suporte, fica peso 880. */
+    .kinetic-wrap { overflow: clip; display: block; }
+    .slide .kinetic-h { font-optical-sizing: none; font-variation-settings: 'wght' 880, 'wdth' 125; }
+    @supports (font-variation-settings: 'wght' 400) {
+      @media (prefers-reduced-motion: no-preference) {
+        .slide.is-active .kinetic-h { animation: kineticType var(--duration-hero) var(--ease-emphatic) 80ms both; }
+        @keyframes kineticType {
+          from { font-variation-settings: 'wght' 320, 'wdth' 80;  letter-spacing: .04em; opacity: .5; }
+          to   { font-variation-settings: 'wght' 880, 'wdth' 125; letter-spacing: -.01em; opacity: 1; }
+        }
+      }
+    }
+
+    /* W15 — odômetro: número-tese rola por dígito (no-op sem .odometer no DOM). */
+    .odometer { display: inline-flex; overflow: clip; line-height: 1; font-variant-numeric: tabular-nums lining-nums; }
+    .od-digit { display: inline-block; width: 1ch; height: 1em; overflow: clip; }
+    .od-reel  { display: flex; flex-direction: column; transition: transform 900ms var(--ease-out); }
+    .od-reel > span { height: 1em; }
+
+    /* W11 — magnetismo (no-op sem [data-magnetic] no DOM; só desktop+mouse via JS). */
+    [data-magnetic] { transition: transform 160ms var(--ease-out); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .od-reel { transition: none !important; }
+      [data-magnetic] { transition: none !important; }
+    }
+
     /* Fragments — base só para tipos que começam invisíveis.
        Tipos always-visible (highlight-current, strike) são excluídos para
        não ficarem com opacity:0 inicial — eles começam visíveis e só mudam estilo. */
@@ -417,7 +452,7 @@
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-sm);
       position: relative;
-      transition: all var(--duration-fast) var(--ease-out);
+      transition: border-color var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
     }
     .card-d--accent { border-top: 3px solid var(--color-accent); }
     .card-d--info   { border-top: 3px solid var(--color-info); }
@@ -637,7 +672,7 @@
       border: 1px solid var(--color-border);
       border-radius: 999px;
       cursor: pointer; color: var(--color-fg);
-      transition: all var(--duration-fast) var(--ease-out);
+      transition: border-color var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
       font: inherit;
       box-shadow: var(--shadow-sm);
     }
@@ -1095,7 +1130,9 @@
       <span class="slide-num"><span>01</span> · 07</span>
       <div class="layout-hero">
         <p class="kicker kicker--accent" data-anim style="--i: 0"><span class="kicker__dot"></span>CAPÍTULO 01</p>
-        <h1 class="title-mega" data-anim="hero">Título <em>chave</em> do deck</h1>
+        <!-- WOW hero (W3): kinetic-h = entrada cinética por eixo da fonte. Alternativas: data-anim="hero"
+             (heroIn blur), .mask-reveal, ou M0 estático. Escolher 1 por parti — não empilhar. -->
+        <div class="kinetic-wrap"><h1 class="title-mega kinetic-h">Título <em>chave</em> do deck</h1></div>
         <p class="lead-deck" data-anim style="--i: 2">Subtítulo descrevendo o pitch em uma ou duas frases.</p>
         <div class="meta" data-anim style="--i: 3">
           <span><strong>Apresentador</strong>Cargo · Equipe</span>
@@ -1701,6 +1738,42 @@ print(market_share(aum, 8.2e12))  # 14.5%</code></pre>
       if (document.visibilityState === 'visible') acquireWakeLock();
     });
     acquireWakeLock();
+
+    /* ─── WOW init (W11 magnetismo + W15 odômetro) — idempotente, no-op se ausente.
+       Blocos completos e variantes em references/wow-components.md. ─── */
+    (function initWowMagnetic() {
+      if (!matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      document.querySelectorAll('[data-magnetic]').forEach(el => {
+        if (el._mag) return; el._mag = true;
+        const S = 0.3; let raf = 0, lx = 0, ly = 0;
+        el.addEventListener('pointermove', e => {
+          const r = el.getBoundingClientRect();
+          lx = (e.clientX - (r.left + r.width / 2)) * S; ly = (e.clientY - (r.top + r.height / 2)) * S;
+          if (!raf) raf = requestAnimationFrame(() => { raf = 0; el.style.transform = `translate(${lx}px, ${ly}px)`; });
+        });
+        el.addEventListener('pointerleave', () => { el.style.transform = 'translate(0,0)'; });
+      });
+    })();
+    (function initWowOdometer() {
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      function build(el) {
+        if (el._odo) return; el._odo = true;
+        const raw = el.dataset.odometer || el.textContent;
+        el.textContent = '';
+        [...raw].forEach(ch => {
+          if (!/\d/.test(ch)) { el.append(ch); return; }
+          const d = document.createElement('span'); d.className = 'od-digit';
+          const reel = document.createElement('span'); reel.className = 'od-reel';
+          for (let i = 0; i <= 9; i++) { const s = document.createElement('span'); s.textContent = i; reel.append(s); }
+          d.append(reel); el.append(d);
+          const setY = () => { reel.style.transform = `translateY(${-ch}em)`; };
+          if (reduce) setY(); else requestAnimationFrame(() => requestAnimationFrame(setY));
+        });
+      }
+      const io = new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting) { build(e.target); io.unobserve(e.target); } }), { threshold: 0.6 });
+      document.querySelectorAll('.odometer').forEach(el => io.observe(el));
+    })();
   </script>
 </body>
 </html>

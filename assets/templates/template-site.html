@@ -60,11 +60,17 @@
       }
     }
 
+    /* ═══ WOW W5 — morph entre views (View Transitions) ═══
+       Cross-fade da raiz por padrão; opcionalmente nomear o herói que persiste
+       entre views para um morph dirigido. Guard JS no route() (wow-components.md#W5). */
+    .view__hero { view-transition-name: hero; }
+    @media (prefers-reduced-motion: reduce) { ::view-transition-group(*) { animation: none !important; } }
+
     .topbar { position: sticky; top: 0; z-index: 100; height: var(--header-h); background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--color-border); display: flex; align-items: center; padding: 0 var(--space-5); gap: var(--space-5); }
     [data-theme="dark"] .topbar { background: rgba(20,17,13,0.85); }
     .topbar__brand { font-weight: 600; font-size: 0.9375rem; text-decoration: none; color: var(--color-fg); }
     .topnav { display: flex; gap: var(--space-1); }
-    .topnav__link { padding: var(--space-2) var(--space-3); font-size: var(--size-small); color: var(--color-fg-muted); text-decoration: none; border-radius: var(--radius-sm); transition: all var(--duration-fast); }
+    .topnav__link { padding: var(--space-2) var(--space-3); font-size: var(--size-small); color: var(--color-fg-muted); text-decoration: none; border-radius: var(--radius-sm); transition: color var(--duration-fast), border-color var(--duration-fast), background var(--duration-fast); }
     .topnav__link:hover { color: var(--color-fg); background: var(--color-bg-elevated); }
     .topnav__link.is-active { color: var(--color-accent); font-weight: 500; background: var(--color-bg-elevated); }
     .topbar__spacer { flex: 1; }
@@ -136,23 +142,31 @@
       try { localStorage.setItem('theme', next); } catch {}
     });
 
+    /* WOW W5 — transição contínua entre views (View Transitions, sem framework).
+       Guard: sem suporte ou reduced-motion → troca instantânea. Ver wow-components.md#W5. */
+    function navigate(updateDOM) {
+      if (!document.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches) { updateDOM(); return; }
+      document.startViewTransition(updateDOM);
+    }
     function route() {
       const id = (location.hash || '#home').slice(1);
-      let found = false;
-      document.querySelectorAll('.view').forEach(v => {
-        const on = v.id === id;
-        v.classList.toggle('is-active', on);
-        v.hidden = !on;
-        if (on) found = true;
-      });
-      if (!found) {
-        const first = document.querySelector('.view');
-        if (first) { first.classList.add('is-active'); first.hidden = false; }
-      }
-      document.querySelectorAll('.topnav__link').forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === '#' + id));
-      window.scrollTo({ top: 0, behavior: 'instant' });
-      requestAnimationFrame(() => {
-        document.querySelectorAll('.view.is-active [data-reveal]').forEach(el => el.classList.add('is-visible'));
+      navigate(() => {
+        let found = false;
+        document.querySelectorAll('.view').forEach(v => {
+          const on = v.id === id;
+          v.classList.toggle('is-active', on);
+          v.hidden = !on;
+          if (on) found = true;
+        });
+        if (!found) {
+          const first = document.querySelector('.view');
+          if (first) { first.classList.add('is-active'); first.hidden = false; }
+        }
+        document.querySelectorAll('.topnav__link').forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === '#' + id));
+        window.scrollTo({ top: 0, behavior: 'instant' });
+        requestAnimationFrame(() => {
+          document.querySelectorAll('.view.is-active [data-reveal]').forEach(el => el.classList.add('is-visible'));
+        });
       });
     }
     addEventListener('hashchange', route);

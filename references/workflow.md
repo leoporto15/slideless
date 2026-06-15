@@ -77,6 +77,18 @@ Saída esperada: `OK` ou lista numerada de violações. Se houver violação, **
 - Tipografia gigante (≥4rem) fora do `deck`
 - Sem `prefers-reduced-motion`
 - Keyboard nav ausente no `deck`
+- **Placeholder não preenchido** (BRAND, TÍTULO, `{{...}}`, Card N) — geração incompleta
+- **`+`/`-` sem espaço em calc/clamp** (`2rem+6vw`) — CSS inválido, o tamanho cai pro default
+- **`--kit-*` não definido** — o kit carregado via `<link>` cai pro Georgia
+- **`<script>` aninhado** — mata todo o JS do documento
+
+### 5.5. Smoke-test de RENDER (obrigatório — a estrutura não vê runtime)
+
+```bash
+python scripts/smoke.py <output.html>
+```
+
+O validador determinístico checa a ESTRUTURA; **não vê erro de runtime (JS que não parseia) nem quebra visual.** O smoke carrega o doc num Chromium headless e pega `PAGEERROR`, conteúdo invisível e placeholder renderizado. `SMOKE FAIL` = corrigir antes de entregar. `SKIP` (sem Playwright) → instalar `pip install playwright && python -m playwright install chromium`. **Regra: nunca entregar sem render-verificar** — um `<script>` aninhado já matou todo o JS de vários docs passando no validador estrutural.
 
 ### 6. Revisão LLM (cheklist-revisao)
 
