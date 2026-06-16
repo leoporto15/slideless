@@ -279,7 +279,7 @@
     /* SUPERFÍCIE: pauta-de-linhas (despacho). SEM glow radial em body. */
     body::before {
       content: ''; position: fixed; inset: 0;
-      background-image: var(--rule-line);
+      background-image: none; /* pauta-de-linhas removida */
       pointer-events: none; z-index: 0; opacity: 0.9;
     }
     /* W7 — grão de papel-jornal sutil POR CIMA da pauta (materialidade de despacho,

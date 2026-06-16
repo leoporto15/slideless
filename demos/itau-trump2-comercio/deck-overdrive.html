@@ -271,9 +271,7 @@
     .deck { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
     body::before {
       content: ''; position: fixed; inset: 0;
-      background-image: repeating-linear-gradient(to bottom,
-        transparent, transparent 31px,
-        var(--color-border) 31px, var(--color-border) 32px);
+      background-image: none; /* pauta-de-linhas removida */
       opacity: 0.6;
       pointer-events: none; z-index: 0;
     }
