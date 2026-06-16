@@ -37,6 +37,11 @@ Você foi invocado para converter Markdown em slideless.
 3. Sidebar (handbook): um link por `##`. Agrupar com `<h2>` adicionais se houver demais.
 4. TOC: gerada dinamicamente.
 
+## Gate de render antes de entregar (v7 — obrigatório)
+A edição/importação mexe no render — além do `validar.py`, rodar o smoke e corrigir a CAUSA:
+- `python scripts/smoke.py <arquivo.html>` → `SMOKE PASS` (Chromium headless: overflow, texto-por-caractere, odômetro não-clipado, número duplicado, slide que não preenche a viewport, invasão de coluna lateral, scroll horizontal). `SKIP` se Playwright ausente.
+Nunca entregar com `SMOKE FAIL`. Armadilhas: [references/wow-components.md](../references/wow-components.md) §"Armadilhas visuais que o smoke.py reprova".
+
 ## Anti-patterns críticos
 
 - Manter MD blocks "como vieram" sem virar componentes slideless.

@@ -66,6 +66,12 @@ Regra geral por densidade/uso:
 - Apresentação linear ao vivo → **deck**
 - Relatório editorial denso, PDF-friendly → **report**
 
+## Visual / momentos-wow no mapa
+
+Ao anotar a coluna **Visual** e propor onde mora o `momento-wow`, a fonte é [references/wow-components.md](../references/wow-components.md) — biblioteca W1–W31 de drop-ins copy-paste (receitas já corrigidas: `@supports` + estado-final-base + reduced-motion). Respeitar o **§STACKING**: 1 herói pinned + 2 sistemas ambientes (uma só `--spring`) + 3–4 momentos rank-4 espaçados + ~70% calmo. Densidade por ambição do parti: **A2 = 2–4 momentos**; **A3 = 4–6, ≥3 famílias**; A1/sóbrio = 0 premium. (Este comando só propõe o mapa; o gate de render roda no comando de geração que recebe a aprovação.)
+
+Seguir o passo-a-passo de [references/workflow.md](../references/workflow.md).
+
 ## Anti-pattern
 
 NÃO chutar o modelo nem inventar conteúdo. Se a fonte é ambígua, perguntar; se a fonte está vazia, aplicar [protocolo-sem-conteudo.md](../references/protocolo-sem-conteudo.md).

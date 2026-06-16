@@ -31,6 +31,11 @@ Você foi invocado para destilar um documento slideless longo.
 5. Salvar como `outputs/<nome>-resumo.html` (não sobrescrever original).
 6. Validar.
 
+## Gate de render antes de entregar (v7 — obrigatório)
+A transformação mexe no render — além do `validar.py`, rodar:
+- `python scripts/smoke.py <arquivo.html>` → `SMOKE PASS` (Chromium headless: overflow, texto-por-caractere, odômetro não-clipado, número duplicado, slide que não preenche a viewport, invasão de coluna lateral, scroll horizontal). `SKIP` se Playwright ausente.
+Nunca entregar com `SMOKE FAIL`. Armadilhas: [references/wow-components.md](../references/wow-components.md) §"Armadilhas visuais que o smoke.py reprova".
+
 ## Tamanho-alvo
 
 Se o usuário especificou ("metade", "1 página", "3000 palavras"), trabalhar até bater. Se não, default: 25-30% do original em palavras.

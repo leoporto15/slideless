@@ -54,6 +54,12 @@ Você foi invocado para adicionar gráfico.
 6. `aria-label` no `<canvas>` é obrigatório (descrição do que o gráfico mostra).
 7. Validar.
 
+## Gate de render antes de entregar (v7 — obrigatório)
+A edição/importação mexe no render — além do `validar.py`, rodar o smoke e corrigir a CAUSA:
+- `python scripts/smoke.py <arquivo.html>` → `SMOKE PASS` (Chromium headless: overflow, texto-por-caractere, odômetro não-clipado, número duplicado, slide que não preenche a viewport, invasão de coluna lateral, scroll horizontal). `SKIP` se Playwright ausente.
+- O `<canvas>` do Chart.js NUNCA pode ter CSS `width:auto`/`height:auto` (replaced element → exibe no tamanho do buffer = css×devicePixelRatio → estoura em telas 2×/3×); usar tamanho explícito (`100%`/`calc`, `maintainAspectRatio:false`, container com altura definida). O `validar.py` tem o check `B-canvas-autosize`.
+Nunca entregar com `SMOKE FAIL`. Armadilhas: [references/wow-components.md](../references/wow-components.md) §"Armadilhas visuais que o smoke.py reprova".
+
 ## Anti-patterns críticos
 
 - Inventar números (anti-pattern C2).

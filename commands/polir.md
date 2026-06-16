@@ -72,6 +72,11 @@ PROIBIDO no Passe 3: criar momento-wow novo (isso é geração/`/animate`, não 
 4. **Não introduzir nem componentes nem conteúdo novo.** Só refino.
 5. Rodar `validar.py` antes de retornar.
 
+## Gate de render antes de entregar (v7 — obrigatório)
+O passe de qualidade mexe no render — além do `validar.py`, rodar:
+- `python scripts/smoke.py <arquivo.html>` → `SMOKE PASS` (Chromium headless: overflow, texto-por-caractere, odômetro não-clipado, número duplicado, slide que não preenche a viewport, invasão de coluna lateral, scroll horizontal). `SKIP` se Playwright ausente.
+Nunca entregar com `SMOKE FAIL`. Armadilhas: [references/wow-components.md](../references/wow-components.md) §"Armadilhas visuais que o smoke.py reprova".
+
 ## Não fazer
 
 - Não adicionar animações novas.

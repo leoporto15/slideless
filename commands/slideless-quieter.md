@@ -35,7 +35,22 @@ Você é um designer sênior pareado com um engenheiro sênior elevando um docum
 - Converter `data-fragment="current-visible"` em `data-fragment` simples (ou remover se for ruído)
 - Box-shadows decorativas em cards (manter só estruturais leves)
 
+**Ambição, não só tokens — baixar a família W# e a densidade.** Quieter não é só reduzir `--size-*`: é baixar a INTENSIDADE/ambição. Quando o documento gritar com momentos-wow exuberantes, **desça um degrau na §STACKING** (A3 → A2: de 4–6 para 2–4 momentos) e troque as famílias barulhentas pelas calmas da biblioteca [../references/wow-components.md](../references/wow-components.md) — remover os spice/herói de espetáculo (**W31 glitch, W23 gooey, W27 marquee, W30 flip-in, W19 masked-type animada, W18 sticky-stack**) e, se ainda fizer sentido reter movimento, preferir os reveals editoriais contidos (**W6 text-reveal, W10 máscara, W29 blur-focus**) com duração mais lenta. Reter **no máximo 1 herói** e cortar pinned redundante. **Não trocar fonte** (o kit do documento manda; Instrument Serif é banida — ver type-kits.md). Se já é registro sóbrio, quieter só baixa peso/cor/motion — não há premium a remover ali.
+
 **Não tocar:** conteúdo, gráficos, tabelas, slides.
+
+### §STACKING — descer de intensidade sem zerar
+
+Ao reduzir, mirar a densidade mais baixa da §STACKING de [../references/wow-components.md](../references/wow-components.md): aumentar as **zonas de silêncio** (subir além dos ~70% calmo), manter **1 herói no máximo** (ou nenhum) e **nunca deixar 2 momentos de atenção no mesmo viewport**. Quieter tende ao piso: menos momentos, mais respiro — sem normalizar tudo a um cinza médio (isso também é tell de IA).
+
+### Armadilhas de render (não reintroduzir)
+
+Ver §Armadilhas de [../references/wow-components.md](../references/wow-components.md) — ao remover/desligar efeitos, não deixar o documento em estado quebrado:
+- **Número duplicado ("7070%"):** se retirar a animação de um counter, garantir que sobra **só** o número-base em texto (nunca texto **E** `::after counter` juntos).
+- **Odômetro:** se mantido, `.od-digit { height:1em }` (senão a tira 0-9 vaza).
+- **`<canvas>`:** nunca `width:auto` (estoura em HiDPI).
+- **`a[href="#"]`** sempre com `preventDefault`.
+- **`.bleed` com sidebar/TOC:** em handbook/report, `.bleed { width:100%; margin-left:0; max-width:100%; overflow-x:auto }` (não invadir as colunas laterais).
 
 ---
 
@@ -61,6 +76,12 @@ Você é um designer sênior pareado com um engenheiro sênior elevando um docum
 - Documento abre sem console errors
 - Dark mode toggle ainda funciona
 - Conteúdo da fonte ainda 100% presente
+
+## Gate de render antes de entregar (v7 — obrigatório)
+Todo verbo modifica render — rodar os DOIS e corrigir a CAUSA antes de entregar:
+- `python scripts/validar.py <arquivo.html>` → `0 erro(s)`.
+- `python scripts/smoke.py <arquivo.html>` → `SMOKE PASS` (Chromium headless: overflow, texto-por-caractere, odômetro não-clipado, número duplicado, slide curto, invasão de coluna, scroll horizontal).
+Nunca entregar com `SMOKE FAIL`.
 
 Reportar em uma frase ao final:
 > "Apliquei **quieter** em `<arquivo>` — tipografia -15%, glow reduzido, fallback serif editorial, marks removidos. Conteúdo preservado integralmente."

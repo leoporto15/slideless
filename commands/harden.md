@@ -60,6 +60,11 @@ A11y, keyboard navigation, reduced motion, contraste. **Não toca conteúdo nem 
 2. Validar com `validar.py --strict` se disponível, ou checklist completo.
 3. Se houver dúvida sobre contraste de tokens, calcular manualmente (não chutar).
 
+## Gate de render antes de entregar (v7 — obrigatório)
+O passe de qualidade mexe no render — além do `validar.py`, rodar:
+- `python scripts/smoke.py <arquivo.html>` → `SMOKE PASS` (Chromium headless: overflow, texto-por-caractere, odômetro não-clipado, número duplicado, slide que não preenche a viewport, invasão de coluna lateral, scroll horizontal). `SKIP` se Playwright ausente.
+O smoke também confere que `prefers-reduced-motion` não deixa conteúdo invisível (estado-final-base presente) e que nada vaza nem colapsa após o passe de a11y. Nunca entregar com `SMOKE FAIL`. Armadilhas: [references/wow-components.md](../references/wow-components.md) §"Armadilhas visuais que o smoke.py reprova".
+
 ## Não fazer
 
 - Não remover features acessíveis para "simplificar".

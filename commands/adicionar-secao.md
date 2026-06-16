@@ -23,6 +23,11 @@ Você foi invocado para adicionar uma seção a um documento slideless existente
 7. **Site:** sempre dentro de uma `<article class="view">` específica — perguntar ao usuário em qual.
 8. Rodar validador.
 
+## Gate de render antes de entregar (v7 — obrigatório)
+A edição/importação mexe no render — além do `validar.py`, rodar o smoke e corrigir a CAUSA:
+- `python scripts/smoke.py <arquivo.html>` → `SMOKE PASS` (Chromium headless: overflow, texto-por-caractere, odômetro não-clipado, número duplicado, slide que não preenche a viewport, invasão de coluna lateral, scroll horizontal). `SKIP` se Playwright ausente.
+Nunca entregar com `SMOKE FAIL`. Armadilhas: [references/wow-components.md](../references/wow-components.md) §"Armadilhas visuais que o smoke.py reprova".
+
 ## Anti-patterns críticos
 
 - Esquecer link na sidebar (handbook) — sidebar fica desatualizada.

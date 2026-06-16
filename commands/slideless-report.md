@@ -26,6 +26,8 @@ Se o usuário pedir "relatório" e descrever algo curto/visual, talvez ele queir
 ## Procedimento
 
 0. **Parti (obrigatório)** — [../references/direcao-de-arte.md](../references/direcao-de-arte.md): 7 decisões + `nao-vai-ter` derivadas do assunto, capa/kit/superfície ≠ exemplo canônico, bloco no `<head>`. Defaults do registro `institucional-impresso`: kit 02, superfície flat, **motion estático** (zero keyframe de entrada — perfil estrutural), assinatura M0 compositiva. A 7ª decisão é `ambicao` ([../references/ambicao.md](../references/ambicao.md)) — **default A1-contido** para report (vai virar PDF assinado; **A3 é proibido** em registro sóbrio — falha P10). Um report A2 sóbrio fica materialmente mais rico (fio, grain estático, anotação viva no gráfico), nunca mais saltitante; `momento-wow` só se A2 deliberado, e omitido em A1.
+
+   **Momentos-wow:** a fonte é [references/wow-components.md](../references/wow-components.md) — biblioteca W1–W31 de drop-ins copy-paste (receitas já corrigidas: `@supports` + estado-final-base + reduced-motion). Respeitar o **§STACKING**: 1 herói pinned + 2 sistemas ambientes (uma só `--spring`) + 3–4 momentos rank-4 espaçados + ~70% calmo. Densidade por ambição do parti: **A2 = 2–4 momentos**; **A3 = 4–6, ≥3 famílias**; A1/sóbrio = 0 premium. (Para report: default A1 = 0 premium; só um A2 sóbrio deliberado abre 2–4 momentos, e A3 segue proibido.)
 1. Copiar [../assets/templates/template-report.html](../assets/templates/template-report.html).
 2. Substituir placeholders: `{{TÍTULO}}`, `{{ORG}}`, `{{DOC_NUM}}`, `{{DATA}}`. Slot `SLIDELESS:TYPE-KIT` com o `<link>` do kit + `:root` do kit antes do tema.
 3. Aplicar tema substituindo `/* SLIDELESS:THEME */` pelo conteúdo de [../assets/temas/itau.css](../assets/temas/itau.css) ou neutro (MARCA intacta; DIREÇÃO conforme o parti).
@@ -48,6 +50,16 @@ Se o usuário pedir "relatório" e descrever algo curto/visual, talvez ele queir
 - **Quebrar conteúdo em múltiplos arquivos** → single-file inviolável, mesmo para relatórios de 50 páginas.
 
 ## Antes de entregar
+
+Seguir o passo-a-passo de [../references/workflow.md](../references/workflow.md).
+
+### Gate de render antes de entregar (v7 — obrigatório)
+O validador determinístico vê a ESTRUTURA; **não vê runtime nem quebra visual.** Rodar os DOIS e corrigir a CAUSA antes de entregar:
+- `python scripts/validar.py <arquivo.html>` → `0 erro(s)`.
+- `python scripts/smoke.py <arquivo.html>` → `SMOKE PASS` (Chromium headless: pega overflow, texto-por-caractere, odômetro não-clipado, número duplicado, slide que não preenche a viewport, invasão de coluna lateral, scroll horizontal). `SKIP` se Playwright ausente.
+Nunca entregar com `SMOKE FAIL`. Armadilhas recorrentes: [references/wow-components.md](../references/wow-components.md) §"Armadilhas visuais que o smoke.py reprova".
+
+Checklist adicional:
 
 - Abre sem console errors
 - Dark mode toggle funciona

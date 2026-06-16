@@ -7,6 +7,8 @@ Você é um designer sênior pareado com um engenheiro sênior elevando um docum
 
 > **v5 — overdrive É o nome do nível A3** ([../references/ambicao.md](../references/ambicao.md)). A repartição: as opções **F (scroll-driven), G (springs `linear()`) e a parte de anotação/direct-label de B** desceram para o **nível A2** (core, com fallback trivial — já estão no arsenal de css-patterns.md e devem ser usadas em qualquer documento A2, sem precisar de /overdrive). O que permanece exclusivo do /overdrive (A3): **A (WebGL/minigl), C (variable font animada plena), D (cinematic blur), E (3D tilt), H (View Transitions full-morph), W4 (cursor-proximity), conic glow**. Regra de coerência: **A3 é proibido em registro `institucional-impresso`/`relatorio-de-bancada`** (o documento sóbrio sobe via A2, nunca A3). A engine v3 (FLIP, Rough Notation) é vocabulário **A2** para todos os modelos, não exclusividade do overdrive.
 
+> **v7 — o repertório A3 vive na biblioteca; COLAR, não reinventar.** Além das opções A–H abaixo, o catálogo completo dos momentos-wow é [../references/wow-components.md](../references/wow-components.md) (W1–W31): drop-ins copy-paste já com `@supports` + estado-final-base + branch reduced-motion embutidos — o código de ponta improvisado vira tímido ou quebra na intranet, então **copiar o bloco verbatim** (trocar só o payload) é a forma certa. Os herois A3 e seu repertório expandido moram lá: **W9 hero WebGL** (= opção A, gateado a `data-overdrive`), **W18 sticky-stack**, **W26 spotlight-mask**, **W31 glitch/RGB-split**, além de W13 scroll-horizontal-pin, W19 masked-type, W20 aurora-mesh animada, W24 3D-tilt (= opção E), W28 chapter-divider, W30 flip-in. **Composição, não empilhamento:** mesmo no overdrive, **COMPOR 1–2** desses, nunca despejar tudo — ver §STACKING (1 herói pinned único + 2 ambientes + ~70% calmo). Cada bloco é creditado pelo validador (P8) pela sua *signature*.
+
 ## Workflow
 
 1. **Identificar o arquivo HTML alvo.** Se o usuário não indicou, perguntar.
@@ -197,6 +199,18 @@ Aplicar em fragments/toggles do deck cinemático — máx 2 momentos por documen
 
 ---
 
+## §STACKING — composição, não empilhamento
+
+Mesmo no teto A3, respeitar a §STACKING de [../references/wow-components.md](../references/wow-components.md): a densidade-alvo é **A3 = 4–6 momentos** (A2 = 2–4), com **exatamente 1 herói pinned/scrub** (W18 sticky-stack OU W28 chapter-divider OU W13 horizontal — **nunca dois disputando o mesmo gesto de scroll**, dá enjoo), **2 sistemas ambientes** na mesma física (W21 hue-drift + UM reveal de figura — W29 blur-focus OU W25 data-choreo com **uma só** `--spring`), **3–4 momentos rank-4 espaçados** (~1.5 viewport entre dois, nunca 2 no mesmo viewport) e **~70% calmo** (zonas de silêncio obrigatórias). Conflitos duros: nunca 2 blur no viewport (W20+W23+W29), nunca 2 cursor-reativos (W24 tilt + W26 spotlight-mask), masked-type (W19) pede fundo calmo. Spice (W23 gooey, W31 glitch, W27 marquee) é one-shot: máx 1 cada.
+
+## Armadilhas de render (não reintroduzir)
+
+Ver §Armadilhas de [../references/wow-components.md](../references/wow-components.md) — o que o `smoke.py` reprova e o overdrive arrisca tocar:
+- **Slide colapsado (capa branca pela metade):** variantes de `.slide` (`.overdrive-hero`, `.aurora-mesh`, etc.) NÃO podem sobrescrever `position` para `relative` — o `.slide` base é `position:absolute; inset:0` e o relative colapsa o slide. Usar `.slide.<variante> { position:absolute; inset:0; }` ou só `isolation:isolate`.
+- **`<canvas>` (WebGL/Chart.js):** nunca `width:auto` (em DPR 2×/3× o buffer = css × devicePixelRatio e o gráfico/hero estoura o box, invisível no DPR=1 do dev) — tamanho explícito `width:100% !important; height:100% !important` + `maintainAspectRatio:false`. E o `<canvas>` decorativo SEMPRE com `data-overdrive` (já é regra acima).
+- **Odômetro/número duplicado:** `.od-digit { height:1em }` (senão a tira 0-9 vaza); nunca número como nó de texto **E** `::after { content: counter() }` juntos.
+- **`a[href="#"]`** sempre com `preventDefault`; **demo embutida** via **blob URL** (`iframe.src`), nunca `srcdoc`.
+
 ## Composição com outros verbos
 
 - `overdrive` + `/slideless-bolder` → showpiece tecnológico de alto perfil (só com conteúdo à altura)
@@ -224,6 +238,12 @@ Aplicar em fragments/toggles do deck cinemático — máx 2 momentos por documen
 - Canvas/WebGL pausam quando slide não está ativo
 - Tamanho final ≤ 5MB
 - Sem warning `[slideless] slide N overflows` no console em viewport 1366×768
+
+## Gate de render antes de entregar (v7 — obrigatório)
+Todo verbo modifica render — rodar os DOIS e corrigir a CAUSA antes de entregar:
+- `python scripts/validar.py <arquivo.html>` → `0 erro(s)`.
+- `python scripts/smoke.py <arquivo.html>` → `SMOKE PASS` (Chromium headless: overflow, texto-por-caractere, odômetro não-clipado, número duplicado, slide curto, invasão de coluna, scroll horizontal).
+Nunca entregar com `SMOKE FAIL`.
 
 Reportar em uma frase mencionando os efeitos efetivamente aplicados. Exemplo:
 > "Apliquei **overdrive** em `<arquivo>` com opções **A + B** — shader WebGL no hero (FBM domain-warped) + Chart.js plugin com glow accent e pulse-on-active. Conteúdo preservado integralmente, 142KB total."

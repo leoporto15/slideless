@@ -35,7 +35,22 @@ Você é um designer sênior pareado com um engenheiro sênior elevando um docum
 - Detectar `h1`/`h2` com `.title-mega` ou `.title-xl` → adicionar `data-fit-text` se ainda não tem.
 - Hero slides (primeiro slide ou layout-hero) sem `[data-anim="hero"]` no `<h1>` → adicionar.
 
+**Ambição, não só tokens — qual família W# e quanta densidade.** Bolder não é só ampliar `--size-*`: é subir a INTENSIDADE/ambição dentro do parti. Quando a fonte justifica, encarnar o dado-tese com um momento-wow da biblioteca [../references/wow-components.md](../references/wow-components.md) (W1–W31, drop-ins copy-paste com `@supports` + estado-final-base + reduced-motion — **COLAR, não reinventar**) em vez de só engordar o título: manchete-display via **W19 masked-type** (hue ÚNICO da marca, 1/doc) ou manchete cinética **W3**; número-tese protagonista via **W15 odômetro** / **W25 data-choreography**; herói de impacto via **W18 sticky-stack** (registro expressivo). **Subir um degrau na §STACKING** (ex.: A2 com 2 momentos → 3–4) só se a fonte aguentar — sempre dentro do `nao-vai-ter` e do perfil de motion (bolder num doc `estatico` amplia tipografia/contraste, **NUNCA injeta animação**). A camada premium (W10–W31) é **proibida em registro sóbrio** (`institucional-impresso`/`relatorio-de-bancada` — P-premium-sobrio); lá bolder sobe só por peso/contraste/whitespace.
+
 **Não tocar:** conteúdo textual, estrutura, gráficos, tabelas, layouts semânticos.
+
+### §STACKING — subir intensidade sem virar cassino
+
+Ao adicionar momentos-wow, respeitar a densidade da §STACKING de [../references/wow-components.md](../references/wow-components.md): **A2 = 2–4 momentos; A3 = 4–6**, com **1 herói pinned único** + 2 sistemas ambientes na mesma física + **~70% calmo**. Bolder pode subir um degrau de ambição, mas **nunca empilhar pinned demais** (jamais 2 mecânicas pinned/scrub disputando o mesmo gesto de scroll) nem encher todos os viewports — mais peso ≠ mais elementos animados.
+
+### Armadilhas de render (não reintroduzir)
+
+Ver §Armadilhas de [../references/wow-components.md](../references/wow-components.md) — o que o `smoke.py` reprova:
+- **Odômetro:** `.od-digit { height:1em }` (+ `overflow:clip`), senão a tira 0-9 vaza.
+- **Número duplicado ("7070%"):** nunca número como nó de texto **E** `::after { content: counter() }` juntos (esconder o texto-base sob o `@supports`+motion).
+- **Lista numerada:** counter **absoluto** (não `display:grid` — quebra texto por-caractere).
+- **`<canvas>`:** nunca `width:auto` (estoura em HiDPI).
+- **`a[href="#"]`** sempre com `preventDefault`.
 
 ---
 
@@ -62,6 +77,12 @@ Você é um designer sênior pareado com um engenheiro sênior elevando um docum
 - Dark mode toggle ainda funciona
 - `prefers-reduced-motion: reduce` desabilita motion adicionada
 - Conteúdo da fonte ainda 100% presente
+
+## Gate de render antes de entregar (v7 — obrigatório)
+Todo verbo modifica render — rodar os DOIS e corrigir a CAUSA antes de entregar:
+- `python scripts/validar.py <arquivo.html>` → `0 erro(s)`.
+- `python scripts/smoke.py <arquivo.html>` → `SMOKE PASS` (Chromium headless: overflow, texto-por-caractere, odômetro não-clipado, número duplicado, slide curto, invasão de coluna, scroll horizontal).
+Nunca entregar com `SMOKE FAIL`.
 
 Reportar em uma frase ao final:
 > "Apliquei **bolder** em `<arquivo>` — tipografia hero +30%, números-âncora circulados via Rough Notation, glow atmosférico reforçado. Conteúdo preservado integralmente."

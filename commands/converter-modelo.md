@@ -34,3 +34,8 @@ Você foi invocado para converter entre modelos.
 4. Manter mesmo tema.
 5. Validar resultado.
 6. Avisar o usuário sobre componentes específicos que foram perdidos (e.g., sticky chart no scrollytelling → handbook perde o chart sticky).
+
+## Gate de render antes de entregar (v7 — obrigatório)
+A transformação mexe no render — além do `validar.py`, rodar:
+- `python scripts/smoke.py <arquivo.html>` → `SMOKE PASS` (Chromium headless: overflow, texto-por-caractere, odômetro não-clipado, número duplicado, slide que não preenche a viewport, invasão de coluna lateral, scroll horizontal). `SKIP` se Playwright ausente.
+Nunca entregar com `SMOKE FAIL`. Armadilhas: [references/wow-components.md](../references/wow-components.md) §"Armadilhas visuais que o smoke.py reprova".

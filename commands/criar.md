@@ -107,7 +107,9 @@ Baseado em Q4:
 
 ### Passo 3 — Estruturar antes de gerar
 
-A resposta de Q5 roteia o **parti** ([../references/direcao-de-arte.md](../references/direcao-de-arte.md)): registro → kit/capa/superfície/motion + **ambição** (a 7ª decisão — [../references/ambicao.md](../references/ambicao.md)). Default de ambição **pelo modelo escolhido**: deck/hub/site/scrollytelling/handbook = **A2-elevado**; report = **A1-contido**. Se A2/A3, declarar 1 `momento-wow` (W#) ligado ao dado-tese; A3 só com conteúdo à altura e nunca em registro sóbrio. Ao mostrar o mapa para aprovação, incluir o parti **traduzido para leigo** (1 linha, sem jargão): *"Visual: vai abrir com o número 22,3% bem grande, tipografia de jornal, sem efeitos de brilho — e o número conta sozinho até 22,3% ao entrar na tela."* Se a pessoa quiser "igual ao documento anterior", usar `serie: herdar` — continuidade é decisão declarada, não acidente.
+A resposta de Q5 roteia o **parti** ([../references/direcao-de-arte.md](../references/direcao-de-arte.md)): registro → kit/capa/superfície/motion + **ambição** (a 7ª decisão — [../references/ambicao.md](../references/ambicao.md)). Default de ambição **pelo modelo escolhido**: deck/hub/site/scrollytelling/handbook = **A2-elevado**; report = **A1-contido**. Se A2/A3, declarar 1 `momento-wow` (W#) ligado ao dado-tese; A3 só com conteúdo à altura e nunca em registro sóbrio.
+
+**Momentos-wow:** a fonte é [references/wow-components.md](../references/wow-components.md) — biblioteca W1–W31 de drop-ins copy-paste (receitas já corrigidas: `@supports` + estado-final-base + reduced-motion). Respeitar o **§STACKING**: 1 herói pinned + 2 sistemas ambientes (uma só `--spring`) + 3–4 momentos rank-4 espaçados + ~70% calmo. Densidade por ambição do parti: **A2 = 2–4 momentos**; **A3 = 4–6, ≥3 famílias**; A1/sóbrio = 0 premium. Ao mostrar o mapa para aprovação, incluir o parti **traduzido para leigo** (1 linha, sem jargão): *"Visual: vai abrir com o número 22,3% bem grande, tipografia de jornal, sem efeitos de brilho — e o número conta sozinho até 22,3% ao entrar na tela."* Se a pessoa quiser "igual ao documento anterior", usar `serie: herdar` — continuidade é decisão declarada, não acidente.
 
 **SEMPRE** chamar `/estruturar` (ou aplicar a lógica do `/estruturar` inline) antes de gerar HTML, especialmente quando:
 - Conteúdo veio de PDF/PPT (denso)
@@ -137,7 +139,13 @@ Vou criar **N seções/slides** com os seguintes blocos:
 
 ### Passo 4 — Gerar HTML
 
-Após aprovação do mapa, gerar o HTML chamando a lógica do comando `/slideless-<modelo>` correspondente. Salvar em `outputs/<nome-do-documento>.html` ou no caminho que o usuário indicar.
+Após aprovação do mapa, gerar o HTML chamando a lógica do comando `/slideless-<modelo>` correspondente. Salvar em `outputs/<nome-do-documento>.html` ou no caminho que o usuário indicar. Seguir o passo-a-passo de [references/workflow.md](../references/workflow.md).
+
+## Gate de render antes de entregar (v7 — obrigatório)
+O validador determinístico vê a ESTRUTURA; **não vê runtime nem quebra visual.** Rodar os DOIS e corrigir a CAUSA antes de entregar:
+- `python scripts/validar.py <arquivo.html>` → `0 erro(s)`.
+- `python scripts/smoke.py <arquivo.html>` → `SMOKE PASS` (Chromium headless: pega overflow, texto-por-caractere, odômetro não-clipado, número duplicado, slide que não preenche a viewport, invasão de coluna lateral, scroll horizontal). `SKIP` se Playwright ausente.
+Nunca entregar com `SMOKE FAIL`. Armadilhas recorrentes: [references/wow-components.md](../references/wow-components.md) §"Armadilhas visuais que o smoke.py reprova".
 
 ### Passo 5 — Entregar e explicar como usar
 

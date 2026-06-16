@@ -7,6 +7,7 @@ Você foi invocado para exportar screenshots.
 
 ## Procedimento
 
+0. Pré-requisito: o documento já deve passar `validar.py` 0 + `smoke.py` PASS antes de exportar (exportar não conserta quebra de render).
 1. Identificar o modelo.
 2. Rodar o script:
    ```bash

@@ -34,6 +34,11 @@ Você foi invocado para uma varredura focada de a11y.
 4. Aplicar conforme escolha.
 5. Re-rodar varredura.
 
+## Gate de render antes de entregar (v7 — obrigatório)
+O passe de qualidade mexe no render — além do `validar.py`, rodar:
+- `python scripts/smoke.py <arquivo.html>` → `SMOKE PASS` (Chromium headless: overflow, texto-por-caractere, odômetro não-clipado, número duplicado, slide que não preenche a viewport, invasão de coluna lateral, scroll horizontal). `SKIP` se Playwright ausente.
+O smoke também confere que `prefers-reduced-motion` não deixa conteúdo invisível (estado-final-base presente) e que nada vaza nem colapsa após as correções de a11y. Nunca entregar com `SMOKE FAIL`. Armadilhas: [references/wow-components.md](../references/wow-components.md) §"Armadilhas visuais que o smoke.py reprova".
+
 ## Referência
 
 - WCAG 2.1 AA: https://www.w3.org/TR/WCAG21/

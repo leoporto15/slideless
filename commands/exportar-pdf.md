@@ -8,6 +8,7 @@ Você foi invocado para exportar PDF.
 ## Procedimento
 
 1. Verificar que o arquivo existe e é slideless.
+1.5. Pré-requisito: o documento já deve passar `validar.py` 0 + `smoke.py` PASS antes de exportar (exportar não conserta quebra de render).
 2. Identificar o modelo (verifica classes raiz):
    - `.deck` → landscape A4
    - demais → retrato A4
