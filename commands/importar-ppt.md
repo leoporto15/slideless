@@ -37,6 +37,11 @@ Não chutar. Resposta determina TODO o resto.
 
 **Aviso ao usuário:** se o PPT vier muito raso (só bullets), avisar que o handbook resultante vai precisar de mais texto. Não tentar inflar artificialmente.
 
+## Gate de render antes de entregar (v7 — obrigatório)
+A edição/importação mexe no render — além do `validar.py`, rodar o smoke e corrigir a CAUSA:
+- `python scripts/smoke.py <arquivo.html>` → `SMOKE PASS` (Chromium headless: overflow, texto-por-caractere, odômetro não-clipado, número duplicado, slide que não preenche a viewport, invasão de coluna lateral, scroll horizontal). `SKIP` se Playwright ausente.
+Nunca entregar com `SMOKE FAIL`. Armadilhas: [references/wow-components.md](../references/wow-components.md) §"Armadilhas visuais que o smoke.py reprova".
+
 ## Anti-patterns críticos
 
 - "Traduzir slide-por-slide" em handbook → vira handbook ruim. Reescrever.

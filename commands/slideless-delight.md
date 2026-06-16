@@ -21,6 +21,12 @@ Você é um designer sênior pareado com um engenheiro sênior elevando um docum
 
 **Quando usar:** documento profissional mas frio. Falta a camada "humana" que faz sorrir sem cafonice.
 
+> **Fonte canônica dos efeitos — COLAR, não reinventar.** O CSS deste arquivo é só *exemplo de referência*. A biblioteca verdadeira das micro-interações premium é [../references/wow-components.md](../references/wow-components.md) (W1–W31): drop-ins copy-paste já com `@supports` + estado-final-base + branch reduced-motion (e os early-returns de `(hover:hover) and (pointer:fine)`). **Preferir COLAR o bloco de lá** a escrever hover/CSS solto. Repertório premium **contido** do /delight (parcimônia é regra, não sugestão):
+> - **Spotlight W12** (luz radial sob o cursor) — **máx 1 por documento** (P-premium-spotlight), nunca sobre texto de corpo.
+> - **3D-tilt W24** (card inclina rumo ao cursor) — só no **1–2 cards-herói**, jamais em todo card (tell de slop).
+> - **Magnetismo W11** (elemento atrai o cursor) — **só CTA primário + dots de nav**, nunca em linha de tabela/lista densa, `S ≤ 0.4`.
+> Todos desligam em touch e reduced-motion sozinhos (já no bloco). **SEM hover-lift/glow incondicional** — a camada premium vem de materialidade por papel (fio, grain, specular) e desses gestos contidos, não de `translateY`/glow em tudo (anti-slop, falha P-premium). **Conflito duro:** nunca W24 tilt + W26/W12 spotlight no mesmo viewport (cursor disputado).
+
 **CSS a adicionar:**
 
 ```css
@@ -117,6 +123,19 @@ body::after  { transform: translateY(calc(var(--parallax-y, 0) * -0.6)); }
 
 **Não tocar:** conteúdo, gráficos, tabelas, layouts.
 
+### §STACKING — respeitar a disciplina de densidade
+
+Mesmo micro-interações contam para a densidade da §STACKING de [../references/wow-components.md](../references/wow-components.md): **A2 = 2–4 momentos; A3 = 4–6**. /delight escolhe 2–3 gestos coerentes, não soma todos — **nunca 2 cursor-reativos no mesmo viewport** (W24+W26/W12), e respeitar os **~70% calmo** + a regra de "1 spotlight/doc". Não empilhar pinned (isso é trabalho do /animate/overdrive, não do /delight).
+
+### Armadilhas de render (não reintroduzir)
+
+Ver §Armadilhas de [../references/wow-components.md](../references/wow-components.md) — o que o `smoke.py` reprova:
+- **`a[href="#"]`:** sempre com `preventDefault` (links/CTAs de delight não podem saltar ao topo).
+- **Clique de hub que não rola:** chamar `scrollIntoView` em **duplo `requestAnimationFrame`** após `navigate()` (senão rola pro painel fechado — "clique 2x").
+- **`<canvas>`:** nunca `width:auto` (estoura em HiDPI).
+- **Número duplicado / odômetro vazando:** se tocar em número animado, ver as regras W2/W15 (texto-base `display:none` sob `@supports`; `.od-digit { height:1em }`).
+- **Demo embutida:** via **blob URL** (`iframe.src`), nunca `srcdoc` (em `srcdoc` `href="#x"` navega o iframe pro doc-pai).
+
 ---
 
 ## Composição com outros verbos
@@ -142,6 +161,12 @@ body::after  { transform: translateY(calc(var(--parallax-y, 0) * -0.6)); }
 - Dark mode toggle ainda funciona
 - `prefers-reduced-motion: reduce` desabilita TODA motion adicionada
 - Conteúdo da fonte ainda 100% presente
+
+## Gate de render antes de entregar (v7 — obrigatório)
+Todo verbo modifica render — rodar os DOIS e corrigir a CAUSA antes de entregar:
+- `python scripts/validar.py <arquivo.html>` → `0 erro(s)`.
+- `python scripts/smoke.py <arquivo.html>` → `SMOKE PASS` (Chromium headless: overflow, texto-por-caractere, odômetro não-clipado, número duplicado, slide curto, invasão de coluna, scroll horizontal).
+Nunca entregar com `SMOKE FAIL`.
 
 Reportar em uma frase ao final:
 > "Apliquei **delight** em `<arquivo>` — hover lifts, cursor spotlight no hero, shimmer na progress bar, parallax sutil. Conteúdo preservado integralmente."

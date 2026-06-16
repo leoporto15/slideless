@@ -21,7 +21,10 @@ Você foi invocado para auditar um documento slideless.
    renderizado. **SMOKE FAIL = bloqueante.** Se imprimir `SKIP` (Playwright ausente),
    instalar: `pip install playwright && python -m playwright install chromium`. Esta rede
    foi adicionada depois que um `<script>` aninhado matou todo o JS de 5 docs em silêncio
-   e o validador estrutural passou — render-verificar é obrigatório.
+   e o validador estrutural passou — render-verificar é obrigatório. O checklist do que o
+   smoke pega (overflow, texto-por-caractere, odômetro não-clipado, número duplicado, slide
+   curto, invasão de coluna, scroll horizontal) está em
+   [../references/wow-components.md](../references/wow-components.md) §"Armadilhas visuais que o smoke.py reprova".
 2. **Checklist de revisão LLM** ([../references/checklist-revisao.md](../references/checklist-revisao.md)):
    - Bloqueantes (🚫) — corrigir antes de entregar
    - Alto (⚠️)

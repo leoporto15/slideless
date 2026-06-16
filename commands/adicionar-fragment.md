@@ -27,6 +27,11 @@ Só faz sentido em modelo `deck`.
    ```
 6. JS já trata: `next()` revela o próximo fragment do slide ativo antes de avançar para o próximo slide. Não duplicar lógica.
 
+## Gate de render antes de entregar (v7 — obrigatório)
+A edição/importação mexe no render — além do `validar.py`, rodar o smoke e corrigir a CAUSA:
+- `python scripts/smoke.py <arquivo.html>` → `SMOKE PASS` (Chromium headless: overflow, texto-por-caractere, odômetro não-clipado, número duplicado, slide que não preenche a viewport, invasão de coluna lateral, scroll horizontal). `SKIP` se Playwright ausente.
+Nunca entregar com `SMOKE FAIL`. Armadilhas: [references/wow-components.md](../references/wow-components.md) §"Armadilhas visuais que o smoke.py reprova".
+
 ## Anti-patterns críticos
 
 - Marcar 10 fragments num slide → cansativo. Máximo 4-5 por slide.

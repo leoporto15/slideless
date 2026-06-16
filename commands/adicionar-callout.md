@@ -40,3 +40,8 @@ Para `danger`, mudar `role="note"` para `role="alert"`.
 2. Não usar callout para decoração de cor — semântica é regra. Ver [../references/anti-patterns.md](../references/anti-patterns.md) A8.
 3. Validar tipo (não inventar `callout--success` ou `callout--note`).
 4. Validar.
+
+## Gate de render antes de entregar (v7 — obrigatório)
+A edição/importação mexe no render — além do `validar.py`, rodar o smoke e corrigir a CAUSA:
+- `python scripts/smoke.py <arquivo.html>` → `SMOKE PASS` (Chromium headless: overflow, texto-por-caractere, odômetro não-clipado, número duplicado, slide que não preenche a viewport, invasão de coluna lateral, scroll horizontal). `SKIP` se Playwright ausente.
+Nunca entregar com `SMOKE FAIL`. Armadilhas: [references/wow-components.md](../references/wow-components.md) §"Armadilhas visuais que o smoke.py reprova".

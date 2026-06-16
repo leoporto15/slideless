@@ -29,6 +29,12 @@ Ver [../references/modelos/deck.md](../references/modelos/deck.md#layouts-de-sli
 5. Hash `#sN` continua válido se a posição mudou (avisar o usuário se houver links externos para slides específicos).
 6. Validar.
 
+## Gate de render antes de entregar (v7 — obrigatório)
+A edição/importação mexe no render — além do `validar.py`, rodar o smoke e corrigir a CAUSA:
+- `python scripts/smoke.py <arquivo.html>` → `SMOKE PASS` (Chromium headless: overflow, texto-por-caractere, odômetro não-clipado, número duplicado, slide que não preenche a viewport, invasão de coluna lateral, scroll horizontal). `SKIP` se Playwright ausente.
+- Conferir no smoke que o slide novo PREENCHE a viewport (variantes de `.slide` não podem sobrescrever `position` para `relative`) e que números/odômetros não duplicam nem mostram a coluna 0-9.
+Nunca entregar com `SMOKE FAIL`. Armadilhas: [references/wow-components.md](../references/wow-components.md) §"Armadilhas visuais que o smoke.py reprova".
+
 ## Anti-patterns críticos
 
 - Slide com texto editorial denso (parágrafos longos) → vira "PPT com texto demais". Slide é uma frase ou bullet curto.

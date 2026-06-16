@@ -16,6 +16,8 @@ Você foi invocado para gerar um documento `handbook` (slideless).
 ## Procedimento
 
 0. **Parti (obrigatório, antes de qualquer HTML)** — [../references/direcao-de-arte.md](../references/direcao-de-arte.md): rotear o assunto pela tabela de registros, ler o parti do exemplo canônico ([../assets/exemplos/exemplo-handbook.html](../assets/exemplos/exemplo-handbook.html)) e do último doc da pasta, preencher as 7 decisões + `nao-vai-ter` (capa/kit/superfície ≠ canônico) e colar o bloco no `<head>`. A 7ª decisão é `ambicao` ([../references/ambicao.md](../references/ambicao.md)) — **default A2-elevado** para handbook; se A2/A3, o campo `momento-wow` (W1-W9 ligado ao dado-tese) é **obrigatório**.
+
+   **Momentos-wow:** a fonte é [references/wow-components.md](../references/wow-components.md) — biblioteca W1–W31 de drop-ins copy-paste (receitas já corrigidas: `@supports` + estado-final-base + reduced-motion). Respeitar o **§STACKING**: 1 herói pinned + 2 sistemas ambientes (uma só `--spring`) + 3–4 momentos rank-4 espaçados + ~70% calmo. Densidade por ambição do parti: **A2 = 2–4 momentos**; **A3 = 4–6, ≥3 famílias**; A1/sóbrio = 0 premium.
 1. Copiar [../assets/templates/template-handbook.html](../assets/templates/template-handbook.html) como base.
 2. Preencher o slot `SLIDELESS:TYPE-KIT` com o `<link>` do kit ([../references/type-kits.md](../references/type-kits.md)) + bloco `:root` do kit antes do tema. Substituir `/* SLIDELESS:THEME */` pelo conteúdo de [../assets/temas/itau.css](../assets/temas/itau.css) ou [../assets/temas/neutro.css](../assets/temas/neutro.css) — camada MARCA intacta, camada DIREÇÃO composta conforme o parti.
 3. **Compor** conforme [../references/modelos/handbook.md](../references/modelos/handbook.md) e [../references/componentes.md](../references/componentes.md) (adaptar ao parti, não colar verbatim).
@@ -26,6 +28,12 @@ Você foi invocado para gerar um documento `handbook` (slideless).
 8. Rodar `python ../scripts/validar.py <output.html>` (inclui categoria P).
 9. Aplicar [../references/checklist-revisao.md](../references/checklist-revisao.md) mentalmente (bloco 🎨 incluído). Gate perceptual se Playwright disponível (workflow.md §6.5).
 10. Salvar em `outputs/handbook-<slug>.html` e reportar o parti em 1 linha leiga.
+
+## Gate de render antes de entregar (v7 — obrigatório)
+O validador determinístico vê a ESTRUTURA; **não vê runtime nem quebra visual.** Rodar os DOIS e corrigir a CAUSA antes de entregar:
+- `python scripts/validar.py <arquivo.html>` → `0 erro(s)`.
+- `python scripts/smoke.py <arquivo.html>` → `SMOKE PASS` (Chromium headless: pega overflow, texto-por-caractere, odômetro não-clipado, número duplicado, slide que não preenche a viewport, invasão de coluna lateral, scroll horizontal). `SKIP` se Playwright ausente.
+Nunca entregar com `SMOKE FAIL`. Armadilhas recorrentes: [references/wow-components.md](../references/wow-components.md) §"Armadilhas visuais que o smoke.py reprova".
 
 ## Anti-patterns críticos
 

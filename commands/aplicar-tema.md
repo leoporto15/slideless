@@ -18,6 +18,11 @@ Você foi invocado para trocar tema.
 6. **Logo:** se tema = `itau`, manter logo Itaú no topbar; se `neutro`, considerar remover ou substituir.
 7. Rodar validador.
 
+## Gate de render antes de entregar (v7 — obrigatório)
+A transformação mexe no render — além do `validar.py`, rodar:
+- `python scripts/smoke.py <arquivo.html>` → `SMOKE PASS` (Chromium headless: overflow, texto-por-caractere, odômetro não-clipado, número duplicado, slide que não preenche a viewport, invasão de coluna lateral, scroll horizontal). `SKIP` se Playwright ausente.
+Nunca entregar com `SMOKE FAIL`. Armadilhas: [references/wow-components.md](../references/wow-components.md) §"Armadilhas visuais que o smoke.py reprova".
+
 ## Anti-patterns críticos
 
 - Esquecer override de algum `--color-*` em `[data-theme="dark"]` após troca → dark mode quebrado.

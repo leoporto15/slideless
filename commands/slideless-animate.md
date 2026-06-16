@@ -21,6 +21,13 @@ Você é um designer sênior pareado com um engenheiro sênior elevando um docum
 
 **Quando usar:** documento estático, sem vida cinematográfica.
 
+> **Fonte canônica dos efeitos — COLAR, não reinventar.** O CSS deste arquivo é só *exemplo de referência*. A biblioteca verdadeira dos momentos-wow é [../references/wow-components.md](../references/wow-components.md) (W1–W31): drop-ins copy-paste já com `@supports` + estado-final-base + branch reduced-motion embutidos. **Preferir COLAR o bloco de lá** (trocar só o payload) a escrever CSS de animação solto — improviso de ponta vira tímido ou quebra na intranet. Para os gestos típicos do /animate:
+> - **Reveal** → reveal por **máscara W10** (`clip-path`) no lugar de `fade-up` (que o anti-slop trata como tell); text-reveal editorial **W6** (`Intl.Segmenter`, grapheme-safe pt-BR) para lead/títulos.
+> - **Diagrama/conector** → draw-on SVG **W22** (stroke-a-stroke ao entrar).
+> - **Número-tese + barra + legenda** → data-choreography **W25** (uma `--spring` para o doc inteiro) — complementa/substitui o W2.
+> - **Act-break entre capítulos** → chapter-divider **W28** (interstício full-bleed scrubbed).
+> Manchete cinética **W3** e parallax **W14** seguem disponíveis. Cada bloco é creditado pelo validador (P8) por *signature* — copiar a fiação inteira.
+
 **CSS a adicionar (inline no `<style>`):**
 
 ```css
@@ -72,6 +79,19 @@ document.querySelectorAll('[data-reveal]').forEach(el => rio.observe(el));
 
 **Não tocar:** conteúdo, layouts, gráficos.
 
+### §STACKING — respeitar a disciplina de densidade
+
+Coreografar dentro da densidade da §STACKING de [../references/wow-components.md](../references/wow-components.md): **A2 = 2–4 momentos; A3 = 4–6**. No máximo **1 herói pinned** (W18/W28/W13-horizontal — nunca dois disputando o mesmo gesto de scroll) + **2 sistemas ambientes** na mesma física (ex.: W21 hue-drift + UM reveal de figura, W29 ou W25 com uma só `--spring`) + **~70% calmo** (zonas de silêncio de 1–2 viewports depois de cada momento; nunca 2 momentos de atenção no mesmo viewport). /animate adiciona movimento, não enche a tela.
+
+### Armadilhas de render (não reintroduzir)
+
+Ver §Armadilhas de [../references/wow-components.md](../references/wow-components.md) — o que o `smoke.py` reprova:
+- **Odômetro/reel:** `.od-digit` PRECISA de `height: 1em` (+ `overflow:clip`); sem altura a tira 0-9 vaza.
+- **Número duplicado ("7070%"):** nunca o número como nó de texto direto **E** `::after { content: counter() }` juntos — esconder o texto-base (`display:none`) dentro do `@supports`+motion.
+- **Lista numerada:** counter **absoluto** (`position:relative` no `li` + `::before` absoluto), nunca `display:grid` (quebra o texto por-caractere).
+- **`<canvas>`:** nunca `width:auto` (estoura em HiDPI) — tamanho explícito + `maintainAspectRatio:false`.
+- **`a[href="#"]`:** sempre com `preventDefault` (não saltar ao topo).
+
 ---
 
 ## Composição com outros verbos
@@ -96,6 +116,12 @@ document.querySelectorAll('[data-reveal]').forEach(el => rio.observe(el));
 - Dark mode toggle ainda funciona
 - `prefers-reduced-motion: reduce` desabilita TODA motion adicionada
 - Conteúdo da fonte ainda 100% presente
+
+## Gate de render antes de entregar (v7 — obrigatório)
+Todo verbo modifica render — rodar os DOIS e corrigir a CAUSA antes de entregar:
+- `python scripts/validar.py <arquivo.html>` → `0 erro(s)`.
+- `python scripts/smoke.py <arquivo.html>` → `SMOKE PASS` (Chromium headless: overflow, texto-por-caractere, odômetro não-clipado, número duplicado, slide curto, invasão de coluna, scroll horizontal).
+Nunca entregar com `SMOKE FAIL`.
 
 Reportar em uma frase ao final:
 > "Apliquei **animate** em `<arquivo>` — heroIn em títulos, stagger reveals nos cards, counters em KPIs. Conteúdo preservado integralmente."
