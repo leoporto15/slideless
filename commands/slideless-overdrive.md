@@ -1,5 +1,5 @@
 ---
-description: O nível A3 do parti — opera no teto de ambição declarado, lê o documento e pergunta quais momentos-wow A3 aplicar (WebGL/minigl, variable font animada plena, cinematic blur, 3D tilt, View Transitions, cursor-proximity, conic glow). Bloqueado em registro sóbrio. Liberdade de arquivo até 5 MB. Múltiplas opções compõem.
+description: O nível A3 do parti — opera no teto de ambição e pode compor QUALQUER momento-wow do palette W1–W31 (references/wow-components.md). As opções A–H são os heavies A3-EXCLUSIVOS que o overdrive desbloqueia (WebGL, variable font plena, cinematic, 3D tilt, View Transitions full-morph, cursor-proximity, conic glow), não a lista única. Bloqueado em registro sóbrio. Liberdade de arquivo até 5 MB. Múltiplas opções compõem.
 argument-hint: <arquivo.html opcional>
 ---
 
@@ -15,9 +15,13 @@ Você é um designer sênior pareado com um engenheiro sênior elevando um docum
 
 2. **Confirmar versionamento.** Por padrão, criar `<nome>-overdrive.html` para preservar o original. Só sobrescrever se o usuário pedir explicitamente.
 
-3. **Perguntar quais efeitos aplicar** via `AskUserQuestion` com `multiSelect: true`. Apresente as 8 opções abaixo (A–H) como `options` da pergunta. O usuário pode escolher **uma ou várias** — combinações são esperadas. Phrasing sugerido:
+3. **Perguntar quais efeitos aplicar** via `AskUserQuestion` com `multiSelect: true`. O overdrive pode aplicar **qualquer momento-wow do palette W1–W31** ([../references/wow-components.md](../references/wow-components.md)) — não só os abaixo. As opções A–H são os **heavies A3-exclusivos** (o que o overdrive *desbloqueia*: WebGL, variable font plena, cinematic, 3D-tilt, View Transitions full-morph, etc.); ofereça-as como ponto de partida, MAS:
+   - Leia o documento + o parti e **proponha também outros W# da biblioteca** que sirvam de herói ou de craft de apoio (ex.: W18 sticky-stack, W26 spotlight-mask, W31 glitch, W19 masked-type, W20 aurora-mesh, W28 chapter-divider, W30 flip-in, W22 draw-on, W25 data-choreography — além dos calmos W2/W6/W10/W21/W24 que compõem os ~70%).
+   - Se o usuário pedir um W# específico, aplique-o (colando o drop-in da biblioteca), esteja ele em A–H ou não.
 
-   > **Quais momentos-wow A3 aplicar?** (pode selecionar múltiplos)
+   Phrasing sugerido:
+
+   > **Quais momentos-wow aplicar?** (pode selecionar múltiplos; ofereço os heavies A3, mas qualquer W# da biblioteca é possível)
 
    Opções a oferecer (cada uma vira um `option` com `label` curto + `description`):
    - **A — WebGL hero generativo** · shader fragment customizado no hero (FBM, voronoi, fluid) sobre near-black. minigl (~5KB standalone inline) ou ~150KB com Three.js. 40-60fps em mid-range. Pausa quando slide não ativo. Fallback: aurora CSS com as mesmas cores. **A3 exclusivo** (W9).
@@ -31,7 +35,7 @@ Você é um designer sênior pareado com um engenheiro sênior elevando um docum
 
    **Recomendação ao usuário no momento da pergunta:** "1–2 opções costuma render restraint apropriado. 3+ pode competir entre si — selecionar com cuidado". **F e G já pertencem ao A2-core** (qualquer documento A2 deveria usá-las sem precisar do /overdrive); ficam aqui só como atalho.
 
-4. **Ler o arquivo completo** e aplicar **só** os efeitos selecionados (cada um detalhado abaixo). Restraint é parte do gosto — não inventar efeitos extras nem aplicar opções não selecionadas.
+4. **Ler o arquivo completo** e aplicar os momentos selecionados — heavies A–H detalhados abaixo; qualquer outro W# colado verbatim de [../references/wow-components.md](../references/wow-components.md). Restraint é parte do gosto: compor **1–2 heróis** + o craft de apoio do §STACKING (os ~70% calmos vêm de W# mais leves — **isso não é "efeito extra", é a base**), nunca despejar tudo. Não aplicar heavies que o usuário não pediu.
 
 5. **Preservar 100% do conteúdo** — texto, números, dados, estrutura nunca mudam.
 
