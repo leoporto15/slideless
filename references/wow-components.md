@@ -1018,7 +1018,9 @@ document.querySelectorAll('[data-flip-in]').forEach(el => {
 
 ---
 
-## ═══ STACKING — como empilhar 5-8 sem virar cassino ═══
+## ═══ STACKING — como empilhar 6-8 sem virar cassino ═══
+
+**Densidade por ambição (o teto de cada nível):** A1/sóbrio = **1-2 momentos calmos** (só W6 text-reveal, W8 anotação viva, W2 counter, W22 draw-on, W10 máscara — nunca as famílias premium loud); A2 = **3-5 momentos**; A3 = **6-8 momentos, ≥4 famílias**. A fórmula abaixo (1 herói + 2 ambientes + 3-4 rank-4 + spice) é o teto A3 — A2 usa um subconjunto (ex.: 1 herói + 1-2 ambientes + 1-2 rank-4), A1 só os 1-2 calmos.
 
 1. **Um herói, nunca dois.** Exatamente 1 rank-5 dominante por doc (Sticky stack OU Scrub OU draw-on herói). Duas mecânicas pinned/scrub disputam o mesmo gesto de scroll = enjoo.
 2. **Dois sistemas ambientes correm o doc inteiro.** Atravessam tudo: **W21 hue-drift** + **um** sistema de reveal em toda figura (**W29 blur-focus** OU **W25 data-choreo** com **uma** `--spring`). É a "física da casa".

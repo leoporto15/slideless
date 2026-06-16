@@ -12,9 +12,9 @@ ambicao: <A1-contido | A2-elevado | A3-extraordinario> + o elemento da fonte que
 
 | Nível | Quando | Vocabulário liberado |
 |---|---|---|
-| **A1 contido** | report, regulatório, runbook, qualquer PDF; ou quando o conteúdo não pede mais | = v4. Motion estático/editorial, flat, materialidade por fio. |
-| **A2 elevado** | **default** de deck, scrollytelling, hub, site, handbook | Materialidade de assinatura, springs `linear()`, scroll-driven, tipografia cinética, ≥1 momento-wow data-bound, transição contínua entre estados. **Tudo degradável.** |
-| **A3 extraordinario** | showcases, lançamentos, all-hands de impacto — só com conteúdo à altura | + WebGL/minigl, variable font animada plena, cursor-proximity, conic glow, cinematic transitions. Opt-in explícito. |
+| **A1 contido** | report, regulatório, runbook, qualquer PDF; ou quando o conteúdo não pede mais | Motion estático/editorial, flat, materialidade por fio + **1–2 momentos CALMOS estático-seguros** (anotação viva W8, counter+barra W2, draw-on W22, text-reveal W6, máscara W10 — todos com estado-final-base; nunca premium loud). |
+| **A2 elevado** | **default** de deck, scrollytelling, hub, site, handbook | Materialidade de assinatura, springs `linear()`, scroll-driven, tipografia cinética, **3–5 momentos-wow data-bound**, transição contínua entre estados. **Tudo degradável.** |
+| **A3 extraordinario** | showcases, lançamentos, all-hands de impacto — só com conteúdo à altura | + WebGL/minigl, variable font animada plena, cursor-proximity, conic glow, cinematic transitions — **6–8 momentos, ≥4 famílias** (§STACKING). Opt-in explícito. |
 
 **Derivação obrigatória:** cite o elemento da fonte que justifica o nível ("a curva de adoção do Pix é a própria história → A2 com cena scroll-driven no gráfico"). Sem justificativa = rejeitado, igual às outras decisões do parti.
 
@@ -165,7 +165,7 @@ else { document.getElementById('hero-canvas').classList.add('aurora-fallback'); 
 
 ## v7 — repertório expandido + empilhamento (W18-W31)
 
-Além de W1-W9 (acima), há **14 componentes "agência premiada"** (W18-W31) prontos em [wow-components.md](wow-components.md): sticky-stack, masked-type, aurora-mesh, hue-drift, draw-on SVG, gooey, 3D tilt, data-choreography, spotlight-mask, marquee, chapter-divider, blur-focus, flip-in, glitch. **A2/A3 EMPILHA vários** (A2 2-4, A3 4-6): **1 herói pinned + 2 sistemas ambientes na mesma `--spring` + 3-4 momentos espaçados + zonas de silêncio** (regras de conflito e §STACKING completas em wow-components.md). masked-type e glitch são premium reabilitados com disciplina (hue da marca, 1×).
+Além de W1-W9 (acima), há **14 componentes "agência premiada"** (W18-W31) prontos em [wow-components.md](wow-components.md): sticky-stack, masked-type, aurora-mesh, hue-drift, draw-on SVG, gooey, 3D tilt, data-choreography, spotlight-mask, marquee, chapter-divider, blur-focus, flip-in, glitch. **A1/A2/A3 EMPILHAM** (A1 1-2 calmos, A2 3-5, A3 6-8 ≥4 famílias): **1 herói pinned + 2 sistemas ambientes na mesma `--spring` + 3-4 momentos espaçados + zonas de silêncio** (regras de conflito e §STACKING completas em wow-components.md). masked-type e glitch são premium reabilitados com disciplina (hue da marca, 1×).
 
 ## Materialidade — os 4 "premium baratos" (0KB, fallback gracioso)
 
@@ -205,7 +205,7 @@ function setTheme(t){ const h=document.documentElement; h.classList.add('no-tran
 ## Checklist de saída A2/A3 (some ao checklist do parti)
 
 - [ ] `ambicao:` declarado e coerente com o registro (A3 fora de regulatório = falha)
-- [ ] ≥1 momento-wow (W#) ligado ao **dado-tese**, não decorativo
+- [ ] momentos-wow na densidade do nível (A1 1-2 calmos · A2 3-5 · A3 6-8 ≥4 famílias), **cada um ligado ao dado-tese**, não decorativo
 - [ ] Cada gesto de ponta tem `@supports` + estado-final-base (P9)
 - [ ] Reduced-motion: branch presente em todo movimento
 - [ ] Régua de craft: curvas nomeadas, teto 300ms, `.no-transitions` no toggle

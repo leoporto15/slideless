@@ -678,31 +678,44 @@ def _wow_family(name: str) -> str:
 
 def check_ambicao_delivered(html: str, report: Report) -> None:
     """P8 (músculo simétrico do nao-vai-ter): ambição A2/A3 declarada TEM que ser
-    entregue — momento-wow SUBSTANTIVO no HTML. Onda 3: além do piso, cobra densidade
-    (2-4 por dobra/seção), zona (ligado ao dado) e coerência declarado↔entregue."""
+    entregue — momento-wow SUBSTANTIVO no HTML. Cobra densidade (A1 1-2 calmos, A2 3-5,
+    A3 6-8 com ≥4 famílias), zona (ligado ao dado) e coerência declarado↔entregue."""
     parti = parse_parti(html)
     level = _ambicao_level(parti)
-    if level not in ("A2", "A3"):
+    if level not in ("A1", "A2", "A3"):
         return
     scrubbed = _scrub(html)
     found = [(name, re.search(pat, scrubbed, re.IGNORECASE)) for name, pat in SUBSTANTIVE_WOW]
     found = [(name, m) for name, m in found if m]
     names = [name for name, _ in found]
+
+    # A1 (sóbrio): agora pede 1-2 momentos CALMOS (não-premium) ligados ao dado. As famílias
+    # loud seguem barradas pelo P-premium-sobrio — aqui só o piso calmo (WARN, não ERROR).
+    if level == "A1":
+        calm = [n for n in names if _wow_family(n) not in PREMIUM_FAMILIES]
+        if not calm:
+            report.issues.append(Issue(SEVERITY_WARN, "P8-a1-sem-momento-calmo",
+                "ambicao A1 (sóbrio) pede 1-2 momentos CALMOS — text-reveal (W6), anotação viva no "
+                "gráfico (W8), counter+barra (W2), draw-on (W22) ou máscara editorial (W10) — ligados "
+                "ao dado. Nenhum encontrado. Sobriedade não é chapa: 1-2 gestos contidos elevam sem "
+                "quebrar o registro (as famílias loud seguem proibidas no sóbrio)."))
+        return
+
     if not names:
         report.issues.append(Issue(SEVERITY_ERROR, "P8-ambicao-nao-entregue",
-            f"Parti declara ambicao {level} mas nenhum momento-wow SUBSTANTIVO (W1-W17) aparece "
+            f"Parti declara ambicao {level} mas nenhum momento-wow SUBSTANTIVO aparece "
             "no HTML. Grain/aurora/glass são materialité (decisão `superficie`), NÃO quitam a "
-            "ambição. Entregar ≥1 técnica de ambicao.md/wow-components.md ligada ao dado-tese."))
+            "ambição. Entregar técnicas de wow-components.md ligadas ao dado-tese."))
         if "momento-wow" not in (parti or {}):
             report.issues.append(Issue(SEVERITY_WARN, "P8-sem-campo-momento-wow",
                 f"ambicao {level} sem campo `momento-wow:` no parti — declarar qual W# e onde."))
         return
 
-    # P8-densidade (v7 — empilhamento): A2 alvo 2-4; A3 empilha 4-6 (≥3 famílias distintas).
+    # P8-densidade (v7 — empilhamento): A2 alvo 3-5; A3 empilha 6-8 (≥4 famílias distintas).
     families = {_wow_family(n) for n in names}
-    minimo = 3 if level == "A3" else 2
+    minimo = 4 if level == "A3" else 3
     if len(families) < minimo:
-        alvo = "4-6 (A3 empilha vários: 1 herói + 2 sistemas ambientes + momentos)" if level == "A3" else "2-4 por dobra/seção"
+        alvo = "6-8 (A3 empilha: 1 herói + 2 sistemas ambientes + 3-4 momentos; ≥4 famílias)" if level == "A3" else "3-5 por dobra/seção"
         report.issues.append(Issue(SEVERITY_WARN, "P8-densidade-baixa",
             f"ambicao {level} com {len(families)} momento-wow substantivo ({', '.join(sorted(families))}). "
             f"Alvo: {alvo}, cada um ligado ao dado. Ver §STACKING em wow-components.md."))
@@ -973,7 +986,7 @@ def stats_mode(folder: Path) -> int:
     counters = {a: Counter() for a in axes}
     wow_counter = Counter()     # famílias W# ENTREGUES (anti-uniformidade)
     wow_docs = 0                # docs A2/A3 considerados
-    mono_wow = []               # docs com um único momento-wow (abaixo da régua 2-4)
+    mono_wow = []               # docs com um único momento-wow (abaixo da régua 3-5)
     sem_parti = []
     total = 0
 
@@ -1025,7 +1038,7 @@ def stats_mode(folder: Path) -> int:
             flag = "  <-- >60%: vira fingerprint da casa (variar o W#)" if pct > 60 and wow_docs >= 3 else ""
             print(f"  {n:3d}  {pct:5.1f}%  {fam}{flag}")
         if mono_wow:
-            print(f"\n  Abaixo da régua (1 momento-wow; alvo 2-4 por dobra/seção):")
+            print(f"\n  Abaixo da régua (1 momento-wow; alvo 3-5 por dobra/seção):")
             for name, fam in mono_wow:
                 print(f"    - {name}  ({fam})")
 

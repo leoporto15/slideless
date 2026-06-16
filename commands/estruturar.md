@@ -68,7 +68,7 @@ Regra geral por densidade/uso:
 
 ## Visual / momentos-wow no mapa
 
-Ao anotar a coluna **Visual** e propor onde mora o `momento-wow`, a fonte é [references/wow-components.md](../references/wow-components.md) — biblioteca W1–W31 de drop-ins copy-paste (receitas já corrigidas: `@supports` + estado-final-base + reduced-motion). Respeitar o **§STACKING**: 1 herói pinned + 2 sistemas ambientes (uma só `--spring`) + 3–4 momentos rank-4 espaçados + ~70% calmo. Densidade por ambição do parti: **A2 = 2–4 momentos**; **A3 = 4–6, ≥3 famílias**; A1/sóbrio = 0 premium. (Este comando só propõe o mapa; o gate de render roda no comando de geração que recebe a aprovação.)
+Ao anotar a coluna **Visual** e propor onde mora o `momento-wow`, a fonte é [references/wow-components.md](../references/wow-components.md) — biblioteca W1–W31 de drop-ins copy-paste (receitas já corrigidas: `@supports` + estado-final-base + reduced-motion). Respeitar o **§STACKING**: 1 herói pinned + 2 sistemas ambientes (uma só `--spring`) + 3–4 momentos rank-4 espaçados + ~70% calmo. Densidade por ambição do parti: **A1/sóbrio = 1–2 momentos calmos** (W6/W8/W2/W22/W10 — nunca premium loud); **A2 = 3–5 momentos**; **A3 = 6–8, ≥4 famílias**. (Este comando só propõe o mapa; o gate de render roda no comando de geração que recebe a aprovação.)
 
 Seguir o passo-a-passo de [references/workflow.md](../references/workflow.md).
 
