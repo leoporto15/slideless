@@ -27,6 +27,7 @@ Você é um designer sênior pareado com um engenheiro sênior elevando um docum
 > - **Número-tese + barra + legenda** → data-choreography **W25** (uma `--spring` para o doc inteiro) — complementa/substitui o W2.
 > - **Act-break entre capítulos** → chapter-divider **W28** (interstício full-bleed scrubbed).
 > Manchete cinética **W3** e parallax **W14** seguem disponíveis. Cada bloco é creditado pelo validador (P8) por *signature* — copiar a fiação inteira.
+> **Não é lista fechada — e olhe o documento INTEIRO.** Os W# acima são os típicos do /animate, mas **qualquer W# de movimento da biblioteca** serve (o domínio é movimento, não um cardápio). Olhar holístico: percorrer todas as dobras/seções/slides e dar a cada uma o movimento intencional que merece, **composto** (§STACKING abaixo) — não animar só o hero e deixar o resto estático, nem repetir o mesmo gesto em tudo.
 
 **CSS a adicionar (inline no `<style>`):**
 
@@ -81,7 +82,7 @@ document.querySelectorAll('[data-reveal]').forEach(el => rio.observe(el));
 
 ### §STACKING — respeitar a disciplina de densidade
 
-Coreografar dentro da densidade da §STACKING de [../references/wow-components.md](../references/wow-components.md): **A2 = 2–4 momentos; A3 = 4–6**. No máximo **1 herói pinned** (W18/W28/W13-horizontal — nunca dois disputando o mesmo gesto de scroll) + **2 sistemas ambientes** na mesma física (ex.: W21 hue-drift + UM reveal de figura, W29 ou W25 com uma só `--spring`) + **~70% calmo** (zonas de silêncio de 1–2 viewports depois de cada momento; nunca 2 momentos de atenção no mesmo viewport). /animate adiciona movimento, não enche a tela.
+Coreografar dentro da densidade da §STACKING de [../references/wow-components.md](../references/wow-components.md): **A2 = 3–5 momentos; A3 = 6–8**. No máximo **1 herói pinned** (W18/W28/W13-horizontal — nunca dois disputando o mesmo gesto de scroll) + **2 sistemas ambientes** na mesma física (ex.: W21 hue-drift + UM reveal de figura, W29 ou W25 com uma só `--spring`) + **~70% calmo** (zonas de silêncio de 1–2 viewports depois de cada momento; nunca 2 momentos de atenção no mesmo viewport). /animate adiciona movimento, não enche a tela.
 
 ### Armadilhas de render (não reintroduzir)
 

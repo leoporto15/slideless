@@ -26,6 +26,7 @@ Você é um designer sênior pareado com um engenheiro sênior elevando um docum
 > - **3D-tilt W24** (card inclina rumo ao cursor) — só no **1–2 cards-herói**, jamais em todo card (tell de slop).
 > - **Magnetismo W11** (elemento atrai o cursor) — **só CTA primário + dots de nav**, nunca em linha de tabela/lista densa, `S ≤ 0.4`.
 > Todos desligam em touch e reduced-motion sozinhos (já no bloco). **SEM hover-lift/glow incondicional** — a camada premium vem de materialidade por papel (fio, grain, specular) e desses gestos contidos, não de `translateY`/glow em tudo (anti-slop, falha P-premium). **Conflito duro:** nunca W24 tilt + W26/W12 spotlight no mesmo viewport (cursor disputado).
+> **Não é lista fechada — e olhe o documento INTEIRO.** Os acima são o repertório típico, mas **qualquer micro-interação da biblioteca** (no domínio interação/hover/cursor) serve. Olhar holístico: a camada de prazer tem que ser **coerente em todo o doc** (hover por papel, materialidade por superfície, foco de leitura) — não um gesto solto num canto. Coerência > quantidade: 2–3 gestos consistentes batem 6 aleatórios.
 
 **CSS a adicionar:**
 
@@ -125,7 +126,7 @@ body::after  { transform: translateY(calc(var(--parallax-y, 0) * -0.6)); }
 
 ### §STACKING — respeitar a disciplina de densidade
 
-Mesmo micro-interações contam para a densidade da §STACKING de [../references/wow-components.md](../references/wow-components.md): **A2 = 2–4 momentos; A3 = 4–6**. /delight escolhe 2–3 gestos coerentes, não soma todos — **nunca 2 cursor-reativos no mesmo viewport** (W24+W26/W12), e respeitar os **~70% calmo** + a regra de "1 spotlight/doc". Não empilhar pinned (isso é trabalho do /animate/overdrive, não do /delight).
+Mesmo micro-interações contam para a densidade da §STACKING de [../references/wow-components.md](../references/wow-components.md): **A2 = 3–5 momentos; A3 = 6–8**. /delight escolhe 2–3 gestos coerentes, não soma todos — **nunca 2 cursor-reativos no mesmo viewport** (W24+W26/W12), e respeitar os **~70% calmo** + a regra de "1 spotlight/doc". Não empilhar pinned (isso é trabalho do /animate/overdrive, não do /delight).
 
 ### Armadilhas de render (não reintroduzir)
 

@@ -37,7 +37,7 @@ Priorize por categoria: **🚫 bloqueante > ⚠️ alto > 🟡 médio > 💡 sug
 ### 🚀 Ambição (A2/A3 — [ambicao.md](ambicao.md))
 
 - [ ] 🔴 `ambicao` declarada e coerente com o registro (A3 proibido em regulatório/RI)
-- [ ] 🔴 Se A2/A3: ≥1 momento-wow (W1-W9) presente E ligado ao **dado-tese** (não decorativo)
+- [ ] 🔴 momentos-wow (W1-W31) na densidade do nível (**A1 1-2 calmos · A2 3-5 · A3 6-8 ≥4 famílias**), cada um ligado ao **dado-tese** (não decorativo)
 - [ ] 🔴 Cada gesto de ponta: `@supports` + estado-final-base (conteúdo aparece num Chrome sem a feature) + branch reduced-motion
 - [ ] ⚠️ Régua de craft: curvas nomeadas (não `ease` default), teto 300ms em UI, `.no-transitions` no toggle de tema
 - [ ] ⚠️ Materialidade respeita o registro (report = grain estático + specular; nada de glass/WebGL/aurora saturada)
