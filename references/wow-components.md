@@ -1064,3 +1064,13 @@ silêncio — `scripts/smoke.py` agora as pega, mas evite-as desde a composiçã
 6. **Clique de hub que não rola.** `scrollIntoView` DEPOIS de `startViewTransition`
    roda antes do painel virar `display:block` → rola pro card fechado ("clique 2x").
    Chame o scroll em **duplo `requestAnimationFrame`** após o `navigate()`/updateDOM.
+7. **Gráfico Chart.js estourando o box em "outros computadores".** `<canvas>` é replaced
+   element: regra CSS `canvas { width: auto }` faz ele exibir no tamanho INTRÍNSECO
+   (buffer = css × `devicePixelRatio`), então em tela 2×/3× o gráfico aparece no dobro e
+   vaza o container — em DPR=1 (a tela do dev) parece ok. Dê tamanho EXPLÍCITO ao canvas:
+   `width:100% !important; height:100% !important` (ou `calc(...)`), **nunca `auto`**, com
+   `maintainAspectRatio:false` e o container com altura definida. (validador: `B-canvas-autosize`.)
+8. **Demo embutida via `iframe srcdoc` carrega o doc-pai ao clicar um link.** Em `srcdoc`,
+   `href="#x"` resolve contra a URL-base do PAI, então clicar navega o iframe pro pai. Embuta
+   via **`iframe.src` = blob URL** (`URL.createObjectURL(new Blob([html],{type:'text/html'}))`),
+   aí os links de hash resolvem dentro da própria demo.

@@ -897,6 +897,21 @@ def check_invalid_calc(html: str, report: Report) -> None:
             "Sempre `2rem + 6vw`, nunca `2rem+6vw`.", _line_of(scrubbed, m.start())))
 
 
+def check_canvas_autosize(html: str, report: Report) -> None:
+    """B-canvas-autosize: regra CSS de <canvas> com width/height: auto. <canvas> é replaced
+    element — width:auto usa o tamanho INTRÍNSECO (o buffer = css × devicePixelRatio); em telas
+    HiDPI (2×/3×, muitos laptops) o gráfico Chart.js exibe no dobro/triplo e ESTOURA o container.
+    Em DPR=1 (a tela do dev) parece ok. Usar tamanho explícito (100% / calc), nunca auto."""
+    scrubbed = _scrub(html)
+    m = re.search(r"canvas[^{}]*\{[^}]*\b(?:width|height)\s*:\s*auto", scrubbed)
+    if m:
+        report.issues.append(Issue(SEVERITY_ERROR, "B-canvas-autosize",
+            "Regra de <canvas> com `width/height: auto`. Canvas é replaced element — `auto` usa o "
+            "tamanho intrínseco (buffer = css × devicePixelRatio); em tela 2×/3× o gráfico exibe no "
+            "dobro e estoura o box (some em DPR=1). Use tamanho explícito (`width:100% !important` ou "
+            "`calc(...)`), nunca auto.", _line_of(scrubbed, m.start())))
+
+
 def check_kit_vars(html: str, report: Report) -> None:
     """B-kit-undefined: <link> de fonte carregado mas `--kit-display:` não definido →
     o tema usa var(--kit-display, fallback) e cai pro Georgia/sistema; o kit fica inútil."""
@@ -1048,6 +1063,7 @@ def validate(html_path: Path, strict: bool = False) -> Report:
     # Checks técnicos de FUNCIONAMENTO (bugs que quebram em silêncio — v7 polish)
     check_placeholders(html, report)
     check_invalid_calc(html, report)
+    check_canvas_autosize(html, report)
     check_kit_vars(html, report)
     check_nested_script(html, report)
 
