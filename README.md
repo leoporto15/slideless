@@ -100,7 +100,7 @@
 | `/slideless-quieter` | **Reduz designs ruidosos** — tipografia -15%, extremos de peso suavizados, motion calma. Opera dentro do kit e do nível de ambição declarados. |
 | `/slideless-animate` | **Movimento intencional** — coreografa apenas o momento-wow declarado e a gramática por papel, no perfil de motion do documento. Em registro estático, avisa e para. Respeita `prefers-reduced-motion`. |
 | `/slideless-delight` | **Micro-interações por papel** — hover por affordance, feedback no local do gatilho, micro-interações de leitura. Sem confetti, sem hover-lift universal; coerente com o nível de ambição. |
-| `/slideless-overdrive` | **Nível A3-extraordinário** — WebGL/minigl no hero, springs `linear()`, View Transitions, variable font animada, cursor-proximity. Interativo: pergunta quais efeitos (A-H, multi-seleção), com fallback gracioso. Showpiece técnico (até 5 MB). |
+| `/slideless-overdrive` | **Nível A3-extraordinário** — pode compor **qualquer momento-wow do palette W1-W31** (WebGL no hero, View Transitions, variable font animada, 3D-tilt, masked-type, sticky-stack…); as opções A-H são os _heavies_ A3-exclusivos que ele desbloqueia, não a lista única. Interativo (multi-seleção), fallback gracioso. Showpiece técnico (até 5 MB). |
 
 **Composição típica:**
 - `/slideless-bolder` + `/slideless-animate` → executivo com peso e movimento
@@ -155,7 +155,8 @@ slideless/
 ├── commands/                      ← 31 slash commands (1 arquivo cada)
 ├── references/
 │   ├── direcao-de-arte.md         ← o Parti: 7 decisões por documento (LER ANTES DE GERAR)
-│   ├── ambicao.md                 ← teto cutting-edge: eixo A1/A2/A3 + momentos-wow
+│   ├── ambicao.md                 ← teto cutting-edge: eixo A1/A2/A3 + densidade de momentos-wow
+│   ├── wow-components.md           ← biblioteca W1-W31 de drop-ins copy-paste + §STACKING + armadilhas de render
 │   ├── type-kits.md               ← pool de kits tipográficos + fontes banidas
 │   ├── anti-patterns.md           ← PPT-isms e AI-tells proibidos
 │   ├── design-system.md           ← tokens, dark mode, boot script
@@ -175,9 +176,10 @@ slideless/
 │   ├── exemplos/                  ← showcases canônicos (1 por modelo)
 │   └── templates/                 ← esqueletos vazios para popular
 ├── scripts/
-│   ├── validar.py                 ← validador determinístico (stdlib)
+│   ├── validar.py                 ← validador determinístico de ESTRUTURA (stdlib)
+│   ├── smoke.py                   ← gate de RENDER headless (Playwright): overflow, texto-por-caractere, número duplicado, slide curto, etc.
 │   └── exportar_pdf.py            ← PDF/PNG via Playwright
-└── demos/                         ← 3 famílias × 7 documentos (6 modelos + deck-overdrive), pareados
+└── demos/                         ← 4 famílias: 3 temáticas (itau-1T26 · asset · trump — 7 docs cada: 6 modelos + deck-overdrive) + slideless-skill (a própria skill se demonstrando nos 6 formatos)
 ```
 
 ---
@@ -235,6 +237,19 @@ Exit code: `0` se sem erros, `1` se houver pelo menos um.
 
 ---
 
+## Como rodar o smoke (gate de render)
+
+O `validar.py` checa a **estrutura**; ele não vê runtime nem quebra visual. O `smoke.py` carrega o HTML num Chromium headless e pega o que a estrutura não vê: erro de JS, overflow/sangramento, texto quebrando por-caractere, odômetro não-clipado, número duplicado, slide que não preenche a viewport, invasão de coluna lateral.
+
+```bash
+pip install playwright && playwright install chromium
+python scripts/smoke.py caminho/do/arquivo.html
+```
+
+Saídas: `SMOKE PASS` (ok) · `SMOKE FAIL: <causa>` (corrigir antes de entregar) · `SKIP` (Playwright ausente). **Todo comando que gera ou modifica um documento roda validar.py + smoke.py antes de entregar.**
+
+---
+
 ## Como exportar PDF
 
 ```bash
@@ -276,4 +291,4 @@ Manter a distinção `handbook` × `deck` é load-bearing — perdê-la é repet
 
 - Antes de adicionar componente novo: ver se cabe em [componentes.md](references/componentes.md) — duplicidade fragmenta o sistema.
 - Antes de adicionar modelo novo: justificar que os 6 existentes (handbook, hub, scrollytelling, site, deck, report) não cobrem o caso. O sistema é deliberadamente fechado.
-- Cada PR deve passar o validador (`python scripts/validar.py`) nos exemplos afetados.
+- Cada PR deve passar o validador (`python scripts/validar.py`) **e** o gate de render (`python scripts/smoke.py`) nos exemplos afetados.

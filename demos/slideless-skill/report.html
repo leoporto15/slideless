@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<!--
+  slideless · REPORT — auto-apresentação em modo SHOWCASE (demonstração master)
+  Registro editorial denso (PDF-friendly), mas com data-showcase liberando a
+  camada premium: 14 wow components empilhados sobre dado real, cada um com
+  estado-final-base (degrada em print/intranet sem JS) e branch reduced-motion.
+  Conteúdo 100% real, derivado do próprio repositório (SKILL.md / README /
+  references). Zero lorem, zero dado inventado.
+-->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slideless — relatório de visão geral</title>
+  <meta name="description" content="Slideless: a skill interna do Itaú que substitui o PowerPoint por documentos web de arquivo único. 6 formatos, 31 comandos, 31 wow components, single-file inviolável.">
+
+  <!-- Boot: lê preferência de tema antes do paint para evitar flash -->
+  <script>
+    (function() {
+      try {
+        var t = localStorage.getItem('theme') ||
+                (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+  <!-- slideless:parti
+  conteudo: visão geral do Slideless (auto-apresentação da skill, em modo showcase)
+  registro: institucional-impresso (report editorial denso; data-showcase libera a camada premium para DEMONSTRAR o palette inteiro — não é geração real)
+  kit: 02 (Literata + Public Sans)
+  capa: numeral-bleed + masked-type na manchete-tese
+  superficie: flat com aurora-mesh localizada nos divisores de ato
+  motion: editorial (scroll-driven view-timeline; texto corrido e tabelas nunca animam entrada)
+  ambicao: A3-extraordinário (showcase — empilha 14 wow components que sobrevivem ao registro editorial e degradam em print; gateado por data-showcase)
+  assinatura: M0 composição + empilhamento controlado (1 herói + 2 sistemas ambientes + momentos espaçados)
+  momento-wow: W19 masked-type na manchete; W2/W15/W25 nos números-tese; W6 text-reveal no lead; W8 anotação viva no gráfico; W10 mask-reveal nos act-breaks; W20 aurora-mesh + W21 hue-drift como sistemas ambientes; W22 draw-on no fluxo; W27 marquee de stats; W28 chapter-divider; W29 blur-focus nas figuras; W1 cena scroll-driven
+  nao-vai-ter: hover-lift; webgl; cursor-proximity
+  -->
+
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- SLIDELESS:TYPE-KIT — Kit 02 (Literata display + Public Sans corpo/ui + Spline Sans Mono) -->
+  <link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400..700&family=Public+Sans:wght@400;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- SLIDELESS:TYPE-KIT-END -->
+
+  <!-- Chart.js (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+
+  <style>
+    :root{
+  --kit-display:'Literata';
+  --kit-text:'Public Sans';
+  --kit-ui:'Public Sans';
+  --kit-mono:'Spline Sans Mono';
+}
+/*
+ * slideless — tema itau v4 (duas camadas)
+ *
+ * O tema é dividido em DUAS CAMADAS, marcadas grupo a grupo:
+ *
+ *  [MARCA — INVIOLÁVEL]  laranja #FF6200, paleta semântica com papéis, bg/fg
+ *                        warm, dark mode, a11y (focus, reduced-motion).
+ *                        Copiar SEMPRE, nunca alterar.
+ *
+ *  [DIREÇÃO — compor conforme o parti]  fontes (slots --kit-*), glows,
+ *                        radius, sombras, easings, affordances de componente.
+ *
+ *  [SISTEMA]             escala fluida, espaço, layout — engenharia de
+ *                        viewport/char-limits. Mexer só com razão técnica.
+ */
+
+:root {
+  /* ─── [MARCA] Cores da marca Itaú (fixas nos dois temas) ─────────── */
+  --itau-orange:     #FF6200;
+  --itau-orange-2:   #F88104;
+  --itau-orange-3:   #FA9F09;
+  --itau-blue-3:     #3B85FA;
+  --itau-yellow:     #FBC305;
+  --itau-warm-black: #14110d;
+
+  /* ─── [MARCA] Paleta semântica multi-dimensional (light) ─────────── */
+  --color-accent:        var(--itau-orange);    /* 1. brand accent       */
+  --color-accent-dim:    rgba(255, 98, 0, 0.08);
+  --color-accent-fg:     #ffffff;
+
+  --color-info:          var(--itau-blue-3);    /* 2. info/dados         */
+  --color-info-dim:      rgba(59, 133, 250, 0.08);
+
+  --color-success:       #3f6f1f;               /* 3. sucesso/positivo   */
+  --color-success-dim:   rgba(63, 111, 31, 0.08);
+
+  --color-sage:          var(--color-success);
+  --color-sage-dim:      var(--color-success-dim);
+
+  --color-teal:          #0f766e;               /* 5. técnico/analítico  */
+  --color-teal-dim:      rgba(15, 118, 110, 0.08);
+
+  --color-plum:          #9f1239;               /* 6. crítico/atenção    */
+  --color-plum-dim:      rgba(159, 18, 57, 0.08);
+
+  --color-warn:          var(--itau-yellow);
+  --color-warn-dim:      rgba(251, 195, 5, 0.12);
+  --color-danger:        #b91c1c;
+  --color-danger-dim:    rgba(185, 28, 28, 0.08);
+
+  /* ─── [MARCA] Background + foreground (light) ────────────────────── */
+  --color-bg:            #faf7f5;   /* cream warm (não branco puro)    */
+  --color-bg-elevated:   #ffffff;
+  --color-bg-sunken:     #f4f1ec;
+  --color-fg:            #292017;   /* warm dark (não preto puro)      */
+  --color-fg-muted:      #6b5d50;
+  --color-fg-subtle:     #8a7e72;
+  --color-border:        rgba(41, 32, 23, 0.10);
+  --color-border-strong: rgba(41, 32, 23, 0.18);
+  --color-accent-hover:  var(--itau-orange-2);
+
+  /* ─── [DIREÇÃO] Glow radial — OPÇÃO do cardápio de superfície ────── */
+  --glow-warm:    radial-gradient(ellipse 80% 60% at 80% 0%, rgba(255, 98, 0, 0.10) 0%, transparent 55%);
+  --glow-cool:    radial-gradient(ellipse 70% 50% at 20% 100%, rgba(59, 133, 250, 0.08) 0%, transparent 55%);
+  --glow-hero:    radial-gradient(ellipse 90% 70% at 50% 0%, rgba(255, 98, 0, 0.14) 0%, transparent 50%);
+  --vignette:     radial-gradient(ellipse 120% 80% at 50% 50%, transparent 50%, rgba(41, 32, 23, 0.04) 100%);
+
+  /* ─── [MARCA] Syntax highlight (light) ───────────────────────────── */
+  --syntax-string:   #16a34a;
+  --syntax-keyword:  var(--itau-orange);
+  --syntax-function: var(--itau-blue-3);
+  --syntax-comment:  var(--color-fg-subtle);
+
+  /* ─── [DIREÇÃO] Tipografia — slots do kit (type-kits.md) ──────────── */
+  --font-text:    'Itau Text', var(--kit-text, 'Inter'), -apple-system, system-ui, sans-serif;
+  --font-display: 'Itau Display', var(--kit-display, Georgia), serif;
+  --font-mono:    var(--kit-mono, 'IBM Plex Mono'), 'SF Mono', Consolas, monospace;
+  --font-ui:      var(--kit-ui, var(--kit-text, 'Inter')), -apple-system, system-ui, sans-serif;
+
+  /* ─── [SISTEMA] Escala fluida (clamp) — vale para TODOS os modelos ── */
+  --size-xs:      clamp(0.75rem, 0.7rem + 0.2vw, 0.875rem);
+  --size-small:   clamp(0.875rem, 0.85rem + 0.15vw, 1rem);
+  --size-body:    clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+  --size-lead:    clamp(1.15rem, 1.05rem + 0.5vw, 1.4rem);
+  --size-h4:      clamp(1rem, 0.95rem + 0.25vw, 1.15rem);
+  --size-h3:      clamp(1.2rem, 1.1rem + 0.5vw, 1.5rem);
+  --size-h2:      clamp(1.6rem, 1.3rem + 1.2vw, 2.25rem);
+  --size-h1:      clamp(2.25rem, 1.8rem + 2vw, 3.5rem);
+
+  --size-display: clamp(2.25rem, 1.4rem + 1.8vw + 1.5vh, 4.25rem);
+  --size-mega:    clamp(2.75rem, 1.6rem + 2.4vw + 2vh, 5.5rem);
+  --size-giga:    clamp(3.5rem, 2rem + 3vw + 3vh, 9rem);
+
+  /* ─── [SISTEMA] Espaço ───────────────────────────────────────────── */
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem;
+  --space-4: 1rem;    --space-5: 1.5rem; --space-6: 2rem;
+  --space-7: 2.5rem;  --space-8: 3rem;   --space-10: 4rem;
+  --space-12: 5rem;   --space-16: 7rem;
+
+  /* ─── [SISTEMA] Layout ───────────────────────────────────────────── */
+  --content-max: 720px;
+  --sidebar-w:   268px;
+  --toc-w:       220px;
+  --header-h:    56px;
+
+  /* ─── [DIREÇÃO] Radius, sombra ───────────────────────────────────── */
+  --radius-sm: 4px;
+  --radius:    10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  --shadow-xs: 0 1px 2px rgba(41, 32, 23, 0.04);
+  --shadow-sm: 0 2px 4px rgba(41, 32, 23, 0.06), 0 1px 2px rgba(41, 32, 23, 0.04);
+  --shadow:    0 4px 12px rgba(41, 32, 23, 0.08), 0 1px 3px rgba(41, 32, 23, 0.05);
+  --shadow-lg: 0 12px 32px rgba(41, 32, 23, 0.12), 0 4px 12px rgba(41, 32, 23, 0.06);
+  --shadow-xl: 0 24px 64px rgba(41, 32, 23, 0.16), 0 8px 24px rgba(41, 32, 23, 0.08);
+
+  --inset-sm:  inset 0 1px 3px rgba(41, 32, 23, 0.06);
+  --inset:     inset 0 2px 8px rgba(41, 32, 23, 0.08);
+
+  --glow-accent-sm: 0 0 0 3px rgba(255, 98, 0, 0.14);
+  --glow-accent:    0 8px 32px rgba(255, 98, 0, 0.22);
+
+  /* ─── [DIREÇÃO] Easing — vocabulário, não receita ────────────────── */
+  --ease-out:       cubic-bezier(0.22, 1, 0.36, 1);     /* entrada */
+  --ease-in-out:    cubic-bezier(0.65, 0, 0.35, 1);     /* assinatura */
+  --ease-snap:      cubic-bezier(0.2, 0, 0, 1);         /* micro-interação */
+  --ease-spring:    cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-emphatic:  cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+
+  --duration-fast:    150ms;
+  --duration:         250ms;
+  --duration-slow:    400ms;
+  --duration-slide:   650ms;
+  --duration-fade:    750ms;
+  --duration-hero:    900ms;
+}
+
+/* ─── Dark theme override ───────────────────────────────────────────── */
+[data-theme="dark"] {
+  --color-bg:            #14110d;
+  --color-bg-elevated:   #1c1814;
+  --color-bg-sunken:     #221d18;
+  --color-fg:            #ede5dd;
+  --color-fg-muted:      #b8aa9a;
+  --color-fg-subtle:     #786e62;
+  --color-border:        rgba(237, 229, 221, 0.10);
+  --color-border-strong: rgba(237, 229, 221, 0.20);
+
+  --color-accent:        var(--itau-orange-3);
+  --color-accent-hover:  var(--itau-orange-2);
+  --color-accent-fg:     #14110d;
+  --color-accent-dim:    rgba(250, 159, 9, 0.10);
+
+  --color-info-dim:      rgba(59, 133, 250, 0.12);
+  --color-success:       #8fcc5a;
+  --color-success-dim:   rgba(143, 204, 90, 0.10);
+  --color-sage:          var(--color-success);
+  --color-sage-dim:      var(--color-success-dim);
+  --color-teal:          #6fd0c0;
+  --color-teal-dim:      rgba(111, 208, 192, 0.10);
+  --color-plum:          #e8889c;
+  --color-plum-dim:      rgba(232, 136, 156, 0.10);
+
+  --color-warn-dim:      rgba(251, 195, 5, 0.12);
+  --color-danger:        #f87171;
+  --color-danger-dim:    rgba(248, 113, 113, 0.10);
+
+  --glow-warm:    radial-gradient(ellipse 80% 60% at 80% 0%, rgba(250, 159, 9, 0.18) 0%, transparent 55%);
+  --glow-cool:    radial-gradient(ellipse 70% 50% at 20% 100%, rgba(59, 133, 250, 0.14) 0%, transparent 55%);
+  --glow-hero:    radial-gradient(ellipse 90% 70% at 50% 0%, rgba(250, 159, 9, 0.22) 0%, transparent 50%);
+  --vignette:     radial-gradient(ellipse 120% 80% at 50% 50%, transparent 50%, rgba(0, 0, 0, 0.30) 100%);
+
+  --syntax-string:   #4ade80;
+
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.4);
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+  --shadow:    0 4px 12px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.3);
+  --shadow-xl: 0 24px 64px rgba(0,0,0,0.6), 0 8px 24px rgba(0,0,0,0.4);
+
+  --inset-sm:  inset 0 1px 3px rgba(0,0,0,0.4);
+  --inset:     inset 0 2px 8px rgba(0,0,0,0.5);
+
+  --glow-accent-sm: 0 0 0 3px rgba(250, 159, 9, 0.20);
+  --glow-accent:    0 8px 32px rgba(250, 159, 9, 0.30);
+}
+
+/* ─── Reset / base ───────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--font-text);
+  font-size: var(--size-body);
+  line-height: 1.65;
+  color: var(--color-fg);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  transition: background var(--duration-fast), color var(--duration-fast);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* ─── Headings ───────────────────────────────────────────────────── */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  color: var(--color-fg);
+  line-height: 1.1;
+  letter-spacing: -0.022em;
+  font-weight: 700;
+  font-feature-settings: 'ss01', 'ss02';
+}
+h1 { font-size: var(--size-h1); margin: 0 0 var(--space-4); letter-spacing: -0.030em; }
+h2 {
+  font-size: var(--size-h2);
+  margin: var(--space-10) 0 var(--space-4);
+  scroll-margin-top: calc(var(--header-h) + var(--space-4));
+  position: relative;
+}
+h3 {
+  font-size: var(--size-h3); font-weight: 600;
+  margin: var(--space-7) 0 var(--space-3);
+  scroll-margin-top: calc(var(--header-h) + var(--space-4));
+}
+h4 { font-size: var(--size-h4); font-weight: 600; margin: var(--space-5) 0 var(--space-2); }
+
+p { margin: 0 0 var(--space-4); max-width: 65ch; color: var(--color-fg); }
+.lead {
+  font-size: var(--size-lead);
+  line-height: 1.5;
+  color: var(--color-fg-muted);
+  margin-bottom: var(--space-7);
+  font-weight: 400;
+  max-width: 60ch;
+}
+a { color: var(--color-accent); text-decoration: none; }
+a:hover { color: var(--color-accent-hover); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1.5px; }
+strong { font-weight: 700; color: var(--color-fg); }
+
+code:not(pre code) {
+  font-family: var(--font-mono); font-size: 0.875em;
+  background: var(--color-bg-sunken);
+  padding: 0.15em 0.45em;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+}
+
+ul, ol { padding-left: var(--space-5); margin: 0 0 var(--space-4); }
+li { margin-bottom: var(--space-2); max-width: 65ch; }
+li::marker { color: var(--color-fg-subtle); }
+
+/* ─── Callouts (4 semânticas) ────────────────────────────────────── */
+.callout {
+  display: flex; gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  margin: var(--space-5) 0;
+  border-left: 3px solid;
+  border-radius: var(--radius);
+  break-inside: avoid;
+}
+.callout--info   { background: var(--color-info-dim);    border-color: var(--color-info); }
+.callout--tip    { background: var(--color-success-dim); border-color: var(--color-success); }
+.callout--warn   { background: var(--color-warn-dim);    border-color: var(--color-warn); }
+.callout--danger { background: var(--color-danger-dim);  border-color: var(--color-danger); }
+.callout__icon {
+  flex-shrink: 0; width: 22px; height: 22px;
+  display: grid; place-items: center;
+  border-radius: 50%; font-weight: 700;
+  font-size: 0.7rem; color: white; margin-top: 2px;
+}
+.callout--info   .callout__icon { background: var(--color-info); }
+.callout--tip    .callout__icon { background: var(--color-success); }
+.callout--warn   .callout__icon { background: var(--color-warn); color: var(--itau-warm-black); }
+.callout--danger .callout__icon { background: var(--color-danger); }
+.callout__content { flex: 1; min-width: 0; }
+.callout__title { font-weight: 700; margin: 0 0 var(--space-1); font-size: var(--size-small); color: var(--color-fg); }
+.callout__content p { margin: 0; font-size: var(--size-small); }
+
+/* ─── Reduced motion ─────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  [data-reveal] { opacity: 1; transform: none; transition-delay: 0s; }
+}
+
+/* ─── [MARCA] Paleta secundária em OKLCH ─────────────────────────── */
+@supports (color: oklch(60% 0.1 50)) {
+  :root {
+    --color-success:     oklch(52% 0.11 140);
+    --color-success-dim: oklch(52% 0.11 140 / 0.08);
+    --color-teal:        oklch(52% 0.08 200);
+    --color-teal-dim:    oklch(52% 0.08 200 / 0.08);
+    --color-plum:        oklch(46% 0.12 355);
+    --color-plum-dim:    oklch(46% 0.12 355 / 0.08);
+    --color-danger:      oklch(50% 0.16 27);
+    --color-danger-dim:  oklch(50% 0.16 27 / 0.08);
+  }
+  [data-theme="dark"] {
+    --color-success:     oklch(76% 0.13 140);
+    --color-success-dim: oklch(76% 0.13 140 / 0.10);
+    --color-teal:        oklch(78% 0.09 195);
+    --color-teal-dim:    oklch(78% 0.09 195 / 0.10);
+    --color-plum:        oklch(74% 0.11 0);
+    --color-plum-dim:    oklch(74% 0.11 0 / 0.10);
+    --color-danger:      oklch(70% 0.15 25);
+    --color-danger-dim:  oklch(70% 0.15 25 / 0.10);
+  }
+}
+
+
+    /* ─── Tokens ESPECÍFICOS do report ──────────────────────────────── */
+    :root {
+      --report-max:       820px;
+      --report-gutter:    var(--space-8);
+      --report-lead:      1.75rem;
+      --report-body-size: 1rem;
+      --report-small:     0.875rem;
+      --report-header-h:  80px;
+    }
+
+    body {
+      font-size: var(--report-body-size);
+      line-height: var(--report-lead);
+      background: var(--color-bg);   /* flat — sem glow-wallpaper (anti-pattern C8) */
+    }
+    .report-body p { color: var(--color-fg-muted); max-width: 70ch; }
+
+    /* ─── Header institucional ────────────────────────────────────── */
+    .report-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: var(--report-header-h);
+      background: rgba(250,247,245,0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--space-8);
+      gap: var(--space-6);
+    }
+    @supports not (backdrop-filter: blur(2px)) {
+      .report-header { background: var(--color-bg-elevated); }
+    }
+    [data-theme="dark"] .report-header {
+      background: rgba(20,17,13,0.88);
+    }
+    .report-header::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-accent-hover) 50%, transparent 100%);
+      opacity: 0.6;
+    }
+    .report-header__brand { display: flex; align-items: center; gap: var(--space-4); }
+    .report-header__logo {
+      width: 40px; height: 40px;
+      border-radius: var(--radius-sm);
+      background: var(--color-accent);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-weight: 800;
+      color: var(--color-accent-fg); font-size: 1rem; letter-spacing: -0.03em; flex-shrink: 0;
+    }
+    .report-header__org {
+      margin: 0; font-family: var(--font-display); font-weight: 700;
+      font-size: 0.9375rem; color: var(--color-fg); letter-spacing: -0.02em;
+    }
+    .report-header__doc { margin: 0; font-size: var(--size-xs); color: var(--color-fg-muted); font-family: var(--font-mono); }
+    .report-header__meta { display: flex; align-items: center; gap: var(--space-4); }
+    .report-header__date { margin: 0; font-size: var(--size-small); color: var(--color-fg-muted); font-weight: 500; }
+
+    /* ─── Theme toggle ────────────────────────────────────────────── */
+    .theme-toggle {
+      width: 36px; height: 36px;
+      display: grid; place-items: center;
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: 999px; cursor: pointer;
+      color: var(--color-fg); font-size: 14px;
+      transition: background var(--duration-fast) var(--ease-snap), border-color var(--duration-fast) var(--ease-snap);
+    }
+    .theme-toggle:hover { background: var(--color-bg-sunken); border-color: var(--color-border-strong); }
+
+    /* ─── TOC numerado ────────────────────────────────────────────── */
+    .report-toc {
+      max-width: var(--report-max);
+      margin: var(--space-8) auto var(--space-6);
+      padding: var(--space-5) var(--report-gutter);
+    }
+    .report-toc__heading {
+      font-size: var(--size-xs); font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--color-fg-subtle); margin: 0 0 var(--space-4);
+    }
+    .report-toc__list { list-style: none; padding: 0; margin: 0; columns: 2; column-gap: var(--space-6); }
+    .report-toc__list li { margin-bottom: var(--space-2); break-inside: avoid; }
+    .report-toc__list a {
+      display: flex; align-items: baseline; gap: var(--space-3);
+      font-size: var(--size-small); color: var(--color-fg-muted);
+      text-decoration: none; padding: var(--space-1) 0;
+      border-bottom: 1px dotted var(--color-border);
+      transition: color var(--duration-fast);
+    }
+    .report-toc__list a:hover { color: var(--color-accent); border-color: var(--color-accent); }
+    .toc-num { font-family: var(--font-mono); font-size: var(--size-xs); color: var(--color-accent); font-weight: 600; flex-shrink: 0; min-width: 2ch; }
+
+    /* ═══ CAPA editorial — numeral-bleed + masked-type ═══════════════ */
+    .report-cover {
+      max-width: var(--report-max);
+      margin: var(--space-10) auto var(--space-8);
+      padding: 0 var(--report-gutter);
+      position: relative;
+    }
+    .report-cover__kicker {
+      font-family: var(--font-mono); font-size: var(--size-xs);
+      text-transform: uppercase; letter-spacing: 0.14em;
+      color: var(--color-fg-subtle); margin: 0 0 var(--space-4);
+    }
+    .report-cover__title {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 1.6rem + 3.4vw, 3.6rem);
+      line-height: 1.02; letter-spacing: -0.03em;
+      font-weight: 700; margin: 0 0 var(--space-5); max-width: 18ch;
+    }
+    .report-cover__lead {
+      font-family: var(--font-display);
+      font-size: var(--size-lead); line-height: 1.5;
+      color: var(--color-fg-muted); max-width: 56ch; margin: 0;
+    }
+
+    /* ─── Sumário executivo ───────────────────────────────────────── */
+    .report-summary {
+      max-width: var(--report-max);
+      margin: 0 auto var(--space-10);
+      padding: 0 var(--report-gutter);
+    }
+    .report-summary__inner {
+      background: var(--color-bg-elevated);
+      border-left: 4px solid var(--color-accent);
+      border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+      padding: var(--space-7) var(--space-8);
+      box-shadow: var(--shadow-lg);
+      position: relative; overflow: hidden;
+    }
+    .report-summary__inner::before {
+      content: '';
+      position: absolute; top: 0; right: 0;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, var(--color-accent-dim) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .report-summary__label {
+      font-size: var(--size-xs); font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--color-accent); margin: 0 0 var(--space-4); font-family: var(--font-text);
+    }
+    .report-summary__lead {
+      font-family: var(--font-display);
+      font-size: var(--size-lead); line-height: 1.55;
+      color: var(--color-fg); margin: 0 0 var(--space-6); max-width: 60ch;
+    }
+    .report-summary__kpis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: var(--space-5);
+    }
+    .summary-kpi { border-top: 2px solid var(--color-border-strong); padding-top: var(--space-3); }
+    .summary-kpi__label {
+      font-size: var(--size-xs); color: var(--color-fg-muted);
+      margin: var(--space-2) 0 0; font-weight: 500; max-width: 20ch;
+    }
+
+    /* ─── Corpo principal ─────────────────────────────────────────── */
+    .report-body {
+      max-width: var(--report-max);
+      margin: 0 auto;
+      padding: var(--space-10) var(--report-gutter);
+    }
+
+    /* ─── Seção com número grande ─────────────────────────────────── */
+    .report-section {
+      margin-bottom: var(--space-12);
+      scroll-margin-top: calc(var(--report-header-h) + var(--space-4));
+    }
+    .section-header {
+      display: flex; align-items: flex-end; gap: var(--space-4);
+      margin-bottom: var(--space-6); padding-bottom: var(--space-4);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .section-num {
+      font-family: var(--font-mono); font-size: 3.4rem;
+      color: var(--color-border-strong); line-height: 1;
+      font-weight: 400; flex-shrink: 0; user-select: none;
+    }
+    .report-section h2 {
+      font-size: var(--size-h2); font-weight: 800; margin: 0;
+      letter-spacing: -0.025em; color: var(--color-fg);
+    }
+
+    /* ─── Pull quote ──────────────────────────────────────────────── */
+    .report-pullquote {
+      border-left: 4px solid var(--color-accent);
+      background: var(--color-accent-dim);
+      padding: var(--space-5) var(--space-6);
+      margin: var(--space-7) calc(-1 * var(--space-5));
+      border-radius: 0 var(--radius) var(--radius) 0;
+      break-inside: avoid;
+    }
+    .report-pullquote p {
+      font-family: var(--font-display);
+      font-size: var(--size-lead); font-style: italic;
+      color: var(--color-fg); line-height: 1.5;
+      margin: 0 0 var(--space-3); max-width: 60ch;
+    }
+    .report-pullquote cite { font-size: var(--size-small); color: var(--color-fg-muted); font-style: normal; font-weight: 500; }
+
+    /* ─── Tabelas de dados ────────────────────────────────────────── */
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-sm);
+      margin: var(--space-5) 0;
+      break-inside: avoid;
+    }
+    table.data-table { width: 100%; border-collapse: collapse; font-size: var(--size-small); background: var(--color-bg-elevated); }
+    table.data-table thead { position: sticky; top: 0; z-index: 2; background: var(--color-bg-sunken); }
+    table.data-table th {
+      padding: var(--space-3) var(--space-4); text-align: left;
+      font-size: var(--size-xs); font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      color: var(--color-fg-subtle);
+      border-bottom: 2px solid var(--color-border-strong); white-space: nowrap;
+    }
+    table.data-table td {
+      padding: var(--space-3) var(--space-4);
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-fg-muted); vertical-align: top; line-height: 1.5;
+    }
+    table.data-table tbody tr:nth-child(even) td { background: rgba(41,32,23,0.02); }
+    [data-theme="dark"] table.data-table tbody tr:nth-child(even) td { background: rgba(237,229,221,0.02); }
+    table.data-table tbody tr:hover td { background: var(--color-accent-dim); }
+    table.data-table tbody tr:last-child td { border-bottom: none; }
+    .td-strong { font-weight: 600; color: var(--color-fg); font-family: var(--font-display); }
+
+    /* ─── Tabela-protagonista full-bleed (dispositivo compositivo) ────
+       ATENÇÃO armadilha 4: report é coluna única SEM TOC lateral/sidebar.
+       O .bleed expande além da coluna mas a tabela rola (overflow-x:auto)
+       e não gera scroll horizontal de PÁGINA. */
+    .table-hero {
+      margin-left: calc((var(--report-max) - min(96vw, 1180px)) / 2);
+      margin-right: calc((var(--report-max) - min(96vw, 1180px)) / 2);
+      width: min(96vw, 1180px);
+      max-width: min(96vw, 1180px);
+    }
+    @media (max-width: 880px) { .table-hero { margin-left: 0; margin-right: 0; width: 100%; max-width: 100%; } }
+    .table-hero table.data-table tfoot td {
+      border-top: 3px double var(--color-border-strong);
+      font-family: var(--font-display); font-weight: 700; color: var(--color-fg);
+      background: var(--color-bg-sunken);
+    }
+
+    /* ─── Badges ──────────────────────────────────────────────────── */
+    .badge {
+      display: inline-flex; align-items: center;
+      padding: 2px 8px; border-radius: 999px;
+      font-size: 0.7rem; font-weight: 600;
+      font-family: var(--font-text); white-space: nowrap;
+    }
+    .badge-accent   { background: var(--color-accent-dim);   color: var(--color-accent); }
+    .badge-info     { background: var(--color-info-dim);     color: var(--color-info); }
+    .badge-success  { background: var(--color-success-dim);  color: var(--color-success); }
+    .badge-sage     { background: var(--color-sage-dim);     color: var(--color-sage); }
+    .badge-teal     { background: var(--color-teal-dim);     color: var(--color-teal); }
+    .badge-plum     { background: var(--color-plum-dim);     color: var(--color-plum); }
+    .badge-warn     { background: var(--color-warn-dim);     color: var(--color-fg-muted); }
+
+    /* ─── Gráficos ────────────────────────────────────────────────── */
+    .chart-wrap {
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      box-shadow: var(--shadow-sm);
+      margin: var(--space-5) 0;
+      break-inside: avoid;
+    }
+    .chart-title { font-family: var(--font-display); font-size: var(--size-h3); font-weight: 700; margin: 0 0 var(--space-2); color: var(--color-fg); }
+    .chart-subtitle { font-size: var(--size-xs); color: var(--color-fg-subtle); margin: 0 0 var(--space-5); }
+    .chart-inner { position: relative; height: 320px; }
+
+    /* ─── Footnotes ───────────────────────────────────────────────── */
+    sup { font-size: 0.7em; line-height: 1; }
+    .fn-ref, .fn-back { font-family: var(--font-mono); font-size: 0.75em; color: var(--color-accent); text-decoration: none; font-weight: 600; }
+    .fn-ref:hover, .fn-back:hover { text-decoration: underline; }
+    .report-footnotes {
+      max-width: var(--report-max); margin: var(--space-10) auto 0;
+      padding: var(--space-6) var(--report-gutter) var(--space-8);
+      border-top: 1px solid var(--color-border);
+    }
+    .fn-label { font-size: var(--size-xs); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-fg-subtle); margin: 0 0 var(--space-4); }
+    .fn-list { padding-left: var(--space-5); margin: 0; }
+    .fn-list li { font-size: var(--report-small); color: var(--color-fg-muted); margin-bottom: var(--space-2); line-height: 1.55; }
+
+    /* ─── Footer ──────────────────────────────────────────────────── */
+    .report-footer {
+      max-width: var(--report-max); margin: 0 auto;
+      padding: var(--space-6) var(--report-gutter) var(--space-10);
+      border-top: 1px solid var(--color-border);
+      display: flex; align-items: center; justify-content: space-between;
+      gap: var(--space-4); flex-wrap: wrap;
+    }
+    .report-footer__brand { font-family: var(--font-display); font-weight: 700; font-size: 0.875rem; color: var(--color-fg-subtle); }
+    .report-footer__disclaimer { font-size: var(--size-xs); color: var(--color-fg-subtle); max-width: 50ch; line-height: 1.5; margin: 0; }
+    .report-footer__anbima {
+      display: inline-flex; align-items: center; gap: var(--space-2);
+      border: 1px solid var(--color-border); border-radius: var(--radius-sm);
+      padding: var(--space-2) var(--space-3); font-size: var(--size-xs);
+      font-weight: 600; color: var(--color-fg-muted); white-space: nowrap;
+    }
+
+    /* base = final visível; data-reveal é só gancho opcional, NÃO esconde */
+    [data-reveal] { opacity: 1; transform: none; }
+    .section-divider { border: none; border-top: 1px solid var(--color-border); margin: var(--space-8) 0; }
+    .text-accent { color: var(--color-accent); }
+    .font-mono { font-family: var(--font-mono); }
+
+    /* ═══════════════════════════════════════════════════════════════════
+       CAMADA WOW — drops-ins colados verbatim (corrigidos), 1 por dado real.
+       Todos com estado-final-base + @supports + branch reduced-motion → degrada
+       em print/intranet sem JS. Liberados por data-showcase no <body>.
+       ═══════════════════════════════════════════════════════════════════ */
+
+    /* UMA física para o doc inteiro (curva-assinatura dos números) */
+    :root { --spring: linear(0, .5 30%, 1.08 60%, .98, 1); }
+
+    /* ── W21 — Scroll-hue drift (sistema ambiente; acentos de detalhe) ── */
+    @property --doc-hue { syntax: '<number>'; inherits: true; initial-value: 24; }
+    html { --doc-hue: 24; }   /* 24 = laranja Itaú */
+    @supports (animation-timeline: scroll()) {
+      @media (prefers-reduced-motion: no-preference) {
+        html { animation: hueDrift linear both; animation-timeline: scroll(root); }
+        @keyframes hueDrift { 45% { --doc-hue: 210; } 100% { --doc-hue: 24; } }
+      }
+    }
+    .accent-dynamic { color: hsl(var(--doc-hue) 95% 46%); }   /* S/L travados — só acentos */
+
+    /* ── W19 — Masked type (cor viva DENTRO das letras; 1 manchete) ───── */
+    @property --mt-a { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+    .masked-type { color: var(--color-accent); }   /* base = preenchimento sólido da marca */
+    @supports (background-clip: text) or (-webkit-background-clip: text) {
+      .masked-type {
+        background: conic-gradient(from var(--mt-a), var(--itau-orange), var(--itau-orange-3), var(--itau-orange));
+        -webkit-background-clip: text; background-clip: text; color: transparent;
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        .masked-type { animation: mtSpin 16s linear infinite; }
+        @keyframes mtSpin { to { --mt-a: 360deg; } }
+      }
+    }
+
+    /* ── W20 — Aurora mesh animada (divisores de ato; localizada) ─────── */
+    @property --au-x { syntax: '<percentage>'; inherits: false; initial-value: 24%; }
+    .aurora-mesh { position: relative; isolation: isolate; }
+    .aurora-mesh::before {
+      content: ''; position: absolute; inset: -10%; z-index: -1; pointer-events: none; filter: blur(60px);
+      background:
+        radial-gradient(38vw at var(--au-x) 30%, color-mix(in srgb, var(--itau-orange) 32%, transparent), transparent 60%),
+        radial-gradient(42vw at 78% 64%, color-mix(in srgb, var(--itau-blue-3) 22%, transparent), transparent 64%);
+    }
+    @supports not (background: color-mix(in srgb, red, blue)) {
+      .aurora-mesh::before { background: radial-gradient(38vw at 24% 30%, rgba(255,98,0,.14), transparent 60%); }
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .aurora-mesh::before { animation: auDrift 22s var(--ease-out, ease-in-out) infinite alternate; }
+      @keyframes auDrift { to { --au-x: 70%; } }
+    }
+
+    /* ── W28 — Chapter divider (interstício scrubbed; act-breaks) ─────── */
+    .chapter-divider { height: 150vh; margin: var(--space-12) 0; }   /* runway de scroll */
+    .chapter-divider__inner {
+      position: sticky; top: 0; height: 100vh;
+      display: grid; place-items: center; text-align: center; overflow: clip;
+      padding: 0 var(--report-gutter);
+    }
+    .chapter-divider__num {
+      font-family: var(--font-mono); font-size: clamp(1rem, 0.9rem + 1vw, 1.2rem);
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--color-accent); margin: 0 0 var(--space-4);
+    }
+    .chapter-divider__big {
+      font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(2.2rem, 1.4rem + 3.6vw, 3.6rem);
+      line-height: 1.05; letter-spacing: -0.03em;
+      color: var(--color-fg); margin: 0; max-width: 22ch;
+      font-variant-numeric: tabular-nums;   /* base = título estático full-bleed */
+    }
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        .chapter-divider__inner > * { animation: chScrub linear both; animation-timeline: view(); animation-range: contain 0% contain 100%; }
+        @keyframes chScrub { from { opacity:.2; transform: scale(.9); } 50% { opacity:1; transform:none; } to { opacity:.2; transform: scale(1.05); } }
+      }
+    }
+
+    /* ── W10 — Reveal por máscara editorial (manchetes de seção) ──────── */
+    .mask-reveal { clip-path: inset(0 0 0 0); }   /* base = visível */
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        .mask-reveal { animation: maskWipe linear both; animation-timeline: view(); animation-range: entry 5% cover 35%; }
+        @keyframes maskWipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+      }
+    }
+
+    /* ── W6 — Text reveal editorial (palavra sobe; só lead/título) ────── */
+    .w { display: inline-block; overflow: clip; vertical-align: top; }
+    .w-i { display: inline-block; transform: none; }   /* base = visível */
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        [data-split] { view-timeline-name: --r; view-timeline-axis: block; }
+        .w-i { animation: riseWord linear both; animation-timeline: --r;
+               animation-range: entry 0% entry 70%; animation-delay: calc(var(--i,0) * 35ms); }
+        @keyframes riseWord { from { transform: translateY(110%); } to { transform: none; } }
+      }
+    }
+
+    /* ── W2 — Counter + barra sincronizados (KPI do sumário) ──────────── */
+    @property --n { syntax: '<integer>'; inherits: false; initial-value: 0; }
+    .kpi { display: block; }
+    .kpi__num {
+      font-family: var(--font-display); font-weight: 800;
+      font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.2rem);
+      line-height: 1; color: var(--color-accent);
+      letter-spacing: -0.03em; display: inline-flex; align-items: baseline;
+      font-variant-numeric: tabular-nums;
+    }
+    .kpi__suf { font-size: 0.6em; margin-left: 0.08em; }
+    .kpi__bar {
+      display: block; height: 4px; margin-top: var(--space-3);
+      background: var(--color-accent); border-radius: 99px;
+      transform: scaleX(1); transform-origin: left;   /* base = cheia */
+    }
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        /* animation-name (kpiCount_N, com o alvo real) é injetado per-KPI pelo JS,
+           junto do counter-reset; aqui ficam só timeline + range comuns. */
+        .kpi { counter-reset: n var(--n); animation-duration: 1ms; animation-fill-mode: both;
+               animation-timeline: view(); animation-range: entry 20% cover 50%; }
+        .kpi__num-base { display: none; }            /* esconde o nó base; mostra o counter */
+        .kpi__num::after { content: counter(n); }
+        .kpi__bar { transform: scaleX(0); animation: kpiGrow linear both;
+                    animation-timeline: view(); animation-range: entry 20% cover 50%; }
+        @keyframes kpiGrow  { to { transform: scaleX(1); } }
+      }
+    }
+
+    /* ── W15 — Odômetro (número-tese rola por dígito) ─────────────────── */
+    .odometer { display:inline-flex; overflow:clip; line-height:1; font-variant-numeric: tabular-nums lining-nums;
+      font-family: var(--font-display); font-weight: 800; letter-spacing: -0.02em;
+      font-size: clamp(2.6rem, 1.8rem + 3vw, 4.2rem); color: var(--color-accent); }
+    .od-digit { display:inline-block; width:1ch; height: 1em; overflow:clip; }   /* armadilha 1: height 1em + clip */
+    .od-reel { display:flex; flex-direction:column; transition: transform 900ms var(--ease-out-strong); }
+    .od-reel > span { height:1em; }
+    @media (prefers-reduced-motion: reduce) { .od-reel { transition:none; } }
+
+    /* ── W25 — Data choreography (número + barra + legenda em cascata) ── */
+    @property --cn { syntax:'<integer>'; inherits:false; initial-value:0; }
+    [data-choreo] { display:grid; gap:.4rem; }
+    [data-choreo] .num {
+      font-family:var(--font-display); font-weight:800;
+      font-size:clamp(2rem, 1.4rem + 2.4vw, 3.2rem); line-height:1;
+      color:var(--color-accent); counter-reset:cn var(--cn);
+      font-variant-numeric: tabular-nums;
+    }
+    [data-choreo] .num::after { content:counter(cn); }   /* base também tem o número em texto no HTML */
+    [data-choreo] .num .suf { font-size:.5em; }
+    [data-choreo] .bar { height:5px; background:var(--color-border); border-radius:99px; overflow:hidden; }
+    [data-choreo] .bar i { display:block; height:100%; background:var(--color-accent); transform:scaleX(1); transform-origin:left; }
+    [data-choreo] .cap { color:var(--color-fg-muted); font-size:.92rem; }
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        [data-choreo] { animation-timeline:view(); animation-range:entry 20% entry 72%; }
+        [data-choreo] .bar i { transform:scaleX(0); animation:choB 1s var(--spring) .15s both; }
+        [data-choreo] .cap { opacity:0; animation:choC .6s ease .4s both; }
+        @keyframes choB { to { transform:scaleX(1); } }
+        @keyframes choC { to { opacity:1; } }
+        /* a contagem (choreoCount) é por-elemento via <style> injetado no JS (alvo real) */
+      }
+    }
+
+    /* ── W22 — Draw-on SVG (fluxo de 4 passos se desenha) ─────────────── */
+    .draw-on { fill:none; stroke:var(--color-accent); stroke-width:2.5; stroke-linecap:round;
+      stroke-dasharray:var(--len,1200); stroke-dashoffset:0; }   /* base = desenhado */
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        .draw-on { stroke-dashoffset:var(--len,1200); animation:drawP 1.4s ease both;
+                   animation-timeline:view(); animation-range:cover 6% cover 46%; }
+        @keyframes drawP { to { stroke-dashoffset:0; } }
+      }
+    }
+    .flow { margin: var(--space-7) 0; }
+    .flow__row { display:grid; grid-template-columns:repeat(4,1fr); position:relative; align-items:start; }
+    .flow__track { position:absolute; top:29px; left:12.5%; right:12.5%; height:2px; z-index:0; }
+    .flow__track svg { width:100%; height:2px; overflow:visible; display:block; }
+    .flow__step { display:flex; flex-direction:column; align-items:center; text-align:center; gap:.55rem; position:relative; z-index:1; padding:0 .4rem; }
+    .flow__disc { width:60px; height:60px; border-radius:50%; display:grid; place-items:center;
+      font-family:var(--font-display); font-weight:700; font-size:1.45rem;
+      background:var(--color-bg-elevated); border:2px solid var(--color-border-strong); color:var(--color-fg-muted); }
+    .flow__disc.is-final { background:var(--color-accent); border-color:var(--color-accent); color:var(--color-accent-fg); box-shadow:0 12px 34px var(--color-accent-dim); }
+    .flow__lbl { font-family:var(--font-ui); font-weight:700; font-size:1rem; color:var(--color-fg); line-height:1.2; }
+    .flow__sub { font-family:var(--font-ui); font-size:.82rem; color:var(--color-fg-muted); line-height:1.3; max-width:16ch; }
+    .flow__cap { text-align:center; color:var(--color-fg-muted); font-size:.9rem; margin-top:1.6rem; }
+    @media (max-width:640px) {
+      .flow__row { grid-template-columns:1fr; gap:1.3rem; } .flow__track { display:none; }
+      .flow__step { flex-direction:row; justify-content:flex-start; gap:1rem; text-align:left; } .flow__sub { max-width:none; }
+    }
+
+    /* ── W29 — Blur-to-sharp focus (sistema ambiente nas figuras) ─────── */
+    .focus-reveal { filter:none; }   /* base = nítido */
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        .focus-reveal { animation:focusIn linear both; animation-timeline:view(); animation-range:entry 8% entry 58%; }
+        @keyframes focusIn { from { filter:blur(12px) saturate(.5); opacity:.5; } to { filter:blur(0) saturate(1); opacity:1; } }
+      }
+    }
+
+    /* ── W27 — Marquee/ticker (fita de stats entre atos) ──────────────── */
+    .marquee { overflow: clip; border-block: 1px solid var(--color-border); padding: var(--space-3) 0; margin: var(--space-8) 0; }
+    .marquee__track { display: inline-flex; gap: 2.4rem; white-space: nowrap; will-change: transform; align-items: center; }
+    .marquee__track span { font-family: var(--font-mono); font-size: var(--size-small); color: var(--color-fg-muted); }
+    .marquee__track b { color: var(--color-accent); font-weight: 700; }
+    @media (prefers-reduced-motion: no-preference) { .marquee__track { animation: marq 36s linear infinite; } }
+    @keyframes marq { to { transform: translateX(-50%); } }
+    @media (prefers-reduced-motion: reduce) { .marquee__track { animation: none; } }
+
+    /* ── W8 — anotação viva: o estilo da banda/marcador sai dos tokens ── */
+    /* (o plugin Chart.js está no JS; nada de CSS dedicado além dos tokens) */
+
+    /* ── Numeral-bleed (dispositivo compositivo, M0) ──────────────────── */
+    .numeral-bleed { position: relative; }
+    .numeral-bleed__big {
+      font-family: var(--font-display); font-weight: 800;
+      font-size: clamp(5rem, 3rem + 14vw, 11rem);
+      line-height: 0.82; letter-spacing: -0.05em;
+      color: var(--color-accent); margin: 0;
+      font-variant-numeric: tabular-nums;
+    }
+    .numeral-bleed__cap { color: var(--color-fg-muted); font-size: var(--size-lead); max-width: 40ch; margin: var(--space-3) 0 0; }
+
+    /* ─── @media print ────────────────────────────────────────────── */
+    @media print {
+      .report-header, .report-toc, .theme-toggle, .marquee { display: none !important; }
+      /* act-breaks scrubbed colapsam para um título normal no PDF */
+      .chapter-divider { height: auto !important; margin: 1.5cm 0 !important; }
+      .chapter-divider__inner { position: static !important; height: auto !important; display: block !important; }
+      .chapter-divider__inner > * { animation: none !important; opacity: 1 !important; transform: none !important; }
+      .aurora-mesh::before { display: none !important; }
+      .masked-type { -webkit-text-fill-color: currentColor !important; color: #000 !important; background: none !important; }
+      body {
+        font-size: 11pt; line-height: 1.6;
+        color: #000 !important; background: #fff !important; background-image: none !important;
+      }
+      .report-summary__inner, .chart-wrap, .callout, .table-wrap { box-shadow: none !important; border-color: #ccc !important; }
+      .report-section { page-break-before: always; }
+      .report-section:first-of-type { page-break-before: avoid; }
+      .report-summary { page-break-after: always; }
+      table, .callout, .chart-wrap, .report-pullquote, .flow, .numeral-bleed { page-break-inside: avoid; }
+      h2 { page-break-after: avoid; }
+      .table-hero { margin-left: 0 !important; margin-right: 0 !important; width: 100% !important; max-width: 100% !important; }
+      @page { margin: 2cm; }
+      .report-footer::after { content: "Página " counter(page); display: block; text-align: center; font-size: 9pt; color: #666; margin-top: 2em; }
+      a[href]::after { content: " (" attr(href) ")"; font-size: 8pt; color: #666; }
+      .fn-ref::after, .fn-back::after { content: none; }
+    }
+
+    /* ─── Reduced motion (defensivo) ──────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+      .chapter-divider { height: auto; }
+      .chapter-divider__inner { position: static; height: auto; }
+      [data-reveal] { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body data-showcase>
+
+  <!-- ═══ HEADER ═══════════════════════════════════════════════════ -->
+  <header class="report-header">
+    <div class="report-header__brand">
+      <span class="report-header__logo" aria-hidden="true">S</span>
+      <div>
+        <p class="report-header__org">Slideless</p>
+        <p class="report-header__doc">Visão geral · Doc nº 01 · showcase</p>
+      </div>
+    </div>
+    <div class="report-header__meta">
+      <p class="report-header__date">2026</p>
+      <button class="theme-toggle" aria-label="Alternar tema" type="button">
+        <span aria-hidden="true">◐</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ═══ CAPA editorial — numeral-bleed + masked-type (W19) ════════ -->
+  <section class="report-cover" aria-label="Capa">
+    <p class="report-cover__kicker">Itaú · skill interna · relatório de visão geral</p>
+    <h1 class="report-cover__title mask-reveal">Chega de slides.<br><span class="masked-type">Documento web em minutos.</span></h1>
+    <p class="report-cover__lead" data-split>O Slideless substitui o PowerPoint por documentos de arquivo único — design de ponta, marca Itaú e acessibilidade já decididos. Você cuida do conteúdo; a skill cuida da forma.</p>
+  </section>
+
+  <!-- ═══ TOC (gerada por JS) ══════════════════════════════════════ -->
+  <nav class="report-toc" aria-label="Sumário">
+    <p class="report-toc__heading">Conteúdo</p>
+    <ol class="report-toc__list">
+      <!-- preenchido por JS -->
+    </ol>
+  </nav>
+
+  <!-- ═══ SUMÁRIO EXECUTIVO + KPIs com counter-sync (W2) ═══════════ -->
+  <section class="report-summary" aria-label="Sumário executivo">
+    <div class="report-summary__inner">
+      <p class="report-summary__label">Sumário Executivo</p>
+      <p class="report-summary__lead">O Slideless é a skill interna do Itaú que troca o PowerPoint por documentos web de arquivo único — apresentações e relatórios com design de ponta, criados em minutos por qualquer ituber, de qualquer área, sem instalar nada nem programar. São seis formatos sob a mesma régua de qualidade, 31 comandos que cobrem o ciclo inteiro e 31 wow components que sustentam o teto visual. Este relatório explica o problema que ela resolve, a virada que propõe, os formatos, os comandos, o diferencial de direção de arte e as garantias que sustentam o uso institucional. Ele próprio é um documento Slideless do formato <strong>report</strong>, rodando em modo showcase.</p>
+      <div class="report-summary__kpis">
+        <div class="summary-kpi">
+          <span class="kpi" data-kpi="6"><span class="kpi__num"><span class="kpi__num-base">6</span></span><span class="kpi__bar"></span></span>
+          <p class="summary-kpi__label">formatos sob a mesma régua</p>
+        </div>
+        <div class="summary-kpi">
+          <span class="kpi" data-kpi="31"><span class="kpi__num"><span class="kpi__num-base">31</span></span><span class="kpi__bar"></span></span>
+          <p class="summary-kpi__label">comandos no ciclo de vida</p>
+        </div>
+        <div class="summary-kpi">
+          <span class="kpi" data-kpi="31"><span class="kpi__num"><span class="kpi__num-base">31</span></span><span class="kpi__bar"></span></span>
+          <p class="summary-kpi__label">wow components (W1–W31)</p>
+        </div>
+        <div class="summary-kpi">
+          <span class="kpi" data-kpi="1"><span class="kpi__num"><span class="kpi__num-base">1</span></span><span class="kpi__bar"></span></span>
+          <p class="summary-kpi__label">arquivo HTML, zero dependências</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ MARQUEE de stats (W27) ═══════════════════════════════════ -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      <span>6 <b>formatos</b></span><span>31 <b>comandos</b></span><span>31 <b>wow components</b></span><span>1 <b>arquivo HTML</b></span><span><b>#FF6200</b> laranja Itaú</span><span>WCAG <b>AA</b></span><span>dark mode <b>sem flash</b></span><span>0 <b>linhas de código</b></span>
+      <span>6 <b>formatos</b></span><span>31 <b>comandos</b></span><span>31 <b>wow components</b></span><span>1 <b>arquivo HTML</b></span><span><b>#FF6200</b> laranja Itaú</span><span>WCAG <b>AA</b></span><span>dark mode <b>sem flash</b></span><span>0 <b>linhas de código</b></span>
+    </div>
+  </div>
+
+  <!-- ═══ CORPO DO RELATÓRIO ═══════════════════════════════════════ -->
+  <main class="report-body">
+
+    <!-- S01 — O que é -->
+    <section class="report-section" id="s1" data-reveal>
+      <div class="section-header">
+        <span class="section-num" aria-hidden="true">01</span>
+        <h2 class="mask-reveal">O que é o Slideless</h2>
+      </div>
+
+      <p>Em vez de slides de PowerPoint, você descreve o conteúdo no chat e a skill gera um documento web de alta qualidade: design editorial, identidade visual do Itaú, tema claro e escuro nativos, acessibilidade WCAG AA embutida e tudo pronto para compartilhar por link ou virar PDF. Não há servidor, build nem dependência a instalar — além de fontes e bibliotecas de gráfico carregadas sob demanda, todo o CSS e o JavaScript vivem dentro do próprio arquivo. O resultado é um único <code>.html</code> que você manda por e-mail, sobe no Confluence ou abre offline com um duplo-clique.</p>
+
+      <p>O caminho mais simples é o assistente <code>/criar</code>: cinco perguntas em português sobre objetivo, público, distribuição, conteúdo e estética. A partir das respostas, a skill escolhe o formato ideal e gera o documento — você não precisa conhecer a diferença entre os modelos, nem escrever uma linha de código. Quem prefere preparar o terreno antes pode usar o <code>/estruturar</code>: ele analisa o conteúdo bruto (bullets, um PDF colado, uma descrição solta) e propõe um mapa estruturado para aprovação, evitando retrabalho em material denso.</p>
+
+      <p>A premissa é uma divisão de trabalho clara: <strong>você cuida do conteúdo, a skill cuida da forma</strong>. Nada de arrastar caixas de texto, alinhar ícones na mão ou caçar o tom certo de laranja. O ituber traz a informação real; a direção de arte, a tipografia, o dark mode e a acessibilidade já vêm decididos.</p>
+
+      <!-- W22 draw-on: o fluxo de 4 passos se desenha -->
+      <figure class="flow" data-reveal>
+        <div class="flow__row">
+          <div class="flow__track"><svg viewBox="0 0 100 2" preserveAspectRatio="none" aria-hidden="true"><path class="draw-on" d="M0 1 H100"/></svg></div>
+          <div class="flow__step"><span class="flow__disc">1</span><span class="flow__lbl">Brief</span><span class="flow__sub">você descreve o conteúdo</span></div>
+          <div class="flow__step"><span class="flow__disc">2</span><span class="flow__lbl">5 perguntas</span><span class="flow__sub">o wizard /criar conduz</span></div>
+          <div class="flow__step"><span class="flow__disc">3</span><span class="flow__lbl">Formato</span><span class="flow__sub">escolhido pela skill</span></div>
+          <div class="flow__step"><span class="flow__disc is-final">4</span><span class="flow__lbl">Pronto</span><span class="flow__sub">arquivo único, em minutos</span></div>
+        </div>
+        <figcaption class="flow__cap">Do conteúdo ao arquivo único — cinco perguntas e o material se monta.</figcaption>
+      </figure>
+
+      <div class="callout callout--info">
+        <span class="callout__icon">i</span>
+        <div class="callout__content">
+          <p class="callout__title">Arquivo único, zero dependências</p>
+          <p>Cada documento embute CSS e JS. Abre com duplo-clique, funciona offline e degrada com elegância numa intranet travada — fonte, gráfico e efeito sempre têm um plano B. Sem versão de Office certa, sem plugin, sem "abra no computador X". É só um arquivo HTML, e o navegador todo mundo já tem.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ ATO I — chapter divider (W28) + aurora-mesh (W20) ═══════ -->
+    <div class="chapter-divider aurora-mesh" aria-hidden="true">
+      <div class="chapter-divider__inner">
+        <div>
+          <p class="chapter-divider__num">Ato I</p>
+          <p class="chapter-divider__big">Quatro atritos do PowerPoint que ninguém soma, mas todo mundo paga.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- S02 — O problema -->
+    <section class="report-section" id="s-problema" data-reveal>
+      <div class="section-header">
+        <span class="section-num" aria-hidden="true">02</span>
+        <h2 class="mask-reveal">O problema</h2>
+      </div>
+
+      <p>O PowerPoint custa caro de quatro formas que ninguém soma, mas todo mundo paga. Antes de propor a solução, vale nomear cada uma:</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr><th>Atrito</th><th>O que acontece</th><th>Quem paga</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="td-strong">Tempo de formatação</td><td>Horas alinhando caixas, escolhendo cores e mexendo em template em vez de pensar no conteúdo.</td><td><span class="badge badge-warn">Produtividade</span></td></tr>
+            <tr><td class="td-strong">Slides que estouram a tela</td><td>Texto que vaza da margem, número que some, gráfico cortado — e ninguém percebe até a hora de apresentar.</td><td><span class="badge badge-warn">Credibilidade</span></td></tr>
+            <tr><td class="td-strong">Preso ao Office</td><td>O arquivo só abre direito na mesma versão, perde formatação entre máquinas e quase não funciona no celular.</td><td><span class="badge badge-plum">Distribuição</span></td></tr>
+            <tr><td class="td-strong">Marca inconsistente</td><td>Cada área tem seu template, seu laranja, sua fonte — e o banco aparece de um jeito diferente em cada apresentação.</td><td><span class="badge badge-plum">Identidade</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout--warn">
+        <span class="callout__icon">!</span>
+        <div class="callout__content">
+          <p class="callout__title">O custo invisível</p>
+          <p>O tempo gasto formatando não vira slide melhor — vira slide mais demorado. E o material continua frágil: depende da versão certa do Office, some no celular e raramente passa numa checagem de acessibilidade.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- S03 — A virada -->
+    <section class="report-section" id="s-virada" data-reveal>
+      <div class="section-header">
+        <span class="section-num" aria-hidden="true">03</span>
+        <h2 class="mask-reveal">A virada</h2>
+      </div>
+
+      <p>A resposta do Slideless é trocar o slide pelo <strong>documento web de arquivo único</strong>. Em vez de um <code>.pptx</code> amarrado a uma versão de software, você recebe um <code>.html</code> que abre em qualquer navegador, sem instalar nada — no desktop, no celular, na intranet ou offline. A identidade Itaú, o modo escuro e a acessibilidade não são um esforço extra no fim: já vêm embutidos desde a primeira linha gerada.</p>
+
+      <!-- numeral-bleed + odômetro (W15): o número-tese "minutos" -->
+      <figure class="numeral-bleed focus-reveal" data-reveal>
+        <span class="odometer" data-odometer="0" aria-label="minutos, não horas">0</span>
+        <p class="numeral-bleed__cap">O tempo de produção que o Slideless persegue: da descrição ao arquivo pronto em <strong>minutos</strong>, não nas horas que a formatação manual consome. <a href="#fn3" class="fn-ref" id="fn-ref-3">[3]</a></p>
+      </figure>
+
+      <p>Isso desmonta os quatro atritos de uma vez. Você não formata, porque o documento nasce desenhado. Nada estoura a tela, porque a engine respeita limites de caractere e tem rede de segurança contra vazamento. Não fica preso ao Office, porque é a web. E a marca é consistente, porque toda área parte do mesmo design system com o laranja <code>#FF6200</code> no centro.</p>
+
+      <blockquote class="report-pullquote">
+        <p>"Você cuida do conteúdo. A skill cuida da forma."</p>
+        <cite>— O princípio do Slideless</cite>
+      </blockquote>
+    </section>
+
+    <!-- ═══ ATO II — chapter divider (W28) + aurora-mesh (W20) ══════ -->
+    <div class="chapter-divider aurora-mesh" aria-hidden="true">
+      <div class="chapter-divider__inner">
+        <div>
+          <p class="chapter-divider__num">Ato II</p>
+          <p class="chapter-divider__big">Seis formatos, trinta e um comandos, uma só régua de qualidade.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- S04 — Os seis formatos -->
+    <section class="report-section" id="s2" data-reveal>
+      <div class="section-header">
+        <span class="section-num" aria-hidden="true">04</span>
+        <h2 class="mask-reveal">Os seis formatos</h2>
+      </div>
+
+      <p>Cada necessidade tem um formato certo, todos com a mesma régua de qualidade. Da apresentação ao vivo ao relatório para imprimir, a escolha é automática no <code>/criar</code> — mas vale conhecer onde cada um brilha e de onde vem a referência de design de cada um. A coluna <em>inspiração</em> mostra a vara alta que cada formato persegue<sup><a href="#fn2" class="fn-ref" id="fn-ref-2">[2]</a></sup>:</p>
+
+      <!-- tabela-protagonista full-bleed (table-hero) -->
+      <div class="table-wrap table-hero">
+        <table class="data-table">
+          <thead>
+            <tr><th>Formato</th><th>Para quê</th><th>Inspiração</th><th>Distribuição</th><th>Engine característica</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="td-strong">deck</td><td>Apresentar ao vivo, com navegação por teclado e tipografia grande</td><td>Apple Keynote</td><td><span class="badge badge-accent">Tela</span></td><td>slides + keyboard nav + autoFitSlide()</td></tr>
+            <tr><td class="td-strong">handbook</td><td>Documentar processos e manuais, com sidebar e índice navegável</td><td>GitLab Handbook</td><td><span class="badge badge-info">Leitura</span></td><td>sidebar + scrollspy + TOC</td></tr>
+            <tr><td class="td-strong">hub</td><td>Reunir recursos em cards categorizáveis e painéis na própria página</td><td>Apple Developer</td><td><span class="badge badge-accent">Navegação</span></td><td>filtros + painéis in-page</td></tr>
+            <tr><td class="td-strong">scrollytelling</td><td>Contar uma história com revelações disparadas pelo scroll</td><td>NYT Upshot</td><td><span class="badge badge-info">Leitura</span></td><td>progress bar + reveal por IO</td></tr>
+            <tr><td class="td-strong">site</td><td>Microsite com roteamento entre 2–5 telas por hash</td><td>Linear / Vercel</td><td><span class="badge badge-accent">Navegação</span></td><td>hash routing + View Transitions</td></tr>
+            <tr><td class="td-strong">report</td><td>Relatório editorial denso, otimizado para impressão e PDF</td><td>McKinsey / Goldman</td><td><span class="badge badge-info">PDF</span></td><td>sumário + footnotes + @media print</td></tr>
+          </tbody>
+          <tfoot>
+            <tr><td>6 formatos</td><td colspan="3">Uma única marca, um único dark mode, uma única base de acessibilidade</td><td>Conversão entre modelos compatíveis</td></tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <p>Os formatos não são silos: a skill converte entre modelos compatíveis (handbook ↔ scrollytelling, hub ↔ site) quando a necessidade muda. E todos compartilham a mesma marca, o mesmo dark mode e a mesma base de acessibilidade — o que muda é a forma de ler e navegar, não a qualidade. Este próprio documento é um <strong>report</strong>.</p>
+
+      <blockquote class="report-pullquote">
+        <p>"Qualquer ituber de qualquer área do banco consegue criar um material profissional em minutos."</p>
+        <cite>— Slideless</cite>
+      </blockquote>
+    </section>
+
+    <!-- S05 — Os 31 comandos -->
+    <section class="report-section" id="s3" data-reveal>
+      <div class="section-header">
+        <span class="section-num" aria-hidden="true">05</span>
+        <h2 class="mask-reveal">Os 31 comandos</h2>
+      </div>
+
+      <p>A skill cobre o ciclo de vida inteiro de um documento, não só a primeira geração. São 31 comandos divididos em seis categorias: começar, criar direto, importar, editar, transformar e refinar, e qualidade e exportação. Você pode partir de um brief em branco, importar um PPT antigo ou um espaço do Confluence, ajustar uma seção sem regenerar tudo, deixar o design mais ousado ou mais quieto e, no fim, auditar e exportar.<sup><a href="#fn1" class="fn-ref" id="fn-ref-1">[1]</a></sup> A distribuição por categoria — com anotação viva no pico:</p>
+
+      <!-- W8 anotação viva no gráfico-tese -->
+      <div class="chart-wrap focus-reveal">
+        <p class="chart-title">Comandos por categoria</p>
+        <p class="chart-subtitle">Distribuição dos 31 comandos da skill — a banda marca a categoria mais densa</p>
+        <div class="chart-inner">
+          <canvas id="chartComandos"></canvas>
+        </div>
+      </div>
+
+      <p>O detalhe de cada categoria, com os comandos que a compõem:</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr><th>Categoria</th><th>Comandos</th><th>Para quê</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="td-strong">Começar</td><td><code>/criar</code>, <code>/estruturar</code></td><td>Wizard de cinco perguntas e mapa estruturado antes de gerar.</td></tr>
+            <tr><td class="td-strong">Criar direto</td><td>handbook, hub, scrollytelling, site, deck, report</td><td>Gerar um formato específico quando você já sabe qual quer.</td></tr>
+            <tr><td class="td-strong">Importar</td><td>confluence, ppt, md</td><td>Converter material que já existe em um documento slideless.</td></tr>
+            <tr><td class="td-strong">Editar</td><td>adicionar seção, slide, callout, gráfico, fragment, TOC</td><td>Mudanças cirúrgicas, sem regenerar o documento inteiro.</td></tr>
+            <tr><td class="td-strong">Transformar</td><td>aplicar-tema, converter-modelo, distill</td><td>Trocar o tema, mudar de formato ou enxugar um texto longo.</td></tr>
+            <tr><td class="td-strong">Refinar</td><td>bolder, quieter, animate, delight, overdrive</td><td>Decisões atômicas de design sênior, composáveis entre si.</td></tr>
+            <tr><td class="td-strong">Qualidade</td><td>auditar, polir, harden, acessibilidade</td><td>Verificação determinística, refino e endurecimento WCAG AA.</td></tr>
+            <tr><td class="td-strong">Exportar</td><td>pdf, screenshots</td><td>Renderizar para PDF ou gerar um PNG por slide/seção.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout--tip">
+        <span class="callout__icon">+</span>
+        <div class="callout__content">
+          <p class="callout__title">Os verbos de refino são composáveis</p>
+          <p>Comandos como <code>bolder</code>, <code>quieter</code>, <code>animate</code> e <code>delight</code> são decisões de design isoladas que se empilham: dá para deixar um documento mais ousado e, depois, mais calmo em um ponto específico — sem nunca tocar no conteúdo.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- S06 — Os 31 wow components com data-choreography (W25) -->
+    <section class="report-section" id="s-wow" data-reveal>
+      <div class="section-header">
+        <span class="section-num" aria-hidden="true">06</span>
+        <h2 class="mask-reveal">Os 31 wow components</h2>
+      </div>
+
+      <p>O teto visual da skill não é improviso: é uma caixa de peças. Os <strong>wow components</strong> (W1 a W31) são blocos completos — HTML, CSS e JS — prontos para colar verbatim, cada um com a fiação perigosa já correta: o estado-final-base, o <code>@supports</code>, o branch <code>prefers-reduced-motion</code>. O LLM copia daqui em vez de inventar cutting-edge frágil. Cada componente liga-se ao dado-tese, nunca decora. Esta própria seção empilha 14 deles, todos sobre número real do projeto:</p>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:var(--space-6);margin:var(--space-7) 0">
+        <div data-choreo data-choreo-target="31"><span class="num"></span><span class="bar"><i></i></span><span class="cap">wow components (W1–W31)</span></div>
+        <div data-choreo data-choreo-target="14"><span class="num"></span><span class="bar"><i></i></span><span class="cap">empilhados neste report</span></div>
+        <div data-choreo data-choreo-target="3"><span class="num"></span><span class="bar"><i></i></span><span class="cap">invariantes embutidos em cada bloco</span></div>
+      </div>
+
+      <p>Os três invariantes que vivem dentro de cada bloco: <strong>reduced-motion sempre</strong> (todo movimento atrás de <code>@media (prefers-reduced-motion: no-preference)</code>); <strong><code>@supports</code> + estado-final-base</strong> (o estado final é o CSS base, a animação só acontece dentro do <code>@supports</code> — num Chrome travado, nada some); e <strong>só compositado</strong> (animar apenas <code>transform</code>/<code>opacity</code>). É o que faz um efeito de ponta degradar com elegância em vez de quebrar.</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr><th>Camada</th><th>Faixa</th><th>Exemplos</th><th>Registro</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="td-strong">Vocabulário base</td><td>W1–W9</td><td>cena scroll-driven, counter-sync, manchete cinética, text-reveal, anotação viva, hero WebGL</td><td><span class="badge badge-info">Qualquer</span></td></tr>
+            <tr><td class="td-strong">Assinatura premium</td><td>W10–W17</td><td>mask-reveal, magnetismo, spotlight, scroll horizontal, odômetro, scramble</td><td><span class="badge badge-accent">Expressivos</span></td></tr>
+            <tr><td class="td-strong">Empilhamento de impacto</td><td>W18–W31</td><td>sticky-stack, masked-type, aurora-mesh, hue-drift, draw-on, 3D tilt, data-choreo, chapter-divider, blur-focus, flip-in, glitch</td><td><span class="badge badge-accent">Expressivos</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout--info">
+        <span class="callout__icon">i</span>
+        <div class="callout__content">
+          <p class="callout__title">Empilhar sem virar cassino</p>
+          <p>A regra de ouro do empilhamento: um herói pinned, dois sistemas ambientes na mesma física, três a quatro momentos espaçados e zonas de silêncio obrigatórias entre eles — cerca de 30% momento, 70% calmo. Este report segue exatamente isso: hue-drift e blur-focus correm o documento inteiro; mask-reveal, draw-on, odômetro e data-choreography aparecem espaçados.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- S07 — O diferencial -->
+    <section class="report-section" id="s-diferencial" data-reveal>
+      <div class="section-header">
+        <span class="section-num" aria-hidden="true">07</span>
+        <h2 class="mask-reveal">O diferencial</h2>
+      </div>
+
+      <p>O que separa o Slideless de um gerador de slides automático cabe em uma frase: <strong>não é template, é direção de arte</strong>. Um template aplica o mesmo molde a todo conteúdo; a direção de arte decide o que cada conteúdo específico precisa. Quatro princípios sustentam essa diferença:</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr><th>Princípio</th><th>O que significa na prática</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="td-strong">Cada documento tem um parti</td><td>Antes de gerar, a skill registra as decisões de design para aquele conteúdo — superfície, motion, ambição, momento de destaque. Dois documentos compartilham a marca, nunca o mesmo "fingerprint".</td></tr>
+            <tr><td class="td-strong">Tipografia curada</td><td>Kits tipográficos escolhidos a dedo. As fontes com cara de template são explicitamente banidas — nada de cair no default genérico de IA.</td></tr>
+            <tr><td class="td-strong">Ambição calibrada</td><td>O registro vai do sóbrio (um relatório de diretoria) ao extraordinário (efeitos de estúdio premiado). A ambição é escolhida para o contexto, não aplicada em tudo. Este documento, por ser showcase, libera a camada premium deliberadamente.</td></tr>
+            <tr><td class="td-strong">Anti-slop por desenho</td><td>Um eixo inteiro combate os "PPT-isms" e os tells de IA: fade-up universal, hover-lift, gradient-text decorativo, timeline com bolinha. O validador determinístico recusa cada um pelo nome.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <blockquote class="report-pullquote">
+        <p>"Não é template. É direção de arte para cada conteúdo."</p>
+        <cite>— O diferencial do Slideless</cite>
+      </blockquote>
+    </section>
+
+    <!-- ═══ ATO III — chapter divider (W28) + aurora-mesh (W20) ═════ -->
+    <div class="chapter-divider aurora-mesh" aria-hidden="true">
+      <div class="chapter-divider__inner">
+        <div>
+          <p class="chapter-divider__num">Ato III</p>
+          <p class="chapter-divider__big">Cinco garantias que sustentam o uso institucional.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- S08 — As garantias e os gates -->
+    <section class="report-section" id="s-garantias" data-reveal>
+      <div class="section-header">
+        <span class="section-num" aria-hidden="true">08</span>
+        <h2 class="mask-reveal">As garantias e os gates</h2>
+      </div>
+
+      <p>Para uso institucional, design bonito não basta — é preciso confiar no que vai para fora. O Slideless sustenta garantias invioláveis em todo documento que gera, e duas redes automáticas as verificam: <code>validar.py</code> (checagem determinística da estrutura e dos anti-patterns) e <code>smoke.py</code> (render em Chromium headless que pega o que a estrutura não vê — overflow, número duplicado, texto quebrado por caractere, scroll horizontal).</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr><th>Garantia</th><th>O que assegura</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="td-strong">Arquivo único</td><td>CSS e JS embutidos. Abre offline, viaja por e-mail e não depende de servidor nem de build. CDN só para Google Fonts e Chart.js.</td></tr>
+            <tr><td class="td-strong">Degradação graciosa</td><td>Todo efeito de ponta tem estado-final-base e <code>@supports</code>: numa intranet travada ou sem JS, nada some — o documento só fica mais quieto.</td></tr>
+            <tr><td class="td-strong">Modo escuro nativo</td><td>Tema claro e escuro alternáveis, sem flash ao carregar — a preferência é lida antes do primeiro paint.</td></tr>
+            <tr><td class="td-strong">WCAG AA</td><td>Foco visível, ARIA correto, navegação por teclado e respeito a <code>prefers-reduced-motion</code>.</td></tr>
+            <tr><td class="td-strong">Conteúdo real</td><td>Sem fonte do usuário, a skill não inventa dados internos do Itaú — pede o material em vez de fabricar números.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout--danger">
+        <span class="callout__icon">!</span>
+        <div class="callout__content">
+          <p class="callout__title">Sem conteúdo real, sem geração</p>
+          <p>A regra de conteúdo real é dura por desenho: a skill nunca preenche um relatório do banco com números plausíveis mas falsos. Faltando a fonte, ela aplica o protocolo de "sem conteúdo" e solicita o material verdadeiro. Tudo neste relatório vem do próprio repositório da skill.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- S09 — Conclusão -->
+    <section class="report-section" id="s-conclusao" data-reveal>
+      <div class="section-header">
+        <span class="section-num" aria-hidden="true">09</span>
+        <h2 class="mask-reveal">Qualquer ituber cria material profissional em minutos</h2>
+      </div>
+
+      <p>O Slideless tira do caminho os quatro atritos do PowerPoint — tempo de formatação, slides frágeis, dependência do Office e marca inconsistente — e os substitui por um documento web de arquivo único, com design de ponta, identidade Itaú, dark mode e acessibilidade embutidos. Seis formatos cobrem da apresentação ao vivo ao relatório de diretoria; 31 comandos cobrem o ciclo inteiro, de criar a exportar; 31 wow components sustentam o teto visual; e a direção de arte garante que cada material nasça pensado para o seu conteúdo, não estampado por um molde.</p>
+
+      <blockquote class="report-pullquote">
+        <p>"Qualquer ituber, de qualquer área, cria material profissional em minutos."</p>
+        <cite>— Slideless</cite>
+      </blockquote>
+    </section>
+
+  </main>
+
+  <!-- ═══ FOOTNOTES ════════════════════════════════════════════════ -->
+  <div class="report-footnotes">
+    <p class="fn-label">Notas</p>
+    <ol class="fn-list">
+      <li id="fn1"><a href="#fn-ref-1" class="fn-back">↑</a> Contagem aproximada; a skill evolui e novos comandos podem ser adicionados ou reorganizados entre categorias.</li>
+      <li id="fn2"><a href="#fn-ref-2" class="fn-back">↑</a> As inspirações de design servem de referência de qualidade e linguagem visual — não implicam afiliação com as marcas citadas.</li>
+      <li id="fn3"><a href="#fn-ref-3" class="fn-back">↑</a> "Minutos" descreve o tempo de geração assistida pela skill, não uma garantia de SLA; depende do volume de conteúdo e da revisão humana.</li>
+    </ol>
+  </div>
+
+  <!-- ═══ FOOTER ═══════════════════════════════════════════════════ -->
+  <footer class="report-footer">
+    <span class="report-footer__brand">Slideless · 2026</span>
+    <p class="report-footer__disclaimer">Documento interno do Itaú — material de referência da skill Slideless, em modo showcase.</p>
+    <span class="report-footer__anbima">● Uso interno.</span>
+  </footer>
+
+  <script>
+    // ── Helper: lê cor CSS calculada ────────────────────────────────
+    function cssVar(name) {
+      return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    }
+
+    // ── Boot: tema ──────────────────────────────────────────────────
+    document.querySelector('.theme-toggle')?.addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme');
+      const next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch {}
+      if (window._reportCharts) {
+        window._reportCharts.forEach(chart => { updateChartTheme(chart); chart.update(); });
+      }
+    });
+
+    // ── TOC gerada dos h2 dentro de .report-section[id] ────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      const toc = document.querySelector('.report-toc__list');
+      if (!toc) return;
+      document.querySelectorAll('.report-section[id] > .section-header > h2').forEach((h, i) => {
+        const li = document.createElement('li');
+        const n = String(i + 1).padStart(2, '0');
+        const id = h.closest('section').id;
+        li.innerHTML = `<a href="#${id}"><span class="toc-num">${n}</span>${h.textContent}</a>`;
+        toc.appendChild(li);
+      });
+    });
+
+    // ── W6: split grapheme-safe pt-BR (Intl.Segmenter) ──────────────
+    document.querySelectorAll('[data-split]').forEach(el => {
+      if (!('Segmenter' in Intl)) return;                 // fallback: texto fica como está (visível)
+      const seg = new Intl.Segmenter('pt', { granularity: 'word' });
+      let i = 0;
+      el.innerHTML = [...seg.segment(el.textContent)]
+        .map(s => s.isWordLike
+          ? `<span class="w"><span class="w-i" style="--i:${i++}">${s.segment}</span></span>`
+          : s.segment).join('');
+    });
+
+    // ── W2: counter-sync — keyframe per-KPI (alvo real) ─────────────
+    //   O número final já está em texto no .kpi__num-base (visível sem suporte/
+    //   reduced-motion). Aqui só injetamos o keyframe que conta de 0→alvo e o
+    //   ligamos por --n a cada KPI; o .kpi__num-base é escondido dentro do @supports.
+    document.querySelectorAll('.summary-kpi .kpi[data-kpi]').forEach((el, i) => {
+      const target = parseInt(el.dataset.kpi, 10) || 0;
+      const kf = document.createElement('style');
+      kf.textContent = `@keyframes kpiCount_${i}{to{--n:${target}}}`
+        + `@supports (animation-timeline: view()){@media (prefers-reduced-motion: no-preference){`
+        + `.summary-kpi:nth-of-type(${i+1}) .kpi{animation-name:kpiCount_${i};animation-duration:1ms}}}`;
+      document.head.appendChild(kf);
+    });
+
+    // ── W15: odômetro (build por dígito; valor final no base) ───────
+    function buildOdometer(el){
+      const raw = el.dataset.odometer || el.textContent;
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      el.textContent = '';
+      [...raw].forEach(ch => {
+        if (!/\d/.test(ch)) { el.append(ch); return; }
+        const d = document.createElement('span'); d.className = 'od-digit';
+        const reel = document.createElement('span'); reel.className = 'od-reel';
+        for (let i = 0; i <= 9; i++) { const s = document.createElement('span'); s.textContent = i; reel.append(s); }
+        d.append(reel); el.append(d);
+        const setY = () => { reel.style.transform = `translateY(${-ch}em)`; };
+        if (reduce) setY(); else requestAnimationFrame(() => requestAnimationFrame(setY));
+      });
+    }
+    const odoIO = new IntersectionObserver((es) => es.forEach(e => {
+      if (e.isIntersecting) { buildOdometer(e.target); odoIO.unobserve(e.target); }
+    }), { threshold: 0.6 });
+    document.querySelectorAll('.odometer').forEach(el => odoIO.observe(el));
+
+    // ── W25: data-choreography — contagem per-bloco (alvo real) ─────
+    document.querySelectorAll('[data-choreo]').forEach((el, i) => {
+      const target = parseInt(el.dataset.choreoTarget, 10) || 0;
+      const st = document.createElement('style');
+      st.textContent = `@supports (animation-timeline: view()){@media (prefers-reduced-motion: no-preference){`
+        + `[data-choreo]:nth-of-type(${i+1}) .num{animation:choN_${i} 1s var(--spring) both}`
+        + `@keyframes choN_${i}{to{--cn:${target}}}}}`;
+      document.head.appendChild(st);
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches)
+        el.querySelector('.num').style.setProperty('--cn', target);
+    });
+
+    // ── W22: medir comprimento real dos paths (draw-on) ─────────────
+    document.querySelectorAll('.draw-on').forEach(p => { try { p.style.setProperty('--len', Math.ceil(p.getTotalLength())); } catch(e){} });
+
+    // ── Helper: atualiza cores do gráfico no tema toggle ────────────
+    function updateChartTheme(chart) {
+      const fgMuted = cssVar('--color-fg-muted');
+      const border = cssVar('--color-border');
+      if (chart.options.plugins?.legend?.labels) chart.options.plugins.legend.labels.color = fgMuted;
+      if (chart.options.scales) {
+        Object.values(chart.options.scales).forEach(scale => {
+          if (scale.ticks) scale.ticks.color = fgMuted;
+          if (scale.grid) scale.grid.color = border;
+          if (scale.title) scale.title.color = fgMuted;
+          if (scale.border) scale.border.color = border;
+        });
+      }
+    }
+
+    // ── Chart.js defaults — OBRIGATÓRIO antes do 1º new Chart() ──────
+    if (typeof Chart !== 'undefined') {
+      Chart.defaults.font.family = cssVar('--font-ui') || cssVar('--font-text');
+      Chart.defaults.font.size = 12;
+      Chart.defaults.color = cssVar('--color-fg-muted');
+      Chart.defaults.plugins.tooltip.backgroundColor = cssVar('--color-bg-elevated');
+      Chart.defaults.plugins.tooltip.titleColor = cssVar('--color-fg');
+      Chart.defaults.plugins.tooltip.bodyColor = cssVar('--color-fg-muted');
+      Chart.defaults.plugins.tooltip.borderColor = cssVar('--color-border-strong');
+      Chart.defaults.plugins.tooltip.borderWidth = 1;
+    }
+    const fmtBR = (v, dec = 0) => v.toLocaleString('pt-BR', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+
+    // ── W8: anotação viva (banda + marcador) no gráfico-tese ────────
+    const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+    const BAND = {};
+    const annoPlugin = {
+      id: 'annoPlugin',
+      beforeDatasetsDraw(chart) {
+        const st = BAND[chart.canvas.id];
+        if (!st || !st.band) return;
+        const { ctx, chartArea, scales: { x } } = chart;
+        const x1 = x.getPixelForValue(st.band.from), x2 = x.getPixelForValue(st.band.to);
+        if (isNaN(x1) || isNaN(x2)) return;
+        const half = (x2 - x1) ? 0 : (x.width / chart.data.labels.length) / 2; // banda de 1 categoria
+        ctx.save();
+        ctx.fillStyle = css('--color-warn-dim') || 'rgba(251,195,5,0.12)';
+        ctx.fillRect(x1 - 18, chartArea.top, 36, chartArea.bottom - chartArea.top);
+        ctx.font = '700 11px ' + Chart.defaults.font.family;
+        ctx.fillStyle = css('--color-fg-muted');
+        ctx.fillText(st.band.text, x1 - 14, chartArea.top + 14);
+        ctx.restore();
+      },
+      afterDatasetsDraw(chart) {
+        const st = BAND[chart.canvas.id];
+        if (!st || !st.mark) return;
+        const { ctx, scales: { x, y } } = chart;
+        const px = x.getPixelForValue(st.mark.x), py = y.getPixelForValue(st.mark.y);
+        if (isNaN(px) || isNaN(py)) return;
+        const accent = css('--color-accent'), ink = css('--color-fg'), muted = css('--color-fg-muted');
+        ctx.save();
+        ctx.beginPath(); ctx.arc(px, py, 5, 0, Math.PI * 2);
+        ctx.strokeStyle = accent; ctx.lineWidth = 2; ctx.stroke();
+        ctx.strokeStyle = css('--color-border-strong'); ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(px, py - 8); ctx.lineTo(px, py - 40); ctx.stroke();
+        ctx.font = '700 12px ' + Chart.defaults.font.family; ctx.fillStyle = ink; ctx.textAlign = 'center';
+        ctx.fillText(st.mark.t1, px, py - 56);
+        ctx.font = '600 11px ' + Chart.defaults.font.family; ctx.fillStyle = muted;
+        ctx.fillText(st.mark.t2, px, py - 42);
+        ctx.restore();
+      }
+    };
+    if (typeof Chart !== 'undefined') Chart.register(annoPlugin);
+
+    // ── Gráfico-tese: comandos por categoria (draw-on-enter) ────────
+    window._reportCharts = [];
+    function drawOnEnter(canvasId, makeChart) {
+      const el = document.getElementById(canvasId);
+      if (!el || typeof Chart === 'undefined') return;
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let chart = null;
+      const start = () => {
+        if (chart) return;
+        chart = makeChart(el.getContext('2d'), reduce ? { duration: 0 } : { duration: 900, easing: 'easeOutQuart' });
+        window._reportCharts.push(chart);
+      };
+      if (reduce) { start(); return; }
+      const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { start(); io.disconnect(); } }), { threshold: 0.35 });
+      io.observe(el);
+    }
+    drawOnEnter('chartComandos', (ctx, anim) => {
+      const accent = cssVar('--color-accent'), fgMuted = cssVar('--color-fg-muted'), border = cssVar('--color-border');
+      const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Criar', 'Editar', 'Refinar', 'Exportar', 'Qualidade', 'Importar', 'Transformar', 'Começar'],
+          datasets: [{ label: 'Comandos', data: [6, 6, 5, 5, 4, 3, 3, 2], backgroundColor: accent, borderRadius: 0 }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false, animation: anim,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: fgMuted }, grid: { display: false } },
+            y: { beginAtZero: true, ticks: { color: fgMuted, callback: v => fmtBR(v) }, grid: { color: border } }
+          }
+        }
+      });
+      // popular a anotação ANTES do 1º paint = fallback (não depende de scroll/hover)
+      BAND['chartComandos'] = { band: { from: 0, to: 0, text: 'pico' }, mark: { x: 0, y: 6, t1: 'Criar + Editar', t2: '6 comandos cada' } };
+      chart.update();
+      return chart;
+    });
+  </script>
+</body>
+</html>

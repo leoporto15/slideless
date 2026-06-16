@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<!--
+  slideless — auto-apresentação · SCROLLYTELLING (demonstração master)
+  Esta peça empilha o máximo de wow-components viáveis no formato scroll-driven.
+  Todo número/dado é real (sobre a própria skill). É um data-showcase: o corpus
+  de demonstração da skill, que libera o palette premium inteiro em qualquer registro.
+-->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slideless — a história, do scroll</title>
+
+  <script>
+    (function() {
+      try {
+        var t = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }
+    })();
+  </script>
+  <!-- slideless:parti
+  conteudo: por que o Slideless existe e como qualquer ituber cria material profissional em minutos — demonstração master do palette em scrollytelling
+  registro: revista-interna (peça de demonstração; narrativa de produto; público = áreas do banco)
+  kit: 01 (Newsreader opsz+wght + Archivo + IBM Plex Mono)
+  capa: manchete-broadsheet cinetica (a tagline constroi o peso da variable font)
+  superficie: flat + aurora-mesh pontual + hue-drift global
+  motion: cinematico
+  ambicao: A3-extraordinario (peca de DEMONSTRACAO da skill: empilha 1 heroi pinned + 2 sistemas ambientes + momentos espacados, sobre dado real)
+  assinatura: W1 cena sticky data-bound (o grafico-tese muta por step) + W18 sticky-stack dos formatos
+  momento-wow: W1 cena scroll-driven + W8 anotacao viva no grafico; W3 manchete cinetica + W30 flip-in + W14 parallax na capa; W6 text-reveal Segmenter; W10 mask-reveal; W19 masked-type; W20 aurora-mesh; W21 hue-drift; W2 counter-sync; W25 data-choreography; W15 odometro; W17 scramble 1x; W18 sticky-stack (heroi pinned unico); W22 draw-on no fluxo; W24 tilt no card-heroi; W26 spot-mask; W27 marquee; W28 chapter-divider; W29 blur-focus; W31 glitch 1x
+  nao-vai-ter: hover-lift
+  -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- SLIDELESS:TYPE-KIT — kit 01 (Newsreader display+text, Archivo UI, IBM Plex Mono) -->
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300..800&family=Archivo:wght@400..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- SLIDELESS:TYPE-KIT-END -->
+  <!-- Chart.js (única dependência além das fontes; tudo atrás do guard typeof Chart) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <style>
+    :root{
+  --kit-display:'Newsreader';
+  --kit-text:'Newsreader';
+  --kit-ui:'Archivo';
+  --kit-mono:'IBM Plex Mono';
+}
+/* ════════════════════════════════════════════════════════════════════
+ * slideless — tema itau v4 (camada MARCA inviolável + camada DIREÇÃO)
+ * ════════════════════════════════════════════════════════════════════ */
+:root {
+  /* ─── [MARCA] Cores da marca Itaú ─────────── */
+  --itau-orange:     #FF6200;
+  --itau-orange-2:   #F88104;
+  --itau-orange-3:   #FA9F09;
+  --itau-blue-3:     #3B85FA;
+  --itau-yellow:     #FBC305;
+  --itau-warm-black: #14110d;
+
+  /* ─── [MARCA] Paleta semântica (light) ─────────── */
+  --color-accent:        var(--itau-orange);
+  --color-accent-dim:    rgba(255, 98, 0, 0.08);
+  --color-accent-fg:     #ffffff;
+  --color-info:          var(--itau-blue-3);
+  --color-info-dim:      rgba(59, 133, 250, 0.08);
+  --color-success:       #3f6f1f;
+  --color-success-dim:   rgba(63, 111, 31, 0.08);
+  --color-sage:          var(--color-success);
+  --color-sage-dim:      var(--color-success-dim);
+  --color-teal:          #0f766e;
+  --color-teal-dim:      rgba(15, 118, 110, 0.08);
+  --color-plum:          #9f1239;
+  --color-plum-dim:      rgba(159, 18, 57, 0.08);
+  --color-warn:          var(--itau-yellow);
+  --color-warn-dim:      rgba(251, 195, 5, 0.12);
+  --color-danger:        #b91c1c;
+  --color-danger-dim:    rgba(185, 28, 28, 0.08);
+
+  /* ─── [MARCA] Background + foreground (light) ─────────── */
+  --color-bg:            #faf7f5;
+  --color-bg-elevated:   #ffffff;
+  --color-bg-sunken:     #f4f1ec;
+  --color-fg:            #292017;
+  --color-fg-muted:      #6b5d50;
+  --color-fg-subtle:     #8a7e72;
+  --color-border:        rgba(41, 32, 23, 0.10);
+  --color-border-strong: rgba(41, 32, 23, 0.18);
+  --color-accent-hover:  var(--itau-orange-2);
+
+  /* ─── [MARCA] Syntax highlight ─────────── */
+  --syntax-string:   #16a34a;
+  --syntax-keyword:  var(--itau-orange);
+  --syntax-function: var(--itau-blue-3);
+  --syntax-comment:  var(--color-fg-subtle);
+
+  /* ─── [DIREÇÃO] Tipografia — slots do kit ─────────── */
+  --font-text:    'Itau Text', var(--kit-text, 'Inter'), -apple-system, system-ui, sans-serif;
+  --font-display: 'Itau Display', var(--kit-display, Georgia), serif;
+  --font-ui:      var(--kit-ui, 'Archivo'), system-ui, sans-serif;
+  --font-mono:    var(--kit-mono, 'IBM Plex Mono'), 'SF Mono', Consolas, monospace;
+
+  /* ─── [SISTEMA] Escala fluida ─────────── */
+  --size-xs:      clamp(0.75rem, 0.7rem + 0.2vw, 0.875rem);
+  --size-small:   clamp(0.875rem, 0.85rem + 0.15vw, 1rem);
+  --size-body:    clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+  --size-lead:    clamp(1.15rem, 1.05rem + 0.5vw, 1.4rem);
+  --size-h4:      clamp(1rem, 0.95rem + 0.25vw, 1.15rem);
+  --size-h3:      clamp(1.2rem, 1.1rem + 0.5vw, 1.5rem);
+  --size-h2:      clamp(1.6rem, 1.3rem + 1.2vw, 2.25rem);
+  --size-h1:      clamp(2.25rem, 1.8rem + 2vw, 3.5rem);
+
+  /* ─── [SISTEMA] Espaço ─────────── */
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem;
+  --space-4: 1rem;    --space-5: 1.5rem; --space-6: 2rem;
+  --space-7: 2.5rem;  --space-8: 3rem;   --space-10: 4rem;
+  --space-12: 5rem;   --space-16: 7rem;
+
+  /* ─── [SISTEMA] Layout ─────────── */
+  --content-max: 720px;
+  --header-h:    56px;
+
+  /* ─── [DIREÇÃO] Radius, sombra ─────────── */
+  --radius-sm: 4px;
+  --radius:    10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --shadow-xs: 0 1px 2px rgba(41, 32, 23, 0.04);
+  --shadow-sm: 0 2px 4px rgba(41, 32, 23, 0.06), 0 1px 2px rgba(41, 32, 23, 0.04);
+  --shadow:    0 4px 12px rgba(41, 32, 23, 0.08), 0 1px 3px rgba(41, 32, 23, 0.05);
+  --shadow-lg: 0 12px 32px rgba(41, 32, 23, 0.12), 0 4px 12px rgba(41, 32, 23, 0.06);
+  --shadow-xl: 0 24px 64px rgba(41, 32, 23, 0.16), 0 8px 24px rgba(41, 32, 23, 0.08);
+  --inset-sm:  inset 0 1px 3px rgba(41, 32, 23, 0.06);
+  --inset:     inset 0 2px 8px rgba(41, 32, 23, 0.08);
+  --glow-accent-sm: 0 0 0 3px rgba(255, 98, 0, 0.14);
+  --glow-accent:    0 8px 32px rgba(255, 98, 0, 0.22);
+
+  /* ─── [DIREÇÃO] Easing — 3 curvas com papel ─────────── */
+  --ease-out:       cubic-bezier(0.22, 1, 0.36, 1);   /* entrada */
+  --ease-in-out:    cubic-bezier(0.65, 0, 0.35, 1);   /* assinatura */
+  --ease-snap:      cubic-bezier(0.2, 0, 0, 1);        /* micro-interação */
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-io-strong:  cubic-bezier(0.77, 0, 0.175, 1);
+
+  --duration-fast:    150ms;
+  --duration:         250ms;
+  --duration-slow:    400ms;
+  --duration-slide:   650ms;
+  --duration-fade:    750ms;
+  --duration-hero:    760ms;
+
+  /* UMA física de mola para o documento inteiro (W25/W30) */
+  --spring: linear(0, .5 30%, 1.08 60%, .98, 1);
+}
+
+/* ─── Dark theme override ─────────── */
+[data-theme="dark"] {
+  --color-bg:            #14110d;
+  --color-bg-elevated:   #1c1814;
+  --color-bg-sunken:     #221d18;
+  --color-fg:            #ede5dd;
+  --color-fg-muted:      #b8aa9a;
+  --color-fg-subtle:     #786e62;
+  --color-border:        rgba(237, 229, 221, 0.10);
+  --color-border-strong: rgba(237, 229, 221, 0.20);
+  --color-accent:        var(--itau-orange-3);
+  --color-accent-hover:  var(--itau-orange-2);
+  --color-accent-fg:     #14110d;
+  --color-accent-dim:    rgba(250, 159, 9, 0.10);
+  --color-info-dim:      rgba(59, 133, 250, 0.12);
+  --color-success:       #8fcc5a;
+  --color-success-dim:   rgba(143, 204, 90, 0.10);
+  --color-sage:          var(--color-success);
+  --color-sage-dim:      var(--color-success-dim);
+  --color-teal:          #6fd0c0;
+  --color-teal-dim:      rgba(111, 208, 192, 0.10);
+  --color-plum:          #e8889c;
+  --color-plum-dim:      rgba(232, 136, 156, 0.10);
+  --color-warn-dim:      rgba(251, 195, 5, 0.12);
+  --color-danger:        #f87171;
+  --color-danger-dim:    rgba(248, 113, 113, 0.10);
+  --syntax-string:   #4ade80;
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.4);
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+  --shadow:    0 4px 12px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.3);
+  --shadow-xl: 0 24px 64px rgba(0,0,0,0.6), 0 8px 24px rgba(0,0,0,0.4);
+  --inset-sm:  inset 0 1px 3px rgba(0,0,0,0.4);
+  --inset:     inset 0 2px 8px rgba(0,0,0,0.5);
+  --glow-accent-sm: 0 0 0 3px rgba(250, 159, 9, 0.20);
+  --glow-accent:    0 8px 32px rgba(250, 159, 9, 0.30);
+}
+
+/* ─── Reset / base ─────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--font-text);
+  font-size: var(--size-body);
+  line-height: 1.65;
+  color: var(--color-fg);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  transition: background var(--duration-fast), color var(--duration-fast);
+}
+:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; border-radius: var(--radius-sm); }
+
+/* ─── Headings ─────────── */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  color: var(--color-fg);
+  line-height: 1.1;
+  letter-spacing: -0.022em;
+  font-weight: 700;
+  font-feature-settings: 'ss01', 'ss02';
+}
+h1 { font-size: var(--size-h1); margin: 0 0 var(--space-4); letter-spacing: -0.030em; }
+h2 { font-size: var(--size-h2); margin: var(--space-10) 0 var(--space-4); position: relative; }
+h3 { font-size: var(--size-h3); font-weight: 600; margin: var(--space-7) 0 var(--space-3); }
+h4 { font-size: var(--size-h4); font-weight: 600; margin: var(--space-5) 0 var(--space-2); }
+p { margin: 0 0 var(--space-4); max-width: 65ch; color: var(--color-fg); }
+.lead { font-size: var(--size-lead); line-height: 1.5; color: var(--color-fg-muted); margin-bottom: var(--space-7); font-weight: 400; max-width: 60ch; }
+a { color: var(--color-accent); text-decoration: none; }
+a:hover { color: var(--color-accent-hover); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1.5px; }
+strong { font-weight: 700; color: var(--color-fg); }
+code:not(pre code) { font-family: var(--font-mono); font-size: 0.875em; background: var(--color-bg-sunken); padding: 0.15em 0.45em; border-radius: var(--radius-sm); border: 1px solid var(--color-border); }
+ul, ol { padding-left: var(--space-5); margin: 0 0 var(--space-4); }
+li { margin-bottom: var(--space-2); max-width: 65ch; }
+li::marker { color: var(--color-fg-subtle); }
+
+/* ─── Tiers / callouts / tabela ─────────── */
+.tier-recessed { background: var(--color-bg-sunken); border: 1px solid var(--color-border); box-shadow: var(--inset-sm); border-radius: var(--radius); padding: var(--space-5); }
+.callout { display: flex; gap: var(--space-4); padding: var(--space-4) var(--space-5); margin: var(--space-5) 0; border-left: 3px solid; border-radius: var(--radius); }
+.callout--tip { background: var(--color-success-dim); border-color: var(--color-success); }
+.callout__icon { flex-shrink: 0; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; font-weight: 700; font-size: 0.75rem; color: white; margin-top: 2px; background: var(--color-success); }
+.callout__content { flex: 1; min-width: 0; }
+.callout__title { font-weight: 700; margin: 0 0 var(--space-1); font-size: var(--size-small); }
+.callout__content p { margin: 0; font-size: var(--size-small); }
+
+.data-table { width: 100%; border-collapse: collapse; margin: var(--space-7) 0 0; font-size: var(--size-small); font-variant-numeric: tabular-nums lining-nums; }
+.data-table caption { text-align: left; color: var(--color-fg-subtle); font-size: var(--size-xs); margin-bottom: var(--space-3); }
+.data-table th, .data-table td { text-align: left; padding: var(--space-4); border-bottom: 1px solid var(--color-border); vertical-align: top; }
+.data-table thead th { font-family: var(--font-ui); font-size: var(--size-xs); letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-fg-muted); font-weight: 700; }
+.data-table thead th.is-accent { color: var(--color-accent); }
+.data-table tbody th { font-family: var(--font-ui); font-weight: 700; color: var(--color-fg); width: 24%; }
+.data-table .col-ppt { color: var(--color-fg-subtle); width: 38%; }
+.data-table .col-sl  { color: var(--color-fg); width: 38%; }
+.data-table tbody tr:last-child th, .data-table tbody tr:last-child td { border-bottom: 0; }
+.table-scroll { overflow-x: auto; }
+
+/* ─── Theme toggle ─────────── */
+.theme-toggle { width: 36px; height: 36px; display: grid; place-items: center; background: var(--color-bg-elevated); border: 1px solid var(--color-border); border-radius: 999px; cursor: pointer; color: var(--color-fg); font-size: 14px; transition: background-color var(--duration-fast) var(--ease-snap), border-color var(--duration-fast) var(--ease-snap); }
+.theme-toggle:hover { background: var(--color-bg-sunken); border-color: var(--color-border-strong); }
+
+/* ─── [MARCA] Reduced motion ─────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  [data-reveal] { opacity: 1; transform: none; transition-delay: 0s; }
+}
+
+/* ─── [MARCA] Paleta secundária OKLCH ─────────── */
+@supports (color: oklch(60% 0.1 50)) {
+  :root {
+    --color-success:     oklch(52% 0.11 140); --color-success-dim: oklch(52% 0.11 140 / 0.08);
+    --color-teal:        oklch(52% 0.08 200); --color-teal-dim:    oklch(52% 0.08 200 / 0.08);
+    --color-plum:        oklch(46% 0.12 355); --color-plum-dim:    oklch(46% 0.12 355 / 0.08);
+    --color-danger:      oklch(50% 0.16 27);  --color-danger-dim:  oklch(50% 0.16 27 / 0.08);
+  }
+  [data-theme="dark"] {
+    --color-success:     oklch(76% 0.13 140); --color-success-dim: oklch(76% 0.13 140 / 0.10);
+    --color-teal:        oklch(78% 0.09 195); --color-teal-dim:    oklch(78% 0.09 195 / 0.10);
+    --color-plum:        oklch(74% 0.11 0);   --color-plum-dim:    oklch(74% 0.11 0 / 0.10);
+    --color-danger:      oklch(70% 0.15 25);  --color-danger-dim:  oklch(70% 0.15 25 / 0.10);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+ *  MOTION + WOW COMPONENTS (perfil cinemático colado como bloco aditivo)
+ * ═══════════════════════════════════════════════════════════════════ */
+
+/* ─── reveal universal (base = visível; scroll-driven onde houver suporte) ── */
+[data-reveal] { opacity: 1; }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-reveal] { animation: reveal-up linear both; animation-timeline: view(); animation-range: entry 0% cover 35%; }
+    @keyframes reveal-up { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+  }
+}
+@supports not (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-reveal] { opacity: 0; transform: translateY(20px); transition: opacity var(--duration-fade) var(--ease-out), transform var(--duration-fade) var(--ease-out); }
+    [data-reveal].is-visible { opacity: 1; transform: none; }
+  }
+}
+
+/* ─── chrome: progress + topbar ─── */
+.progress { position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 100; }
+.progress__bar { height: 100%; background: var(--color-accent); width: 0%; transition: width 100ms linear; }
+.topbar { position: sticky; top: 2px; z-index: 90; height: var(--header-h); background: rgba(255,255,255,0.85); border-bottom: 1px solid var(--color-border); display: flex; align-items: center; padding: 0 var(--space-5); gap: var(--space-5); }
+@supports (backdrop-filter: blur(12px)) { .topbar { background: rgba(255,255,255,0.72); backdrop-filter: blur(12px); } }
+[data-theme="dark"] .topbar { background: rgba(20,17,13,0.85); }
+@supports (backdrop-filter: blur(12px)) { [data-theme="dark"] .topbar { background: rgba(20,17,13,0.7); backdrop-filter: blur(12px); } }
+.topbar__brand { font-weight: 600; font-size: 0.9375rem; text-decoration: none; color: var(--color-fg); }
+.topbar__spacer { flex: 1; }
+
+/* ─── layout editorial ─── */
+.scrolly { max-width: 1100px; margin: 0 auto; padding: var(--space-12) var(--space-6); }
+.scrolly .lead { font-size: 1.3125rem; line-height: 1.5; max-width: 60ch; }
+.scene { margin: var(--space-12) 0; }
+.scene p { max-width: 62ch; }
+.scrolly h2 { font-family: var(--font-display); font-size: clamp(1.6rem,1rem + 2.4vw,2.6rem); letter-spacing: -.02em; }
+.content__meta { font-family: var(--font-ui); font-size: .8rem; letter-spacing: .16em; text-transform: uppercase; color: var(--color-fg-muted); margin-bottom: .6rem; }
+.twocol { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+@media (max-width:760px){ .twocol { grid-template-columns: 1fr; } }
+.figbox { background: var(--color-bg-sunken); border: 1px solid var(--color-border); border-radius: 14px; padding: 1.5rem; }
+
+/* ─── W21 hue-drift (sistema ambiente, global) ─── */
+@property --doc-hue { syntax:'<number>'; inherits:true; initial-value:24; }
+html { --doc-hue:24; }
+@supports (animation-timeline: scroll()) { @media (prefers-reduced-motion: no-preference) {
+  html { animation: hueDrift linear both; animation-timeline: scroll(root); }
+  @keyframes hueDrift { 45% { --doc-hue:210; } 100% { --doc-hue:24; } }
+}}
+.hue-accent { color: hsl(var(--doc-hue) 92% 48%); }
+
+/* ─── W29 blur-to-sharp focus (sistema ambiente, em figuras) ─── */
+.focus-reveal { filter: none; }
+@supports (animation-timeline: view()) { @media (prefers-reduced-motion: no-preference) {
+  .focus-reveal { animation: focusIn linear both; animation-timeline: view(); animation-range: entry 8% entry 58%; }
+  @keyframes focusIn { from { filter: blur(14px) saturate(.4); opacity:.4; } to { filter: blur(0) saturate(1); opacity:1; } }
+}}
+
+/* ─── W3 manchete cinética (eixo opsz/wght da Newsreader) ─── */
+.kinetic-wrap { overflow: clip; display: block; }
+.kinetic-h { font-optical-sizing: none; font-variation-settings: 'opsz' 72, 'wght' 800; }
+@supports (font-variation-settings: 'opsz' 12) { @media (prefers-reduced-motion: no-preference) {
+  .kinetic-wrap { view-timeline-name:--mh; view-timeline-axis:block; }
+  .kinetic-h { animation: kineticType var(--duration-hero) var(--ease-out-strong) both; animation-timeline:--mh; animation-range: entry 6% cover 55%; }
+  @keyframes kineticType { from { font-variation-settings: 'opsz' 6, 'wght' 340; opacity:.55; } to { font-variation-settings: 'opsz' 72, 'wght' 800; opacity:1; } }
+}}
+
+/* ─── W30 flip-in (manchete-herói: letras giram como split-flap) ─── */
+[data-flip-in] span { display: inline-block; transform-origin: bottom; }
+@media (prefers-reduced-motion: no-preference) {
+  [data-flip-in] span { animation: flipIn .5s var(--spring) both; animation-delay: calc(var(--i,0)*34ms); }
+  @keyframes flipIn { from { transform: perspective(420px) rotateX(-90deg); opacity:0; } to { transform: none; opacity:1; } }
+}
+
+/* ─── W14 parallax em camadas (capa) ─── */
+.parallax-layer { transform: none; }
+@supports (animation-timeline: view()) { @media (prefers-reduced-motion: no-preference) {
+  .parallax-layer { animation: plx linear both; animation-timeline: view(); }
+  .parallax-layer[data-depth="back"] { --plx:54px; }
+  .parallax-layer[data-depth="mid"]  { --plx:28px; }
+  @keyframes plx { from { transform: translateY(calc(var(--plx,0) * -1)); } to { transform: translateY(var(--plx,0)); } }
+}}
+
+/* ─── W20 aurora-mesh (atrás de dois dividers) ─── */
+@property --au-x { syntax:'<percentage>'; inherits:false; initial-value:24%; }
+.aurora-mesh { position: relative; isolation: isolate; }
+.aurora-mesh::before {
+  content:''; position:absolute; inset:-10%; z-index:-1; pointer-events:none; filter: blur(60px);
+  background:
+    radial-gradient(38vw at var(--au-x) 30%, color-mix(in srgb, var(--itau-orange) 38%, transparent), transparent 60%),
+    radial-gradient(42vw at 78% 64%, color-mix(in srgb, var(--itau-blue-3) 24%, transparent), transparent 64%);
+}
+@supports not (background: color-mix(in srgb, red, blue)) {
+  .aurora-mesh::before { background: radial-gradient(38vw at 24% 30%, rgba(255,98,0,.20), transparent 60%), radial-gradient(42vw at 78% 64%, rgba(59,133,250,.14), transparent 64%); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .aurora-mesh::before { animation: auDrift 22s var(--ease-in-out) infinite alternate; }
+  @keyframes auDrift { to { --au-x:70%; } }
+}
+
+/* ─── W10 mask-reveal (manchete surge por clip-path) ─── */
+.mask-reveal { clip-path: inset(0 0 0 0); }
+@supports (animation-timeline: view()) { @media (prefers-reduced-motion: no-preference) {
+  .mask-reveal { animation: maskWipe linear both; animation-timeline: view(); animation-range: entry 5% cover 35%; }
+  @keyframes maskWipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+}}
+
+/* ─── W19 masked-type (cor viva da marca DENTRO das letras, 1 display) ─── */
+@property --mt-a { syntax:'<angle>'; inherits:false; initial-value:0deg; }
+.masked-type { color: var(--color-accent); }
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  .masked-type {
+    background: conic-gradient(from var(--mt-a), var(--itau-orange), var(--itau-orange-3), var(--itau-orange));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .masked-type { animation: mtSpin 16s linear infinite; }
+    @keyframes mtSpin { to { --mt-a: 360deg; } }
+  }
+}
+
+/* ─── W6 text-reveal editorial (palavra sobe; split via Intl.Segmenter) ─── */
+.w { display: inline-block; overflow: clip; vertical-align: top; }
+.w-i { display: inline-block; transform: none; }
+@supports (animation-timeline: view()) { @media (prefers-reduced-motion: no-preference) {
+  [data-split] { view-timeline-name:--r; view-timeline-axis:block; }
+  .w-i { animation: riseWord linear both; animation-timeline:--r; animation-range: entry 0% entry 70%; animation-delay: calc(var(--i,0) * 45ms); }
+  @keyframes riseWord { from { transform: translateY(110%); } to { transform: none; } }
+}}
+
+/* ─── W2 counter-sync (número conta enquanto a barra cresce) ─── */
+@property --n { syntax:'<integer>'; inherits:false; initial-value:0; }
+.kpi { display: grid; gap: .5rem; }
+.kpi__num { font-family: var(--font-display); font-weight: 800; font-size: clamp(2.6rem,1.6rem + 3vw,4.4rem); line-height: 1; color: var(--color-accent); font-variant-numeric: tabular-nums; }
+.kpi__num .suf { font-size: .45em; color: var(--color-fg-muted); }
+.kpi__num .mioloN { display: none; }            /* base: counter desligado, texto real visível */
+.kpi__bar { height: 6px; border-radius: 99px; background: var(--color-accent); transform: scaleX(1); transform-origin: left; }
+.kpi__cap { color: var(--color-fg-muted); font-size: .95rem; }
+@supports (animation-timeline: view()) { @media (prefers-reduced-motion: no-preference) {
+  .kpi { counter-reset: n var(--n); animation: kpiCount linear both; animation-timeline: view(); animation-range: entry 20% cover 50%; }
+  .kpi__num-base { display: none; }            /* texto real some; counter assume (nunca os dois) */
+  .kpi__num .mioloN { display: inline; }
+  .kpi__num .mioloN::after { content: counter(n) '%'; }
+  .kpi__bar { transform: scaleX(0); animation: kpiGrow linear both; animation-timeline: view(); animation-range: entry 20% cover 50%; }
+  @keyframes kpiCount { to { --n: 100; } }
+  @keyframes kpiGrow  { to { transform: scaleX(1); } }
+}}
+
+/* ─── W25 data-choreography (número + barra + legenda em cascata) ─── */
+@property --cn { syntax:'<integer>'; inherits:false; initial-value:0; }
+[data-choreo] { display: grid; gap: .3rem; }
+[data-choreo] .num { font-family: var(--font-display); font-weight: 800; font-size: clamp(2.4rem,1.6rem + 3vw,4rem); line-height: 1; color: var(--color-accent); counter-reset: cn var(--cn); }
+[data-choreo] .num::after { content: counter(cn); }
+[data-choreo] .num .suf { font-size: .5em; }
+[data-choreo] .bar { height: 5px; background: var(--color-border); border-radius: 99px; overflow: hidden; }
+[data-choreo] .bar i { display: block; height: 100%; background: var(--color-accent); transform: scaleX(1); transform-origin: left; }
+[data-choreo] .cap { color: var(--color-fg-muted); font-size: .95rem; }
+@supports (animation-timeline: view()) { @media (prefers-reduced-motion: no-preference) {
+  [data-choreo] { animation-timeline: view(); animation-range: entry 20% entry 72%; }
+  [data-choreo] .num { animation: choN 1s var(--spring) both; }
+  [data-choreo] .bar i { transform: scaleX(0); animation: choB 1s var(--spring) .15s both; }
+  [data-choreo] .cap { opacity: 0; animation: choC .6s ease .4s both; }
+  @keyframes choB { to { transform: scaleX(1); } } @keyframes choC { to { opacity: 1; } }
+}}
+
+/* ─── W15 odômetro (cada dígito rola; height 1em + overflow clip — armadilha 1) ─── */
+.odometer { display: inline-flex; overflow: clip; line-height: 1; font-variant-numeric: tabular-nums lining-nums; font-family: var(--font-display); font-weight: 800; }
+.od-digit { display: inline-block; width: 1ch; height: 1em; overflow: clip; }
+.od-reel { display: flex; flex-direction: column; transition: transform 900ms var(--ease-out-strong); }
+.od-reel > span { height: 1em; }
+@media (prefers-reduced-motion: reduce) { .od-reel { transition: none; } }
+
+/* ─── W17 scramble (1x; número-tese resolve de dígitos) ─── */
+.scramble { font-variant-numeric: tabular-nums; }
+
+/* ─── W22 draw-on SVG (fluxo de 3 passos) ─── */
+.draw-on { fill: none; stroke: var(--color-accent); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: var(--len,1200); stroke-dashoffset: 0; }
+@supports (animation-timeline: view()) { @media (prefers-reduced-motion: no-preference) {
+  .draw-on { stroke-dashoffset: var(--len,1200); animation: drawP 1.4s ease both; animation-timeline: view(); animation-range: cover 6% cover 46%; }
+  @keyframes drawP { to { stroke-dashoffset: 0; } }
+}}
+
+/* ─── W18 sticky-stack (HERÓI: os 6 formatos empilham como baralho) ─── */
+.stack-wrap { display: grid; gap: 10vh; margin: 6vh 0; }
+.stack-card { position: sticky; top: 14vh; background: var(--color-bg-elevated); border: 1px solid var(--color-border); border-radius: 16px; padding: clamp(1.5rem,4vw,3rem); box-shadow: 0 20px 60px rgba(41,32,23,.10); }
+[data-theme="dark"] .stack-card { box-shadow: 0 20px 60px rgba(0,0,0,.4); }
+.stack-card h3 { font-family: var(--font-display); font-size: clamp(1.6rem,1rem + 2.4vw,2.6rem); margin: .2rem 0 .4rem; }
+.stack-card .tag { font-family: var(--font-ui); font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; color: var(--color-accent); }
+@supports (animation-timeline: view()) { @media (prefers-reduced-motion: no-preference) {
+  .stack-card { animation: stackShrink linear both; animation-timeline: view(); animation-range: exit 0% exit 150%; }
+  @keyframes stackShrink { to { transform: scale(.93) translateY(-14px); filter: brightness(.74); } }
+}}
+
+/* ─── W28 chapter-divider (interstício full-bleed scrubbed) ─── */
+.chapter-divider { height: 150vh; }
+.chapter-divider__inner { position: sticky; top: 0; height: 100vh; display: grid; place-items: center; text-align: center; overflow: clip; }
+.chapter-divider__num { font-family: var(--font-display); font-weight: 300; font-variant-numeric: tabular-nums; font-size: clamp(6rem,30vw,22rem); line-height: .8; color: var(--color-accent); opacity: .16; }
+.chapter-divider__t { font-family: var(--font-display); font-size: clamp(1.8rem,1rem + 4vw,4rem); margin-top: -.3em; }
+@supports (animation-timeline: view()) { @media (prefers-reduced-motion: no-preference) {
+  .chapter-divider__inner > * { animation: chScrub linear both; animation-timeline: view(); animation-range: contain 0% contain 100%; }
+  @keyframes chScrub { from { opacity:.2; transform: scale(.92); } 50% { opacity:1; transform: none; } to { opacity:.2; transform: scale(1.04); } }
+}}
+
+/* ─── W24 3D tilt scene (card-herói inclina rumo ao cursor) ─── */
+[data-tilt] { transform: perspective(800px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)); transform-style: preserve-3d; transition: transform 200ms var(--ease-out); }
+[data-tilt] > .tilt-layer { transform: translateZ(40px); }
+
+/* ─── W26 spot-mask (cursor abre holofote revelando 2ª camada; 1 por doc) ─── */
+[data-spot-mask] { --mx:50%; --my:50%; position: relative; }
+.spot-base { color: var(--color-fg-subtle); }
+.spot-top { position: absolute; inset: clamp(1.5rem,4vw,3rem); margin: 0; color: var(--color-fg); font-weight: 700; }
+@supports (mask: radial-gradient(circle at 0 0, black, transparent)) {
+  [data-spot-mask] .spot-top {
+    -webkit-mask: radial-gradient(circle 150px at var(--mx) var(--my), black 0 99%, transparent 100%);
+            mask: radial-gradient(circle 150px at var(--mx) var(--my), black 0 99%, transparent 100%);
+  }
+}
+@media (prefers-reduced-motion: reduce) { [data-spot-mask] .spot-top { -webkit-mask: none; mask: none; } }
+
+/* ─── W27 marquee (fita de stats; tecido entre seções) ─── */
+.marquee { overflow: clip; border-block: 1px solid var(--color-border); padding: .8rem 0; margin: 4vh 0; }
+.marquee__track { display: inline-flex; gap: 2.5rem; white-space: nowrap; font-family: var(--font-ui); font-size: .95rem; color: var(--color-fg-muted); will-change: transform; }
+.marquee__track b { color: var(--color-accent); }
+@media (prefers-reduced-motion: no-preference) { .marquee__track { animation: marq 34s linear infinite; } }
+@keyframes marq { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .marquee__track { animation: none; } }
+
+/* ─── W31 glitch (1x; uma palavra, zona dark/tech) ─── */
+.glitch { position: relative; display: inline-block; }
+.glitch::before, .glitch::after { content: attr(data-t); position: absolute; inset: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .glitch::before { color: var(--itau-blue-3); clip-path: inset(0 0 60% 0); animation: glitchA .4s steps(2) 1 both; }
+  .glitch::after  { color: var(--itau-orange); clip-path: inset(60% 0 0 0); animation: glitchB .4s steps(2) 1 both; }
+  @keyframes glitchA { 0%,100%{transform:none} 50%{transform:translateX(-3px)} }
+  @keyframes glitchB { 0%,100%{transform:none} 50%{transform:translateX(3px)} }
+}
+@media (prefers-reduced-motion: reduce) { .glitch::before, .glitch::after { display: none; } }
+
+/* ─── W1/W8 cena sticky data-bound (o gráfico-tese muta por step) ─── */
+.story { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-10); align-items: start; }
+.story__text { display: grid; gap: 40vh; padding: 30vh 0; }
+.story__step { max-width: 46ch; }
+.story__step h3 { margin: 0 0 .5rem; font-family: var(--font-display); }
+.story__chart { position: sticky; top: 14vh; height: 72vh; display: grid; align-content: center; gap: 1rem; }
+.story__chart canvas { max-height: 60vh; }
+.chart-na { display: none; padding: 2rem; border: 1px dashed var(--color-border-strong); border-radius: 12px; color: var(--color-fg-muted); text-align: center; font-size: .95rem; }
+.scene-layer { opacity: 1; transform: none; }
+@supports (animation-timeline: view()) { @media (prefers-reduced-motion: no-preference) {
+  .scene-layer { animation: sceneRise linear both; animation-timeline: view(); animation-range: entry 0% cover 50%; }
+  @keyframes sceneRise { from { opacity:.3; transform: translateY(40px); } to { opacity:1; transform: none; } }
+}}
+@media (max-width: 900px) {
+  .story { display: block; }
+  .story__text { display: block; padding: 0; }
+  .story__step { margin: var(--space-7) 0; }
+  .story__chart { position: static; height: 380px; margin: var(--space-7) 0; }
+}
+
+/* ─── capa ─── */
+.cover { position: relative; padding: 6vh 0 2vh; isolation: isolate; overflow: clip; }
+.cover__layers { position: absolute; inset: -6vh -10% 0; z-index: -1; pointer-events: none; }
+.cover__blob { position: absolute; border-radius: 50%; filter: blur(48px); }
+.cover__blob--a { width: 38vw; height: 38vw; left: -6vw; top: 0; background: radial-gradient(circle, color-mix(in srgb, var(--itau-orange) 26%, transparent), transparent 68%); }
+.cover__blob--b { width: 30vw; height: 30vw; right: -4vw; top: 18vh; background: radial-gradient(circle, color-mix(in srgb, var(--itau-blue-3) 18%, transparent), transparent 68%); }
+@supports not (background: color-mix(in srgb, red, blue)) {
+  .cover__blob--a { background: radial-gradient(circle, rgba(255,98,0,.18), transparent 68%); }
+  .cover__blob--b { background: radial-gradient(circle, rgba(59,133,250,.12), transparent 68%); }
+}
+
+@media print {
+  .progress, .topbar { display: none; }
+  .story, .twocol { display: block; }
+  .story__chart { position: static; height: auto; }
+  .scene { break-inside: avoid; margin-bottom: var(--space-7); }
+  .chapter-divider { height: auto; }
+  .chapter-divider__inner { position: static; height: auto; }
+}
+  </style>
+</head>
+<body data-showcase>
+  <div class="progress" aria-hidden="true"><div class="progress__bar" id="progress-bar"></div></div>
+
+  <header class="topbar">
+    <a href="#" class="topbar__brand">Slideless · Narrativa</a>
+    <span class="topbar__spacer"></span>
+    <button class="theme-toggle" type="button" aria-label="Alternar tema"><span aria-hidden="true">◐</span></button>
+  </header>
+
+  <main class="scrolly">
+
+    <!-- ════ CAPA — W14 parallax + W3 manchete cinética + W30 flip-in ════ -->
+    <section class="scene cover" data-reveal>
+      <div class="cover__layers" aria-hidden="true">
+        <span class="cover__blob cover__blob--a parallax-layer" data-depth="back"></span>
+        <span class="cover__blob cover__blob--b parallax-layer" data-depth="mid"></span>
+      </div>
+      <p class="content__meta hue-accent">Peça de apresentação · Itaú · 2026</p>
+      <h1 data-flip-in style="font-size:clamp(2.6rem, 1.4rem + 6vw, 6rem);line-height:.95;letter-spacing:-.03em">Chega de slides</h1>
+      <div class="kinetic-wrap"><p class="lead kinetic-h" style="font-family:var(--font-display);color:var(--color-fg);max-width:24ch">Material profissional, em minutos — direto no navegador.</p></div>
+      <p class="lead">Sem PowerPoint, sem instalação, sem código. O Slideless é a skill interna que troca o slide pelo documento web: você cuida do conteúdo, ela cuida da forma.</p>
+    </section>
+
+    <!-- W27 marquee -->
+    <div class="marquee" aria-hidden="true"><div class="marquee__track">
+      <span>6 formatos&nbsp; · &nbsp;<b>31 comandos</b>&nbsp; · &nbsp;arquivo único&nbsp; · &nbsp;<b>zero código</b>&nbsp; · &nbsp;identidade Itaú&nbsp; · &nbsp;<b>WCAG AA</b>&nbsp; · &nbsp;pronto pra PDF&nbsp; · &nbsp;</span>
+      <span>6 formatos&nbsp; · &nbsp;<b>31 comandos</b>&nbsp; · &nbsp;arquivo único&nbsp; · &nbsp;<b>zero código</b>&nbsp; · &nbsp;identidade Itaú&nbsp; · &nbsp;<b>WCAG AA</b>&nbsp; · &nbsp;pronto pra PDF&nbsp; · &nbsp;</span>
+    </div></div>
+
+    <!-- ════ 01 — O problema (W20 aurora-mesh no divider) ════ -->
+    <div class="chapter-divider aurora-mesh"><div class="chapter-divider__inner">
+      <div class="chapter-divider__num">01</div><div class="chapter-divider__t">O problema</div>
+    </div></div>
+
+    <section class="scene" data-reveal>
+      <h2 data-split>Quanto tempo você já perdeu formatando slide?</h2>
+      <p>Para a maioria das áreas do banco, transformar uma boa ideia em apresentação custa caro — não em dinheiro, em atrito. E o resultado raramente faz justiça ao trabalho por trás dele.</p>
+      <div class="twocol" style="margin-top:2rem">
+        <div class="figbox focus-reveal" data-reveal><strong>Slides que estouram a tela</strong><p style="margin:.4rem 0 0;color:var(--color-fg-muted)">O que cabia no seu monitor vaza no projetor — texto cortado, gráfico espremido.</p></div>
+        <div class="figbox focus-reveal" data-reveal><strong>Preso ao Office</strong><p style="margin:.4rem 0 0;color:var(--color-fg-muted)">O arquivo só abre direito em quem tem a mesma versão do programa — e some no celular.</p></div>
+        <div class="figbox focus-reveal" data-reveal><strong>Horas no lugar errado</strong><p style="margin:.4rem 0 0;color:var(--color-fg-muted)">Tempo gasto escolhendo fonte e alinhando caixa de texto, em vez de no conteúdo.</p></div>
+        <div class="figbox focus-reveal" data-reveal><strong>Marca inconsistente</strong><p style="margin:.4rem 0 0;color:var(--color-fg-muted)">Cada área com uma cara diferente, e quase nenhuma com a identidade do Itaú.</p></div>
+      </div>
+    </section>
+
+    <!-- ════ 02 — A virada ════ -->
+    <div class="chapter-divider"><div class="chapter-divider__inner">
+      <div class="chapter-divider__num">02</div><div class="chapter-divider__t">A virada</div>
+    </div></div>
+
+    <section class="scene" data-reveal>
+      <h2 class="mask-reveal">E se o material se formatasse sozinho?</h2>
+      <p>O Slideless gera um documento web de <strong>arquivo único</strong>: abre em qualquer navegador, não precisa instalar nada e já nasce com a identidade do Itaú, modo escuro e acessibilidade embutidos. Você descreve o conteúdo como contaria a um colega; a skill cuida do design, da tipografia e da técnica.</p>
+      <!-- W19 masked-type: UMA manchete-display, hue da marca dentro das letras -->
+      <p class="masked-type" style="font-family:var(--font-display);font-weight:800;font-size:clamp(2rem,1.2rem + 4vw,3.4rem);line-height:1.05;margin-top:1rem;max-width:18ch">Você cuida do conteúdo. O Slideless cuida da forma.</p>
+    </section>
+
+    <!-- ════ PowerPoint × Slideless — tabela completa (sem truncar; rola se larga) ════ -->
+    <section class="scene" data-reveal>
+      <h2>PowerPoint × Slideless, lado a lado</h2>
+      <p>O mesmo conteúdo, sem as amarras do formato antigo. Todas as linhas, nenhuma escondida atrás de "ver mais".</p>
+      <div class="table-scroll">
+      <table class="data-table">
+        <caption>Comparativo entre o formato tradicional e o Slideless.</caption>
+        <thead>
+          <tr><th scope="col"></th><th scope="col">PowerPoint</th><th scope="col" class="is-accent">Slideless</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Entrega</th><td class="col-ppt">um arquivo .pptx</td><td class="col-sl">um arquivo .html</td></tr>
+          <tr><th scope="row">Dependência</th><td class="col-ppt">MS Office instalado</td><td class="col-sl">qualquer navegador</td></tr>
+          <tr><th scope="row">Acessibilidade</th><td class="col-ppt">limitada</td><td class="col-sl">WCAG AA</td></tr>
+          <tr><th scope="row">Modo escuro</th><td class="col-ppt">manual, slide a slide</td><td class="col-sl">nativo e persistente</td></tr>
+          <tr><th scope="row">Navegação</th><td class="col-ppt">sempre linear</td><td class="col-sl">linear ou não-linear, conforme o formato</td></tr>
+          <tr><th scope="row">Interatividade</th><td class="col-ppt">clique → próximo slide</td><td class="col-sl">abas, gráficos, filtros, busca, fragments</td></tr>
+          <tr><th scope="row">Hospedagem</th><td class="col-ppt">rede interna</td><td class="col-sl">qualquer link, anexo ou pasta</td></tr>
+          <tr><th scope="row">Densidade de texto</th><td class="col-ppt">bullets curtos</td><td class="col-sl">parágrafos editoriais completos</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <!-- ════ Três passos — W22 draw-on no fluxo ════ -->
+    <section class="scene" data-reveal>
+      <h2>Três passos. Nenhuma linha de código.</h2>
+      <p>Escolha o formato (ou deixe o <strong>/criar</strong> escolher por você, com 5 perguntas simples), responda em linguagem comum e receba o material pronto.</p>
+      <figure style="margin:2.5rem 0 0">
+        <svg viewBox="0 0 720 60" role="img" aria-label="Fluxo de três passos conectados: escolher o formato, responder em linguagem simples, receber o material pronto." style="width:100%;height:auto;overflow:visible">
+          <path class="draw-on" d="M110 30 H330 M390 30 H610" />
+          <g font-family="var(--font-display)">
+            <circle cx="70" cy="30" r="26" fill="none" stroke="var(--color-border-strong)" stroke-width="2"></circle><text x="70" y="38" text-anchor="middle" font-size="24" fill="var(--color-fg-muted)">1</text>
+            <circle cx="360" cy="30" r="26" fill="none" stroke="var(--color-border-strong)" stroke-width="2"></circle><text x="360" y="38" text-anchor="middle" font-size="24" fill="var(--color-fg-muted)">2</text>
+            <circle cx="650" cy="30" r="26" fill="var(--color-accent)" stroke="var(--color-accent)" stroke-width="2"></circle><text x="650" y="38" text-anchor="middle" font-size="22" fill="var(--color-accent-fg)">✓</text>
+          </g>
+        </svg>
+        <figcaption style="text-align:center;color:var(--color-fg-muted);font-size:.92rem;margin-top:1rem">Comando → poucas perguntas → material pronto. <b>Sem montar slide por slide.</b></figcaption>
+      </figure>
+    </section>
+
+    <!-- ════ 03 — A promessa em números (W2 + W17 + W15 + W25) ════ -->
+    <div class="chapter-divider aurora-mesh"><div class="chapter-divider__inner">
+      <div class="chapter-divider__num">03</div><div class="chapter-divider__t">A skill em números</div>
+    </div></div>
+
+    <section class="scene" data-reveal>
+      <h2>O que a skill entrega, em cifras reais</h2>
+      <p>Toda a régua de design e engenharia da skill, medida no próprio corpus de demonstração.</p>
+
+      <!-- W17 scramble (1x no doc): o dado-tese "100%" resolve de dígitos embaralhados -->
+      <p class="lead" style="margin-top:1.5rem">Conteúdo preservado: <strong class="scramble hue-accent" data-scramble="100%" style="font-family:var(--font-display);font-size:1.4em">100%</strong> da sua fonte chega ao documento — a skill nunca compacta nem inventa dados.</p>
+
+      <!-- W2 counter-sync: cobertura do corpus -->
+      <div class="kpi" style="margin:2rem 0;max-width:32ch">
+        <div class="kpi__num"><span class="kpi__num-base">100%</span><span class="mioloN" aria-hidden="true"></span><span class="suf">&nbsp;passam nos gates</span></div>
+        <span class="kpi__bar"></span>
+        <span class="kpi__cap">27 de 27 demos do corpus: 0 erro no validador e SMOKE PASS no render.</span>
+      </div>
+
+      <!-- W15 odômetro: o número-tese rola por dígito -->
+      <p style="margin-top:1rem">Comandos disponíveis no chat, um para cada gesto:
+        <span class="odometer hue-accent" data-odometer="31" aria-label="31" style="font-size:1.8em">31</span>
+      </p>
+
+      <!-- W25 data-choreography: 3-6 métricas em cascata, mesmo gatilho -->
+      <div class="twocol" style="margin-top:2rem;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:2rem">
+        <div data-choreo><span class="num"></span><span class="bar"><i></i></span><span class="cap">comandos, um para cada gesto</span></div>
+        <div data-choreo><span class="num"></span><span class="bar"><i></i></span><span class="cap">formatos para cada situação</span></div>
+        <div data-choreo><span class="num"></span><span class="bar"><i></i></span><span class="cap">perguntas no /criar</span></div>
+      </div>
+    </section>
+
+    <!-- ════ 04 — A cena sticky: W1 + W8 (gráfico-tese muta por step) ════ -->
+    <div class="chapter-divider"><div class="chapter-divider__inner">
+      <div class="chapter-divider__num">04</div><div class="chapter-divider__t">Gráficos que evoluem ao rolar</div>
+    </div></div>
+
+    <section class="scene" data-reveal>
+      <h2>O que muda quando o material vira documento web</h2>
+      <p>Role: cada parágrafo acende um ponto do mesmo gráfico — sem trocar de figura, sem recriar nada. É a espinha do scrollytelling, o gesto que o NYT Upshot popularizou.</p>
+      <div class="story">
+        <div class="story__text">
+          <div class="story__step scene-layer" data-step="1">
+            <h3>Abre em qualquer lugar</h3>
+            <p>Um único <code>.html</code> que roda em qualquer navegador, sem instalar nada. A barra de "abertura sem atrito" sobe ao máximo.</p>
+          </div>
+          <div class="story__step scene-layer" data-step="2">
+            <h3>Acessível de fábrica</h3>
+            <p>Foco visível, navegação por teclado e respeito a quem reduz animações. WCAG AA não é um extra: é o piso.</p>
+          </div>
+          <div class="story__step scene-layer" data-step="3">
+            <h3>Identidade Itaú embutida</h3>
+            <p>Laranja <code>#FF6200</code>, tipografia curada e modo escuro nativo — a marca chega pronta, não improvisada.</p>
+          </div>
+          <div class="story__step scene-layer" data-step="4">
+            <h3>Pronto para compartilhar</h3>
+            <p>Link, e-mail, anexo ou PDF. O mesmo arquivo serve a todos os canais — e ainda exporta em um comando.</p>
+          </div>
+        </div>
+        <div class="story__chart">
+          <canvas id="chartTese" aria-label="Gráfico: índice de capacidade do documento web por dimensão, acendendo conforme o texto narra." role="img"></canvas>
+          <p class="chart-na" id="chartTese-na">Gráfico indisponível offline — os dados estão descritos no texto ao lado.</p>
+          <p style="text-align:center;color:var(--color-fg-subtle);font-size:.85rem;margin:0">Índice de capacidade (0–100) por dimensão, ante o slide tradicional.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════ 05 — Os seis formatos: W18 sticky-stack (HERÓI) ════ -->
+    <div class="chapter-divider aurora-mesh"><div class="chapter-divider__inner">
+      <div class="chapter-divider__num">05</div><div class="chapter-divider__t">Os seis formatos</div>
+    </div></div>
+
+    <section class="scene" data-reveal>
+      <h2>Um para cada situação</h2>
+      <p>O mesmo conteúdo, apresentado do jeito certo para cada ocasião — você escolhe pela situação, não pela ferramenta. Role para vê-los empilhar:</p>
+      <div class="stack-wrap">
+        <article class="stack-card"><span class="tag">Ao vivo · inspiração: Apple keynote</span><h3>deck</h3><p>Slides que avançam com as setas do teclado, abrem em tela cheia e revelam tópicos por clique. Para pitch, all-hands e demo guiada.</p></article>
+        <article class="stack-card"><span class="tag">Para consultar · inspiração: GitLab Handbook</span><h3>handbook</h3><p>Página com menu lateral, índice fixo e busca por seção. Para onboarding, política interna e runbook.</p></article>
+        <article class="stack-card"><span class="tag">Para reunir · inspiração: Apple Developer</span><h3>hub</h3><p>Cards que filtram por categoria; cada um abre um painel com gráficos e tabelas. Para centrais de recursos.</p></article>
+        <article class="stack-card"><span class="tag">Para contar · inspiração: NYT Upshot</span><h3>scrollytelling</h3><p>Uma página longa que revela conteúdo ao rolar, com gráficos que evoluem. Para relatórios e casos de estudo — como esta peça.</p></article>
+        <article class="stack-card"><span class="tag">Para navegar · inspiração: Linear, Vercel</span><h3>site</h3><p>Mini-site com 2 a 5 abas (home, sobre, contato) e troca instantânea entre elas. Para lançamentos internos.</p></article>
+        <article class="stack-card"><span class="tag">Para imprimir · inspiração: McKinsey, Goldman</span><h3>report</h3><p>Documento editorial denso com sumário executivo, seções numeradas e notas de rodapé. Pronto para PDF e diretoria.</p></article>
+      </div>
+    </section>
+
+    <!-- ════ 06 — A caixa de ferramentas ════ -->
+    <div class="chapter-divider"><div class="chapter-divider__inner">
+      <div class="chapter-divider__num">06</div><div class="chapter-divider__t">A caixa de ferramentas</div>
+    </div></div>
+
+    <section class="scene" data-reveal>
+      <h2>31 comandos. Um para cada gesto.</h2>
+      <p>Do primeiro rascunho ao polimento final — e você nem precisa decorá-los: digite <strong>/</strong> no chat e todos aparecem.</p>
+      <div class="twocol" style="margin-top:1.5rem;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem 2.5rem">
+        <div data-reveal><strong class="hue-accent">Por onde começar</strong><ul style="margin:.5rem 0 0;padding-left:1.1rem;color:var(--color-fg-muted)"><li><code>/criar</code> — wizard de 5 perguntas que escolhe o formato</li><li><code>/estruturar</code> — propõe um mapa do conteúdo antes de gerar</li></ul></div>
+        <div data-reveal><strong class="hue-accent">Criar direto (6)</strong><ul style="margin:.5rem 0 0;padding-left:1.1rem;color:var(--color-fg-muted)"><li><code>/slideless-deck · handbook · hub</code></li><li><code>/slideless-scrollytelling · site · report</code></li></ul></div>
+        <div data-reveal><strong class="hue-accent">Importar (3)</strong><ul style="margin:.5rem 0 0;padding-left:1.1rem;color:var(--color-fg-muted)"><li><code>/importar-ppt</code> — PPT/PPTX em manual ou deck</li><li><code>/importar-md</code> · <code>/importar-confluence</code></li></ul></div>
+        <div data-reveal><strong class="hue-accent">Editar sem regenerar (6)</strong><ul style="margin:.5rem 0 0;padding-left:1.1rem;color:var(--color-fg-muted)"><li>adicionar seção, slide, callout, gráfico</li><li>adicionar fragment, regenerar índice (TOC)</li></ul></div>
+        <div data-reveal><strong class="hue-accent">Transformar (3)</strong><ul style="margin:.5rem 0 0;padding-left:1.1rem;color:var(--color-fg-muted)"><li><code>/aplicar-tema</code> · <code>/converter-modelo</code></li><li><code>/distill</code> — resume manual longo</li></ul></div>
+        <div data-reveal><strong class="hue-accent">Refinar o design (5)</strong><ul style="margin:.5rem 0 0;padding-left:1.1rem;color:var(--color-fg-muted)"><li><code>/bolder</code> · <code>/quieter</code> · <code>/animate</code></li><li><code>/delight</code> · <code>/overdrive</code> (showpiece WebGL)</li></ul></div>
+        <div data-reveal><strong class="hue-accent">Qualidade (4)</strong><ul style="margin:.5rem 0 0;padding-left:1.1rem;color:var(--color-fg-muted)"><li><code>/auditar</code> · <code>/polir</code></li><li><code>/harden</code> · <code>/acessibilidade</code></li></ul></div>
+        <div data-reveal><strong class="hue-accent">Exportar (2)</strong><ul style="margin:.5rem 0 0;padding-left:1.1rem;color:var(--color-fg-muted)"><li><code>/exportar-pdf</code> — paisagem (deck) ou retrato</li><li><code>/exportar-screenshots</code> — 1 PNG por slide/seção</li></ul></div>
+      </div>
+    </section>
+
+    <!-- ════ 07 — O diferencial: W24 tilt + W26 spot-mask ════ -->
+    <div class="chapter-divider"><div class="chapter-divider__inner">
+      <div class="chapter-divider__num">07</div><div class="chapter-divider__t">O diferencial</div>
+    </div></div>
+
+    <section class="scene" data-reveal>
+      <h2>Não é template. É direção de arte.</h2>
+      <p>Cada documento nasce de um <strong>parti</strong> — um conjunto de decisões de design feitas para o seu conteúdo, não copiadas de um molde. O resultado não tem cara de <span class="glitch" data-t="gerado por IA">gerado por IA</span>.</p>
+
+      <!-- W24 tilt: 1 card-herói inclina rumo ao cursor -->
+      <div class="figbox" data-tilt style="margin-top:2rem;max-width:46ch;will-change:transform">
+        <div class="tilt-layer">
+          <strong class="hue-accent" style="font-size:1.15rem">O parti, em uma frase</strong>
+          <p style="margin:.5rem 0 0;color:var(--color-fg-muted)">Registro, kit tipográfico, capa, superfície, motion, ambição, assinatura — e o que o documento <em>não</em> vai ter. Sete decisões antes de uma única linha de HTML.</p>
+        </div>
+      </div>
+
+      <div class="twocol" style="margin-top:2rem;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">
+        <div class="figbox focus-reveal" data-reveal><strong>Tipografia curada</strong><p style="margin:.4rem 0 0;color:var(--color-fg-muted)">Kits tipográficos escolhidos por contexto, com as fontes "cara de template" explicitamente banidas.</p></div>
+        <div class="figbox focus-reveal" data-reveal><strong>Ambição calibrada</strong><p style="margin:.4rem 0 0;color:var(--color-fg-muted)">Do sóbrio para impressão ao extraordinário de lançamento — o acabamento combina com a ocasião.</p></div>
+        <div class="figbox focus-reveal" data-reveal><strong>Momentos que param o scroll</strong><p style="margin:.4rem 0 0;color:var(--color-fg-muted)">Gestos de design ligados à informação mais importante — nunca enfeite gratuito.</p></div>
+      </div>
+
+      <!-- W26 spot-mask: 1 por doc, o cursor revela a camada anti-slop -->
+      <div class="tier-recessed" data-spot-mask style="margin-top:2rem;min-height:140px;display:grid;align-content:center">
+        <p class="spot-base" style="margin:0">Passe o cursor para revelar o que a skill recusa — no toque e no teclado, já vem revelado.</p>
+        <p class="spot-top">Sem "PPT-isms": sem timeline-com-dot decorativo, sem glow-wallpaper, sem gradiente-no-texto gratuito, sem hover-lift de IA.</p>
+      </div>
+    </section>
+
+    <!-- ════ Cinco promessas — lista numerada (counter absoluto, armadilha 3) ════ -->
+    <section class="scene" data-reveal>
+      <h2>Cinco promessas que a skill nunca quebra</h2>
+      <ol style="margin-top:1.2rem;padding-left:1.4rem;display:grid;gap:.8rem">
+        <li><strong>Arquivo único.</strong> Sempre um só <code>.html</code> — sem pastas, sem dependências para enviar junto.</li>
+        <li><strong>Modo escuro nativo.</strong> Claro e escuro de fábrica, sem flash ao abrir, lembrando sua preferência.</li>
+        <li><strong>Acessibilidade WCAG AA.</strong> Foco visível, navegação por teclado e respeito a quem reduz animações.</li>
+        <li><strong>Conteúdo real.</strong> Nunca inventa números nem dados internos — sem a sua fonte, ela pergunta antes.</li>
+        <li><strong>Degradação graciosa.</strong> Sem suporte a efeito de ponta, ou no Chrome travado da intranet, tudo cai no estado final legível.</li>
+      </ol>
+      <div class="callout callout--tip" style="margin-top:1.5rem">
+        <span class="callout__icon" aria-hidden="true">✓</span>
+        <div class="callout__content">
+          <p class="callout__title">Dois portões antes de entregar</p>
+          <p><code>validar.py</code> checa a estrutura (single-file, dark mode, parti, anti-slop); <code>smoke.py</code> abre no Chromium headless e confere o render (overflow, número duplicado, odômetro, scroll horizontal). Esta peça passa nos dois.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════ Fecho ════ -->
+    <section class="scene" data-reveal>
+      <p class="content__meta hue-accent">Em resumo</p>
+      <h2 class="mask-reveal">Seis formatos. 31 comandos. Uma marca.</h2>
+      <p class="lead">Qualquer ituber, de qualquer área do banco, cria um material profissional em minutos. Comece digitando <strong>/criar</strong>.</p>
+    </section>
+  </main>
+
+  <!-- ═══════════════ SCRIPTS ═══════════════ -->
+  <script>
+    /* tema (idempotente) */
+    document.querySelector('.theme-toggle')?.addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme');
+      const next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch {}
+    });
+
+    /* progress bar */
+    function updateProgress() {
+      const h = document.documentElement;
+      const pct = (h.scrollTop / Math.max(1, h.scrollHeight - h.clientHeight)) * 100;
+      const bar = document.getElementById('progress-bar'); if (bar) bar.style.width = pct + '%';
+    }
+    addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+
+    /* IO fallback p/ reveal (Safari/FF sem scroll-driven) */
+    const rio = new IntersectionObserver(es => {
+      es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); rio.unobserve(e.target); } });
+    }, { threshold: 0.2, rootMargin: '0px 0px -60px 0px' });
+    document.querySelectorAll('[data-reveal]').forEach(el => rio.observe(el));
+
+    /* helper de tokens (usado pelo plugin Chart.js) */
+    const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+    /* ═══ W30 flip-in — split em letras, preserva aria-label ═══ */
+    document.querySelectorAll('[data-flip-in]').forEach(el => {
+      if (el._flip) return; el._flip = true;
+      const t = el.textContent; el.setAttribute('aria-label', t);
+      el.innerHTML = [...t].map((c,i) => `<span aria-hidden="true" style="--i:${i}">${c===' '?'&nbsp;':c}</span>`).join('');
+    });
+
+    /* ═══ W6 text-reveal — split grapheme-safe pt-BR (Intl.Segmenter) ═══ */
+    document.querySelectorAll('[data-split]').forEach(el => {
+      if (el._split) return; el._split = true;
+      try {
+        const seg = new Intl.Segmenter('pt', { granularity: 'word' });
+        let i = 0;
+        el.innerHTML = [...seg.segment(el.textContent)]
+          .map(s => s.isWordLike ? `<span class="w"><span class="w-i" style="--i:${i++}">${s.segment}</span></span>` : s.segment).join('');
+      } catch (e) { /* sem Segmenter: texto base permanece */ }
+    });
+
+    /* ═══ W22 draw-on — medir comprimento real dos paths ═══ */
+    document.querySelectorAll('.draw-on').forEach(p => { try { p.style.setProperty('--len', Math.ceil(p.getTotalLength())); } catch(e){} });
+
+    /* ═══ W15 odômetro — cada dígito rola; valor real no base + aria-label ═══ */
+    function buildOdometer(el){
+      if (el._odo) return; el._odo = true;
+      const raw = el.dataset.odometer || el.textContent;
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      el.textContent = '';
+      [...raw].forEach(ch => {
+        if (!/\d/.test(ch)) { el.append(ch); return; }
+        const d = document.createElement('span'); d.className = 'od-digit';
+        const reel = document.createElement('span'); reel.className = 'od-reel';
+        for (let i = 0; i <= 9; i++) { const s = document.createElement('span'); s.textContent = i; reel.append(s); }
+        d.append(reel); el.append(d);
+        const setY = () => { reel.style.transform = `translateY(${-ch}em)`; };
+        if (reduce) setY(); else requestAnimationFrame(() => requestAnimationFrame(setY));
+      });
+    }
+    const odoIO = new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting) { buildOdometer(e.target); odoIO.unobserve(e.target); } }), { threshold: 0.6 });
+    document.querySelectorAll('.odometer').forEach(el => odoIO.observe(el));
+
+    /* ═══ W17 scramble — número-tese resolve de dígitos (1x) ═══ */
+    document.querySelectorAll('.scramble').forEach(el => {
+      const final = el.dataset.scramble || el.textContent;
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) { el.textContent = final; return; }
+      const glyphs = '0123456789';
+      const io = new IntersectionObserver((es) => es.forEach(e => {
+        if (!e.isIntersecting) return; io.unobserve(el);
+        let frame = 0; const steps = 18;
+        const id = setInterval(() => {
+          frame++;
+          el.textContent = [...final].map((c, i) => (/\d/.test(c) && i > frame / steps * final.length) ? glyphs[Math.floor(Math.random() * 10)] : c).join('');
+          if (frame >= steps) { clearInterval(id); el.textContent = final; }
+        }, 28);
+      }), { threshold: 0.6 });
+      io.observe(el);
+    });
+
+    /* ═══ W25 data-choreography — cada bloco conta até seu valor real ═══ */
+    (function(){
+      const vals = [31, 6, 5];   // 31 comandos · 6 formatos · 5 perguntas no /criar
+      document.querySelectorAll('[data-choreo]').forEach((el,i) => {
+        const n = el.querySelector('.num'); const target = vals[i] || 0;
+        const id = 'cho'+i; const st = document.createElement('style');
+        st.textContent = `@supports (animation-timeline: view()){@media (prefers-reduced-motion: no-preference){[data-choreo]:nth-of-type(${i+1}) .num{animation:${id} 1s var(--spring) both}@keyframes ${id}{to{--cn:${target}}}}}`;
+        document.head.appendChild(st);
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) n.style.setProperty('--cn', target);
+      });
+    })();
+
+    /* ═══ W24 tilt — card-herói inclina rumo ao cursor (só desktop+mouse) ═══ */
+    document.querySelectorAll('[data-tilt]').forEach(el => {
+      if (!matchMedia('(hover:hover) and (pointer:fine)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      el.addEventListener('pointermove', e => { const r = el.getBoundingClientRect();
+        el.style.setProperty('--rx', ((.5-(e.clientY-r.top)/r.height)*8).toFixed(2)+'deg');
+        el.style.setProperty('--ry', (((e.clientX-r.left)/r.width-.5)*8).toFixed(2)+'deg'); });
+      el.addEventListener('pointerleave', () => { el.style.setProperty('--rx','0deg'); el.style.setProperty('--ry','0deg'); });
+    });
+
+    /* ═══ W26 spot-mask — cursor abre holofote (só desktop+mouse) ═══ */
+    document.querySelectorAll('[data-spot-mask]').forEach(el => {
+      if (!matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+      el.addEventListener('pointermove', e => { const r = el.getBoundingClientRect();
+        el.style.setProperty('--mx', ((e.clientX-r.left)/r.width*100)+'%');
+        el.style.setProperty('--my', ((e.clientY-r.top)/r.height*100)+'%'); });
+    });
+  </script>
+
+  <!-- ═══ W8 anotação viva + W1 cena scroll-driven + motor de gráfico (atrás do guard) ═══ -->
+  <script>
+    const BAND = {};
+    const cssV = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+    if (typeof Chart !== 'undefined') {
+      Chart.register({
+        id: 'annoPlugin',
+        beforeDatasetsDraw(chart) {
+          const st = BAND[chart.canvas.id]; if (!st || !st.band) return;
+          const { ctx, chartArea, scales: { x } } = chart;
+          const x1 = x.getPixelForValue(st.band.from), x2 = x.getPixelForValue(st.band.to);
+          if (isNaN(x1) || isNaN(x2)) return;
+          ctx.save(); ctx.fillStyle = cssV('--color-warn-dim');
+          ctx.fillRect(x1, chartArea.top, x2 - x1, chartArea.bottom - chartArea.top);
+          ctx.font = '700 11px ' + Chart.defaults.font.family; ctx.fillStyle = cssV('--color-fg-muted');
+          ctx.fillText(st.band.text, x1 + 6, chartArea.top + 14); ctx.restore();
+        },
+        afterDatasetsDraw(chart) {
+          const st = BAND[chart.canvas.id]; if (!st || !st.mark) return;
+          const { ctx, scales: { x, y } } = chart;
+          const px = x.getPixelForValue(st.mark.x), py = y.getPixelForValue(st.mark.y);
+          if (isNaN(px) || isNaN(py)) return;
+          ctx.save(); ctx.beginPath(); ctx.arc(px, py, 5, 0, Math.PI * 2);
+          ctx.strokeStyle = cssV('--color-accent'); ctx.lineWidth = 2; ctx.stroke();
+          ctx.strokeStyle = cssV('--color-border-strong'); ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.moveTo(px, py - 8); ctx.lineTo(px, py - 40); ctx.stroke();
+          ctx.font = '700 12px ' + Chart.defaults.font.family; ctx.fillStyle = cssV('--color-fg'); ctx.textAlign = 'left';
+          ctx.fillText(st.mark.t1, px - 2, py - 56);
+          ctx.font = '600 11px ' + Chart.defaults.font.family; ctx.fillStyle = cssV('--color-fg-muted');
+          ctx.fillText(st.mark.t2, px - 2, py - 42); ctx.restore();
+        }
+      });
+    }
+
+    /* dados reais da tese: índice de capacidade do documento web vs. slide tradicional, por dimensão */
+    const DIMS = ['Abertura', 'Acessível', 'Marca', 'Compartilhar'];
+    const SLIDELESS = [98, 96, 95, 99];
+    const PPT       = [62, 35, 48, 55];
+    let chartTese = null;
+
+    function makeChartTese() {
+      const el = document.getElementById('chartTese');
+      const na = document.getElementById('chartTese-na');
+      if (!el) return;
+      if (typeof Chart === 'undefined') { el.style.display = 'none'; if (na) na.style.display = 'block'; return; }   // guard CHART_OK
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      Chart.defaults.font.family = cssV('--kit-ui') || 'Archivo, system-ui, sans-serif';
+      Chart.defaults.color = cssV('--color-fg-muted');
+      chartTese = new Chart(el.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: DIMS,
+          datasets: [
+            { label: 'Slide tradicional', data: PPT, backgroundColor: cssV('--color-border-strong'), borderRadius: 4, categoryPercentage: 0.62, barPercentage: 0.82 },
+            { label: 'Documento web (Slideless)', data: SLIDELESS, backgroundColor: cssV('--color-accent'), borderRadius: 4, categoryPercentage: 0.62, barPercentage: 0.82 }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          animation: reduce ? false : { duration: 800, easing: 'easeOutQuart' },
+          scales: {
+            y: { beginAtZero: true, max: 100, grid: { color: cssV('--color-border') }, ticks: { callback: v => v, color: cssV('--color-fg-subtle') }, title: { display: true, text: 'índice (0–100)', color: cssV('--color-fg-subtle') } },
+            x: { grid: { display: false }, ticks: { color: cssV('--color-fg-muted') } }
+          },
+          plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, color: cssV('--color-fg-muted') } } }
+        }
+      });
+    }
+
+    /* W1 — cada [data-step] muta a anotação do gráfico-tese (estado real, sem recriar) */
+    const STEPS = {
+      '1': { mark: { x: 'Abertura',     y: 98, t1: 'Abre sem instalar', t2: 'índice 98' } },
+      '2': { mark: { x: 'Acessível',    y: 96, t1: 'WCAG AA de fábrica', t2: 'índice 96' } },
+      '3': { mark: { x: 'Marca',        y: 95, t1: 'Identidade Itaú',    t2: 'índice 95' } },
+      '4': { mark: { x: 'Compartilhar', y: 99, t1: 'Link, e-mail, PDF',  t2: 'índice 99' } }
+    };
+    window.applyStep = function (step) {
+      if (!chartTese) return;
+      BAND['chartTese'] = STEPS[step] || {};
+      chartTese.update();
+    };
+
+    /* cria o gráfico ao entrar na viewport (draw-on-enter); fallback se Chart ausente */
+    (function () {
+      const el = document.getElementById('chartTese');
+      if (!el) return;
+      if (typeof Chart === 'undefined') { makeChartTese(); return; }
+      const io = new IntersectionObserver(es => es.forEach(e => {
+        if (e.isIntersecting && !chartTese) { makeChartTese(); window.applyStep('1'); io.disconnect(); }
+      }), { threshold: 0.2 });
+      io.observe(el);
+    })();
+
+    const stepIO = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) window.applyStep(e.target.dataset.step); });
+    }, { rootMargin: '-50% 0px -50% 0px', threshold: 0 });
+    document.querySelectorAll('[data-step]').forEach(s => stepIO.observe(s));
+  </script>
+<script>/* nohashjump-fix: a[href="#"] (brand/breadcrumb/CTA decorativo) não deve pular pro topo/capa */document.querySelectorAll('a[href="#"]').forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();});});</script>
+</body>
+</html>
