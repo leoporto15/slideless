@@ -207,6 +207,16 @@ claude --plugin-dir ./slideless
 
 Use `/reload-plugins` para recarregar após editar. Alternativamente, clonar dentro de `~/.claude/skills/slideless/` faz o Claude Code carregar como plugin de skills-dir automaticamente (mesma namespace `/slideless:…`).
 
+### GitHub Copilot Chat (VS Code)
+
+O Copilot **não** lê `commands/*.md` (isso é convenção do plugin do Claude Code). Os slash-commands do Copilot vêm de **prompt files** em [`.github/prompts/`](.github/prompts/) — um por comando (`criar.prompt.md` → `/criar`, `slideless-deck.prompt.md` → `/slideless-deck`, etc.), que apontam para o `commands/<nome>.md` canônico. O sempre-ativo `.github/copilot-instructions.md` carrega a doutrina; os prompt files dão os comandos.
+
+1. **Abrir a pasta do repositório no VS Code** (com a extensão GitHub Copilot Chat). O `.github/prompts/` é detectado no workspace.
+2. O setting `chat.promptFiles` já vem ligado via [`.vscode/settings.json`](.vscode/settings.json) versionado. Se os comandos não aparecerem, confirme em Settings → busque **"prompt files"** → marque, ou use seu profile pessoal de prompts.
+3. No painel de Chat, digite `/` → aparecem `criar`, `slideless-deck`, `auditar`, etc. Ou `/criar <seu pedido>`. Use o **modo Agent** (os prompts leem os arquivos da skill e rodam os gates).
+
+> Os prompt files são finos (apontam para `commands/` on-demand) para não estourar o limite de payload do gateway do Copilot — a fonte única de verdade continua em `commands/` e `SKILL.md`.
+
 ### Devin
 
 Configurar a skill como ferramenta interna no espaço do time, apontando para este repositório. Devin lê `SKILL.md` como roteador comportamental.

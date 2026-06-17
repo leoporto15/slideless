@@ -1,0 +1,6 @@
+{
+  // Liga os "prompt files" do GitHub Copilot Chat → os comandos da skill
+  // (.github/prompts/*.prompt.md) aparecem como /criar, /slideless-deck, etc.
+  // Sem isto, algumas versões do VS Code só reconhecem instruções, não os slash-commands.
+  "chat.promptFiles": true
+}
