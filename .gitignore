@@ -10,7 +10,9 @@ desktop.ini
 *~
 
 # ─── IDEs e editores ──────────────────────────────────────────────────
-.vscode/
+# EXCEÇÃO: .vscode/settings.json é compartilhado (liga os prompt files do Copilot → /criar etc.)
+.vscode/*
+!.vscode/settings.json
 .idea/
 *.swp
 *.swo

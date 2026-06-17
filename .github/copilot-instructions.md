@@ -46,6 +46,8 @@ slideless/
 
 ## Comandos principais (digitar `/` no chat para lista completa)
 
+> No Copilot, os slash-commands vêm dos **prompt files** em `.github/prompts/*.prompt.md` (um por comando, apontando para `commands/<nome>.md`). Se `/criar` não aparecer, veja a seção "GitHub Copilot Chat" do [README.md](../README.md#instalação) (setting `chat.promptFiles`).
+
 | Comando | O que faz |
 |---|---|
 | `/criar` | Wizard para áreas de negócios (escolhe modelo automaticamente) |
