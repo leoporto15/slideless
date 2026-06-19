@@ -33,98 +33,100 @@
 
 ## Comandos (31)
 
+Um comando único — **`/slideless`** — e você escreve o subcomando logo depois: `/slideless deck pitch do 1T26`, `/slideless criar`, `/slideless auditar arquivo.html`. **Mesma sintaxe em Claude Code, GitHub Copilot e Devin** — não há slash-command individual por subcomando; cada um é um spec em [references/comandos/](references/comandos/) que o roteador do [SKILL.md](SKILL.md) despacha.
+
 > ### 🧭 Não sabe por onde começar? Siga por aqui.
 >
-> Se você é de uma **área de negócios** e não conhece a diferença entre handbook, deck, hub etc. — **use `/criar`**. É um wizard conversacional que faz 5 perguntas em português comum e escolhe o modelo certo automaticamente. Você não precisa saber nada técnico.
+> Se você é de uma **área de negócios** e não conhece a diferença entre handbook, deck, hub etc. — **use `/slideless criar`**. É um wizard conversacional que faz 5 perguntas em português comum e escolhe o modelo certo automaticamente. Você não precisa saber nada técnico.
 
 ### 🚪 Ponto de entrada (1)
 
 | Comando | O que faz |
 |---|---|
-| **`/criar`** | **Wizard guiado para áreas de negócios.** Faz 5 perguntas (objetivo, público, distribuição, conteúdo, tema) e escolhe o modelo automaticamente. Coleta o conteúdo do jeito que você tiver (PDF, bullets, ideias na cabeça ou nada ainda) e gera o HTML pronto. |
+| **`/slideless criar`** | **Wizard guiado para áreas de negócios.** Faz 5 perguntas (objetivo, público, distribuição, conteúdo, tema) e escolhe o modelo automaticamente. Coleta o conteúdo do jeito que você tiver (PDF, bullets, ideias na cabeça ou nada ainda) e gera o HTML pronto. |
 
 ### Pré-geração (1)
 
 | Comando | O que faz |
 |---|---|
-| `/estruturar` | Analisa conteúdo bruto (bullets, PDF colado, descrição) e propõe um mapa estruturado em tabela para você aprovar antes de gerar HTML. Evita retrabalho em conteúdo denso. |
+| `/slideless estruturar` | Analisa conteúdo bruto (bullets, PDF colado, descrição) e propõe um mapa estruturado em tabela para você aprovar antes de gerar HTML. Evita retrabalho em conteúdo denso. |
 
 ### Criação direta (6)
 *Use quando você já sabe qual modelo quer.*
 
 | Comando | O que faz |
 |---|---|
-| `/slideless-deck` | **Apresentação com slides** que avançam (setas/teclado). Para pitch ao vivo, all-hands, demo guiada. Único modelo com tipografia gigante permitida. |
-| `/slideless-handbook` | **Manual web com menu lateral** + scrollspy + TOC sticky. Para documentação longa, onboarding, política interna, runbook. |
-| `/slideless-hub` | **Portal de cards categorizados.** Cards filtram por categoria; clicar abre painel in-page com gráficos e tabelas. Para centrais de recursos. |
-| `/slideless-scrollytelling` | **Narrativa única** que revela conteúdo ao rolar a página. Gráficos sticky que mudam conforme avança. Para relatórios anuais, casos de estudo. |
-| `/slideless-site` | **Mini-site SPA** com 2-5 abas (home, sobre, contato) e hash routing. Para microsites internos, lançamentos. |
-| `/slideless-report` | **Relatório editorial denso** otimizado para impressão e PDF — sumário executivo, seções numeradas, footnotes, CSS @print rigoroso. Para diretoria, RI, compliance. |
+| `/slideless deck` | **Apresentação com slides** que avançam (setas/teclado). Para pitch ao vivo, all-hands, demo guiada. Único modelo com tipografia gigante permitida. |
+| `/slideless handbook` | **Manual web com menu lateral** + scrollspy + TOC sticky. Para documentação longa, onboarding, política interna, runbook. |
+| `/slideless hub` | **Portal de cards categorizados.** Cards filtram por categoria; clicar abre painel in-page com gráficos e tabelas. Para centrais de recursos. |
+| `/slideless scrollytelling` | **Narrativa única** que revela conteúdo ao rolar a página. Gráficos sticky que mudam conforme avança. Para relatórios anuais, casos de estudo. |
+| `/slideless site` | **Mini-site SPA** com 2-5 abas (home, sobre, contato) e hash routing. Para microsites internos, lançamentos. |
+| `/slideless report` | **Relatório editorial denso** otimizado para impressão e PDF — sumário executivo, seções numeradas, footnotes, CSS @print rigoroso. Para diretoria, RI, compliance. |
 
 ### Importação (3)
 *Converte conteúdo existente em formato slideless.*
 
 | Comando | O que faz |
 |---|---|
-| `/importar-confluence` | Converte página ou espaço Confluence inteiro no modelo mais adequado. |
-| `/importar-ppt` | Converte PPT/PPTX em handbook (para leitura) ou deck (para apresentar). Sempre pergunta qual. |
-| `/importar-md` | Converte Markdown estruturado em handbook (default) ou scrollytelling. |
+| `/slideless importar-confluence` | Converte página ou espaço Confluence inteiro no modelo mais adequado. |
+| `/slideless importar-ppt` | Converte PPT/PPTX em handbook (para leitura) ou deck (para apresentar). Sempre pergunta qual. |
+| `/slideless importar-md` | Converte Markdown estruturado em handbook (default) ou scrollytelling. |
 
 ### Edição cirúrgica (6)
 *Adiciona elementos a um documento existente sem regenerar.*
 
 | Comando | O que faz |
 |---|---|
-| `/adicionar-secao` | Adiciona uma seção a handbook, scrollytelling ou site existente. |
-| `/adicionar-slide` | Adiciona slide ao deck (hero, big-num, metrics, list, quote, two-col, divider, timeline). |
-| `/adicionar-callout` | Insere callout colorido (info, tip, warn, danger). |
-| `/adicionar-grafico` | Insere gráfico Chart.js (line, bar, donut, gauge, radar, bubble, waterfall, mixed). |
-| `/adicionar-fragment` | No deck: marca elementos para revelar progressivamente por click. |
-| `/adicionar-toc` | No handbook: regenera o TOC sticky a partir dos h2/h3 atuais. |
+| `/slideless adicionar-secao` | Adiciona uma seção a handbook, scrollytelling ou site existente. |
+| `/slideless adicionar-slide` | Adiciona slide ao deck (hero, big-num, metrics, list, quote, two-col, divider, timeline). |
+| `/slideless adicionar-callout` | Insere callout colorido (info, tip, warn, danger). |
+| `/slideless adicionar-grafico` | Insere gráfico Chart.js (line, bar, donut, gauge, radar, bubble, waterfall, mixed). |
+| `/slideless adicionar-fragment` | No deck: marca elementos para revelar progressivamente por click. |
+| `/slideless adicionar-toc` | No handbook: regenera o TOC sticky a partir dos h2/h3 atuais. |
 
 ### Transformação (3)
 *Modifica um documento existente.*
 
 | Comando | O que faz |
 |---|---|
-| `/aplicar-tema` | Troca tema (neutro ↔ itau) em documento existente. |
-| `/converter-modelo` | Converte entre modelos compatíveis (handbook ↔ scrollytelling, hub ↔ site). |
-| `/distill` | Reduz handbook longo a sumário enxuto preservando hierarquia. |
+| `/slideless aplicar-tema` | Troca tema (neutro ↔ itau) em documento existente. |
+| `/slideless converter-modelo` | Converte entre modelos compatíveis (handbook ↔ scrollytelling, hub ↔ site). |
+| `/slideless distill` | Reduz handbook longo a sumário enxuto preservando hierarquia. |
 
 ### 🎨 Refinamento de design (5 comandos independentes)
 *Aplica transformações de design sênior a documentos existentes. Comandos compõem em sequência aplicando um após o outro.*
 
 | Comando | O que faz |
 |---|---|
-| `/slideless-bolder` | **Amplifica designs tímidos** — tipografia +30%, contraste de peso ampliado, whitespace generoso. Lê o `parti` do documento e reforça as decisões dele (não instala um kit fixo). |
-| `/slideless-quieter` | **Reduz designs ruidosos** — tipografia -15%, extremos de peso suavizados, motion calma. Opera dentro do kit e do nível de ambição declarados. |
-| `/slideless-animate` | **Movimento intencional** — coreografa apenas o momento-wow declarado e a gramática por papel, no perfil de motion do documento. Em registro estático, avisa e para. Respeita `prefers-reduced-motion`. |
-| `/slideless-delight` | **Micro-interações por papel** — hover por affordance, feedback no local do gatilho, micro-interações de leitura. Sem confetti, sem hover-lift universal; coerente com o nível de ambição. |
-| `/slideless-overdrive` | **Nível A3-extraordinário** — pode compor **qualquer momento-wow do palette W1-W31** (WebGL no hero, View Transitions, variable font animada, 3D-tilt, masked-type, sticky-stack…); as opções A-H são os _heavies_ A3-exclusivos que ele desbloqueia, não a lista única. Interativo (multi-seleção), fallback gracioso. Showpiece técnico (até 5 MB). |
+| `/slideless bolder` | **Amplifica designs tímidos** — tipografia +30%, contraste de peso ampliado, whitespace generoso. Lê o `parti` do documento e reforça as decisões dele (não instala um kit fixo). |
+| `/slideless quieter` | **Reduz designs ruidosos** — tipografia -15%, extremos de peso suavizados, motion calma. Opera dentro do kit e do nível de ambição declarados. |
+| `/slideless animate` | **Movimento intencional** — coreografa apenas o momento-wow declarado e a gramática por papel, no perfil de motion do documento. Em registro estático, avisa e para. Respeita `prefers-reduced-motion`. |
+| `/slideless delight` | **Micro-interações por papel** — hover por affordance, feedback no local do gatilho, micro-interações de leitura. Sem confetti, sem hover-lift universal; coerente com o nível de ambição. |
+| `/slideless overdrive` | **Nível A3-extraordinário** — pode compor **qualquer momento-wow do palette W1-W31** (WebGL no hero, View Transitions, variable font animada, 3D-tilt, masked-type, sticky-stack…); as opções A-H são os _heavies_ A3-exclusivos que ele desbloqueia, não a lista única. Interativo (multi-seleção), fallback gracioso. Showpiece técnico (até 5 MB). |
 
 **Composição típica:**
-- `/slideless-bolder` + `/slideless-animate` → executivo com peso e movimento
-- `/slideless-quieter` + `/slideless-delight` → editorial refinado
-- `/slideless-bolder` + `/slideless-overdrive` → showpiece de alto perfil
+- `/slideless bolder` + `/slideless animate` → executivo com peso e movimento
+- `/slideless quieter` + `/slideless delight` → editorial refinado
+- `/slideless bolder` + `/slideless overdrive` → showpiece de alto perfil
 
 ### Qualidade (4)
 *Audita e melhora documentos existentes.*
 
 | Comando | O que faz |
 |---|---|
-| `/auditar` | Roda validador determinístico + checklist + anti-patterns. Devolve lista de violações com severidade. |
-| `/polir` | Refina tipografia, espaçamento e hierarquia visual. |
-| `/harden` | Endurece a11y (WCAG AA), keyboard nav, `prefers-reduced-motion`. |
-| `/acessibilidade` | Foco isolado em acessibilidade — varredura completa + correções. |
+| `/slideless auditar` | Roda validador determinístico + checklist + anti-patterns. Devolve lista de violações com severidade. |
+| `/slideless polir` | Refina tipografia, espaçamento e hierarquia visual. |
+| `/slideless harden` | Endurece a11y (WCAG AA), keyboard nav, `prefers-reduced-motion`. |
+| `/slideless acessibilidade` | Foco isolado em acessibilidade — varredura completa + correções. |
 
 ### Export (2)
 
 | Comando | O que faz |
 |---|---|
-| `/exportar-pdf` | Renderiza para PDF via Playwright (deck → landscape; demais → retrato). |
-| `/exportar-screenshots` | 1 PNG por slide (deck) ou por seção (demais) para preview rápido. |
+| `/slideless exportar-pdf` | Renderiza para PDF via Playwright (deck → landscape; demais → retrato). |
+| `/slideless exportar-screenshots` | 1 PNG por slide (deck) ou por seção (demais) para preview rápido. |
 
-Documentação técnica completa de cada comando em [commands/](commands/).
+Documentação técnica completa de cada subcomando em [references/comandos/](references/comandos/).
 
 ---
 
@@ -139,7 +141,7 @@ Documentação técnica completa de cada comando em [commands/](commands/).
 | [`deck`](references/modelos/deck.md) | pitch ao vivo, all-hands (único onde tipografia gigante é OK) | Apple keynote |
 | [`report`](references/modelos/report.md) | relatório editorial denso para diretoria/RI/compliance, otimizado para PDF — sumário executivo, TOC numerada, footnotes, CSS @print rigoroso | Itaú Pesquisa Macro, McKinsey Global Institute, Goldman Sachs research |
 
-Decisão entre modelos: [references/decisao-modelo.md](references/decisao-modelo.md). **Ou simplesmente use `/criar` — o wizard decide por você.**
+Decisão entre modelos: [references/decisao-modelo.md](references/decisao-modelo.md). **Ou simplesmente use `/slideless criar` — o wizard decide por você.**
 
 ---
 
@@ -152,8 +154,10 @@ slideless/
 ├── CLAUDE.md                      ← instruções para Claude Code
 ├── .claude-plugin/plugin.json     ← manifest do plugin
 ├── .github/copilot-instructions.md ← instruções para GitHub Copilot Chat
-├── commands/                      ← 31 slash commands (1 arquivo cada)
+├── commands/                      ← só slideless.md (roteador fino do Claude Code → references/comandos/)
+├── .github/prompts/               ← só slideless.prompt.md (roteador fino do Copilot)
 ├── references/
+│   ├── comandos/                  ← specs dos 31 subcomandos (FONTE ÚNICA)
 │   ├── direcao-de-arte.md         ← o Parti: 7 decisões por documento (LER ANTES DE GERAR)
 │   ├── ambicao.md                 ← teto cutting-edge: eixo A1/A2/A3 + densidade de momentos-wow
 │   ├── wow-components.md           ← biblioteca W1-W31 de drop-ins copy-paste + §STACKING + armadilhas de render
@@ -194,7 +198,7 @@ O plugin é distribuído pelo marketplace interno do time/banco. Com esse catál
 /plugin install slideless@<marketplace-interno>
 ```
 
-O nome do `<marketplace-interno>` é fornecido por quem administra o catálogo. Se ainda não estiver registrado, adicione-o primeiro com `/plugin marketplace add <repo-ou-url-do-catálogo>` (esse repo do catálogo lista o `slideless` via `source` apontando para este repositório). A instalação traz a skill `slideless` (auto-invocável quando você pede um manual, deck, relatório etc.) e os 31 comandos, namespaced sob o plugin: `/slideless:criar`, `/slideless:slideless-handbook`, `/slideless:auditar`, etc. Para atualizar depois: `/plugin marketplace update <marketplace-interno>`.
+O nome do `<marketplace-interno>` é fornecido por quem administra o catálogo. Se ainda não estiver registrado, adicione-o primeiro com `/plugin marketplace add <repo-ou-url-do-catálogo>` (esse repo do catálogo lista o `slideless` via `source` apontando para este repositório). A instalação traz a skill `slideless` (auto-invocável quando você pede um manual, deck, relatório etc.) e o **comando único `/slideless`** (namespaced `/slideless:slideless` no plugin) — em vez de 31 comandos, você escreve o subcomando logo depois: `/slideless deck`, `/slideless criar`, `/slideless auditar`. Para atualizar depois: `/plugin marketplace update <marketplace-interno>`.
 
 ### Claude Code — manual (desenvolvimento / teste)
 
@@ -209,13 +213,13 @@ Use `/reload-plugins` para recarregar após editar. Alternativamente, clonar den
 
 ### GitHub Copilot Chat (VS Code)
 
-O Copilot **não** lê `commands/*.md` (isso é convenção do plugin do Claude Code). Os slash-commands do Copilot vêm de **prompt files** em [`.github/prompts/`](.github/prompts/) — um por comando (`criar.prompt.md` → `/criar`, `slideless-deck.prompt.md` → `/slideless-deck`, etc.), que apontam para o `commands/<nome>.md` canônico. O sempre-ativo `.github/copilot-instructions.md` carrega a doutrina; os prompt files dão os comandos.
+O Copilot **não** lê `commands/*.md` nem os specs em `references/comandos/` como slash-commands — seu mecanismo são **prompt files**. O repo traz **um só**: [`.github/prompts/slideless.prompt.md`](.github/prompts/slideless.prompt.md) → o comando `/slideless`. Você invoca `/slideless`, escreve o subcomando, e o prompt roteia para `references/comandos/<nome>.md` conforme o [SKILL.md](SKILL.md). O sempre-ativo `.github/copilot-instructions.md` carrega a doutrina.
 
 1. **Abrir a pasta do repositório no VS Code** (com a extensão GitHub Copilot Chat). O `.github/prompts/` é detectado no workspace.
-2. O setting `chat.promptFiles` já vem ligado via [`.vscode/settings.json`](.vscode/settings.json) versionado. Se os comandos não aparecerem, confirme em Settings → busque **"prompt files"** → marque, ou use seu profile pessoal de prompts.
-3. No painel de Chat, digite `/` → aparecem `criar`, `slideless-deck`, `auditar`, etc. Ou `/criar <seu pedido>`. Use o **modo Agent** (os prompts leem os arquivos da skill e rodam os gates).
+2. O setting `chat.promptFiles` já vem ligado via [`.vscode/settings.json`](.vscode/settings.json) versionado. Se `/slideless` não aparecer, confirme em Settings → busque **"prompt files"** → marque.
+3. No painel de Chat, **modo Agent**, digite `/slideless deck pitch do 1T26` (ou só `/slideless` → ele lista/pergunta). Um comando só — igual ao Claude Code e ao Devin.
 
-> Os prompt files são finos (apontam para `commands/` on-demand) para não estourar o limite de payload do gateway do Copilot — a fonte única de verdade continua em `commands/` e `SKILL.md`.
+> Single-source: a lógica de cada subcomando vive só em `references/comandos/`. As entradas por harness (`commands/slideless.md`, `.github/prompts/slideless.prompt.md`) são roteadores finos que apontam pra lá — sem payload duplicado.
 
 ### Devin
 
@@ -223,7 +227,7 @@ Configurar a skill como ferramenta interna no espaço do time, apontando para es
 
 ### Cursor / OpenCode / outros
 
-O formato `SKILL.md` + `commands/*.md` + `references/*.md` é portátil. Adapte conforme o harness.
+O formato `SKILL.md` (roteador) + `references/comandos/*.md` (subcomandos) + `references/*.md` (doutrina) é portátil: cada harness só precisa registrar **um** comando, `/slideless`, apontando para o `SKILL.md`. Adapte conforme o harness.
 
 ---
 

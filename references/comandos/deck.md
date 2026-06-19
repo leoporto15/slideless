@@ -1,0 +1,41 @@
+---
+description: Gera deck moderno (slide-by-slide com keyboard nav, fragments, fullscreen) — único modelo com tipografia gigante OK
+argument-hint: <tópico do pitch>
+---
+
+Você foi invocado para gerar um documento `deck` (slideless). Este é o **único** modelo onde tipografia gigante é permitida.
+
+## Pré-requisitos
+
+1. Ler [../references/modelos/deck.md](../modelos/deck.md).
+2. Confirmar com o usuário:
+   - **Apresentação ao vivo?** Se não (vai distribuir como leitura), redirecionar para [scrollytelling](scrollytelling.md). Não fazer deck "para ler".
+   - **Roteiro dos slides** (kicker, hero, big-num, métricas, list, two-col, divider, quote, timeline, encerramento).
+   - **Tema** (default `itau`).
+
+## Procedimento
+
+0. **Parti (obrigatório, antes de qualquer HTML)** — [../references/direcao-de-arte.md](../direcao-de-arte.md): 7 decisões + `nao-vai-ter` derivadas do CONTEÚDO do pitch (capa/kit/superfície ≠ [exemplo-deck](../../assets/exemplos/exemplo-deck.html) e ≠ último deck da pasta), bloco no `<head>`. A 7ª decisão é `ambicao` ([../references/ambicao.md](../ambicao.md)) — **default A2-elevado** para deck; se A2/A3, o campo `momento-wow` (W1-W9 ligado ao dado-tese) é **obrigatório**. A3 só com conteúdo à altura (lançamento/all-hands).
+
+   **Momentos-wow:** a fonte é [references/wow-components.md](../wow-components.md) — biblioteca W1–W31 de drop-ins copy-paste (receitas já corrigidas: `@supports` + estado-final-base + reduced-motion). Respeitar o **§STACKING**: 1 herói pinned + 2 sistemas ambientes (uma só `--spring`) + 3–4 momentos rank-4 espaçados + ~70% calmo. Densidade por ambição do parti: **A1/sóbrio = 1–2 momentos calmos** (W6/W8/W2/W22/W10 — nunca premium loud); **A2 = 3–5 momentos**; **A3 = 6–8, ≥4 famílias**.
+1. Copiar [../assets/templates/template-deck.html](../../assets/templates/template-deck.html).
+2. Aplicar tema e preencher o slot `SLIDELESS:TYPE-KIT` com o kit do parti ([../references/type-kits.md](../type-kits.md)). PROIBIDO Inter como display.
+3. Para cada slide do roteiro, escolher layout em [../references/modelos/deck.md](../modelos/deck.md#layouts-de-slide) e **compor**.
+4. **Regra de ritmo (anti-pasteurização):** a cada bloco de 4-5 slides, ≥1 slide abandona o esqueleto kicker→título→corpo (número 20vw, tabela full-bleed, quote sem chrome, diagrama SVG). Kicker em ≤50% dos slides; `<em>` accent em ≤25% dos títulos; cards em ≤1/3 dos slides; ≥1 slide com assimetria real (2fr/1fr ou elemento sangrando a margem).
+5. Motion conforme o perfil do parti (cinemático: até 3 gestos POR PAPEL; quote entra seca). `data-anim`/`data-fragment` para reveals sequenciais; stagger só em grupo homogêneo.
+6. **Re-ancoragem anti-drift:** a cada ~5 slides, reler o parti — o modo de falha real é os slides finais regredirem ao grid de cards default.
+7. Keyboard nav já está no template — não duplicar nem remover. Indicador de slide (`id="cur"`, `id="tot"`) presente.
+8. Validar (categoria P) + checklist (bloco 🎨) + gate perceptual se disponível. Entregar em `outputs/deck-<slug>.html` e reportar o parti em 1 linha. Seguir o passo-a-passo de [../references/workflow.md](../workflow.md).
+
+## Gate de render antes de entregar (v7 — obrigatório)
+O validador determinístico vê a ESTRUTURA; **não vê runtime nem quebra visual.** Rodar os DOIS e corrigir a CAUSA antes de entregar:
+- `python scripts/validar.py <arquivo.html>` → `0 erro(s)`.
+- `python scripts/smoke.py <arquivo.html>` → `SMOKE PASS` (Chromium headless: pega overflow, texto-por-caractere, odômetro não-clipado, número duplicado, slide que não preenche a viewport, invasão de coluna lateral, scroll horizontal). `SKIP` se Playwright ausente.
+Nunca entregar com `SMOKE FAIL`. Armadilhas recorrentes: [references/wow-components.md](../wow-components.md) §"Armadilhas visuais que o smoke.py reprova".
+
+## Anti-patterns críticos
+
+- Transição > 800ms → cansa apresentador.
+- Esquecer keyboard handler → não navega no palco.
+- Fragments todos visíveis ao entrar no slide → defeito da animação.
+- Tipografia fixa em px gigantes → use `clamp()` sempre, fluido com viewport.

@@ -89,7 +89,7 @@ Sempre perguntar se:
 
 ## Conversões entre modelos
 
-`/converter-modelo <novo>` cobre as conversões compatíveis:
+`/slideless converter-modelo <novo>` cobre as conversões compatíveis:
 
 | De → Para | Viável? | Notas |
 |---|---|---|

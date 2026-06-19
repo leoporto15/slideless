@@ -1,6 +1,6 @@
 # Workflow padrão de geração
 
-Passo-a-passo a seguir em todo comando de criação (`/slideless-*`).
+Passo-a-passo a seguir em todo comando de criação (`/slideless *`).
 
 ---
 
@@ -92,7 +92,7 @@ O validador determinístico checa a ESTRUTURA; **não vê erro de runtime (JS qu
 
 ### 6. Revisão LLM (cheklist-revisao)
 
-Rodar mentalmente (ou via `/auditar`) os checks de [checklist-revisao.md](checklist-revisao.md). Foco no que o validador determinístico não captura: tom editorial vs pitch, densidade de bullet, hierarquia visual, semântica das cores.
+Rodar mentalmente (ou via `/slideless auditar`) os checks de [checklist-revisao.md](checklist-revisao.md). Foco no que o validador determinístico não captura: tom editorial vs pitch, densidade de bullet, hierarquia visual, semântica das cores.
 
 ### 6.5 Gate perceptual (degradação graciosa)
 
@@ -108,7 +108,7 @@ Se Playwright disponível: `python scripts/exportar_pdf.py --mode screenshots` d
 
 ---
 
-## Workflow para comandos de edição (`/adicionar-*`, `/aplicar-tema`, `/converter-modelo`)
+## Workflow para comandos de edição (`/adicionar-*`, `/slideless aplicar-tema`, `/slideless converter-modelo`)
 
 1. **Receber arquivo HTML existente** (path ou conteúdo).
 2. **Validar que o arquivo é slideless válido** — rodar `validar.py --quick` (modo identificação).
@@ -119,23 +119,23 @@ Se Playwright disponível: `python scripts/exportar_pdf.py --mode screenshots` d
 
 ---
 
-## Workflow para comandos de qualidade (`/auditar`, `/polir`, `/harden`)
+## Workflow para comandos de qualidade (`/slideless auditar`, `/slideless polir`, `/slideless harden`)
 
-### `/auditar`
+### `/slideless auditar`
 1. Rodar validador determinístico.
 2. Aplicar checklist [checklist-revisao.md](checklist-revisao.md) parte por parte.
 3. Confrontar contra [anti-patterns.md](anti-patterns.md).
 4. Retornar relatório priorizado: críticos > altos > médios > sugestões.
 
-### `/polir`
+### `/slideless polir`
 Focado em tipografia, espaçamento, hierarquia. Não toca em estrutura nem conteúdo.
 
-### `/harden`
+### `/slideless harden`
 Focado em a11y, keyboard, reduced motion, contraste. Foca em conformidade WCAG AA.
 
 ---
 
-## Workflow para export (`/exportar-pdf`, `/exportar-screenshots`)
+## Workflow para export (`/slideless exportar-pdf`, `/slideless exportar-screenshots`)
 
 Ver [../scripts/exportar_pdf.py](../scripts/exportar_pdf.py). Resumo:
 

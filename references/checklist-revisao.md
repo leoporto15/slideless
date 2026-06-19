@@ -2,7 +2,7 @@
 
 Complementa o validador determinístico (`scripts/validar.py`). O validador checa o sintático; este checklist checa o semântico, editorial e a11y avançado.
 
-Aplicar antes de entregar — ou via comando `/auditar`.
+Aplicar antes de entregar — ou via comando `/slideless auditar`.
 
 Priorize por categoria: **🚫 bloqueante > ⚠️ alto > 🟡 médio > 💡 sugestão**.
 
@@ -142,6 +142,6 @@ Priorize por categoria: **🚫 bloqueante > ⚠️ alto > 🟡 médio > 💡 sug
 1. Ler o HTML do início ao fim, anotando cada quebra.
 2. Listar violações por prioridade.
 3. Corrigir bloqueantes primeiro.
-4. Aplicar `/polir` se sobrarem altos visuais; `/harden` se sobrarem altos de a11y.
+4. Aplicar `/slideless polir` se sobrarem altos visuais; `/slideless harden` se sobrarem altos de a11y.
 5. Re-rodar validador determinístico.
 6. Re-aplicar este checklist (rápido — só os pontos tocados).

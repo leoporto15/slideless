@@ -98,5 +98,5 @@ Se o texto tem cara de bullet list (frases curtas, muitos parágrafos pequenos),
 
 1. Aplicar tema (`itau` default, `neutro` se neutralidade pedida).
 2. Rodar `python scripts/validar.py <output.html>`.
-3. Aplicar `/auditar` para revisão LLM contra [checklist-revisao.md](checklist-revisao.md) e [anti-patterns.md](anti-patterns.md).
+3. Aplicar `/slideless auditar` para revisão LLM contra [checklist-revisao.md](checklist-revisao.md) e [anti-patterns.md](anti-patterns.md).
 4. Salvar em `outputs/<nome-descritivo>.html`.
