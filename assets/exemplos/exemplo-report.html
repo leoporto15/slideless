@@ -638,17 +638,17 @@ nao-vai-ter: glow-radial; fade-up; sombra-difusa-em-tudo
         --color-accent:        #000000;  /* links viram texto no papel */
       }
       body {
-        background: #ffffff !important;
-        color: #000000 !important;
+        background: var(--color-bg) !important;
+        color: var(--color-fg) !important;
         font-size: 10.5pt;
         line-height: 1.55;
       }
-      a { color: #000000; text-decoration: none; }
+      a { color: var(--color-fg); text-decoration: none; }
       /* URLs externas explicitadas; âncoras internas não */
       a[href^="http"]::after {
         content: " (" attr(href) ")";
         font-size: 8pt;
-        color: #444444;
+        color: var(--color-fg-subtle);
       }
 
       /* capa = folha de rosto, sozinha na página 1 */
@@ -672,15 +672,15 @@ nao-vai-ter: glow-radial; fade-up; sombra-difusa-em-tudo
       .bleed { width: 100%; margin-left: 0; }
 
       /* footnotes ao fim, com fio simples; fechamento com fio duplo preto */
-      .report-footnotes { border-top: 1px solid #000000; }
-      .report-footer { border-top: 3px double #000000; padding-bottom: 0; }
+      .report-footnotes { border-top: 1px solid var(--color-fg); }
+      .report-footer { border-top: 3px double var(--color-fg); padding-bottom: 0; }
       .report-footer::after {
         content: "Norma DC-PJ 2026-04 · Página " counter(page);
         display: block;
         width: 100%;
         text-align: center;
         font-size: 8pt;
-        color: #444444;
+        color: var(--color-fg-subtle);
         margin-top: 2em;
       }
     }
@@ -1063,6 +1063,46 @@ nao-vai-ter: glow-radial; fade-up; sombra-difusa-em-tudo
     const fmtBR  = (v, dec = 0) => v.toLocaleString('pt-BR', { minimumFractionDigits: dec, maximumFractionDigits: dec });
     const fmtBRL = (v, suf = '') => 'R$ ' + fmtBR(v, v % 1 ? 1 : 0) + (suf ? ' ' + suf : '');
 
+    // ── W8 — anotação viva no gráfico-tese (código provado, scrollytelling.html) ──
+    // Desenha 1× no render (perfil sóbrio: sem motion; é também o fallback / reduced-motion-safe).
+    const BAND = {};
+    const annoPlugin = {
+      id: 'annoPlugin',
+      beforeDatasetsDraw(chart) {
+        const st = BAND[chart.canvas.id];
+        if (!st || !st.band) return;
+        const { ctx, chartArea, scales: { x } } = chart;
+        const x1 = x.getPixelForValue(st.band.from), x2 = x.getPixelForValue(st.band.to);
+        if (isNaN(x1) || isNaN(x2)) return;
+        ctx.save();
+        ctx.fillStyle = css('--color-warn-dim');
+        ctx.fillRect(x1, chartArea.top, x2 - x1, chartArea.bottom - chartArea.top);
+        ctx.font = '700 11px ' + Chart.defaults.font.family;
+        ctx.fillStyle = css('--color-fg-muted');
+        ctx.fillText(st.band.text, x1 + 6, chartArea.top + 14);
+        ctx.restore();
+      },
+      afterDatasetsDraw(chart) {
+        const st = BAND[chart.canvas.id];
+        if (!st || !st.mark) return;
+        const { ctx, scales: { x, y } } = chart;
+        const px = x.getPixelForValue(st.mark.x), py = y.getPixelForValue(st.mark.y);
+        if (isNaN(px) || isNaN(py)) return;
+        const accent = css('--color-accent'), ink = css('--color-fg'), muted = css('--color-fg-muted');
+        ctx.save();
+        ctx.beginPath(); ctx.arc(px, py, 5, 0, Math.PI * 2);
+        ctx.strokeStyle = accent; ctx.lineWidth = 2; ctx.stroke();
+        ctx.strokeStyle = css('--color-border-strong'); ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(px, py - 8); ctx.lineTo(px, py - 40); ctx.stroke();
+        ctx.font = '700 12px ' + Chart.defaults.font.family; ctx.fillStyle = ink; ctx.textAlign = 'left';
+        ctx.fillText(st.mark.t1, px - 2, py - 56);
+        ctx.font = '600 11px ' + Chart.defaults.font.family; ctx.fillStyle = muted;
+        ctx.fillText(st.mark.t2, px - 2, py - 42);
+        ctx.restore();
+      }
+    };
+    if (typeof Chart !== 'undefined') Chart.register(annoPlugin);
+
     // ── Gráfico: exposição por segmento (dados completos, 1 série) ──
     // Bicromático: ink para o estoque, accent para os segmentos que
     // RECEBEM sublimite em 2026 (Empresas, PME) — legível em escala de cinza.
@@ -1116,6 +1156,9 @@ nao-vai-ter: glow-radial; fade-up; sombra-difusa-em-tudo
           }
         }
       });
+      // W8 — marca o ponto-tese: Empresas+PME absorvem +R$ 18 bi de sublimite em 2026
+      BAND[el.id] = { mark: { x: 2, y: 58, t1: '+R$ 18 bi', t2: 'p/ Empresas + PME · 2026' } };
+      chart.update();
       window._reportCharts.push(chart);
     })();
 
