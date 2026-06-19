@@ -3,6 +3,7 @@
 Relatório editorial denso, otimizado para impressão/PDF. Para relatórios anuais, white papers, análises de pesquisa, documentos executivos longos.
 
 **Referência mental:** Itaú Pesquisa Macro reports, McKinsey Global Institute reports, Goldman Sachs research notes, World Bank/IMF working papers.
+**Exemplo:** [../../assets/exemplos/exemplo-report.html](../../assets/exemplos/exemplo-report.html).
 **Template vazio:** [../../assets/templates/template-report.html](../../assets/templates/template-report.html).
 
 ---
