@@ -24,7 +24,7 @@ serie: <opcional: "herdar de <arquivo>" para família de documentos>
 
 > **A 7ª decisão — `ambicao`** ([ambicao.md](ambicao.md)) — é ortogonal ao registro: o registro decide *como soa* (sóbrio↔expressivo), a ambição decide *quão longe o craft vai* (contido↔extraordinário). Default: **A2-elevado** para deck/scrollytelling/hub/site/handbook; **A1-contido** para report/regulatório. A ambição respeita o registro como teto de exuberância (A3 proibido em registros sóbrios). Se `ambicao` for A2/A3, o campo `momento-wow` é obrigatório.
 
-**Derivação textual obrigatória:** cada decisão cita um elemento concreto da fonte — um substantivo, um número, uma tensão ("guerra comercial → motivo: linhas de tarifa", "ROE 22,3% → capa numero-protagonista"). Justificativa genérica ("moderno", "elegante", "clean") é inválida e reprovada pelo `/auditar`. Se o conteúdo não decidir um eixo, declarar `neutro por decisão` — nunca herdar o default silenciosamente.
+**Derivação textual obrigatória:** cada decisão cita um elemento concreto da fonte — um substantivo, um número, uma tensão ("guerra comercial → motivo: linhas de tarifa", "ROE 22,3% → capa numero-protagonista"). Justificativa genérica ("moderno", "elegante", "clean") é inválida e reprovada pelo `/slideless auditar`. Se o conteúdo não decidir um eixo, declarar `neutro por decisão` — nunca herdar o default silenciosamente.
 
 ### Exemplo 1 — resultados trimestrais
 
@@ -75,7 +75,7 @@ Classificar o ASSUNTO (não o modelo) na tabela. O registro define os defaults c
 | Crise, tensão, urgência, cronologia de choques | `condensado-noticioso` | 05 Poster (wdth 62) | pauta de linhas | editorial |
 | Continuidade com a série pré-v4 | `itau-signal-classico` | 06 Itaú Signal (quota 1/3) | glow localizado permitido | editorial |
 
-No `/criar`, o registro é traduzido em pergunta leiga ("Como esse documento deve soar?") com sugestão automática pelo assunto e confirmação de 1 clique.
+No `/slideless criar`, o registro é traduzido em pergunta leiga ("Como esse documento deve soar?") com sugestão automática pelo assunto e confirmação de 1 clique.
 
 ---
 
@@ -171,7 +171,7 @@ O perfil determina QUAIS keyframes existem no arquivo. **Templates nascem sem mo
 ```
 
 ### Perfil `fisico` (springs, scroll-driven, View Transitions)
-**Reservado ao `/slideless-overdrive`** — em Chrome corporativo gerenciado o fallback vira o caminho primário; não compensa no core.
+**Reservado ao `/slideless overdrive`** — em Chrome corporativo gerenciado o fallback vira o caminho primário; não compensa no core.
 
 **Hover por papel (qualquer perfil):** links = underline-grow; tabs/filtros = background-sweep; card CLICÁVEL = lift leve OU border-draw OU contraste (1 escolha por documento); card informativo = nenhum. `translateY` negativo em hover de elemento sem destino (href/handler) = falha.
 
@@ -179,7 +179,7 @@ O perfil determina QUAIS keyframes existem no arquivo. **Templates nascem sem mo
 
 ## §6. Momento assinatura — M0–M6
 
-Exatamente 1 por documento, ligado ao **dado ou afirmação mais importante da fonte**, com localização declarada no parti (o `/auditar` verifica existência no local declarado). Motion anima o dado, nunca apenas o container.
+Exatamente 1 por documento, ligado ao **dado ou afirmação mais importante da fonte**, com localização declarada no parti (o `/slideless auditar` verifica existência no local declarado). Motion anima o dado, nunca apenas o container.
 
 - **M0** — assinatura COMPOSITIVA, sem motion (única opção válida no perfil `estatico`): o dado-tese protagoniza um dispositivo editorial — tabela-protagonista full-bleed com fio duplo, número sangrando a margem, pull-quote display. A força vem da composição, não do movimento.
 - **M1** — número-tese que se constrói até o valor REAL da fonte (counter com easing).

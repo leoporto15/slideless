@@ -46,45 +46,26 @@ Skill para gerar **documentos web interativos** em HTML single-file. NÃO é "PP
 
 ---
 
-## Comandos (31)
+## Invocação — `/slideless <subcomando>` (agnóstico a harness)
 
-### Criação (1 wizard + 1 pré-geração + 6 modelos)
-| Comando | Função |
-|---|---|
-| `/criar` | Wizard para áreas de negócios: 5 perguntas em PT-BR e escolhe modelo |
-| `/estruturar` | Analisa conteúdo bruto e propõe mapa para aprovação antes de gerar |
-| `/slideless-handbook` `<tópico>` | Cria handbook (sidebar + scrollspy + TOC) |
-| `/slideless-hub` `<tópico>` | Cria hub (cards categorizáveis) |
-| `/slideless-scrollytelling` `<tópico>` | Cria scrollytelling (reveal + sticky chart) |
-| `/slideless-site` `<tópico>` | Cria site SPA single-file |
-| `/slideless-deck` `<tópico>` | Cria deck moderno (keyboard nav, fragments) |
-| `/slideless-report` `<tópico>` | Cria relatório editorial denso (PDF-friendly) |
+A skill tem **um único comando universal**: `/slideless`. O usuário escreve o **subcomando** e o contexto logo depois — ex.: `/slideless deck pitch do 1T26`, `/slideless criar`, `/slideless auditar caminho.html`. Cada subcomando é um spec em `references/comandos/<nome>.md` (**fonte única**). Não há slash-command individual por subcomando — assim a skill funciona igual em **Claude Code, GitHub Copilot, Devin** e qualquer harness que carregue este arquivo. As entradas nativas (`commands/slideless.md`, `.github/prompts/slideless.prompt.md`) são finas e só apontam para cá.
 
-### Importação (3)
-`/importar-confluence <url\|anexo>`, `/importar-ppt <arquivo>`, `/importar-md <arquivo>`. Detalhes em [references/importar-conteudo.md](references/importar-conteudo.md).
+### Dispatch (como rotear)
+1. Tome a **primeira palavra** do argumento como o subcomando.
+2. Casou (exato ou por sinônimo) com um arquivo de `references/comandos/`? **Leia e siga à risca** `references/comandos/<subcomando>.md`, usando o resto da linha como o pedido/conteúdo.
+3. Argumento **vazio, ambíguo, ou a pessoa não sabe o que quer**? → siga `references/comandos/criar.md` (wizard) ou liste o catálogo e pergunte.
+4. **Sinônimos PT** (mapeiam pro modelo): manual→handbook · portal/central de recursos→hub · narrativa/história com dados→scrollytelling · microsite→site · pitch/apresentação ao vivo→deck · relatório (formal/PDF)→report.
 
-### Edição cirúrgica (6)
-`/adicionar-secao <título>` (handbook/scrollytelling/site), `/adicionar-slide <tipo>` (deck), `/adicionar-callout <tipo>` (info/tip/warn/danger), `/adicionar-grafico <tipo>` (line/bar/donut/gauge/radar/bubble/waterfall/mixed), `/adicionar-fragment` (deck), `/adicionar-toc` (handbook).
+### Catálogo de subcomandos (31 → `references/comandos/<nome>.md`)
 
-### Transformação (3)
-`/aplicar-tema <neutro\|itau>`, `/converter-modelo <novo>` (handbook ↔ scrollytelling, hub ↔ site), `/distill` (reduz handbook longo a sumário).
-
-### Refinamento de design (5 verbos independentes — compõem em sequência)
-| Comando | Função |
-|---|---|
-| `/slideless-bolder` | Tipografia +30%, glow reforçado, números circulados via Rough Notation |
-| `/slideless-quieter` | Tipografia −15%, cores muted, motion calma, fallback serif editorial |
-| `/slideless-animate` | heroIn, Auto-Animate FLIP, counters, stagger reveals (respeita reduced-motion) |
-| `/slideless-delight` | Hover lifts, spotlight cursor-aware, shimmer, parallax sutil |
-| `/slideless-overdrive` | WebGL hero, Chart.js plugins, variable font, cinematic. **Interativo** (pergunta quais efeitos). Até 5MB |
-
-Composição típica: `bolder` + `animate` (executivo) · `quieter` + `delight` (editorial refinado) · `bolder` + `overdrive` (showpiece).
-
-### Qualidade (4)
-`/auditar` (validador + checklist), `/polir` (tipografia/espaçamento), `/harden` (a11y + reduced-motion), `/acessibilidade` (varredura WCAG isolada).
-
-### Export (2)
-`/exportar-pdf` (Playwright), `/exportar-screenshots` (1 PNG por slide/seção).
+- **Criação** — `criar` (wizard PT-BR, 5 perguntas, escolhe o modelo) · `estruturar` (mapa do conteúdo p/ aprovação antes de gerar)
+- **Modelos** `<tópico>` — `deck` (slides, keyboard nav, fragments) · `handbook` (sidebar + scrollspy + TOC) · `hub` (cards categorizáveis) · `scrollytelling` (reveal + sticky chart) · `site` (SPA single-file) · `report` (relatório editorial denso, PDF-friendly)
+- **Importação** — `importar-ppt <arquivo>` · `importar-md <arquivo>` · `importar-confluence <url\|anexo>`. Detalhes: [references/importar-conteudo.md](references/importar-conteudo.md)
+- **Edição cirúrgica** — `adicionar-secao <título>` (handbook/scrollytelling/site) · `adicionar-slide <tipo>` (deck) · `adicionar-callout <info\|tip\|warn\|danger>` · `adicionar-grafico <tipo>` (line/bar/donut/gauge/radar/bubble/waterfall/mixed) · `adicionar-fragment` (deck) · `adicionar-toc` (handbook)
+- **Transformação** — `aplicar-tema <neutro\|itau>` · `converter-modelo <novo>` (handbook ↔ scrollytelling, hub ↔ site) · `distill` (reduz handbook longo a sumário)
+- **Refinamento de design** (5 verbos, compõem em sequência) — `bolder` (tipografia +30%, números circulados) · `quieter` (−15%, muted, motion calma) · `animate` (heroIn, FLIP, counters, stagger) · `delight` (hover lift, spotlight, shimmer, parallax) · `overdrive` (WebGL hero, Chart.js plugins, variable font; **interativo**; até 5MB). Composição: `bolder`+`animate` (executivo) · `quieter`+`delight` (editorial) · `bolder`+`overdrive` (showpiece)
+- **Qualidade** — `auditar` (validador + checklist) · `polir` (tipografia/espaçamento) · `harden` (a11y + reduced-motion) · `acessibilidade` (varredura WCAG)
+- **Export** — `exportar-pdf` (Playwright) · `exportar-screenshots` (1 PNG por slide/seção)
 
 ---
 

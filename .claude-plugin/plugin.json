@@ -1,7 +1,7 @@
 {
   "name": "slideless",
-  "version": "5.0.0",
-  "description": "Substitui PowerPoint por documentos web HTML single-file (deck, handbook, hub, scrollytelling, site, report). Cada documento nasce de uma direção de arte derivada do conteúdo (mecanismo parti, anti-slop), com tipografia cinética e materialidade cutting-edge, dark mode nativo, WCAG AA e validador determinístico. 31 comandos.",
+  "version": "6.0.0",
+  "description": "Substitui PowerPoint por documentos web HTML single-file (deck, handbook, hub, scrollytelling, site, report). Cada documento nasce de uma direção de arte derivada do conteúdo (mecanismo parti, anti-slop), com tipografia cinética e materialidade cutting-edge, dark mode nativo, WCAG AA e validador determinístico. Comando único /slideless com 31 subcomandos (agnóstico a harness: Claude Code, GitHub Copilot, Devin).",
   "author": {
     "name": "Itaú — Comunicação Interna"
   },

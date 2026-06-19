@@ -27,7 +27,7 @@ Não carregar inline. Abrir só quando o trabalho exigir:
 - [references/protocolo-sem-conteudo.md](../references/protocolo-sem-conteudo.md) — sem dados reais, sem geração
 - [references/workflow.md](../references/workflow.md) — passo-a-passo completo
 - [references/modelos/](../references/modelos/) — spec detalhada por modelo
-- [commands/](../commands/) — 31 slash commands (1 arquivo cada)
+- [references/comandos/](../references/comandos/) — specs dos 31 subcomandos (FONTE ÚNICA)
 
 ## Estrutura do projeto
 
@@ -39,25 +39,18 @@ slideless/
   README.md                         ← onboarding humano
   assets/templates/                 ← templates base por modelo
   assets/temas/                     ← itau.css, neutro.css
-  commands/                         ← 31 slash commands
-  references/                       ← documentação técnica detalhada (consultar on-demand)
+  commands/                         ← só slideless.md (roteador fino → references/comandos/)
+  references/                       ← doc técnica + comandos/ (specs dos 31 subcomandos)
   demos/                            ← 3 famílias × 7 documentos (os 6 modelos + deck-overdrive)
 ```
 
-## Comandos principais (digitar `/` no chat para lista completa)
+## Comando — um só: `/slideless <subcomando>`
 
-> No Copilot, os slash-commands vêm dos **prompt files** em `.github/prompts/*.prompt.md` (um por comando, apontando para `commands/<nome>.md`). Se `/criar` não aparecer, veja a seção "GitHub Copilot Chat" do [README.md](../README.md#instalação) (setting `chat.promptFiles`).
+> No Copilot, o slash-command vem do prompt file `.github/prompts/slideless.prompt.md`. Invoque **`/slideless`** e escreva o subcomando logo depois — ex.: `/slideless deck`, `/slideless criar`. Se não aparecer, veja "GitHub Copilot Chat" no [README.md](../README.md#instalação) (setting `chat.promptFiles`).
 
-| Comando | O que faz |
-|---|---|
-| `/criar` | Wizard para áreas de negócios (escolhe modelo automaticamente) |
-| `/estruturar` | Analisa conteúdo bruto e propõe mapa antes de gerar |
-| `/slideless-handbook` | Manual com sidebar + TOC |
-| `/slideless-hub` | Portal de cards categorizáveis |
-| `/slideless-scrollytelling` | Narrativa scroll-triggered |
-| `/slideless-site` | SPA com hash routing |
-| `/slideless-deck` | Apresentação ao vivo (slides + keyboard nav) |
-| `/slideless-report` | Relatório editorial denso (PDF-friendly) |
+Tome a **primeira palavra** como subcomando e siga `references/comandos/<nome>.md`; o resto da linha é o pedido. Vazio/ambíguo → `criar` (wizard). Sinônimos: manual→handbook, pitch→deck, relatório→report.
+
+**Catálogo (31):** `criar`, `estruturar` · modelos `deck` `handbook` `hub` `scrollytelling` `site` `report` · `importar-{ppt,md,confluence}` · `adicionar-{secao,slide,callout,grafico,fragment,toc}` · `aplicar-tema` `converter-modelo` `distill` · `bolder` `quieter` `animate` `delight` `overdrive` · `auditar` `polir` `harden` `acessibilidade` · `exportar-{pdf,screenshots}`.
 
 ## Regras invioláveis
 

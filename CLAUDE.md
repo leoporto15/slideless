@@ -39,25 +39,25 @@ slideless/
   assets/
     templates/                ← templates base por modelo (handbook, hub, scrollytelling, site, deck, report)
     temas/                    ← itau.css (laranja #FF6200), neutro.css (azul)
-  commands/                   ← 31 slash commands (1 arquivo cada)
-  references/                 ← documentação técnica detalhada (consultar on-demand)
+  commands/                   ← só slideless.md (roteador fino do Claude Code → references/comandos/)
+  references/                 ← doc técnica + comandos/ (specs dos 31 subcomandos, FONTE ÚNICA)
   demos/                      ← exemplos pareados (3 famílias × 7 documentos: os 6 modelos + deck-overdrive)
 ```
 
 ## Comandos principais
 
-Digitar `/` no chat mostra todos. Os mais usados:
+A skill tem **um comando só** — `/slideless` — e você escreve o subcomando logo depois (ex.: `/slideless deck`, `/slideless criar`, `/slideless auditar arquivo.html`). Os 31 subcomandos vivem em [references/comandos/](references/comandos/). Os mais usados:
 
 | Comando | O que faz |
 |---|---|
-| **`/criar`** | Wizard para áreas de negócios (5 perguntas, escolhe modelo automaticamente) |
-| `/estruturar` | Analisa conteúdo bruto e propõe mapa estruturado antes de gerar |
-| `/slideless-handbook` | Manual com sidebar + TOC |
-| `/slideless-hub` | Portal de cards categorizáveis |
-| `/slideless-scrollytelling` | Narrativa scroll-triggered |
-| `/slideless-site` | SPA com hash routing |
-| `/slideless-deck` | Apresentação ao vivo (slides + keyboard nav) |
-| `/slideless-report` | Relatório editorial denso (PDF-friendly) |
+| **`/slideless criar`** | Wizard para áreas de negócios (5 perguntas, escolhe modelo automaticamente) |
+| `/slideless estruturar` | Analisa conteúdo bruto e propõe mapa estruturado antes de gerar |
+| `/slideless handbook` | Manual com sidebar + TOC |
+| `/slideless hub` | Portal de cards categorizáveis |
+| `/slideless scrollytelling` | Narrativa scroll-triggered |
+| `/slideless site` | SPA com hash routing |
+| `/slideless deck` | Apresentação ao vivo (slides + keyboard nav) |
+| `/slideless report` | Relatório editorial denso (PDF-friendly) |
 
 Tabela completa em [README.md](README.md).
 

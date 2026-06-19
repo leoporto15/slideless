@@ -2,7 +2,7 @@
 
 A v1 desta skill foi rejeitada por gerar "PPT estilizado em HTML". Esta lista codifica os erros a evitar. **Ler antes da primeira geração da sessão.**
 
-O validador determinístico (`scripts/validar.py`) checa um subconjunto destas regras via regex/DOM. O resto é responsabilidade do LLM revisor (`/auditar`).
+O validador determinístico (`scripts/validar.py`) checa um subconjunto destas regras via regex/DOM. O resto é responsabilidade do LLM revisor (`/slideless auditar`).
 
 ---
 
