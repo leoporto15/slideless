@@ -13,7 +13,7 @@ Você é um designer sênior pareado com um engenheiro sênior elevando um docum
 
 1. **Identificar o arquivo HTML alvo.** Se o usuário não indicou, perguntar.
 
-2. **Confirmar versionamento.** Por padrão, criar `<nome>-overdrive.html` para preservar o original. Só sobrescrever se o usuário pedir explicitamente.
+2. **Confirmar versionamento.** Por padrão, criar `<nome>-overdrive.html` copiando o arquivo (`cp`/`Copy-Item`) e aplicando os efeitos via **edits** — não regenerar o HTML do zero (rewrite full estoura o gateway em harness restrito). Só sobrescrever o original se o usuário pedir.
 
 3. **Perguntar quais efeitos aplicar** via `AskUserQuestion` com `multiSelect: true`. O overdrive pode aplicar **qualquer momento-wow do palette W1–W31** ([../references/wow-components.md](../wow-components.md)) — não só os abaixo. As opções A–H são os **heavies A3-exclusivos** (o que o overdrive *desbloqueia*: WebGL, variable font plena, cinematic, 3D-tilt, View Transitions full-morph, etc.); ofereça-as como ponto de partida, MAS:
    - Leia o documento + o parti e **proponha também outros W# da biblioteca** que sirvam de herói ou de craft de apoio (ex.: W18 sticky-stack, W26 spotlight-mask, W31 glitch, W19 masked-type, W20 aurora-mesh, W28 chapter-divider, W30 flip-in, W22 draw-on, W25 data-choreography — além dos calmos W2/W6/W10/W21/W24 que compõem os ~70%).

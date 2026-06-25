@@ -139,7 +139,7 @@ Vou criar **N seções/slides** com os seguintes blocos:
 
 ### Passo 4 — Gerar HTML
 
-Após aprovação do mapa, gerar o HTML chamando a lógica do comando `/slideless <modelo>` correspondente. Salvar em `outputs/<nome-do-documento>.html` ou no caminho que o usuário indicar. Seguir o passo-a-passo de [references/workflow.md](../workflow.md).
+Após aprovação do mapa, gerar o HTML chamando a lógica do `/slideless <modelo>`: **`scaffold.py` monta o esqueleto** (template + tema, fora do LLM) e **preenche-se incremental** (kit → parti → conteúdo seção-a-seção, edits pequenos — nunca o doc inteiro numa resposta). Salvar em `outputs/<nome-do-documento>.html` ou no caminho indicado. Passo-a-passo: [references/workflow.md](../workflow.md).
 
 ## Gate de render antes de entregar (v7 — obrigatório)
 O validador determinístico vê a ESTRUTURA; **não vê runtime nem quebra visual.** Rodar os DOIS e corrigir a CAUSA antes de entregar:

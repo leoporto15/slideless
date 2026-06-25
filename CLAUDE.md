@@ -8,6 +8,10 @@ Este projeto é a skill **slideless**: gera apresentações e documentos HTML si
 
 Spec principal da skill: [SKILL.md](SKILL.md). Lê on-demand quando uma tarefa começar — **não usar `@-includes` inline**, isso causa 502 no Copilot Chat por exceder o limite de payload do gateway. Links markdown normais permitem ao agente abrir o arquivo só quando precisar.
 
+## ⚡ Geração rápida — protocolo (evita 502/timeout, crítico no Copilot)
+
+**Nunca emita o HTML inteiro numa única resposta** (em harness restrito como o GitHub Copilot Chat isso estoura o gateway). Sempre: (1) **parti enxuto**; (2) **esqueleto por script** — `python scripts/scaffold.py <modelo> <tema> outputs/<nome>.html` monta engine + layout + tema (~80% dos bytes) em disco, **sem regurgitar template nem tema**; (3) **preencher INCREMENTAL** com edits pequenos (kit no slot `SLIDELESS:TYPE-KIT` → bloco parti → conteúdo seção-a-seção / slide-a-slide); (4) **dieta de contexto** (abrir só a seção da reference necessária, não a reference inteira); (5) **gates**: `validar.py` obrigatório, `smoke.py` best-effort em harness restrito. Vale como default em qualquer harness (mais rápido/barato). Detalhes: [references/workflow.md](references/workflow.md).
+
 ## References (consultar conforme necessário)
 
 Não carregar inline. Abrir só quando o trabalho exigir:

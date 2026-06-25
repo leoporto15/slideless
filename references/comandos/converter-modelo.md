@@ -25,7 +25,7 @@ Você foi invocado para converter entre modelos.
 ## Procedimento
 
 1. Confirmar conversão alvo + viabilidade.
-2. Carregar template do modelo-alvo como base.
+2. Montar o esqueleto do modelo-alvo por script: `python scripts/scaffold.py <modelo-alvo> <tema-atual> outputs/<nome>.html` (mantém o tema do doc original — ver passo 4). **Não regurgitar template nem tema.**
 3. Migrar conteúdo:
    - **handbook → scrollytelling:** cada `<section>` do handbook vira `<section class="scene">`. h2 → h2 (mesmo tamanho). **`data-reveal` só em figuras/dados (≤40% das sections), conforme o perfil de `motion` do parti — texto corrido nunca anima.**
    - **scrollytelling → handbook:** inversa. Gerar sidebar listando h2.

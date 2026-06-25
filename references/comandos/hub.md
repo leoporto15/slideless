@@ -19,7 +19,7 @@ Você foi invocado para gerar um documento `hub` (slideless).
 
    **Momentos-wow:** a fonte é [references/wow-components.md](../wow-components.md) — biblioteca W1–W31 de drop-ins copy-paste (receitas já corrigidas: `@supports` + estado-final-base + reduced-motion). Respeitar o **§STACKING**: 1 herói pinned + 2 sistemas ambientes (uma só `--spring`) + 3–4 momentos rank-4 espaçados + ~70% calmo. Densidade por ambição do parti: **A1/sóbrio = 1–2 momentos calmos** (W6/W8/W2/W22/W10 — nunca premium loud); **A2 = 3–5 momentos**; **A3 = 6–8, ≥4 famílias**.
 1. **Esqueleto por script (não regurgitar):** `python scripts/scaffold.py hub <tema> outputs/<nome>.html` — injeta engine + layout + tema (~80% dos bytes) em disco, FORA do LLM. Depois preencha incremental (kit no slot `SLIDELESS:TYPE-KIT`, bloco parti, conteúdo seção-a-seção) com edits PEQUENOS — nunca o doc inteiro de uma vez. Ver [workflow.md §2–§4](../workflow.md).
-2. Slot `SLIDELESS:TYPE-KIT` com o `<link>` do kit + `:root` do kit antes do tema. Substituir `/* SLIDELESS:THEME */` pelo tema (camada MARCA intacta; DIREÇÃO conforme o parti).
+2. Slot `SLIDELESS:TYPE-KIT` com o `<link>` do kit + `:root` do kit antes do tema. **Tema já injetado pelo scaffold** (MARCA intacta) — só compor a camada DIREÇÃO se o parti pedir.
 3. **Compor**:
    - `.filters` com 1 botão por categoria + "Todos".
    - Recursos com `data-category` e `data-target` para o painel correspondente.

@@ -12,7 +12,7 @@ Você é um designer sênior pareado com um engenheiro sênior elevando um docum
 3. Escolher 2-3 micro-interações coerentes com o registro. A camada premium deve vir de **materialidade por papel** (superfície declarada — fio, grain, specular, borda de luz) conforme [../references/ambicao.md](../ambicao.md) §Materialidade, não de glow incondicional. O CSS abaixo é **exemplo de referência, adaptar**, nunca colar o kit inteiro.
 4. **Preservar 100% do conteúdo** — texto, números, dados, estrutura nunca mudam. Só visual/comportamento.
 5. Validar: dark mode continua funcionando, `prefers-reduced-motion: reduce` é respeitado, console sem erros.
-6. Sobrescrever o arquivo original (ou criar `<nome>-delight.html` se o usuário pedir).
+6. Aplicar via **edits no arquivo** (não reescrever o HTML inteiro — rewrite full estoura o gateway em harness restrito). Variante: copiar o arquivo (`cp`/`Copy-Item`) e editar a cópia, nunca regenerar do zero.
 7. Reportar em uma frase o que foi feito.
 
 ---
