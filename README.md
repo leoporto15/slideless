@@ -180,6 +180,7 @@ slideless/
 │   ├── exemplos/                  ← showcases canônicos (1 por modelo)
 │   └── templates/                 ← esqueletos vazios para popular
 ├── scripts/
+│   ├── scaffold.py                ← monta o esqueleto (template + tema) FORA do LLM — geração rápida, sem 502/timeout (Copilot)
 │   ├── validar.py                 ← validador determinístico de ESTRUTURA (stdlib)
 │   ├── smoke.py                   ← gate de RENDER headless (Playwright): overflow, texto-por-caractere, número duplicado, slide curto, etc.
 │   └── exportar_pdf.py            ← PDF/PNG via Playwright
@@ -228,6 +229,19 @@ Configurar a skill como ferramenta interna no espaço do time, apontando para es
 ### Cursor / OpenCode / outros
 
 O formato `SKILL.md` (roteador) + `references/comandos/*.md` (subcomandos) + `references/*.md` (doutrina) é portátil: cada harness só precisa registrar **um** comando, `/slideless`, apontando para o `SKILL.md`. Adapte conforme o harness.
+
+---
+
+## Geração rápida (scaffold) — evita 502/timeout no Copilot
+
+O gargalo de gerar um single-file grande é emitir tudo numa resposta só — o gateway do GitHub Copilot Chat estoura (502/timeout). O `scaffold.py` monta o **boilerplate** (engine + layout + tema, ~80% dos bytes) em disco, **fora do modelo**:
+
+```bash
+python scripts/scaffold.py <modelo> <tema> outputs/<nome>.html
+# ex.: python scripts/scaffold.py deck itau outputs/pitch-1t26.html
+```
+
+Depois o modelo só preenche, com **edits pequenos** (nunca o documento inteiro de uma vez): kit no slot `SLIDELESS:TYPE-KIT` → bloco `<!-- slideless:parti -->` → conteúdo seção-a-seção / slide-a-slide → `validar.py`. Default em qualquer harness (mais rápido e barato); **obrigatório no Copilot**.
 
 ---
 

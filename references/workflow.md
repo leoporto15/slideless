@@ -40,16 +40,20 @@ Não pular esta etapa para "agilizar". Geração sem briefing = retrabalho garan
 
 Documento sem parti = falha P0 no validador.
 
-### 2. Seleção de base
+### 2. Scaffold — montar o esqueleto por script (FORA do LLM)
 
-| Cenário | Base |
-|---|---|
-| Tem conteúdo real | `assets/templates/template-<modelo>.html` (esqueleto vazio) |
-| Mostrar referência | `assets/exemplos/exemplo-<modelo>.html` (showcase preenchido) |
+```bash
+python scripts/scaffold.py <modelo> <tema> outputs/<nome>.html
+```
 
-Não usar showcase como template — copia conteúdo fictício junto.
+Copia `template-<modelo>.html` e **injeta o tema** (`temas/<tema>.css`) no marker `SLIDELESS:THEME` — engine + layout + tema (~80% dos bytes) entram **em disco, sem passar pelo output do LLM**. É o que evita o 502/timeout do gateway em harness restrito (Copilot) e acelera/abarata em qualquer harness.
 
-### 3. Composição (não "população")
+- **NUNCA regurgitar** o template nem o tema na resposta — o scaffold já os colocou.
+- Para só MOSTRAR referência (não gerar): `assets/exemplos/exemplo-<modelo>.html` (showcase preenchido). Não usar showcase como base — traz conteúdo fictício junto.
+
+### 3. Composição incremental (não "população", nunca one-shot)
+
+**Preencha o esqueleto com edits PEQUENOS, um por vez** — bloco parti no `<head>`, kit no slot, depois conteúdo **seção-a-seção / slide-a-slide**. **Nunca emita o documento inteiro numa resposta:** one-shot de HTML grande estoura o gateway do Copilot (502/timeout). Default em todo harness (mais rápido/barato); obrigatório no Copilot.
 
 - Aplicar regras de [importar-conteudo.md](importar-conteudo.md) conforme a fonte.
 - Componentes em [componentes.md](componentes.md) — **adaptados ao parti**, não colados verbatim.
@@ -57,13 +61,11 @@ Não usar showcase como template — copia conteúdo fictício junto.
 - Acentos/cores via tokens — nunca hardcode.
 - **Re-ancoragem anti-drift:** a cada ~5 seções/slides gerados, reler o bloco parti e conferir que as últimas seções ainda o seguem (o modo de falha real é regredir ao grid de cards default no final do documento).
 
-### 4. Aplicação do tema + kit
+### 4. Tema (já injetado pelo scaffold) + kit
 
-- Kit tipográfico do parti: `<link>` EXATO de [type-kits.md](type-kits.md) no slot `SLIDELESS:TYPE-KIT` + bloco `:root` do kit ANTES do bloco do tema.
-- `itau`: tokens de `assets/temas/itau.css` inline — camada `[MARCA]` intacta; camada `[DIREÇÃO]` composta conforme o parti.
-- `neutro`: tokens de `assets/temas/neutro.css` inline (o kit é 100% da voz tipográfica).
+- **Tema:** o `scaffold.py` já injetou `temas/<tema>.css` inline no `<style>` (camada `[MARCA]` intacta). **Não regurgitar nem redeclarar o tema.** Só compor a camada `[DIREÇÃO]` (glow/radius/easing/sombras) com edits pequenos SE o parti pedir.
+- **Kit tipográfico do parti** (o modelo preenche, é pequeno): `<link>` EXATO de [type-kits.md](type-kits.md) no slot `SLIDELESS:TYPE-KIT` + bloco `:root` dos slots `--kit-*` ANTES do tema. Nunca Inter como display.
 - Perfil de motion do parti colado como bloco aditivo ([direcao-de-arte.md](direcao-de-arte.md) §5) — os temas não trazem motion.
-- O tema é **inline** no `<style>` do HTML final — não link externo.
 
 ### 5. Validação determinística
 
@@ -89,6 +91,8 @@ python scripts/smoke.py <output.html>
 ```
 
 O validador determinístico checa a ESTRUTURA; **não vê erro de runtime (JS que não parseia) nem quebra visual.** O smoke carrega o doc num Chromium headless e pega `PAGEERROR`, conteúdo invisível e placeholder renderizado. `SMOKE FAIL` = corrigir antes de entregar. `SKIP` (sem Playwright) → instalar `pip install playwright && python -m playwright install chromium`. **Regra: nunca entregar sem render-verificar** — um `<script>` aninhado já matou todo o JS de vários docs passando no validador estrutural.
+
+**Em harness restrito (GitHub Copilot Chat)**, onde subir o Chromium pode estourar o timeout: trate o smoke como **best-effort** — rode se for rápido; se travar ou estiver indisponível, **registre o aviso e entregue mesmo assim** (o `validar.py`, leve, continua obrigatório). O gargalo a evitar é o gateway, não o gate.
 
 ### 6. Revisão LLM (cheklist-revisao)
 

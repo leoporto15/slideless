@@ -80,13 +80,15 @@ A skill tem **um único comando universal**: `/slideless`. O usuário escreve o 
 
 ## Workflow
 
-Resumo: **Think → Parti → Structure → Style → Deliver**. Passo-a-passo completo em [references/workflow.md](references/workflow.md).
+Resumo: **Think → Parti → Scaffold → Fill → Deliver**. Passo-a-passo completo em [references/workflow.md](references/workflow.md).
+
+> **Nunca emita o HTML inteiro numa resposta.** Em harness restrito (GitHub Copilot Chat) isso estoura o gateway (502/timeout). Monte o esqueleto por script e preencha incremental — vale como default em qualquer harness (mais rápido e barato).
 
 1. **Think.** Quem lê? Que tipo de conteúdo? O que o ASSUNTO pede visualmente? **Proibido:** neon dashboard (cyan+magenta+purple), Inter+violet/indigo+gradient text, emoji como ícones.
-2. **Parti (obrigatório, antes de qualquer HTML).** Abrir [references/direcao-de-arte.md](references/direcao-de-arte.md), preencher o bloco `<!-- slideless:parti -->` — 7 decisões derivadas do conteúdo (incl. `ambicao` — ver [references/ambicao.md](references/ambicao.md)), cada uma citando a fonte — e colá-lo no `<head>`. Ler o parti do exemplo canônico do modelo e do último documento da pasta (não repetir capa/kit/superfície). Se `ambicao` A2/A3, declarar o(s) `momento-wow`.
-3. **Structure.** Use o template correto em `assets/templates/template-<modelo>.html`. Inventariar elementos discretos (mandatório para deck) — nada pode ficar sem destino.
-4. **Style.** Compor a camada de direção conforme o parti: kit no slot `SLIDELESS:TYPE-KIT`, superfície do cardápio (flat é legítimo; glow nunca é obrigatório), perfil de motion colado como bloco aditivo. Hierarquia via escala+peso+cor. Nunca Inter sozinho — kit de [references/type-kits.md](references/type-kits.md).
-5. **Deliver.** Salvar no diretório indicado. **Validar SEMPRE antes de entregar**: `python scripts/validar.py <arquivo>` (estrutura) **E** `python scripts/smoke.py <arquivo>` (render — pega JS quebrado, conteúdo invisível e placeholder que o validador estrutural NÃO vê). Os dois precisam passar. Conferir o checklist de saída do [direcao-de-arte.md](references/direcao-de-arte.md), reportar path + o que foi gerado.
+2. **Parti (obrigatório, antes de qualquer HTML).** Abrir [references/direcao-de-arte.md](references/direcao-de-arte.md), preencher o bloco `<!-- slideless:parti -->` — 7 decisões derivadas do conteúdo (incl. `ambicao` — ver [references/ambicao.md](references/ambicao.md)), cada uma citando a fonte. Ler o parti do exemplo canônico do modelo e do último documento da pasta (não repetir capa/kit/superfície). Se `ambicao` A2/A3, declarar o(s) `momento-wow`.
+3. **Scaffold (esqueleto por script — fora do LLM).** `python scripts/scaffold.py <modelo> <tema> outputs/<nome>.html` injeta engine + layout + tema (~80% dos bytes) em disco. **NUNCA regurgitar template nem tema na resposta.** Inventariar elementos discretos (mandatório p/ deck) — nada sem destino.
+4. **Fill (incremental — edits pequenos, um por vez).** Colar o bloco parti no `<head>`; kit no slot `SLIDELESS:TYPE-KIT` (kit de [type-kits.md](references/type-kits.md), nunca Inter sozinho); conteúdo **seção-a-seção / slide-a-slide**, cada um um edit pequeno. Compor a direção conforme o parti (superfície do cardápio — flat é legítimo, glow nunca obrigatório; motion como bloco aditivo). Hierarquia via escala+peso+cor.
+5. **Deliver.** **`python scripts/validar.py <arquivo>` SEMPRE** (estrutura — obrigatório, rápido). **`python scripts/smoke.py <arquivo>`** (render — pega JS quebrado/invisível): obrigatório no Claude Code; **best-effort em harness restrito** (Copilot) — se pular, registrar o aviso. Reportar path + parti em 1 linha.
 
 ---
 

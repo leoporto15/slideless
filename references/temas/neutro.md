@@ -56,7 +56,7 @@ Cada um tem o par `--color-*-bg` (fundo tingido, ~7-10% de opacidade) consumido 
 
 Toda geração com tema `neutro` deve:
 
-1. Incluir o tema inline no `<style>` do HTML (copiar `assets/temas/neutro.css` inteiro no slot `SLIDELESS:THEME`). **Não redeclarar `:root` de cores/fontes** — duplicaria o tema.
+1. O tema entra via `scaffold.py` (injeta `assets/temas/neutro.css` no marker `SLIDELESS:THEME`). **Não regurgitar nem redeclarar o tema** — já está inline no `<style>`.
 2. Carregar o **kit tipográfico** do documento (escolhido em [../type-kits.md](../type-kits.md), decisão do parti — [../direcao-de-arte.md](../direcao-de-arte.md)): `<link>` no slot `SLIDELESS:TYPE-KIT` + bloco `:root` do kit ANTES do tema. Como o tema neutro não tem fonte de marca, **o kit é 100% da voz tipográfica**. **Inter como display é proibido**, e Fraunces fora do Kit 06 / Instrument Serif também.
 3. Boot script de tema no `<head>` (mesmo padrão que `itau` — ver [../design-system.md](../design-system.md#boot-script)).
 4. Theme toggle no header.

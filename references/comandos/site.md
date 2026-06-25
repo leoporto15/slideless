@@ -17,7 +17,7 @@ Você foi invocado para gerar um documento `site` (SPA single-file slideless).
 0. **Parti (obrigatório)** — [../references/direcao-de-arte.md](../direcao-de-arte.md): 7 decisões + `nao-vai-ter` derivadas do assunto, capa/kit/superfície ≠ exemplo canônico, bloco no `<head>`. A 7ª decisão é `ambicao` ([../references/ambicao.md](../ambicao.md)) — **default A2-elevado** para site; se A2/A3, o campo `momento-wow` (W1-W9; W5 morph na troca de view encaixa bem — mas o full-morph com View Transitions é A3/overdrive) é **obrigatório**.
 
    **Momentos-wow:** a fonte é [references/wow-components.md](../wow-components.md) — biblioteca W1–W31 de drop-ins copy-paste (receitas já corrigidas: `@supports` + estado-final-base + reduced-motion). Respeitar o **§STACKING**: 1 herói pinned + 2 sistemas ambientes (uma só `--spring`) + 3–4 momentos rank-4 espaçados + ~70% calmo. Densidade por ambição do parti: **A1/sóbrio = 1–2 momentos calmos** (W6/W8/W2/W22/W10 — nunca premium loud); **A2 = 3–5 momentos**; **A3 = 6–8, ≥4 famílias**.
-1. Copiar [../assets/templates/template-site.html](../../assets/templates/template-site.html).
+1. **Esqueleto por script (não regurgitar):** `python scripts/scaffold.py site <tema> outputs/<nome>.html` — injeta engine + layout + tema (~80% dos bytes) em disco, FORA do LLM. Depois preencha incremental (kit no slot `SLIDELESS:TYPE-KIT`, bloco parti, conteúdo seção-a-seção) com edits PEQUENOS — nunca o doc inteiro de uma vez. Ver [workflow.md §2–§4](../workflow.md).
 2. Slot `SLIDELESS:TYPE-KIT` com o `<link>` do kit + `:root` do kit antes do tema. Aplicar tema (MARCA intacta; DIREÇÃO conforme o parti).
 3. **Compor**:
    - `.topnav` com 1 `<a href="#hash">` por view.
