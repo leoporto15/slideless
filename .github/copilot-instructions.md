@@ -8,6 +8,16 @@ Este repositório é a skill **slideless**: gera apresentações e documentos HT
 
 Spec principal da skill: **[SKILL.md](../SKILL.md)**. Abrir on-demand quando uma tarefa começar.
 
+## ⚡ Geração rápida — protocolo OBRIGATÓRIO (evita 502/timeout)
+
+O gateway do Copilot estoura (502/timeout) quando você emite um HTML grande de uma vez. **NUNCA gere o documento inteiro numa única resposta.** Sempre, nesta ordem:
+
+1. **Parti enxuto** — decida modelo, tema, kit e as 7 decisões num bloco curto (sem despejar raciocínio longo).
+2. **Esqueleto por script:** rode `python scripts/scaffold.py <modelo> <tema> outputs/<nome>.html`. Ele monta engine + layout + tema (~80% dos bytes) **em disco** — **NÃO regurgite o template nem o tema na resposta** (é o que causa o timeout).
+3. **Preencha INCREMENTALMENTE, um edit pequeno por vez:** kit no slot `SLIDELESS:TYPE-KIT` → bloco `<!-- slideless:parti -->` no `<head>` → conteúdo **seção-a-seção / slide-a-slide**. Cada edit = um chunk pequeno; nunca o arquivo todo.
+4. **Dieta de contexto:** não leia template/tema inteiros pro chat (o scaffold os consome em disco); abra só a SEÇÃO da reference que precisar — não a reference inteira.
+5. **Gates:** `python scripts/validar.py <saída>` (rápido, obrigatório). `smoke.py` e screenshots = **best-effort aqui** (rode se for rápido; senão registre o aviso e não bloqueie a entrega).
+
 ## References (consultar conforme necessário)
 
 Não carregar inline. Abrir só quando o trabalho exigir:

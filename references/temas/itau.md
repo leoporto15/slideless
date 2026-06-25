@@ -75,7 +75,7 @@ Cor é **informação, não decoração** (anti-pattern C14): cada cor só entra
 
 Toda geração com tema `itau` deve:
 
-1. Copiar `assets/temas/itau.css` inteiro no slot `SLIDELESS:THEME` (camada `[MARCA]` sempre; compor `[DIREÇÃO]` conforme o parti). **Não redeclarar `:root` de cores/fontes no template** — duplicaria o tema.
+1. O tema entra via `scaffold.py` (injeta `assets/temas/itau.css` no marker `SLIDELESS:THEME` — camada `[MARCA]` intacta). **Não regurgitar nem redeclarar o tema** — já está inline no `<style>`. Apenas compor a camada `[DIREÇÃO]` conforme o parti, com edits pequenos se necessário.
 2. Carregar o kit tipográfico do documento via Google Fonts (escolhido em [../type-kits.md](../type-kits.md), decisão do parti — [../direcao-de-arte.md](../direcao-de-arte.md)): `<link>` no slot `SLIDELESS:TYPE-KIT` + bloco `:root` do kit ANTES do tema. Dentro da rede Itaú, `Itau Display`/`Itau Text` prevalecem; o kit é o fallback desenhado fora da rede. **Inter como display é proibido.**
 3. Boot script de tema no `<head>` (ver [../design-system.md](../design-system.md#boot-script)).
 4. Theme toggle no header.
