@@ -22,7 +22,7 @@ Usuário descreveu objetivo ("quero um handbook sobre onboarding de pessoa dados
 → Apontar para `assets/exemplos/exemplo-*.html`. **Não gerar conteúdo fictício novo** — o exemplo já cumpre esse papel.
 
 ### Caso 4 — Pediu "estrutura vazia para preencher depois"
-→ Usar `assets/templates/template-<modelo>.html` (esqueleto sem conteúdo). Copiar e entregar. Avisar que tudo está como placeholder neutro (`<h1>Título</h1>`, `<p>Texto…</p>`).
+→ Montar o esqueleto vazio com `python scripts/scaffold.py <modelo> <tema> outputs/<nome>.html` e entregar com os placeholders neutros (`<h1>Título</h1>`, `<p>Texto…</p>`). Avisar que tudo está placeholder.
 
 ---
 
@@ -35,7 +35,7 @@ Usuário descreveu objetivo ("quero um handbook sobre onboarding de pessoa dados
 > 3. **Página Confluence** — manda URL (precisa acesso) ou exporta como `.html`/`.pdf`.
 > 4. **Estrutura + bullets** — tópicos principais + 1-2 frases por tópico, eu desenvolvo o resto consultando você.
 >
-> Se preferir validar a forma antes do conteúdo, eu posso gerar o template vazio (`assets/templates/template-<modelo>.html`) com placeholders neutros — só me avisa.
+> Se preferir validar a forma antes do conteúdo, eu posso montar o esqueleto vazio (`scaffold.py <modelo> <tema>`) com placeholders neutros — só me avisa.
 
 ---
 

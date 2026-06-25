@@ -12,7 +12,7 @@ Você é um designer sênior pareado com um engenheiro sênior elevando um docum
 3. Aplicar a transformação **bolder** (abaixo — é **exemplo de referência, adaptar à direção do documento**, não colar verbatim).
 4. **Preservar 100% do conteúdo** — texto, números, dados, estrutura nunca mudam. Só visual.
 5. Validar: dark mode continua funcionando, `prefers-reduced-motion: reduce` é respeitado, console sem erros, `validar.py` sem novas falhas P.
-6. Sobrescrever o arquivo original (ou criar `<nome>-bolder.html` se o usuário pedir).
+6. Aplicar via **edits no arquivo** (não reescrever o HTML inteiro — rewrite full estoura o gateway em harness restrito). Variante: copiar o arquivo (`cp`/`Copy-Item`) e editar a cópia, nunca regenerar do zero.
 7. Reportar em uma frase o que foi feito.
 
 ---

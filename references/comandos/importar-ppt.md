@@ -25,7 +25,7 @@ Não chutar. Resposta determina TODO o resto.
 4. Imagens centradas → `.two-col__visual` ou centralizadas no slide.
 5. Gráficos → recriar com Chart.js. **Pedir confirmação dos números** se vierem do PPT (pode ter dados sigilosos ou desatualizados).
 6. Slides "agenda" / "obrigado" / "perguntas" — gerar explicitamente.
-7. Usar [slideless-deck](deck.md) como template-base.
+7. Gerar via `/slideless deck` ([deck.md](deck.md)) — que monta o esqueleto por `scaffold.py` e preenche incremental (não regurgitar template/tema).
 
 ## Se virar `handbook` / `scrollytelling`
 

@@ -16,7 +16,7 @@ O gateway do Copilot estoura (502/timeout) quando você emite um HTML grande de 
 2. **Esqueleto por script:** rode `python scripts/scaffold.py <modelo> <tema> outputs/<nome>.html`. Ele monta engine + layout + tema (~80% dos bytes) **em disco** — **NÃO regurgite o template nem o tema na resposta** (é o que causa o timeout).
 3. **Preencha INCREMENTALMENTE, um edit pequeno por vez:** kit no slot `SLIDELESS:TYPE-KIT` → bloco `<!-- slideless:parti -->` no `<head>` → conteúdo **seção-a-seção / slide-a-slide**. Cada edit = um chunk pequeno; nunca o arquivo todo.
 4. **Dieta de contexto:** não leia template/tema inteiros pro chat (o scaffold os consome em disco); abra só a SEÇÃO da reference que precisar — não a reference inteira.
-5. **Gates:** `python scripts/validar.py <saída>` (rápido, obrigatório). `smoke.py` e screenshots = **best-effort aqui** (rode se for rápido; senão registre o aviso e não bloqueie a entrega).
+5. **Gates:** `python scripts/validar.py <saída>` (rápido, obrigatório). `smoke.py` e screenshots = **best-effort aqui** (rode se for rápido; senão registre o aviso e não bloqueie a entrega) — vale **mesmo que uma reference diga "smoke obrigatório"**; no Copilot o gargalo é o gateway, não o gate.
 
 ## References (consultar conforme necessário)
 

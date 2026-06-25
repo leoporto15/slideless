@@ -96,7 +96,7 @@ Se o texto tem cara de bullet list (frases curtas, muitos parágrafos pequenos),
 
 ## Após importar — sempre
 
-1. Aplicar tema (`itau` default, `neutro` se neutralidade pedida).
+1. Tema escolhido (`itau` default, `neutro` se neutralidade pedida) — já injetado pelo `scaffold.py` no esqueleto, não reaplicar.
 2. Rodar `python scripts/validar.py <output.html>`.
 3. Aplicar `/slideless auditar` para revisão LLM contra [checklist-revisao.md](checklist-revisao.md) e [anti-patterns.md](anti-patterns.md).
 4. Salvar em `outputs/<nome-descritivo>.html`.
