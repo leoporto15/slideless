@@ -1,6 +1,6 @@
 /*
- * slideless — tema itau-preto — canvas preto #000000 (altíssima renda/private cinematográfico)
- * Gerado de itau-cream (base provada); só os tokens de canvas (bg/fg/border/accent) mudam.
+ * slideless — tema itau-preto — canvas preto #000000 (private/cinematografico) — accent laranja
+ * Gerado de itau-cream; so os tokens de canvas mudam.
  *
  * O tema é dividido em DUAS CAMADAS, marcadas grupo a grupo:
  *
@@ -40,8 +40,8 @@
      Cor é INFORMAÇÃO, não decoração (anti-pattern C14): cada cor só entra
      com papel declarado no documento. Regime cromático (bicromático /
      duotone / polícromo mapeado) é decisão do parti.                     */
-  --color-accent:        var(--itau-orange-3);    /* 1. brand accent       */
-  --color-accent-dim:    rgba(250,159,9,0.14);
+  --color-accent:        var(--itau-orange);    /* 1. brand accent       */
+  --color-accent-dim:    rgba(255,98,0,0.14);
   --color-accent-fg:     #000000;
 
   --color-info:          var(--itau-blue-3);    /* 2. info/dados         */
@@ -185,10 +185,10 @@
   --color-border-strong: rgba(255,255,255,0.24);
 
   /* Accent shifted +20% luminosity para readability em dark */
-  --color-accent:        var(--itau-orange-3);
+  --color-accent:        var(--itau-orange);
   --color-accent-hover:  var(--itau-orange-2);
   --color-accent-fg:     #000000;
-  --color-accent-dim:    rgba(250,159,9,0.16);
+  --color-accent-dim:    rgba(255,98,0,0.16);
 
   --color-info-dim:      rgba(59, 133, 250, 0.12);
   --color-success:       #8fcc5a;

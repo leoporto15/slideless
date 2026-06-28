@@ -5,10 +5,10 @@
   "temas": {
     "itau-padrao":  { "label": "Itaú padrão (oficial 2023)",     "canvas": "branco + cool gray",      "accent": "laranja",       "brand": true,  "uso": "institucional padrão — relatório/handbook/deck" },
     "itau-cream":   { "label": "Itaú cálido",                     "canvas": "cream + preto quente",    "accent": "laranja",       "brand": true,  "uso": "leitura editorial mais quente (fora da base fria oficial)" },
-    "itau-laranja": { "label": "Itaú varejo",                     "canvas": "laranja #FF6200",         "accent": "preto/branco",  "brand": true,  "uso": "campanha interna, all-hands, energético" },
+    "itau-grafite": { "label": "Itaú grafite (dark quente)",      "canvas": "carvão/espresso #1E1C1A", "accent": "laranja",       "brand": true,  "uso": "soft dark premium — deck/keynote, fácil no olho" },
     "itau-navy":    { "label": "Itaú premium (Personnalité)",     "canvas": "navy #000D3C",            "accent": "laranja",       "brand": true,  "uso": "alta renda, board, premium sóbrio" },
     "itau-preto":   { "label": "Itaú private",                    "canvas": "preto #000000",           "accent": "laranja",       "brand": true,  "uso": "altíssima renda, keynote/launch cinematográfico" },
-    "itau-verde":   { "label": "Itaú ESG/impacto",               "canvas": "verde profundo #0A3B00",  "accent": "laranja + lime","brand": true,  "uso": "ESG, sustentabilidade, Plano Amazônia" },
+    "itau-areia":   { "label": "Itaú areia (oat/papel)",          "canvas": "oat/papel #ECE4D5",       "accent": "laranja",       "brand": true,  "uso": "quiet-luxury editorial — report/handbook quente" },
     "neutro":       { "label": "Neutro (white-label)",           "canvas": "cool gray + branco",      "accent": "azul-tinta",    "brand": false, "uso": "documentos fora do Itaú" }
   }
 }
