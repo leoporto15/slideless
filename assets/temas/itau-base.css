@@ -246,6 +246,9 @@ body {
   border-radius: var(--radius-sm);
 }
 
+/* ─── Assinatura de seleção (marca, por tema) ────────────────────────── */
+::selection { background: var(--color-accent); color: var(--color-accent-fg); }
+
 /* ─── Headings ───────────────────────────────────────────────────── */
 h1, h2, h3, h4 {
   font-family: var(--font-display);
@@ -278,7 +281,9 @@ p { margin: 0 0 var(--space-4); max-width: 65ch; color: var(--color-fg); }
   font-weight: 400;
   max-width: 60ch;
 }
-a { color: var(--color-accent); text-decoration: none; }
+/* link usa accent-text (laranja escurecida p/ AA em canvas claro); cai p/ accent
+   quando o tema nao define accent-text (ex.: itau-base usado direto). */
+a { color: var(--color-accent-text, var(--color-accent)); text-decoration: none; }
 a:hover { color: var(--color-accent-hover); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1.5px; }
 strong { font-weight: 700; color: var(--color-fg); }
 
@@ -517,6 +522,17 @@ li::marker { color: var(--color-fg-subtle); }
      mais [data-reveal]{opacity:0}; esta linha é defensiva: garante que QUALQUER
      reveal colado fique visível e sem transform sob reduced-motion. */
   [data-reveal] { opacity: 1; transform: none; transition-delay: 0s; }
+}
+
+/* ─── [MARCA] Alto contraste do SO (Windows forced-colors) ──────────────
+   Muito usado em banco/governo. Deixa o SO controlar cores e garante que
+   superfícies e foco continuem visíveis (bordas via system colors). */
+@media (forced-colors: active) {
+  .tier-hero, .tier-default, .tier-recessed, .card, .toggle, .code, .callout {
+    border: 1px solid CanvasText;
+  }
+  .tier-hero { border-top-width: 2px; }
+  :focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
 }
 
 /* ─── [MARCA] Paleta secundária em OKLCH ─────────────────────────────

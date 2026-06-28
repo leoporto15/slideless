@@ -54,6 +54,14 @@ Você foi invocado para adicionar gráfico.
 6. `aria-label` no `<canvas>` é obrigatório (descrição do que o gráfico mostra).
 7. Validar.
 
+## Cores de série — paleta do tema (não as semânticas)
+
+Cor de gráfico vem da paleta de dados do tema (calibrada por canvas, OKLCH — §5.0c de [../css-patterns.md](../css-patterns.md)), **nunca** de `--color-info/success/teal/plum` (são status e quebram em canvas escuro):
+- **1 série / gráfico-tese:** `--color-accent` + resto em `--color-fg-subtle` (highlight-mute — o default).
+- **Categórica (donut, multi-série):** `css('--cat-1')` … `css('--cat-6')` (`--cat-1` = tese).
+- **Magnitude:** `--seq-1`…`--seq-5`. **Desvio +/−:** `--div-1`…`--div-5` (`--div-3` neutro, CVD-safe laranja↔azul).
+- **Daltonismo:** laranja+azul (`--cat-1`/`--cat-2`) é seguro; **4+ séries exigem rotulagem direta + `borderDash`** — cor nunca é a única pista.
+
 ## Gate de render antes de entregar (v7 — obrigatório)
 A edição/importação mexe no render — além do `validar.py`, rodar o smoke e corrigir a CAUSA:
 - `python scripts/smoke.py <arquivo.html>` → `SMOKE PASS` (Chromium headless: overflow, texto-por-caractere, odômetro não-clipado, número duplicado, slide que não preenche a viewport, invasão de coluna lateral, scroll horizontal). `SKIP` se Playwright ausente.

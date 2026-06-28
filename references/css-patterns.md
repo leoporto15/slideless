@@ -576,6 +576,28 @@ function renderChartX() { const el = document.getElementById('chart-x'); if (!el
 - Ticks numéricos herdam `tabular-nums` visualmente: usar a MESMA formatação pt-BR do texto.
 - Re-render no toggle de tema (os `css()` são lidos na criação — escutar o evento de tema e `chart.update()`).
 
+### 5.0c Paleta de dados por tema — `--cat` / `--seq` / `--div`
+
+Cada tema define uma paleta de dados **calibrada para o próprio canvas** (contraste garantido, derivada em OKLCH). **Nunca use as cores semânticas (`--color-info/success/teal/plum`) como cor de série** — elas têm papel (status) e quebram em canvas escuro (medido: `success/teal/plum` caem a 2–3 de contraste sobre navy/grafite/aço). Use:
+
+| Família | Tokens | Quando |
+|---|---|---|
+| **Categórica** | `--cat-1` … `--cat-6` | séries sem ordem (categorias, fatias de donut). `--cat-1` = laranja-tese. |
+| **Sequencial** | `--seq-1` … `--seq-5` | magnitude/intensidade (1 dimensão crescente, heatmap). |
+| **Divergente** | `--div-1` … `--div-5` | desvio em torno de um centro (acima/abaixo da meta, +/−). `--div-3` = neutro. CVD-safe (laranja↔azul). |
+| **Secundário** | `--color-secondary` (+`-dim`) | 2ª série de realce — o par cromático do tema. |
+
+**Default = realce + silêncio (highlight-mute), não arco-íris.** A série-tese em `--cat-1`/`--color-accent`; as demais em `--color-fg-subtle`/`--color-border`. É a melhor prática de storytelling de dados e o caminho mais legível em qualquer tema.
+
+**Daltonismo (medido):** `--cat-1`+`--cat-2` (laranja+azul) é à prova de deuter/protanopia; **1–3 séries** são distinguíveis só pela cor. **4+ séries: cor nunca é a única pista** — rotulagem direta (plugin §5.1) + `borderDash` por série (a regra "≤3 séries sem legenda" já cobre isso).
+
+```js
+// categórica (donut/multi-série): cat-1 = tese
+backgroundColor: [css('--cat-1'), css('--cat-2'), css('--cat-3'), css('--cat-4')]
+// divergente (acima/abaixo da meta): negativo→div-1, neutro→div-3, positivo→div-5
+// sequencial (intensidade): css('--seq-1') … css('--seq-5')
+```
+
 ### 5.0a Plugin de direct-label (copiar, não reescrever)
 
 ```js
@@ -788,9 +810,9 @@ new Chart(document.getElementById('chart-donut'), {
     labels: ['Renda Fixa', 'Ações', 'Multi-Mercado', 'ETFs', 'Outros'],
     datasets: [{
       data: [45, 20, 18, 12, 5],
-      backgroundColor: [
-        css('--color-accent'), css('--color-info'),
-        css('--color-teal'),   css('--color-success'), css('--color-sage')
+      backgroundColor: [                       // paleta categórica do tema (§5.0c)
+        css('--cat-1'), css('--cat-2'),
+        css('--cat-3'), css('--cat-4'), css('--cat-5')
       ],
       borderWidth: 2,
       borderColor: css('--color-bg-elevated'),
@@ -954,22 +976,22 @@ new Chart(document.getElementById('chart-bubble'), {
       {
         label: 'Renda Fixa',
         data: [{ x: 2.1, y: 8.4, r: 24 }],
-        backgroundColor: css('--color-accent') + 'cc',
-        borderColor: css('--color-accent'),
+        backgroundColor: css('--cat-1') + 'cc',
+        borderColor: css('--cat-1'),
         borderWidth: 2,
       },
       {
         label: 'Multimercado',
         data: [{ x: 5.8, y: 14.2, r: 16 }],
-        backgroundColor: css('--color-info') + 'cc',
-        borderColor: css('--color-info'),
+        backgroundColor: css('--cat-2') + 'cc',
+        borderColor: css('--cat-2'),
         borderWidth: 2,
       },
       {
         label: 'Renda Variável',
         data: [{ x: 12.4, y: 19.7, r: 10 }],
-        backgroundColor: css('--color-teal') + 'cc',
-        borderColor: css('--color-teal'),
+        backgroundColor: css('--cat-3') + 'cc',
+        borderColor: css('--cat-3'),
         borderWidth: 2,
       }
     ]
@@ -1009,9 +1031,8 @@ const steps = [
   { label: 'Jun/24',    base: 0,    val: 1013, type: 'end'   },
 ];
 
-const accent = css('--color-accent');
-const info   = css('--color-info');
-const danger = css('--color-danger-border') || '#ef4444';
+const up     = css('--div-5');   // aumento (azul, divergente §5.0c)
+const down    = css('--div-1');  // redução (laranja) — CVD-safe, sem vermelho hardcoded
 const muted  = css('--color-border');
 
 new Chart(document.getElementById('chart-waterfall'), {
@@ -1031,7 +1052,7 @@ new Chart(document.getElementById('chart-waterfall'), {
         data: steps.map(s => Math.abs(s.val)),
         backgroundColor: steps.map(s =>
           s.type === 'start' || s.type === 'end' ? muted :
-          s.type === 'pos' ? info : danger
+          s.type === 'pos' ? up : down
         ),
         borderRadius: 3,
         stack: 'wf',
