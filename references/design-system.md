@@ -8,7 +8,7 @@ Tokens, dark mode, boot script. **Ler antes de gerar qualquer HTML.**
 
 Este arquivo define a **engenharia** do sistema: tokens, contratos, dark mode, boot script, a11y. A **estética** de cada documento NÃO mora aqui — ela é decidida por documento no bloco `<!-- slideless:parti -->` ([direcao-de-arte.md](direcao-de-arte.md)), com tipografia de [type-kits.md](type-kits.md). Dois testes que todo documento precisa passar: *"isso pareceria um slide de PPT?"* (se sim, recuar) e *"isso é distinguível do exemplo canônico cobrindo o logo?"* (se não, falhou a direção de arte).
 
-**Fonte de verdade dos tokens: [assets/temas/itau-cream.css](../assets/temas/itau-cream.css) e [assets/temas/neutro.css](../assets/temas/neutro.css)** (v4, duas camadas: `[MARCA]`/`[BASE]` inviolável + `[DIREÇÃO]` composta conforme o parti). Os blocos abaixo são resumo de referência — em divergência, o tema vence.
+**Fonte de verdade dos tokens: [assets/temas/itau-base.css](../assets/temas/itau-base.css) e [assets/temas/neutro.css](../assets/temas/neutro.css)** (v4, duas camadas: `[MARCA]`/`[BASE]` inviolável + `[DIREÇÃO]` composta conforme o parti). Os blocos abaixo são resumo de referência — em divergência, o tema vence.
 
 ---
 
@@ -124,7 +124,7 @@ A voz tipográfica vem do **kit do documento** ([type-kits.md](type-kits.md)) vi
 }
 ```
 
-Valores completos (sombras light/dark, insets, durações de deck): [assets/temas/itau-cream.css](../assets/temas/itau-cream.css). **`transition: all` é proibido** — transições sempre property-scoped.
+Valores completos (sombras light/dark, insets, durações de deck): [assets/temas/itau-base.css](../assets/temas/itau-base.css). **`transition: all` é proibido** — transições sempre property-scoped.
 
 ---
 

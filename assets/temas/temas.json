@@ -1,14 +1,14 @@
 {
-  "_doc": "Registro único dos temas slideless. scaffold.py e validar.py leem daqui — adicionar tema = soltar paletas/<nome>.css em assets/temas/ + 1 entrada aqui.",
+  "_doc": "Registro único dos temas slideless. scaffold.py e validar.py leem daqui — adicionar tema = soltar <nome>.css em assets/temas/ + 1 entrada aqui. itau-base.css é a base estrutural (NÃO é tema selecionável): os 6 itau são gerados dela trocando só os tokens de canvas.",
   "default": "itau-padrao",
   "aliases": { "itau": "itau-padrao" },
   "temas": {
-    "itau-padrao":  { "label": "Itaú padrão (oficial 2023)",     "canvas": "branco + cool gray",      "accent": "laranja",       "brand": true,  "uso": "institucional padrão — relatório/handbook/deck" },
-    "itau-cream":   { "label": "Itaú cálido",                     "canvas": "cream + preto quente",    "accent": "laranja",       "brand": true,  "uso": "leitura editorial mais quente (fora da base fria oficial)" },
-    "itau-grafite": { "label": "Itaú grafite (dark quente)",      "canvas": "carvão/espresso #1E1C1A", "accent": "laranja",       "brand": true,  "uso": "soft dark premium — deck/keynote, fácil no olho" },
-    "itau-navy":    { "label": "Itaú premium (Personnalité)",     "canvas": "navy #000D3C",            "accent": "laranja",       "brand": true,  "uso": "alta renda, board, premium sóbrio" },
-    "itau-preto":   { "label": "Itaú private",                    "canvas": "preto #000000",           "accent": "laranja",       "brand": true,  "uso": "altíssima renda, keynote/launch cinematográfico" },
-    "itau-areia":   { "label": "Itaú areia (oat/papel)",          "canvas": "oat/papel #ECE4D5",       "accent": "laranja",       "brand": true,  "uso": "quiet-luxury editorial — report/handbook quente" },
-    "neutro":       { "label": "Neutro (white-label)",           "canvas": "cool gray + branco",      "accent": "azul-tinta",    "brand": false, "uso": "documentos fora do Itaú" }
+    "itau-padrao":  { "label": "Itaú padrão (oficial 2023)", "canvas": "branco + cool gray",       "accent": "laranja",    "brand": true,  "uso": "institucional padrão — relatório/handbook/deck" },
+    "itau-navy":    { "label": "Itaú premium (Personnalité)", "canvas": "navy #000D3C",             "accent": "laranja",    "brand": true,  "uso": "alta renda, board, premium sóbrio" },
+    "itau-grafite": { "label": "Itaú grafite (dark quente)",  "canvas": "carvão/espresso #1E1C1A",  "accent": "laranja",    "brand": true,  "uso": "soft dark premium quente — deck/keynote, fácil no olho" },
+    "itau-aco":     { "label": "Itaú aço (dark frio)",        "canvas": "aço/grafite frio #1E242C", "accent": "laranja",    "brand": true,  "uso": "dim mode contemporâneo — deck/site/produto" },
+    "itau-areia":   { "label": "Itaú areia (oat/papel)",      "canvas": "oat/papel #ECE4D5",        "accent": "laranja",    "brand": true,  "uso": "quiet-luxury editorial quente — report/handbook" },
+    "itau-bruma":   { "label": "Itaú bruma (azul arejado)",   "canvas": "azul-acinzentado #E7ECF2", "accent": "laranja",    "brand": true,  "uso": "light frio calmo/arquitetônico — deck/site/hub" },
+    "neutro":       { "label": "Neutro (white-label)",        "canvas": "cool gray + branco",       "accent": "azul-tinta", "brand": false, "uso": "documentos fora do Itaú" }
   }
 }

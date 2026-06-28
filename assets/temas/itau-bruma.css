@@ -1,4 +1,4 @@
-/* slideless — tema itau-padrao — oficial — branco + cool gray.
+/* slideless — tema itau-bruma — light frio — azul-acinzentado arejado #E7ECF2.
    Gerado de itau-base.css; accent laranja (#FF6200) no light E dark. NAO editar a mao: regenerar. */
 /*
  * slideless — tema itau v4 (duas camadas)
@@ -69,14 +69,14 @@
   --color-danger-dim:    rgba(185, 28, 28, 0.08);
 
   /* ─── [MARCA] Background + foreground (light) ────────────────────── */
-  --color-bg:            #F1F2F4;   /* cream warm (não branco puro)    */
+  --color-bg:            #E7ECF2;   /* cream warm (não branco puro)    */
   --color-bg-elevated:   #FFFFFF;
-  --color-bg-sunken:     #E3E5E8;
-  --color-fg:            #1A1D21;   /* warm dark (não preto puro)      */
-  --color-fg-muted:      #4C4C4C;
-  --color-fg-subtle:     #6E6E6E;
-  --color-border:        rgba(26,29,33,0.10);
-  --color-border-strong: rgba(26,29,33,0.18);
+  --color-bg-sunken:     #D8DFE8;
+  --color-fg:            #1B2430;   /* warm dark (não preto puro)      */
+  --color-fg-muted:      #566270;
+  --color-fg-subtle:     #828D9B;
+  --color-border:        rgba(27,36,48,0.10);
+  --color-border-strong: rgba(27,36,48,0.18);
   --color-accent-hover:  var(--itau-orange-2);
 
   /* ─── [DIREÇÃO] Glow radial — OPÇÃO do cardápio de superfície ──────
@@ -176,19 +176,19 @@
 /* ─── Dark theme override ───────────────────────────────────────────── */
 [data-theme="dark"] {
   /* Backgrounds em preto quente Itaú (NÃO preto puro) */
-  --color-bg:            #15181C;
-  --color-bg-elevated:   #1D2127;
-  --color-bg-sunken:     #101317;
-  --color-fg:            #E6E7E4;
-  --color-fg-muted:      #A3A8AD;
-  --color-fg-subtle:     #70767D;
-  --color-border:        rgba(230,231,228,0.12);
-  --color-border-strong: rgba(230,231,228,0.22);
+  --color-bg:            #141A22;
+  --color-bg-elevated:   #1C232D;
+  --color-bg-sunken:     #0E1218;
+  --color-fg:            #E7ECF2;
+  --color-fg-muted:      #A3AEBC;
+  --color-fg-subtle:     #6E7884;
+  --color-border:        rgba(231,236,242,0.12);
+  --color-border-strong: rgba(231,236,242,0.22);
 
   /* Accent shifted +20% luminosity para readability em dark */
   --color-accent:        var(--itau-orange);
   --color-accent-hover:  var(--itau-orange-2);
-  --color-accent-fg:     #15181C;
+  --color-accent-fg:     #141A22;
   --color-accent-dim:    rgba(255,98,0,0.12);
 
   --color-info-dim:      rgba(59, 133, 250, 0.12);

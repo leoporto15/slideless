@@ -1,6 +1,7 @@
+/* slideless — tema itau-navy — premium — navy #000D3C.
+   Gerado de itau-base.css; accent laranja (#FF6200) no light E dark. NAO editar a mao: regenerar. */
 /*
- * slideless — tema itau-navy — canvas navy Itaú #000D3C (alta renda/Personnalité)
- * Gerado de itau-cream (base provada); só os tokens de canvas (bg/fg/border/accent) mudam.
+ * slideless — tema itau v4 (duas camadas)
  *
  * O tema é dividido em DUAS CAMADAS, marcadas grupo a grupo:
  *
@@ -76,7 +77,7 @@
   --color-fg-subtle:     #6E7A96;
   --color-border:        rgba(234,238,246,0.12);
   --color-border-strong: rgba(234,238,246,0.22);
-  --color-accent-hover:  var(--itau-orange-3);
+  --color-accent-hover:  var(--itau-orange-2);
 
   /* ─── [DIREÇÃO] Glow radial — OPÇÃO do cardápio de superfície ──────
      v4: glow NUNCA é obrigatório (flat é legítimo). Usar SÓ se o parti
@@ -185,10 +186,10 @@
   --color-border-strong: rgba(234,238,246,0.24);
 
   /* Accent shifted +20% luminosity para readability em dark */
-  --color-accent:        var(--itau-orange-3);
-  --color-accent-hover:  var(--itau-orange);
-  --color-accent-fg:     #000D3C;
-  --color-accent-dim:    rgba(250,159,9,0.16);
+  --color-accent:        var(--itau-orange);
+  --color-accent-hover:  var(--itau-orange-2);
+  --color-accent-fg:     #00081F;
+  --color-accent-dim:    rgba(255,98,0,0.16);
 
   --color-info-dim:      rgba(59, 133, 250, 0.12);
   --color-success:       #8fcc5a;
@@ -206,9 +207,9 @@
   --color-danger-dim:    rgba(248, 113, 113, 0.10);
 
   /* Glow mais saturado no dark (preto absorve luz, glow precisa empurrar) */
-  --glow-warm:    radial-gradient(ellipse 80% 60% at 80% 0%, rgba(250, 159, 9, 0.18) 0%, transparent 55%);
+  --glow-warm:    radial-gradient(ellipse 80% 60% at 80% 0%, rgba(255, 98, 0, 0.18) 0%, transparent 55%);
   --glow-cool:    radial-gradient(ellipse 70% 50% at 20% 100%, rgba(59, 133, 250, 0.14) 0%, transparent 55%);
-  --glow-hero:    radial-gradient(ellipse 90% 70% at 50% 0%, rgba(250, 159, 9, 0.22) 0%, transparent 50%);
+  --glow-hero:    radial-gradient(ellipse 90% 70% at 50% 0%, rgba(255, 98, 0, 0.22) 0%, transparent 50%);
   --vignette:     radial-gradient(ellipse 120% 80% at 50% 50%, transparent 50%, rgba(0, 0, 0, 0.30) 100%);
 
   --syntax-string:   #4ade80;
@@ -222,8 +223,8 @@
   --inset-sm:  inset 0 1px 3px rgba(0,0,0,0.4);
   --inset:     inset 0 2px 8px rgba(0,0,0,0.5);
 
-  --glow-accent-sm: 0 0 0 3px rgba(250, 159, 9, 0.20);
-  --glow-accent:    0 8px 32px rgba(250, 159, 9, 0.30);
+  --glow-accent-sm: 0 0 0 3px rgba(255, 98, 0, 0.20);
+  --glow-accent:    0 8px 32px rgba(255, 98, 0, 0.30);
 }
 
 /* ─── Reset / base ───────────────────────────────────────────────── */

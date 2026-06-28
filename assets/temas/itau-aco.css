@@ -1,3 +1,5 @@
+/* slideless — tema itau-aco — dark frio — aco/grafite frio #1E242C (dim mode).
+   Gerado de itau-base.css; accent laranja (#FF6200) no light E dark. NAO editar a mao: regenerar. */
 /*
  * slideless — tema itau v4 (duas camadas)
  *
@@ -40,8 +42,8 @@
      com papel declarado no documento. Regime cromático (bicromático /
      duotone / polícromo mapeado) é decisão do parti.                     */
   --color-accent:        var(--itau-orange);    /* 1. brand accent       */
-  --color-accent-dim:    rgba(255, 98, 0, 0.08);
-  --color-accent-fg:     #ffffff;
+  --color-accent-dim:    rgba(255,98,0,0.12);
+  --color-accent-fg:     #1E242C;
 
   --color-info:          var(--itau-blue-3);    /* 2. info/dados         */
   --color-info-dim:      rgba(59, 133, 250, 0.08);
@@ -67,14 +69,14 @@
   --color-danger-dim:    rgba(185, 28, 28, 0.08);
 
   /* ─── [MARCA] Background + foreground (light) ────────────────────── */
-  --color-bg:            #faf7f5;   /* cream warm (não branco puro)    */
-  --color-bg-elevated:   #ffffff;
-  --color-bg-sunken:     #f4f1ec;
-  --color-fg:            #292017;   /* warm dark (não preto puro)      */
-  --color-fg-muted:      #6b5d50;
-  --color-fg-subtle:     #8a7e72;
-  --color-border:        rgba(41, 32, 23, 0.10);
-  --color-border-strong: rgba(41, 32, 23, 0.18);
+  --color-bg:            #1E242C;   /* cream warm (não branco puro)    */
+  --color-bg-elevated:   #28303A;
+  --color-bg-sunken:     #161B21;
+  --color-fg:            #E8ECF1;   /* warm dark (não preto puro)      */
+  --color-fg-muted:      #A3ADB9;
+  --color-fg-subtle:     #6E7782;
+  --color-border:        rgba(232,236,241,0.12);
+  --color-border-strong: rgba(232,236,241,0.22);
   --color-accent-hover:  var(--itau-orange-2);
 
   /* ─── [DIREÇÃO] Glow radial — OPÇÃO do cardápio de superfície ──────
@@ -174,20 +176,20 @@
 /* ─── Dark theme override ───────────────────────────────────────────── */
 [data-theme="dark"] {
   /* Backgrounds em preto quente Itaú (NÃO preto puro) */
-  --color-bg:            #14110d;
-  --color-bg-elevated:   #1c1814;
-  --color-bg-sunken:     #221d18;
-  --color-fg:            #ede5dd;
-  --color-fg-muted:      #b8aa9a;
-  --color-fg-subtle:     #786e62;
-  --color-border:        rgba(237, 229, 221, 0.10);
-  --color-border-strong: rgba(237, 229, 221, 0.20);
+  --color-bg:            #161B21;
+  --color-bg-elevated:   #1E242C;
+  --color-bg-sunken:     #0F1318;
+  --color-fg:            #E8ECF1;
+  --color-fg-muted:      #A3ADB9;
+  --color-fg-subtle:     #6E7782;
+  --color-border:        rgba(232,236,241,0.14);
+  --color-border-strong: rgba(232,236,241,0.24);
 
   /* Accent shifted +20% luminosity para readability em dark */
-  --color-accent:        var(--itau-orange-3);
+  --color-accent:        var(--itau-orange);
   --color-accent-hover:  var(--itau-orange-2);
-  --color-accent-fg:     #14110d;
-  --color-accent-dim:    rgba(250, 159, 9, 0.10);
+  --color-accent-fg:     #161B21;
+  --color-accent-dim:    rgba(255,98,0,0.14);
 
   --color-info-dim:      rgba(59, 133, 250, 0.12);
   --color-success:       #8fcc5a;
@@ -205,9 +207,9 @@
   --color-danger-dim:    rgba(248, 113, 113, 0.10);
 
   /* Glow mais saturado no dark (preto absorve luz, glow precisa empurrar) */
-  --glow-warm:    radial-gradient(ellipse 80% 60% at 80% 0%, rgba(250, 159, 9, 0.18) 0%, transparent 55%);
+  --glow-warm:    radial-gradient(ellipse 80% 60% at 80% 0%, rgba(255, 98, 0, 0.18) 0%, transparent 55%);
   --glow-cool:    radial-gradient(ellipse 70% 50% at 20% 100%, rgba(59, 133, 250, 0.14) 0%, transparent 55%);
-  --glow-hero:    radial-gradient(ellipse 90% 70% at 50% 0%, rgba(250, 159, 9, 0.22) 0%, transparent 50%);
+  --glow-hero:    radial-gradient(ellipse 90% 70% at 50% 0%, rgba(255, 98, 0, 0.22) 0%, transparent 50%);
   --vignette:     radial-gradient(ellipse 120% 80% at 50% 50%, transparent 50%, rgba(0, 0, 0, 0.30) 100%);
 
   --syntax-string:   #4ade80;
@@ -221,8 +223,8 @@
   --inset-sm:  inset 0 1px 3px rgba(0,0,0,0.4);
   --inset:     inset 0 2px 8px rgba(0,0,0,0.5);
 
-  --glow-accent-sm: 0 0 0 3px rgba(250, 159, 9, 0.20);
-  --glow-accent:    0 8px 32px rgba(250, 159, 9, 0.30);
+  --glow-accent-sm: 0 0 0 3px rgba(255, 98, 0, 0.20);
+  --glow-accent:    0 8px 32px rgba(255, 98, 0, 0.30);
 }
 
 /* ─── Reset / base ───────────────────────────────────────────────── */
