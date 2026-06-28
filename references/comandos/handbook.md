@@ -10,7 +10,7 @@ Você foi invocado para gerar um documento `handbook` (slideless).
 1. Ler [../references/anti-patterns.md](../anti-patterns.md) e [../references/design-system.md](../design-system.md) se ainda não leu nesta sessão.
 2. Confirmar com o usuário:
    - **Conteúdo real** — sem ele, aplicar [../references/protocolo-sem-conteudo.md](../protocolo-sem-conteudo.md). Não inventar.
-   - **Tema** (`itau` ou `neutro`; default `itau`).
+   - **Tema** (7 em `assets/temas/temas.json`: itau-padrao/navy/grafite/aco/areia/bruma + neutro; default `itau-padrao`).
    - **Escopo** — quantas seções aproximadamente.
 
 ## Procedimento

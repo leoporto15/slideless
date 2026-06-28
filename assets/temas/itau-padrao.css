@@ -1,3 +1,5 @@
+/* slideless — tema itau-padrao. Gerado por gen_temas.py de itau-base.css.
+   NAO editar a mao: rode `python scripts/gen_temas.py`. */
 /*
  * slideless — tema itau v4 (duas camadas)
  *
@@ -40,8 +42,8 @@
      com papel declarado no documento. Regime cromático (bicromático /
      duotone / polícromo mapeado) é decisão do parti.                     */
   --color-accent:        var(--itau-orange);    /* 1. brand accent       */
-  --color-accent-dim:    rgba(255, 98, 0, 0.08);
-  --color-accent-fg:     #ffffff;
+  --color-accent-dim:    rgba(255,98,0,0.08);
+  --color-accent-fg:     #15181C;
 
   --color-info:          var(--itau-blue-3);    /* 2. info/dados         */
   --color-info-dim:      rgba(59, 133, 250, 0.08);
@@ -67,14 +69,14 @@
   --color-danger-dim:    rgba(185, 28, 28, 0.08);
 
   /* ─── [MARCA] Background + foreground (light) ────────────────────── */
-  --color-bg:            #faf7f5;   /* cream warm (não branco puro)    */
-  --color-bg-elevated:   #ffffff;
-  --color-bg-sunken:     #f4f1ec;
-  --color-fg:            #292017;   /* warm dark (não preto puro)      */
-  --color-fg-muted:      #6b5d50;
-  --color-fg-subtle:     #8a7e72;
-  --color-border:        rgba(41, 32, 23, 0.10);
-  --color-border-strong: rgba(41, 32, 23, 0.18);
+  --color-bg:            #F1F2F4;   /* cream warm (não branco puro)    */
+  --color-bg-elevated:   #FFFFFF;
+  --color-bg-sunken:     #E3E5E8;
+  --color-fg:            #1A1D21;   /* warm dark (não preto puro)      */
+  --color-fg-muted:      #4C4C4C;
+  --color-fg-subtle:     #6E6E6E;
+  --color-border:        rgba(26,29,33,0.10);
+  --color-border-strong: rgba(26,29,33,0.18);
   --color-accent-hover:  var(--itau-orange-2);
 
   /* ─── [DIREÇÃO] Glow radial — OPÇÃO do cardápio de superfície ──────
@@ -169,25 +171,46 @@
   --duration-slide:   650ms;
   --duration-fade:    750ms;
   --duration-hero:    900ms;
+
+  /* ─── camada de cor gerada (gen_temas.py) ─── */
+  --color-accent-text: #B94910;
+  --color-secondary: #2E69B2;
+  --color-secondary-dim: rgba(46,105,178,0.12);
+  --cat-1: #D05418;
+  --cat-2: #1762B6;
+  --cat-3: #149993;
+  --cat-4: #6A5103;
+  --cat-5: #407D32;
+  --cat-6: #2C4188;
+  --seq-1: #FCD4C5;
+  --seq-2: #EEA285;
+  --seq-3: #DC6E41;
+  --seq-4: #BA490F;
+  --seq-5: #8E3507;
+  --div-1: #BD4C14;
+  --div-2: #E4997B;
+  --div-3: #9FA5AC;
+  --div-4: #7EA7DC;
+  --div-5: #1467C2;
 }
 
 /* ─── Dark theme override ───────────────────────────────────────────── */
 [data-theme="dark"] {
   /* Backgrounds em preto quente Itaú (NÃO preto puro) */
-  --color-bg:            #14110d;
-  --color-bg-elevated:   #1c1814;
-  --color-bg-sunken:     #221d18;
-  --color-fg:            #ede5dd;
-  --color-fg-muted:      #b8aa9a;
-  --color-fg-subtle:     #786e62;
-  --color-border:        rgba(237, 229, 221, 0.10);
-  --color-border-strong: rgba(237, 229, 221, 0.20);
+  --color-bg:            #15181C;
+  --color-bg-elevated:   #1D2127;
+  --color-bg-sunken:     #101317;
+  --color-fg:            #E6E7E4;
+  --color-fg-muted:      #A3A8AD;
+  --color-fg-subtle:     #70767D;
+  --color-border:        rgba(230,231,228,0.12);
+  --color-border-strong: rgba(230,231,228,0.22);
 
   /* Accent shifted +20% luminosity para readability em dark */
-  --color-accent:        var(--itau-orange-3);
+  --color-accent:        var(--itau-orange);
   --color-accent-hover:  var(--itau-orange-2);
-  --color-accent-fg:     #14110d;
-  --color-accent-dim:    rgba(250, 159, 9, 0.10);
+  --color-accent-fg:     #15181C;
+  --color-accent-dim:    rgba(255,98,0,0.12);
 
   --color-info-dim:      rgba(59, 133, 250, 0.12);
   --color-success:       #8fcc5a;
@@ -205,9 +228,9 @@
   --color-danger-dim:    rgba(248, 113, 113, 0.10);
 
   /* Glow mais saturado no dark (preto absorve luz, glow precisa empurrar) */
-  --glow-warm:    radial-gradient(ellipse 80% 60% at 80% 0%, rgba(250, 159, 9, 0.18) 0%, transparent 55%);
+  --glow-warm:    radial-gradient(ellipse 80% 60% at 80% 0%, rgba(255, 98, 0, 0.18) 0%, transparent 55%);
   --glow-cool:    radial-gradient(ellipse 70% 50% at 20% 100%, rgba(59, 133, 250, 0.14) 0%, transparent 55%);
-  --glow-hero:    radial-gradient(ellipse 90% 70% at 50% 0%, rgba(250, 159, 9, 0.22) 0%, transparent 50%);
+  --glow-hero:    radial-gradient(ellipse 90% 70% at 50% 0%, rgba(255, 98, 0, 0.22) 0%, transparent 50%);
   --vignette:     radial-gradient(ellipse 120% 80% at 50% 50%, transparent 50%, rgba(0, 0, 0, 0.30) 100%);
 
   --syntax-string:   #4ade80;
@@ -221,8 +244,29 @@
   --inset-sm:  inset 0 1px 3px rgba(0,0,0,0.4);
   --inset:     inset 0 2px 8px rgba(0,0,0,0.5);
 
-  --glow-accent-sm: 0 0 0 3px rgba(250, 159, 9, 0.20);
-  --glow-accent:    0 8px 32px rgba(250, 159, 9, 0.30);
+  --glow-accent-sm: 0 0 0 3px rgba(255, 98, 0, 0.20);
+  --glow-accent:    0 8px 32px rgba(255, 98, 0, 0.30);
+
+  /* ─── camada de cor gerada (gen_temas.py) ─── */
+  --color-accent-text: var(--itau-orange);
+  --color-secondary: #6AA7F4;
+  --color-secondary-dim: rgba(106,167,244,0.12);
+  --cat-1: #FC8453;
+  --cat-2: #5CA3FD;
+  --cat-3: #6EE8E1;
+  --cat-4: #F0C551;
+  --cat-5: #67A559;
+  --cat-6: #6782CE;
+  --seq-1: #562A19;
+  --seq-2: #893F21;
+  --seq-3: #C15627;
+  --seq-4: #F77036;
+  --seq-5: #FDAE90;
+  --div-1: #F3743F;
+  --div-2: #A55F44;
+  --div-3: #646A70;
+  --div-4: #5B82B5;
+  --div-5: #6FADFD;
 }
 
 /* ─── Reset / base ───────────────────────────────────────────────── */
@@ -245,6 +289,9 @@ body {
   outline-offset: 3px;
   border-radius: var(--radius-sm);
 }
+
+/* ─── Assinatura de seleção (marca, por tema) ────────────────────────── */
+::selection { background: var(--color-accent); color: var(--color-accent-fg); }
 
 /* ─── Headings ───────────────────────────────────────────────────── */
 h1, h2, h3, h4 {
@@ -278,7 +325,9 @@ p { margin: 0 0 var(--space-4); max-width: 65ch; color: var(--color-fg); }
   font-weight: 400;
   max-width: 60ch;
 }
-a { color: var(--color-accent); text-decoration: none; }
+/* link usa accent-text (laranja escurecida p/ AA em canvas claro); cai p/ accent
+   quando o tema nao define accent-text (ex.: itau-base usado direto). */
+a { color: var(--color-accent-text, var(--color-accent)); text-decoration: none; }
 a:hover { color: var(--color-accent-hover); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1.5px; }
 strong { font-weight: 700; color: var(--color-fg); }
 
@@ -517,6 +566,17 @@ li::marker { color: var(--color-fg-subtle); }
      mais [data-reveal]{opacity:0}; esta linha é defensiva: garante que QUALQUER
      reveal colado fique visível e sem transform sob reduced-motion. */
   [data-reveal] { opacity: 1; transform: none; transition-delay: 0s; }
+}
+
+/* ─── [MARCA] Alto contraste do SO (Windows forced-colors) ──────────────
+   Muito usado em banco/governo. Deixa o SO controlar cores e garante que
+   superfícies e foco continuem visíveis (bordas via system colors). */
+@media (forced-colors: active) {
+  .tier-hero, .tier-default, .tier-recessed, .card, .toggle, .code, .callout {
+    border: 1px solid CanvasText;
+  }
+  .tier-hero { border-top-width: 2px; }
+  :focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
 }
 
 /* ─── [MARCA] Paleta secundária em OKLCH ─────────────────────────────
