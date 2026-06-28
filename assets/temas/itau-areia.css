@@ -1,6 +1,6 @@
 /*
- * slideless — tema itau-laranja — canvas laranja #FF6200 (varejo/energético; texto preto AA 6.99)
- * Gerado de itau-cream (base provada); só os tokens de canvas (bg/fg/border/accent) mudam.
+ * slideless — tema itau-areia — canvas light quente oat/papel #ECE4D5 (quiet-luxury editorial)
+ * Gerado de itau-cream; so os tokens de canvas mudam.
  *
  * O tema é dividido em DUAS CAMADAS, marcadas grupo a grupo:
  *
@@ -40,9 +40,9 @@
      Cor é INFORMAÇÃO, não decoração (anti-pattern C14): cada cor só entra
      com papel declarado no documento. Regime cromático (bicromático /
      duotone / polícromo mapeado) é decisão do parti.                     */
-  --color-accent:        #1A1208;    /* 1. brand accent       */
-  --color-accent-dim:    rgba(26,18,8,0.08);
-  --color-accent-fg:     var(--itau-orange);
+  --color-accent:        var(--itau-orange);    /* 1. brand accent       */
+  --color-accent-dim:    rgba(255,98,0,0.08);
+  --color-accent-fg:     #ffffff;
 
   --color-info:          var(--itau-blue-3);    /* 2. info/dados         */
   --color-info-dim:      rgba(59, 133, 250, 0.08);
@@ -68,15 +68,15 @@
   --color-danger-dim:    rgba(185, 28, 28, 0.08);
 
   /* ─── [MARCA] Background + foreground (light) ────────────────────── */
-  --color-bg:            var(--itau-orange);   /* cream warm (não branco puro)    */
-  --color-bg-elevated:   #FFFFFF;
-  --color-bg-sunken:     #E85800;
-  --color-fg:            #1A1208;   /* warm dark (não preto puro)      */
-  --color-fg-muted:      #4A3520;
-  --color-fg-subtle:     #6B5236;
-  --color-border:        rgba(26,18,8,0.18);
-  --color-border-strong: rgba(26,18,8,0.32);
-  --color-accent-hover:  #000000;
+  --color-bg:            #ECE4D5;   /* cream warm (não branco puro)    */
+  --color-bg-elevated:   #F6F1E7;
+  --color-bg-sunken:     #E0D6C4;
+  --color-fg:            #2A2620;   /* warm dark (não preto puro)      */
+  --color-fg-muted:      #6E6356;
+  --color-fg-subtle:     #928678;
+  --color-border:        rgba(42,38,32,0.12);
+  --color-border-strong: rgba(42,38,32,0.20);
+  --color-accent-hover:  var(--itau-orange-2);
 
   /* ─── [DIREÇÃO] Glow radial — OPÇÃO do cardápio de superfície ──────
      v4: glow NUNCA é obrigatório (flat é legítimo). Usar SÓ se o parti
@@ -175,20 +175,20 @@
 /* ─── Dark theme override ───────────────────────────────────────────── */
 [data-theme="dark"] {
   /* Backgrounds em preto quente Itaú (NÃO preto puro) */
-  --color-bg:            #241200;
-  --color-bg-elevated:   #3D1F00;
-  --color-bg-sunken:     #170B00;
-  --color-fg:            #FFEAD6;
-  --color-fg-muted:      #D6B89C;
-  --color-fg-subtle:     #9C8068;
-  --color-border:        rgba(255,234,214,0.14);
-  --color-border-strong: rgba(255,234,214,0.24);
+  --color-bg:            #1F1B16;
+  --color-bg-elevated:   #2A2419;
+  --color-bg-sunken:     #15120D;
+  --color-fg:            #EFE7D8;
+  --color-fg-muted:      #C0B4A0;
+  --color-fg-subtle:     #8A7E6C;
+  --color-border:        rgba(239,231,216,0.12);
+  --color-border-strong: rgba(239,231,216,0.22);
 
   /* Accent shifted +20% luminosity para readability em dark */
   --color-accent:        var(--itau-orange-3);
   --color-accent-hover:  var(--itau-orange);
-  --color-accent-fg:     #241200;
-  --color-accent-dim:    rgba(250,159,9,0.14);
+  --color-accent-fg:     #1F1B16;
+  --color-accent-dim:    rgba(250,159,9,0.12);
 
   --color-info-dim:      rgba(59, 133, 250, 0.12);
   --color-success:       #8fcc5a;

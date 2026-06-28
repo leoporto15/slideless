@@ -6,10 +6,10 @@ Sistema de cor da marca (Guia de Marca Itaú, Dez 2023, V1). São **6 temas itau
 |---|---|---|
 | **itau-padrao** *(default; alias `itau`)* | branco + cool gray (p.74-75) | institucional padrão |
 | **itau-cream** | cream `#faf7f5` + preto quente | leitura editorial cálida (fora da base fria) |
-| **itau-laranja** | laranja `#FF6200` (texto preto, AA 6.99) | varejo/energético (p.20) |
+| **itau-grafite** | carvão/espresso `#1E1C1A` (dark quente) | soft dark premium — deck/keynote, fácil no olho |
 | **itau-navy** | navy `#000D3C` + laranja | alta renda/Personnalité (p.20) |
 | **itau-preto** | preto `#000000` + laranja | private/cinematográfico (p.20) |
-| **itau-verde** | verde profundo `#0A3B00` + laranja/lime | ESG/impacto (p.84, p.10) |
+| **itau-areia** | oat/papel `#ECE4D5` (quiet-luxury) | report/handbook editorial quente |
 
 Cada tema é um arquivo completo em `assets/temas/<tema>.css`, gerado da base provada **`itau-cream.css`** trocando só os tokens de canvas (bg/fg/border/accent) — todos compartilham a mesma estrutura/tokens. O `scaffold.py` injeta o tema escolhido.
 

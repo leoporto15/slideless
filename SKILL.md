@@ -1,6 +1,6 @@
 ---
 name: slideless
-description: Substitui PowerPoint por documentos web HTML single-file (CSS+JS inline, portátil, dark mode nativo, WCAG AA). Seis modelos: handbook (sidebar+TOC tipo GitLab), hub (cards categorizáveis), scrollytelling (narrativa scroll-triggered), site (SPA hash routing), deck (slides com keyboard nav) e report (relatório editorial denso, PDF-friendly). 7 temas (família itau, laranja #FF6200 — padrao/cream/laranja/navy/preto/verde — + neutro white-label; registro em assets/temas/temas.json). Use quando pedir manual, handbook, portal/hub, scrollytelling, microsite, pitch/all-hands, ou relatório executivo PDF.
+description: Substitui PowerPoint por documentos web HTML single-file (CSS+JS inline, portátil, dark mode nativo, WCAG AA). Seis modelos: handbook (sidebar+TOC tipo GitLab), hub (cards categorizáveis), scrollytelling (narrativa scroll-triggered), site (SPA hash routing), deck (slides com keyboard nav) e report (relatório editorial denso, PDF-friendly). 7 temas (família itau, laranja #FF6200 — padrao/cream/navy/preto/grafite/areia — + neutro white-label; registro em assets/temas/temas.json). Use quando pedir manual, handbook, portal/hub, scrollytelling, microsite, pitch/all-hands, ou relatório executivo PDF.
 ---
 
 # slideless
@@ -73,7 +73,7 @@ A skill tem **um único comando universal**: `/slideless`. O usuário escreve o 
 
 1. **Modelo** — se ambíguo, consulte [decisao-modelo.md](references/decisao-modelo.md) e pergunte.
 2. **Conteúdo real** — texto, MD, PPT, dados. Sem conteúdo, aplique [protocolo-sem-conteudo.md](references/protocolo-sem-conteudo.md).
-3. **Tema** (7 em `assets/temas/temas.json`: `itau-padrao` default + cream/laranja/navy/preto/verde + `neutro`).
+3. **Tema** (7 em `assets/temas/temas.json`: `itau-padrao` default + cream/navy/preto/grafite/areia + `neutro`).
 4. **Escopo** — quantas seções/cards/slides/views aproximadamente.
 
 ---
