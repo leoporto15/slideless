@@ -1,5 +1,5 @@
-/* slideless — tema itau-grafite — dark quente — carvao/espresso #1E1C1A.
-   Gerado de itau-base.css; accent laranja (#FF6200) no light E dark. NAO editar a mao: regenerar. */
+/* slideless — tema itau-grafite. Gerado por gen_temas.py de itau-base.css.
+   NAO editar a mao: rode `python scripts/gen_temas.py`. */
 /*
  * slideless — tema itau v4 (duas camadas)
  *
@@ -46,10 +46,10 @@
   --color-accent-fg:     #1E1C1A;
 
   --color-info:          var(--itau-blue-3);    /* 2. info/dados         */
-  --color-info-dim:      rgba(59, 133, 250, 0.08);
+  --color-info-dim:      rgba(59, 133, 250, 0.12);
 
-  --color-success:       #3f6f1f;               /* 3. sucesso/positivo   */
-  --color-success-dim:   rgba(63, 111, 31, 0.08);
+  --color-success:       #8fcc5a;               /* 3. sucesso/positivo   */
+  --color-success-dim:   rgba(143, 204, 90, 0.10);
 
   /* v4: --color-sage FUNDIDO com --color-success — eram o mesmo lime do
      Tailwind (lime-600 vs lime-700), duas cores fingindo ser duas dimensões.
@@ -57,16 +57,16 @@
   --color-sage:          var(--color-success);
   --color-sage-dim:      var(--color-success-dim);
 
-  --color-teal:          #0f766e;               /* 5. técnico/analítico  */
-  --color-teal-dim:      rgba(15, 118, 110, 0.08);
+  --color-teal:          #6fd0c0;               /* 5. técnico/analítico  */
+  --color-teal-dim:      rgba(111, 208, 192, 0.10);
 
-  --color-plum:          #9f1239;               /* 6. crítico/atenção    */
-  --color-plum-dim:      rgba(159, 18, 57, 0.08);
+  --color-plum:          #e8889c;               /* 6. crítico/atenção    */
+  --color-plum-dim:      rgba(232, 136, 156, 0.10);
 
   --color-warn:          var(--itau-yellow);
   --color-warn-dim:      rgba(251, 195, 5, 0.12);
-  --color-danger:        #b91c1c;
-  --color-danger-dim:    rgba(185, 28, 28, 0.08);
+  --color-danger:        #f87171;
+  --color-danger-dim:    rgba(248, 113, 113, 0.10);
 
   /* ─── [MARCA] Background + foreground (light) ────────────────────── */
   --color-bg:            #1E1C1A;   /* cream warm (não branco puro)    */
@@ -84,12 +84,12 @@
      escolher `glow-localizado`: máx 1 por documento, atrás de UM elemento,
      nunca wallpaper incondicional em body::before (anti-pattern C8).      */
   --glow-warm:    radial-gradient(ellipse 80% 60% at 80% 0%, rgba(255, 98, 0, 0.10) 0%, transparent 55%);
-  --glow-cool:    radial-gradient(ellipse 70% 50% at 20% 100%, rgba(59, 133, 250, 0.08) 0%, transparent 55%);
+  --glow-cool:    radial-gradient(ellipse 70% 50% at 20% 100%, rgba(59, 133, 250, 0.12) 0%, transparent 55%);
   --glow-hero:    radial-gradient(ellipse 90% 70% at 50% 0%, rgba(255, 98, 0, 0.14) 0%, transparent 50%);
   --vignette:     radial-gradient(ellipse 120% 80% at 50% 50%, transparent 50%, rgba(41, 32, 23, 0.04) 100%);
 
   /* ─── [MARCA] Syntax highlight (light) ───────────────────────────── */
-  --syntax-string:   #16a34a;
+  --syntax-string:   #4ade80;
   --syntax-keyword:  var(--itau-orange);
   --syntax-function: var(--itau-blue-3);
   --syntax-comment:  var(--color-fg-subtle);
@@ -171,6 +171,27 @@
   --duration-slide:   650ms;
   --duration-fade:    750ms;
   --duration-hero:    900ms;
+
+  /* ─── camada de cor gerada (gen_temas.py) ─── */
+  --color-accent-text: var(--itau-orange);
+  --color-secondary: #D8953D;
+  --color-secondary-dim: rgba(216,149,61,0.12);
+  --cat-1: #FC8453;
+  --cat-2: #5CA3FD;
+  --cat-3: #6EE8E1;
+  --cat-4: #F0C551;
+  --cat-5: #67A559;
+  --cat-6: #6782CE;
+  --seq-1: #562A19;
+  --seq-2: #893F21;
+  --seq-3: #C15627;
+  --seq-4: #F77036;
+  --seq-5: #FDAE90;
+  --div-1: #F3743F;
+  --div-2: #A55F44;
+  --div-3: #646A70;
+  --div-4: #5B82B5;
+  --div-5: #6FADFD;
 }
 
 /* ─── Dark theme override ───────────────────────────────────────────── */
@@ -225,6 +246,27 @@
 
   --glow-accent-sm: 0 0 0 3px rgba(255, 98, 0, 0.20);
   --glow-accent:    0 8px 32px rgba(255, 98, 0, 0.30);
+
+  /* ─── camada de cor gerada (gen_temas.py) ─── */
+  --color-accent-text: var(--itau-orange);
+  --color-secondary: #D8953D;
+  --color-secondary-dim: rgba(216,149,61,0.12);
+  --cat-1: #FC8453;
+  --cat-2: #5CA3FD;
+  --cat-3: #6EE8E1;
+  --cat-4: #F0C551;
+  --cat-5: #67A559;
+  --cat-6: #6782CE;
+  --seq-1: #562A19;
+  --seq-2: #893F21;
+  --seq-3: #C15627;
+  --seq-4: #F77036;
+  --seq-5: #FDAE90;
+  --div-1: #F3743F;
+  --div-2: #A55F44;
+  --div-3: #646A70;
+  --div-4: #5B82B5;
+  --div-5: #6FADFD;
 }
 
 /* ─── Reset / base ───────────────────────────────────────────────── */
@@ -247,6 +289,9 @@ body {
   outline-offset: 3px;
   border-radius: var(--radius-sm);
 }
+
+/* ─── Assinatura de seleção (marca, por tema) ────────────────────────── */
+::selection { background: var(--color-accent); color: var(--color-accent-fg); }
 
 /* ─── Headings ───────────────────────────────────────────────────── */
 h1, h2, h3, h4 {
@@ -280,7 +325,9 @@ p { margin: 0 0 var(--space-4); max-width: 65ch; color: var(--color-fg); }
   font-weight: 400;
   max-width: 60ch;
 }
-a { color: var(--color-accent); text-decoration: none; }
+/* link usa accent-text (laranja escurecida p/ AA em canvas claro); cai p/ accent
+   quando o tema nao define accent-text (ex.: itau-base usado direto). */
+a { color: var(--color-accent-text, var(--color-accent)); text-decoration: none; }
 a:hover { color: var(--color-accent-hover); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1.5px; }
 strong { font-weight: 700; color: var(--color-fg); }
 
@@ -521,6 +568,17 @@ li::marker { color: var(--color-fg-subtle); }
   [data-reveal] { opacity: 1; transform: none; transition-delay: 0s; }
 }
 
+/* ─── [MARCA] Alto contraste do SO (Windows forced-colors) ──────────────
+   Muito usado em banco/governo. Deixa o SO controlar cores e garante que
+   superfícies e foco continuem visíveis (bordas via system colors). */
+@media (forced-colors: active) {
+  .tier-hero, .tier-default, .tier-recessed, .card, .toggle, .code, .callout {
+    border: 1px solid CanvasText;
+  }
+  .tier-hero { border-top-width: 2px; }
+  :focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+}
+
 /* ─── [MARCA] Paleta secundária em OKLCH ─────────────────────────────
    Redefinição perceptualmente uniforme, derivada do matiz do laranja Itaú
    (#FF6200 ≈ oklch(68% 0.21 41)): mesma Lightness percebida entre as cores
@@ -528,14 +586,14 @@ li::marker { color: var(--color-fg-subtle); }
    Os hex acima permanecem como fallback para browsers sem OKLCH.          */
 @supports (color: oklch(60% 0.1 50)) {
   :root {
-    --color-success:     oklch(52% 0.11 140);
-    --color-success-dim: oklch(52% 0.11 140 / 0.08);
-    --color-teal:        oklch(52% 0.08 200);
-    --color-teal-dim:    oklch(52% 0.08 200 / 0.08);
-    --color-plum:        oklch(46% 0.12 355);
-    --color-plum-dim:    oklch(46% 0.12 355 / 0.08);
-    --color-danger:      oklch(50% 0.16 27);
-    --color-danger-dim:  oklch(50% 0.16 27 / 0.08);
+    --color-success:     oklch(76% 0.13 140);
+    --color-success-dim: oklch(76% 0.13 140 / 0.10);
+    --color-teal:        oklch(78% 0.09 195);
+    --color-teal-dim:    oklch(78% 0.09 195 / 0.10);
+    --color-plum:        oklch(74% 0.11 0);
+    --color-plum-dim:    oklch(74% 0.11 0 / 0.10);
+    --color-danger:      oklch(70% 0.15 25);
+    --color-danger-dim:  oklch(70% 0.15 25 / 0.10);
   }
   [data-theme="dark"] {
     --color-success:     oklch(76% 0.13 140);

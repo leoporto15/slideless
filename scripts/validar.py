@@ -1094,6 +1094,40 @@ def check_brand_safety(html: str, report: Report) -> None:
                 f"(Guia de Marca p.88; também banido pelo anti-slop)."))
 
 
+def check_theme_contrast(html: str, report: Report) -> None:
+    """A11y (WCAG AA): contraste dos tokens de TEXTO e de SÉRIE vs o canvas.
+    Só roda em documentos do novo sistema de cor (que definem --cat-1). Hex-only
+    (var()/rgba são pulados). WARN — o gate DURO dos temas é `gen_temas.py --verify`."""
+    if "--cat-1" not in html:
+        return
+    try:
+        from colorkit import contrast
+    except Exception:
+        return
+    HEX = re.compile(r"^#[0-9a-fA-F]{6}$")
+
+    def tokens(scope_re):
+        m = re.search(scope_re + r"\s*\{([^}]*)\}", html)
+        return dict(re.findall(r"(--[\w-]+)\s*:\s*([^;]+);", m.group(1))) if m else {}
+
+    for label, scope_re in (("light", r":root"), ("dark", r'\[data-theme="dark"\]')):
+        t = {k: v.strip() for k, v in tokens(scope_re).items()}
+        bg = t.get("--color-bg", "")
+        if not HEX.match(bg):
+            continue
+        targets = [("--color-fg", 4.5), ("--color-fg-muted", 4.5), ("--color-fg-subtle", 3.0),
+                   ("--color-accent-text", 4.5)] + [(f"--cat-{i}", 3.0) for i in range(1, 7)]
+        for name, thr in targets:
+            v = t.get(name, "")
+            if not HEX.match(v):
+                continue
+            cr = contrast(v, bg)
+            if cr < thr:
+                report.issues.append(Issue(SEVERITY_WARN, "A-contraste",
+                    f"[{label}] {name}={v} sobre --color-bg={bg} = {cr:.2f}:1 "
+                    f"(< {thr} WCAG AA) — texto/série pouco legível."))
+
+
 # ─── Orquestração ────────────────────────────────────────────────────────
 
 
@@ -1125,6 +1159,7 @@ def validate(html_path: Path, strict: bool = False) -> Report:
     check_kit_vars(html, report)
     check_nested_script(html, report)
     check_brand_safety(html, report)        # cores de concorrente (vermelho/roxo) — Guia p.88
+    check_theme_contrast(html, report)      # A11y: contraste texto/série vs canvas (novo sistema de cor)
 
     # Categoria P — Pasteurização / AI-tells (v4)
     run_p_checks(html, report)

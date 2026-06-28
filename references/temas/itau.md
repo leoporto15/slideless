@@ -11,11 +11,39 @@ Sistema de cor da marca (Guia de Marca Itaú, Dez 2023, V1). São **6 temas itau
 | **itau-areia** | oat/papel `#ECE4D5` (quiet-luxury) | report/handbook editorial quente |
 | **itau-bruma** | azul-acinzentado `#E7ECF2` (light frio) | calmo/arquitetônico — deck/site/hub |
 
-Cada tema é um arquivo completo em `assets/temas/<tema>.css`, gerado da base provada **`itau-base.css`** trocando só os tokens de canvas (bg/fg/border/accent) — todos compartilham a mesma estrutura/tokens. O `scaffold.py` injeta o tema escolhido.
+Cada tema é um arquivo completo em `assets/temas/<tema>.css`, **gerado por `python scripts/gen_temas.py`** a partir da base provada **`itau-base.css`**: troca o canvas (bg/fg/border/accent) e anexa as camadas de cor derivadas em OKLCH (accent-text, secondary, cat/seq/div). Todos compartilham a mesma estrutura. Gate: `gen_temas.py --verify` (contraste AA + daltonismo). O `scaffold.py` injeta o tema escolhido.
 
 **Brand-safety (Guia p.88):** vermelho e roxo = concorrentes (proibidos como identidade); laranja inegociável; ≤3 cores complementares por peça; sem gradiente. `validar.py` checa via `B-brand`.
 
 **CSS base (estrutura/tokens, vale p/ os 6):** [../../assets/temas/itau-base.css](../../assets/temas/itau-base.css) — **base estrutural, não é tema selecionável** (não está no `temas.json`).
+
+## Mapa de uso (storytelling de cor)
+
+Os 7 temas formam **pares de temperatura** — não 7 cores soltas. Escolha pelo *tom* da mensagem e pela audiência:
+
+| Tema | Tom / quando usar | Audiência típica | Luz | Par cromático (secundário) |
+|---|---|---|---|---|
+| **padrao** | institucional neutro — o default seguro | qualquer área | claro | azul-tinta |
+| **areia** | editorial quente, quiet-luxury — leitura longa | report/handbook | claro (quente) | azul-tinta |
+| **bruma** | calmo, arejado, arquitetônico | deck/site/hub leve | claro (frio) | teal |
+| **navy** | premium sóbrio, autoridade | board, alta renda, Personnalité | escuro | **dourado/champagne** |
+| **grafite** | dark quente, premium acolhedor | keynote/deck à noite | escuro (quente) | **âmbar** |
+| **aco** | dark frio, técnico/produto | produto, dados, engenharia | escuro (frio) | **ciano** |
+| **neutro** | white-label, fora do Itaú | externo, co-branded | claro | (dourado) |
+
+Eixos: **warm** = areia (light) / grafite (dark) · **cool** = bruma (light) / aco (dark) · **oficial** = padrao · **premium** = navy · **white-label** = neutro.
+
+## Camadas de cor geradas (OKLCH)
+
+Além do canvas, cada tema define (gerado, calibrado por canvas, gated por `--verify`):
+
+- **`--color-accent-text`** — laranja escurecida p/ **texto pequeno** em canvas claro (passa AA 4.5; o `#FF6200` puro como texto miúdo sobre claro fica ~2.5). Em canvas escuro = a laranja da marca. A laranja vibrante segue intacta em superfície/headline/ícone.
+- **`--color-secondary` (+`-dim`)** — o **par cromático** do tema (tabela acima). Papel = dado/realce secundário, **subordinado ao laranja** (nunca em CTA/título).
+- **`--cat-1..6` / `--seq-1..5` / `--div-1..5`** — paleta de **dados** (gráficos): categórica (cat-1 = laranja-tese), sequencial (magnitude), divergente (laranja↔azul, CVD-safe). Detalhes e uso: [../css-patterns.md](../css-patterns.md) §5.0c. **Nunca** usar as cores semânticas (`info/success/teal/plum`) como série.
+- **`::selection`** na marca + **`@media (forced-colors)`** (alto contraste do SO).
+- **Canvas invertido** (navy/grafite/aco): o `:root` herda a paleta **semântica dark** (senão success/teal/plum ficariam ilegíveis sobre o fundo escuro).
+
+Matemática de cor em [../../scripts/colorkit.py](../../scripts/colorkit.py); geração em [../../scripts/gen_temas.py](../../scripts/gen_temas.py).
 
 > **v4: cada tema tem DUAS CAMADAS** — **[MARCA]** inviolável (copiar) + **[DIREÇÃO]** composta conforme o parti. A seção "Identidade" abaixo descreve a base cálida (itau-base); o `itau-padrao` (default) usa a base fria oficial (branco + cool gray).
 
