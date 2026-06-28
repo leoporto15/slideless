@@ -561,7 +561,7 @@ Cada `<section>` pode ter background próprio, animado independentemente do cont
 
 ### Slide-num colidindo com título (REGRA CANÔNICA)
 
-**NUNCA posicionar `.slide-num` no canto top-left.** Esse é o canto onde kicker e título vivem (slides com `justify-content: center` podem ter conteúdo alto que overflowa para a área superior, sobrepondo o slide-num). Tentativas com `backdrop-filter`, `z-index` alto e background sólido falham porque o background (`--color-bg-elevated`) costuma ser quase idêntico ao bg do slide no tema itaú (ambos cream).
+**NUNCA posicionar `.slide-num` no canto top-left.** Esse é o canto onde kicker e título vivem (slides com `justify-content: center` podem ter conteúdo alto que overflowa para a área superior, sobrepondo o slide-num). Tentativas com `backdrop-filter`, `z-index` alto e background sólido falham porque o background (`--color-bg-elevated`) costuma ser quase idêntico ao bg do slide em vários temas itaú (bg e bg-elevated próximos).
 
 **Posição canônica:** `bottom: 18px; right: 28px` — page-number style, sem badge nem fundo, só texto monospace com `opacity: 0.55`. O HUD fixo no bottom-center não conflita. Conteúdo do slide nunca atinge o canto inferior-direito em layouts centered.
 

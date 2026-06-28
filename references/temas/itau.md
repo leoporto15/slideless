@@ -1,16 +1,57 @@
-# Tema `itau`
+# Temas `itau` — família (6 registros oficiais)
 
-Tema corporativo Itaú. Default da skill quando o usuário não especificar tema.
+Sistema de cor da marca (Guia de Marca Itaú, Dez 2023, V1). São **6 temas itau**, todos com a **laranja `#FF6200` como fio condutor**, + o `neutro` (white-label). Registro/fonte única: [../../assets/temas/temas.json](../../assets/temas/temas.json).
 
-**CSS:** [../../assets/temas/itau.css](../../assets/temas/itau.css).
+| Tema | Canvas | Uso (guia) |
+|---|---|---|
+| **itau-padrao** *(default; alias `itau`)* | branco + cool gray (p.74-75) | institucional padrão |
+| **itau-navy** | navy `#000D3C` + laranja | alta renda/Personnalité (p.20) |
+| **itau-grafite** | carvão/espresso `#1E1C1A` (dark quente) | soft dark premium — deck/keynote, fácil no olho |
+| **itau-aco** | aço/grafite frio `#1E242C` (dark frio) | dim mode contemporâneo — deck/site/produto |
+| **itau-areia** | oat/papel `#ECE4D5` (quiet-luxury) | report/handbook editorial quente |
+| **itau-bruma** | azul-acinzentado `#E7ECF2` (light frio) | calmo/arquitetônico — deck/site/hub |
 
-> **v4: o tema tem DUAS CAMADAS.** Ver "Duas camadas" abaixo — copiar a camada **[MARCA]** sempre, **compor** a camada **[DIREÇÃO]** conforme o parti. Nunca mais "copiar inteiro e pronto".
+Cada tema é um arquivo completo em `assets/temas/<tema>.css`, **gerado por `python scripts/gen_temas.py`** a partir da base provada **`itau-base.css`**: troca o canvas (bg/fg/border/accent) e anexa as camadas de cor derivadas em OKLCH (accent-text, secondary, cat/seq/div). Todos compartilham a mesma estrutura. Gate: `gen_temas.py --verify` (contraste AA + daltonismo). O `scaffold.py` injeta o tema escolhido.
+
+**Brand-safety (Guia p.88):** vermelho e roxo = concorrentes (proibidos como identidade); laranja inegociável; ≤3 cores complementares por peça; sem gradiente. `validar.py` checa via `B-brand`.
+
+**CSS base (estrutura/tokens, vale p/ os 6):** [../../assets/temas/itau-base.css](../../assets/temas/itau-base.css) — **base estrutural, não é tema selecionável** (não está no `temas.json`).
+
+## Mapa de uso (storytelling de cor)
+
+Os 7 temas formam **pares de temperatura** — não 7 cores soltas. Escolha pelo *tom* da mensagem e pela audiência:
+
+| Tema | Tom / quando usar | Audiência típica | Luz | Par cromático (secundário) |
+|---|---|---|---|---|
+| **padrao** | institucional neutro — o default seguro | qualquer área | claro | azul-tinta |
+| **areia** | editorial quente, quiet-luxury — leitura longa | report/handbook | claro (quente) | azul-tinta |
+| **bruma** | calmo, arejado, arquitetônico | deck/site/hub leve | claro (frio) | teal |
+| **navy** | premium sóbrio, autoridade | board, alta renda, Personnalité | escuro | **dourado/champagne** |
+| **grafite** | dark quente, premium acolhedor | keynote/deck à noite | escuro (quente) | **âmbar** |
+| **aco** | dark frio, técnico/produto | produto, dados, engenharia | escuro (frio) | **ciano** |
+| **neutro** | white-label, fora do Itaú | externo, co-branded | claro | (dourado) |
+
+Eixos: **warm** = areia (light) / grafite (dark) · **cool** = bruma (light) / aco (dark) · **oficial** = padrao · **premium** = navy · **white-label** = neutro.
+
+## Camadas de cor geradas (OKLCH)
+
+Além do canvas, cada tema define (gerado, calibrado por canvas, gated por `--verify`):
+
+- **`--color-accent-text`** — laranja escurecida p/ **texto pequeno** em canvas claro (passa AA 4.5; o `#FF6200` puro como texto miúdo sobre claro fica ~2.5). Em canvas escuro = a laranja da marca. A laranja vibrante segue intacta em superfície/headline/ícone.
+- **`--color-secondary` (+`-dim`)** — o **par cromático** do tema (tabela acima). Papel = dado/realce secundário, **subordinado ao laranja** (nunca em CTA/título).
+- **`--cat-1..6` / `--seq-1..5` / `--div-1..5`** — paleta de **dados** (gráficos): categórica (cat-1 = laranja-tese), sequencial (magnitude), divergente (laranja↔azul, CVD-safe). Detalhes e uso: [../css-patterns.md](../css-patterns.md) §5.0c. **Nunca** usar as cores semânticas (`info/success/teal/plum`) como série.
+- **`::selection`** na marca + **`@media (forced-colors)`** (alto contraste do SO).
+- **Canvas invertido** (navy/grafite/aco): o `:root` herda a paleta **semântica dark** (senão success/teal/plum ficariam ilegíveis sobre o fundo escuro).
+
+Matemática de cor em [../../scripts/colorkit.py](../../scripts/colorkit.py); geração em [../../scripts/gen_temas.py](../../scripts/gen_temas.py).
+
+> **v4: cada tema tem DUAS CAMADAS** — **[MARCA]** inviolável (copiar) + **[DIREÇÃO]** composta conforme o parti. A seção "Identidade" abaixo descreve a base cálida (itau-base); o `itau-padrao` (default) usa a base fria oficial (branco + cool gray).
 
 ---
 
 ## Identidade
 
-- **Accent primário:** laranja oficial `#FF6200` no light, laranja luminoso `#FA9F09` no dark.
+- **Accent primário:** laranja oficial `#FF6200` no light **e no dark** (mesma laranja — nunca âmbar/amarelo `#FA9F09` como accent; isso lia "amarelo" no dark e foi corrigido).
 - **Fontes:** dentro da rede Itaú, `Itau Display` (headings) + `Itau Text` (corpo) prevalecem quando disponíveis. **Fora da rede, o fallback é o kit tipográfico do documento** (slots `--kit-display` / `--kit-text` / `--kit-mono` de [../type-kits.md](../type-kits.md)), desenhado por kit. **O fallback NUNCA é Inter** — Inter como display é proibido (era o slop de 1ª geração; Fraunces como default era o de 2ª).
 - **Background light:** cream warm `#faf7f5` (não branco puro), elevado `#ffffff`, sunken `#f4f1ec`.
 - **Background dark:** preto quente `#14110d` (NÃO preto puro `#000000`) — bege/marrom escuro, identidade Itaú; elevado `#1c1814`.
@@ -32,11 +73,11 @@ Dois documentos `itau` compartilham **marca**, nunca **fingerprint**.
 
 ## Tokens (resumo)
 
-Definição completa em [../../assets/temas/itau.css](../../assets/temas/itau.css). Tokens-chave:
+Definição completa em [../../assets/temas/itau-base.css](../../assets/temas/itau-base.css). Tokens-chave:
 
 | Token | Light | Dark |
 |---|---|---|
-| `--color-accent` | `#FF6200` | `#FA9F09` |
+| `--color-accent` | `#FF6200` | `#FF6200` |
 | `--color-bg` | `#faf7f5` (cream) | `#14110d` |
 | `--color-bg-elevated` | `#ffffff` | `#1c1814` |
 | `--color-bg-sunken` | `#f4f1ec` | `#221d18` |
@@ -75,7 +116,7 @@ Cor é **informação, não decoração** (anti-pattern C14): cada cor só entra
 
 Toda geração com tema `itau` deve:
 
-1. O tema entra via `scaffold.py` (injeta `assets/temas/itau.css` no marker `SLIDELESS:THEME` — camada `[MARCA]` intacta). **Não regurgitar nem redeclarar o tema** — já está inline no `<style>`. Apenas compor a camada `[DIREÇÃO]` conforme o parti, com edits pequenos se necessário.
+1. O tema entra via `scaffold.py` (injeta `assets/temas/<tema>.css` — o tema escolhido — no marker `SLIDELESS:THEME` — camada `[MARCA]` intacta). **Não regurgitar nem redeclarar o tema** — já está inline no `<style>`. Apenas compor a camada `[DIREÇÃO]` conforme o parti, com edits pequenos se necessário.
 2. Carregar o kit tipográfico do documento via Google Fonts (escolhido em [../type-kits.md](../type-kits.md), decisão do parti — [../direcao-de-arte.md](../direcao-de-arte.md)): `<link>` no slot `SLIDELESS:TYPE-KIT` + bloco `:root` do kit ANTES do tema. Dentro da rede Itaú, `Itau Display`/`Itau Text` prevalecem; o kit é o fallback desenhado fora da rede. **Inter como display é proibido.**
 3. Boot script de tema no `<head>` (ver [../design-system.md](../design-system.md#boot-script)).
 4. Theme toggle no header.

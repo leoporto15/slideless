@@ -1,0 +1,608 @@
+/* slideless — tema itau-areia. Gerado por gen_temas.py de itau-base.css.
+   NAO editar a mao: rode `python scripts/gen_temas.py`. */
+/*
+ * slideless — tema itau v4 (duas camadas)
+ *
+ * O tema é dividido em DUAS CAMADAS, marcadas grupo a grupo:
+ *
+ *  [MARCA — INVIOLÁVEL]  laranja #FF6200, paleta semântica com papéis, bg/fg
+ *                        warm, dark mode, a11y (focus, reduced-motion).
+ *                        Copiar SEMPRE, nunca alterar.
+ *
+ *  [DIREÇÃO — compor conforme o parti]  fontes (slots --kit-*), glows,
+ *                        radius, sombras, easings, affordances de componente.
+ *                        São DEFAULTS NEUTROS — o parti do documento
+ *                        (references/direcao-de-arte.md) decide o que entra,
+ *                        substitui ou renuncia. Motion NÃO mora aqui: vem do
+ *                        perfil declarado, colado como bloco aditivo.
+ *
+ *  [SISTEMA]             escala fluida, espaço, layout — engenharia de
+ *                        viewport/char-limits. Mexer só com razão técnica.
+ *
+ * Mandato v4: "copiar a camada marca; compor a camada direção" —
+ * NUNCA mais "copiar inteiro e pronto". Dois documentos itau compartilham
+ * marca, nunca fingerprint.
+ *
+ * Paleta secundária: hex fallback abaixo + redefinição OKLCH (derivada do
+ * matiz do laranja) no bloco @supports ao final do arquivo.
+ */
+
+:root {
+  /* ─── [MARCA] Cores da marca Itaú (fixas nos dois temas) ─────────── */
+  --itau-orange:     #FF6200;
+  --itau-orange-2:   #F88104;
+  --itau-orange-3:   #FA9F09;
+  --itau-blue-3:     #3B85FA;
+  --itau-yellow:     #FBC305;
+  --itau-warm-black: #14110d;
+
+  /* ─── [MARCA] Paleta semântica multi-dimensional (light) ─────────── */
+  /* Cada uma com `--*` (foreground/contorno) + `--*-dim` (fundo tingido).
+     Cor é INFORMAÇÃO, não decoração (anti-pattern C14): cada cor só entra
+     com papel declarado no documento. Regime cromático (bicromático /
+     duotone / polícromo mapeado) é decisão do parti.                     */
+  --color-accent:        var(--itau-orange);    /* 1. brand accent       */
+  --color-accent-dim:    rgba(255,98,0,0.08);
+  --color-accent-fg:     #1F1B16;
+
+  --color-info:          var(--itau-blue-3);    /* 2. info/dados         */
+  --color-info-dim:      rgba(59, 133, 250, 0.08);
+
+  --color-success:       #3f6f1f;               /* 3. sucesso/positivo   */
+  --color-success-dim:   rgba(63, 111, 31, 0.08);
+
+  /* v4: --color-sage FUNDIDO com --color-success — eram o mesmo lime do
+     Tailwind (lime-600 vs lime-700), duas cores fingindo ser duas dimensões.
+     Alias mantido por compatibilidade com .var-sage em documentos antigos. */
+  --color-sage:          var(--color-success);
+  --color-sage-dim:      var(--color-success-dim);
+
+  --color-teal:          #0f766e;               /* 5. técnico/analítico  */
+  --color-teal-dim:      rgba(15, 118, 110, 0.08);
+
+  --color-plum:          #9f1239;               /* 6. crítico/atenção    */
+  --color-plum-dim:      rgba(159, 18, 57, 0.08);
+
+  --color-warn:          var(--itau-yellow);
+  --color-warn-dim:      rgba(251, 195, 5, 0.12);
+  --color-danger:        #b91c1c;
+  --color-danger-dim:    rgba(185, 28, 28, 0.08);
+
+  /* ─── [MARCA] Background + foreground (light) ────────────────────── */
+  --color-bg:            #ECE4D5;   /* cream warm (não branco puro)    */
+  --color-bg-elevated:   #F6F1E7;
+  --color-bg-sunken:     #E0D6C4;
+  --color-fg:            #2A2620;   /* warm dark (não preto puro)      */
+  --color-fg-muted:      #6E6356;
+  --color-fg-subtle:     #7C7163;
+  --color-border:        rgba(42,38,32,0.12);
+  --color-border-strong: rgba(42,38,32,0.20);
+  --color-accent-hover:  var(--itau-orange-2);
+
+  /* ─── [DIREÇÃO] Glow radial — OPÇÃO do cardápio de superfície ──────
+     v4: glow NUNCA é obrigatório (flat é legítimo). Usar SÓ se o parti
+     escolher `glow-localizado`: máx 1 por documento, atrás de UM elemento,
+     nunca wallpaper incondicional em body::before (anti-pattern C8).      */
+  --glow-warm:    radial-gradient(ellipse 80% 60% at 80% 0%, rgba(255, 98, 0, 0.10) 0%, transparent 55%);
+  --glow-cool:    radial-gradient(ellipse 70% 50% at 20% 100%, rgba(59, 133, 250, 0.08) 0%, transparent 55%);
+  --glow-hero:    radial-gradient(ellipse 90% 70% at 50% 0%, rgba(255, 98, 0, 0.14) 0%, transparent 50%);
+  --vignette:     radial-gradient(ellipse 120% 80% at 50% 50%, transparent 50%, rgba(41, 32, 23, 0.04) 100%);
+
+  /* ─── [MARCA] Syntax highlight (light) ───────────────────────────── */
+  --syntax-string:   #16a34a;
+  --syntax-keyword:  var(--itau-orange);
+  --syntax-function: var(--itau-blue-3);
+  --syntax-comment:  var(--color-fg-subtle);
+
+  /* ─── [DIREÇÃO] Tipografia — slots do kit (type-kits.md) ──────────── */
+  /* v4: o kit tipográfico do documento (references/type-kits.md) define
+     --kit-display/--kit-text/--kit-mono ANTES deste bloco. Itau Display/Text
+     prevalecem dentro da rede; o kit é o fallback desenhado fora dela.
+     Fraunces não é mais o default universal — era o slop de 2ª geração da casa. */
+  --font-text:    'Itau Text', var(--kit-text, 'Inter'), -apple-system, system-ui, sans-serif;
+  --font-display: 'Itau Display', var(--kit-display, Georgia), serif;
+  --font-mono:    var(--kit-mono, 'IBM Plex Mono'), 'SF Mono', Consolas, monospace;
+
+  /* ─── [SISTEMA] Escala fluida (clamp) — vale para TODOS os modelos ── */
+  --size-xs:      clamp(0.75rem, 0.7rem + 0.2vw, 0.875rem);
+  --size-small:   clamp(0.875rem, 0.85rem + 0.15vw, 1rem);
+  --size-body:    clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+  --size-lead:    clamp(1.15rem, 1.05rem + 0.5vw, 1.4rem);
+  --size-h4:      clamp(1rem, 0.95rem + 0.25vw, 1.15rem);
+  --size-h3:      clamp(1.2rem, 1.1rem + 0.5vw, 1.5rem);
+  --size-h2:      clamp(1.6rem, 1.3rem + 1.2vw, 2.25rem);
+  --size-h1:      clamp(2.25rem, 1.8rem + 2vw, 3.5rem);
+
+  /* Deck-only — fluido em VW e VH para nunca crescer além do que cabe.
+     Inclui vh: viewport baixo (914px ou menos) reduz proporcionalmente
+     o tipo gigante, evitando que títulos longos vazem o slide. */
+  --size-display: clamp(2.25rem, 1.4rem + 1.8vw + 1.5vh, 4.25rem);
+  --size-mega:    clamp(2.75rem, 1.6rem + 2.4vw + 2vh, 5.5rem);
+  --size-giga:    clamp(3.5rem, 2rem + 3vw + 3vh, 9rem);
+
+  /* ─── [SISTEMA] Espaço ───────────────────────────────────────────── */
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem;
+  --space-4: 1rem;    --space-5: 1.5rem; --space-6: 2rem;
+  --space-7: 2.5rem;  --space-8: 3rem;   --space-10: 4rem;
+  --space-12: 5rem;   --space-16: 7rem;
+
+  /* ─── [SISTEMA] Layout ───────────────────────────────────────────── */
+  --content-max: 720px;
+  --sidebar-w:   268px;
+  --toc-w:       220px;
+  --header-h:    56px;
+
+  /* ─── [DIREÇÃO] Radius, sombra ───────────────────────────────────────
+     Defaults neutros. Regra v4: máx 2 valores de radius distintos por
+     documento; regime de luz (flat/key-light/hard-print/glow-spot) é
+     decisão do parti — registro impresso usa fio, não sombra.            */
+  --radius-sm: 4px;
+  --radius:    10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  --shadow-xs: 0 1px 2px rgba(41, 32, 23, 0.04);
+  --shadow-sm: 0 2px 4px rgba(41, 32, 23, 0.06), 0 1px 2px rgba(41, 32, 23, 0.04);
+  --shadow:    0 4px 12px rgba(41, 32, 23, 0.08), 0 1px 3px rgba(41, 32, 23, 0.05);
+  --shadow-lg: 0 12px 32px rgba(41, 32, 23, 0.12), 0 4px 12px rgba(41, 32, 23, 0.06);
+  --shadow-xl: 0 24px 64px rgba(41, 32, 23, 0.16), 0 8px 24px rgba(41, 32, 23, 0.08);
+
+  /* Inset para depth recessed */
+  --inset-sm:  inset 0 1px 3px rgba(41, 32, 23, 0.06);
+  --inset:     inset 0 2px 8px rgba(41, 32, 23, 0.08);
+
+  /* Glow accent (focus, hover, hero) */
+  --glow-accent-sm: 0 0 0 3px rgba(255, 98, 0, 0.14);
+  --glow-accent:    0 8px 32px rgba(255, 98, 0, 0.22);
+
+  /* ─── [DIREÇÃO] Easing — vocabulário, não receita ────────────────────
+     v4: o documento usa 2-3 curvas COM PAPEL COMENTADO (entrada / micro /
+     assinatura), definidas pelo perfil de motion do parti. PROIBIDO usar a
+     mesma curva para tudo (anti-pattern C7) e `transition: all`.          */
+  --ease-out:       cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out:    cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-snap:      cubic-bezier(0.2, 0, 0, 1);          /* micro-interação */
+  --ease-spring:    cubic-bezier(0.34, 1.56, 0.64, 1);   /* overshoot */
+  --ease-emphatic:  cubic-bezier(0.16, 1, 0.3, 1);       /* slow start */
+
+  --duration-fast:    150ms;
+  --duration:         250ms;
+  --duration-slow:    400ms;
+  --duration-slide:   650ms;
+  --duration-fade:    750ms;
+  --duration-hero:    900ms;
+
+  /* ─── camada de cor gerada (gen_temas.py) ─── */
+  --color-accent-text: #AA420C;
+  --color-secondary: #1069AB;
+  --color-secondary-dim: rgba(16,105,171,0.12);
+  --cat-1: #D05418;
+  --cat-2: #1762B6;
+  --cat-3: #1A918B;
+  --cat-4: #6A5103;
+  --cat-5: #407D32;
+  --cat-6: #2C4188;
+  --seq-1: #FCD4C5;
+  --seq-2: #EEA285;
+  --seq-3: #DC6E41;
+  --seq-4: #BA490F;
+  --seq-5: #8E3507;
+  --div-1: #BD4C14;
+  --div-2: #E4997B;
+  --div-3: #9FA5AC;
+  --div-4: #7EA7DC;
+  --div-5: #1467C2;
+}
+
+/* ─── Dark theme override ───────────────────────────────────────────── */
+[data-theme="dark"] {
+  /* Backgrounds em preto quente Itaú (NÃO preto puro) */
+  --color-bg:            #1F1B16;
+  --color-bg-elevated:   #2A2419;
+  --color-bg-sunken:     #15120D;
+  --color-fg:            #EFE7D8;
+  --color-fg-muted:      #C0B4A0;
+  --color-fg-subtle:     #8A7E6C;
+  --color-border:        rgba(239,231,216,0.12);
+  --color-border-strong: rgba(239,231,216,0.22);
+
+  /* Accent shifted +20% luminosity para readability em dark */
+  --color-accent:        var(--itau-orange);
+  --color-accent-hover:  var(--itau-orange-2);
+  --color-accent-fg:     #1F1B16;
+  --color-accent-dim:    rgba(255,98,0,0.12);
+
+  --color-info-dim:      rgba(59, 133, 250, 0.12);
+  --color-success:       #8fcc5a;
+  --color-success-dim:   rgba(143, 204, 90, 0.10);
+  /* sage fundido com success (ver :root) */
+  --color-sage:          var(--color-success);
+  --color-sage-dim:      var(--color-success-dim);
+  --color-teal:          #6fd0c0;
+  --color-teal-dim:      rgba(111, 208, 192, 0.10);
+  --color-plum:          #e8889c;
+  --color-plum-dim:      rgba(232, 136, 156, 0.10);
+
+  --color-warn-dim:      rgba(251, 195, 5, 0.12);
+  --color-danger:        #f87171;
+  --color-danger-dim:    rgba(248, 113, 113, 0.10);
+
+  /* Glow mais saturado no dark (preto absorve luz, glow precisa empurrar) */
+  --glow-warm:    radial-gradient(ellipse 80% 60% at 80% 0%, rgba(255, 98, 0, 0.18) 0%, transparent 55%);
+  --glow-cool:    radial-gradient(ellipse 70% 50% at 20% 100%, rgba(59, 133, 250, 0.14) 0%, transparent 55%);
+  --glow-hero:    radial-gradient(ellipse 90% 70% at 50% 0%, rgba(255, 98, 0, 0.22) 0%, transparent 50%);
+  --vignette:     radial-gradient(ellipse 120% 80% at 50% 50%, transparent 50%, rgba(0, 0, 0, 0.30) 100%);
+
+  --syntax-string:   #4ade80;
+
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.4);
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+  --shadow:    0 4px 12px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.3);
+  --shadow-xl: 0 24px 64px rgba(0,0,0,0.6), 0 8px 24px rgba(0,0,0,0.4);
+
+  --inset-sm:  inset 0 1px 3px rgba(0,0,0,0.4);
+  --inset:     inset 0 2px 8px rgba(0,0,0,0.5);
+
+  --glow-accent-sm: 0 0 0 3px rgba(255, 98, 0, 0.20);
+  --glow-accent:    0 8px 32px rgba(255, 98, 0, 0.30);
+
+  /* ─── camada de cor gerada (gen_temas.py) ─── */
+  --color-accent-text: var(--itau-orange);
+  --color-secondary: #5CABF2;
+  --color-secondary-dim: rgba(92,171,242,0.12);
+  --cat-1: #FC8453;
+  --cat-2: #5CA3FD;
+  --cat-3: #6EE8E1;
+  --cat-4: #F0C551;
+  --cat-5: #67A559;
+  --cat-6: #6782CE;
+  --seq-1: #562A19;
+  --seq-2: #893F21;
+  --seq-3: #C15627;
+  --seq-4: #F77036;
+  --seq-5: #FDAE90;
+  --div-1: #F3743F;
+  --div-2: #A55F44;
+  --div-3: #646A70;
+  --div-4: #5B82B5;
+  --div-5: #6FADFD;
+}
+
+/* ─── Reset / base ───────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--font-text);
+  font-size: var(--size-body);
+  line-height: 1.65;
+  color: var(--color-fg);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  transition: background var(--duration-fast), color var(--duration-fast);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* ─── Assinatura de seleção (marca, por tema) ────────────────────────── */
+::selection { background: var(--color-accent); color: var(--color-accent-fg); }
+
+/* ─── Headings ───────────────────────────────────────────────────── */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  color: var(--color-fg);
+  line-height: 1.1;
+  letter-spacing: -0.022em;
+  font-weight: 700;
+  font-feature-settings: 'ss01', 'ss02';
+}
+h1 { font-size: var(--size-h1); margin: 0 0 var(--space-4); letter-spacing: -0.030em; }
+h2 {
+  font-size: var(--size-h2);
+  margin: var(--space-10) 0 var(--space-4);
+  scroll-margin-top: calc(var(--header-h) + var(--space-4));
+  position: relative;
+}
+h3 {
+  font-size: var(--size-h3); font-weight: 600;
+  margin: var(--space-7) 0 var(--space-3);
+  scroll-margin-top: calc(var(--header-h) + var(--space-4));
+}
+h4 { font-size: var(--size-h4); font-weight: 600; margin: var(--space-5) 0 var(--space-2); }
+
+p { margin: 0 0 var(--space-4); max-width: 65ch; color: var(--color-fg); }
+.lead {
+  font-size: var(--size-lead);
+  line-height: 1.5;
+  color: var(--color-fg-muted);
+  margin-bottom: var(--space-7);
+  font-weight: 400;
+  max-width: 60ch;
+}
+/* link usa accent-text (laranja escurecida p/ AA em canvas claro); cai p/ accent
+   quando o tema nao define accent-text (ex.: itau-base usado direto). */
+a { color: var(--color-accent-text, var(--color-accent)); text-decoration: none; }
+a:hover { color: var(--color-accent-hover); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1.5px; }
+strong { font-weight: 700; color: var(--color-fg); }
+
+code:not(pre code) {
+  font-family: var(--font-mono); font-size: 0.875em;
+  background: var(--color-bg-sunken);
+  padding: 0.15em 0.45em;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+}
+
+ul, ol { padding-left: var(--space-5); margin: 0 0 var(--space-4); }
+li { margin-bottom: var(--space-2); max-width: 65ch; }
+li::marker { color: var(--color-fg-subtle); }
+
+/* ─── Depth tiers (formalizadas via classes) ─────────────────────── */
+.tier-hero {
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-top: 2px solid var(--color-accent);
+  box-shadow: var(--shadow-lg);
+  border-radius: var(--radius-lg);
+  padding: var(--space-7) var(--space-7);
+}
+.tier-default {
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius);
+  padding: var(--space-5);
+}
+.tier-recessed {
+  background: var(--color-bg-sunken);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--inset-sm);
+  border-radius: var(--radius);
+  padding: var(--space-5);
+}
+
+/* ─── Color variants (semantic borders + label dots) ─────────────── */
+.var-accent  { border-color: var(--color-accent); }
+.var-info    { border-color: var(--color-info); }
+.var-success { border-color: var(--color-success); }
+.var-sage    { border-color: var(--color-sage); }
+.var-teal    { border-color: var(--color-teal); }
+.var-plum    { border-color: var(--color-plum); }
+.var-warn    { border-color: var(--color-warn); }
+.var-danger  { border-color: var(--color-danger); }
+
+/* ─── Callouts (4 semânticas — info/tip/warn/danger) ─────────────── */
+.callout {
+  display: flex; gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  margin: var(--space-5) 0;
+  border-left: 3px solid;
+  border-radius: var(--radius);
+}
+.callout--info   { background: var(--color-info-dim);    border-color: var(--color-info); }
+.callout--tip    { background: var(--color-success-dim); border-color: var(--color-success); }
+.callout--warn   { background: var(--color-warn-dim);    border-color: var(--color-warn); }
+.callout--danger { background: var(--color-danger-dim);  border-color: var(--color-danger); }
+.callout__icon {
+  flex-shrink: 0; width: 24px; height: 24px;
+  display: grid; place-items: center;
+  border-radius: 50%; font-weight: 700;
+  font-size: 0.75rem; color: white;
+  margin-top: 2px;
+}
+.callout--info   .callout__icon { background: var(--color-info); }
+.callout--tip    .callout__icon { background: var(--color-success); }
+.callout--warn   .callout__icon { background: var(--color-warn); color: var(--itau-warm-black); }
+.callout--danger .callout__icon { background: var(--color-danger); }
+.callout__content { flex: 1; min-width: 0; }
+.callout__title { font-weight: 700; margin: 0 0 var(--space-1); font-size: var(--size-small); }
+.callout__content p { margin: 0; font-size: var(--size-small); }
+
+/* ─── Code block ─────────────────────────────────────────────────── */
+.code {
+  position: relative;
+  background: var(--color-bg-sunken);
+  border-radius: var(--radius);
+  margin: var(--space-4) 0;
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+}
+.code__head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: var(--space-2) var(--space-3) var(--space-2) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg-elevated);
+}
+.code__lang  { font-family: var(--font-mono); font-size: var(--size-xs); color: var(--color-fg-subtle); letter-spacing: 0.02em; }
+.code__copy {
+  padding: 4px 10px; font-size: var(--size-xs);
+  background: var(--color-bg); border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm); cursor: pointer;
+  color: var(--color-fg-muted); font: inherit;
+  transition: color var(--duration-fast) var(--ease-snap), border-color var(--duration-fast) var(--ease-snap);
+}
+.code__copy:hover { color: var(--color-fg); border-color: var(--color-border-strong); }
+.code__copy.is-copied { color: var(--color-accent); border-color: var(--color-accent); }
+.code pre { padding: var(--space-4); overflow-x: auto; margin: 0; max-height: 400px; white-space: pre-wrap; }
+.code code { font-family: var(--font-mono); font-size: 0.875rem; line-height: 1.65; color: var(--color-fg); }
+
+.tk-comment { color: var(--syntax-comment); font-style: italic; }
+.tk-str     { color: var(--syntax-string); }
+.tk-kw      { color: var(--syntax-keyword); font-weight: 500; }
+.tk-fn      { color: var(--syntax-function); }
+
+/* ─── Toggle (<details>) ─────────────────────────────────────────── */
+.toggle {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  margin: var(--space-3) 0;
+  overflow: hidden;
+  background: var(--color-bg-elevated);
+  transition: border-color var(--duration-fast);
+}
+.toggle:hover { border-color: var(--color-border-strong); }
+.toggle[open] { background: var(--color-bg-elevated); box-shadow: var(--shadow-sm); }
+.toggle__summary {
+  padding: var(--space-3) var(--space-5);
+  cursor: pointer; font-weight: 600;
+  font-size: var(--size-small); list-style: none;
+}
+.toggle__summary::-webkit-details-marker { display: none; }
+.toggle__summary::before {
+  content: '›';
+  display: inline-block;
+  margin-right: var(--space-3);
+  color: var(--color-accent);
+  transition: transform var(--duration-fast);
+  font-weight: 700;
+}
+.toggle[open] .toggle__summary::before { transform: rotate(90deg); }
+.toggle__body { padding: 0 var(--space-5) var(--space-4); }
+
+/* ─── Theme toggle button ────────────────────────────────────────── */
+.theme-toggle {
+  width: 36px; height: 36px;
+  display: grid; place-items: center;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: 999px; cursor: pointer;
+  color: var(--color-fg);
+  font-size: 14px;
+  transition: background-color var(--duration-fast) var(--ease-snap), border-color var(--duration-fast) var(--ease-snap);
+}
+.theme-toggle:hover { background: var(--color-bg-sunken); border-color: var(--color-border-strong); }
+
+/* ─── Motion: NÃO mora no tema ───────────────────────────────────────
+   v4: o reveal universal fade-up foi removido daqui de propósito — era o
+   fingerprint nº 1 da casa. Motion é decisão do perfil declarado no bloco
+   <!-- slideless:parti --> (ver references/direcao-de-arte.md): o perfil
+   escolhido (estático/editorial/cinemático) é COLADO como bloco aditivo.
+   Documento sem perfil de motion = documento sem animação de entrada (válido). */
+
+/* ─── Tabs ───────────────────────────────────────────────────────── */
+.tabs { display: flex; gap: var(--space-1); border-bottom: 1px solid var(--color-border); margin-bottom: var(--space-5); }
+.tab {
+  padding: var(--space-3) var(--space-4);
+  background: transparent; border: 0;
+  font: inherit; font-size: var(--size-small); font-weight: 600;
+  color: var(--color-fg-muted); cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color var(--duration-fast) var(--ease-snap), border-color var(--duration-fast) var(--ease-snap);
+}
+.tab:hover { color: var(--color-fg); }
+.tab.is-active { color: var(--color-accent); border-bottom-color: var(--color-accent); }
+.tab-panel { display: none; }
+.tab-panel.is-active { display: block; }
+
+/* ─── Cards ──────────────────────────────────────────────────────── */
+.card {
+  display: block;
+  padding: var(--space-5);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color var(--duration-fast) var(--ease-out);
+  box-shadow: var(--shadow-xs);
+}
+/* v4: hover-lift (translateY) removido — era o tell nº 1 de UI gerada por IA.
+   Affordance de hover é decisão do parti, POR PAPEL: lift só em card clicável
+   E só no perfil cinemático; alternativas: border-draw, mudança de contraste. */
+.card:hover { border-color: var(--color-border-strong); }
+.card__icon { font-size: 28px; margin-bottom: var(--space-3); color: var(--color-accent); }
+.card__title { font-family: var(--font-display); font-size: var(--size-h3); margin: 0 0 var(--space-2); letter-spacing: -0.015em; }
+.card__desc { font-size: var(--size-small); color: var(--color-fg-muted); margin: 0 0 var(--space-3); max-width: 38ch; line-height: 1.5; }
+.card__cta { font-size: var(--size-small); font-weight: 600; color: var(--color-accent); letter-spacing: 0.01em; }
+
+/* ─── Métricas ───────────────────────────────────────────────────── */
+.metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); margin: var(--space-7) 0; }
+.metric { border-top: 2px solid var(--color-fg); padding-top: var(--space-3); }
+.metric__val { font-family: var(--font-display); font-size: var(--size-h1); font-weight: 800; line-height: 1; margin: 0 0 var(--space-2); letter-spacing: -0.035em; }
+.metric__val span { color: var(--color-accent); }
+.metric__label { font-size: var(--size-small); color: var(--color-fg-muted); margin: 0; max-width: 22ch; line-height: 1.4; }
+
+/* ─── [DIREÇÃO] Timeline vertical — DEFAULT TRIBUTADO ─────────────────
+   v4: a timeline-com-dot é um tell catalogado ("timeline-dot" no vocabulário
+   nao-vai-ter). Usá-la exige justificativa no parti; alternativas em
+   componentes.md (lista com fio, tabela cronológica, numeral de marco).   */
+.timeline { list-style: none; padding: 0; margin: var(--space-5) 0; position: relative; }
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px; top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--color-accent) 0%, var(--color-border) 30%, var(--color-border) 100%);
+}
+.timeline__item { position: relative; padding-left: var(--space-7); margin-bottom: var(--space-6); }
+.timeline__dot {
+  position: absolute;
+  left: 0; top: 6px;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 0 4px var(--color-bg);
+}
+.timeline__date { font-family: var(--font-mono); font-size: var(--size-xs); color: var(--color-accent); text-transform: uppercase; letter-spacing: 0.04em; margin: 0 0 var(--space-1); font-weight: 600; }
+.timeline__title { font-family: var(--font-display); font-size: 1.0625rem; margin: 0 0 var(--space-1); font-weight: 700; }
+.timeline__desc { font-size: var(--size-small); color: var(--color-fg-muted); margin: 0; line-height: 1.5; }
+
+/* ─── [MARCA] Reduced motion ─────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  /* para reveals colados pelo perfil de motion do parti — o tema não define
+     mais [data-reveal]{opacity:0}; esta linha é defensiva: garante que QUALQUER
+     reveal colado fique visível e sem transform sob reduced-motion. */
+  [data-reveal] { opacity: 1; transform: none; transition-delay: 0s; }
+}
+
+/* ─── [MARCA] Alto contraste do SO (Windows forced-colors) ──────────────
+   Muito usado em banco/governo. Deixa o SO controlar cores e garante que
+   superfícies e foco continuem visíveis (bordas via system colors). */
+@media (forced-colors: active) {
+  .tier-hero, .tier-default, .tier-recessed, .card, .toggle, .code, .callout {
+    border: 1px solid CanvasText;
+  }
+  .tier-hero { border-top-width: 2px; }
+  :focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+}
+
+/* ─── [MARCA] Paleta secundária em OKLCH ─────────────────────────────
+   Redefinição perceptualmente uniforme, derivada do matiz do laranja Itaú
+   (#FF6200 ≈ oklch(68% 0.21 41)): mesma Lightness percebida entre as cores
+   de um mesmo papel, chroma controlado — mata o vocabulário Tailwind.
+   Os hex acima permanecem como fallback para browsers sem OKLCH.          */
+@supports (color: oklch(60% 0.1 50)) {
+  :root {
+    --color-success:     oklch(52% 0.11 140);
+    --color-success-dim: oklch(52% 0.11 140 / 0.08);
+    --color-teal:        oklch(52% 0.08 200);
+    --color-teal-dim:    oklch(52% 0.08 200 / 0.08);
+    --color-plum:        oklch(46% 0.12 355);
+    --color-plum-dim:    oklch(46% 0.12 355 / 0.08);
+    --color-danger:      oklch(50% 0.16 27);
+    --color-danger-dim:  oklch(50% 0.16 27 / 0.08);
+  }
+  [data-theme="dark"] {
+    --color-success:     oklch(76% 0.13 140);
+    --color-success-dim: oklch(76% 0.13 140 / 0.10);
+    --color-teal:        oklch(78% 0.09 195);
+    --color-teal-dim:    oklch(78% 0.09 195 / 0.10);
+    --color-plum:        oklch(74% 0.11 0);
+    --color-plum-dim:    oklch(74% 0.11 0 / 0.10);
+    --color-danger:      oklch(70% 0.15 25);
+    --color-danger-dim:  oklch(70% 0.15 25 / 0.10);
+  }
+}
