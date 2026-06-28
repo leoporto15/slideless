@@ -25,7 +25,7 @@ Coletar cinco itens:
 |---|---|
 | **Modelo** (handbook/hub/scrollytelling/site/deck/report) | Aplicar [decisao-modelo.md](decisao-modelo.md) e PERGUNTAR — não chutar |
 | **Conteúdo real** | Se ausente, aplicar [protocolo-sem-conteudo.md](protocolo-sem-conteudo.md) |
-| **Tema** (neutro/itau) | `itau` |
+| **Tema** (7 — ver `assets/temas/temas.json`) | `itau-padrao` (alias `itau`) |
 | **Escopo** (quantas seções/cards/slides/views) | Inferir do conteúdo; perguntar se ambíguo |
 | **Registro/voz** ("como deve soar?") | Inferir do ASSUNTO pela tabela de [direcao-de-arte.md](direcao-de-arte.md) §1 e confirmar em linguagem leiga |
 

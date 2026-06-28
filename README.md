@@ -89,7 +89,7 @@ Um comando único — **`/slideless`** — e você escreve o subcomando logo dep
 
 | Comando | O que faz |
 |---|---|
-| `/slideless aplicar-tema` | Troca tema (neutro ↔ itau) em documento existente. |
+| `/slideless aplicar-tema` | Troca tema (entre os 7 — ver `assets/temas/temas.json`) em documento existente. |
 | `/slideless converter-modelo` | Converte entre modelos compatíveis (handbook ↔ scrollytelling, hub ↔ site). |
 | `/slideless distill` | Reduz handbook longo a sumário enxuto preservando hierarquia. |
 

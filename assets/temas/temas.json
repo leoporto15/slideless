@@ -1,0 +1,14 @@
+{
+  "_doc": "Registro único dos temas slideless. scaffold.py e validar.py leem daqui — adicionar tema = soltar paletas/<nome>.css em assets/temas/ + 1 entrada aqui.",
+  "default": "itau-padrao",
+  "aliases": { "itau": "itau-padrao" },
+  "temas": {
+    "itau-padrao":  { "label": "Itaú padrão (oficial 2023)",     "canvas": "branco + cool gray",      "accent": "laranja",       "brand": true,  "uso": "institucional padrão — relatório/handbook/deck" },
+    "itau-cream":   { "label": "Itaú cálido",                     "canvas": "cream + preto quente",    "accent": "laranja",       "brand": true,  "uso": "leitura editorial mais quente (fora da base fria oficial)" },
+    "itau-laranja": { "label": "Itaú varejo",                     "canvas": "laranja #FF6200",         "accent": "preto/branco",  "brand": true,  "uso": "campanha interna, all-hands, energético" },
+    "itau-navy":    { "label": "Itaú premium (Personnalité)",     "canvas": "navy #000D3C",            "accent": "laranja",       "brand": true,  "uso": "alta renda, board, premium sóbrio" },
+    "itau-preto":   { "label": "Itaú private",                    "canvas": "preto #000000",           "accent": "laranja",       "brand": true,  "uso": "altíssima renda, keynote/launch cinematográfico" },
+    "itau-verde":   { "label": "Itaú ESG/impacto",               "canvas": "verde profundo #0A3B00",  "accent": "laranja + lime","brand": true,  "uso": "ESG, sustentabilidade, Plano Amazônia" },
+    "neutro":       { "label": "Neutro (white-label)",           "canvas": "cool gray + branco",      "accent": "azul-tinta",    "brand": false, "uso": "documentos fora do Itaú" }
+  }
+}

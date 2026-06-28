@@ -25,13 +25,23 @@ numa unica resposta:
     4) validar:  python scripts/validar.py <saida.html>
 """
 import argparse
+import json
 import pathlib
 import re
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 MODELOS = ["deck", "handbook", "hub", "scrollytelling", "site", "report"]
-TEMAS = ["itau", "neutro"]
+
+
+def _load_temas():
+    """Le o registro assets/temas/temas.json (fonte unica dos temas + aliases)."""
+    reg = json.loads((ROOT / "assets" / "temas" / "temas.json").read_text(encoding="utf-8"))
+    return list(reg["temas"].keys()), reg.get("aliases", {})
+
+
+TEMAS, ALIASES = _load_temas()
+TEMA_CHOICES = TEMAS + [a for a in ALIASES if a not in TEMAS]
 
 
 def main():
@@ -44,13 +54,15 @@ def main():
         description="Monta o esqueleto slideless (template + tema) fora do LLM."
     )
     ap.add_argument("modelo", choices=MODELOS, help="modelo do documento")
-    ap.add_argument("tema", choices=TEMAS, help="tema (itau ou neutro)")
+    ap.add_argument("tema", choices=TEMA_CHOICES,
+                    help="tema (ver assets/temas/temas.json; ex.: itau-padrao, itau-cream, itau-navy, neutro)")
     ap.add_argument("saida", help="caminho do HTML de saida (ex.: outputs/pitch.html)")
     ap.add_argument("--force", action="store_true", help="sobrescrever se ja existir")
     args = ap.parse_args()
 
+    tema = ALIASES.get(args.tema, args.tema)  # resolve alias (ex.: itau -> itau-padrao)
     tpl = ROOT / "assets" / "templates" / f"template-{args.modelo}.html"
-    css = ROOT / "assets" / "temas" / f"{args.tema}.css"
+    css = ROOT / "assets" / "temas" / f"{tema}.css"
     out = pathlib.Path(args.saida)
 
     if not tpl.exists():
@@ -75,7 +87,7 @@ def main():
     if not marker.search(html):
         sys.exit(f"ERRO: marker SLIDELESS:THEME ausente em {tpl.name} (template malformado).")
     banner = (
-        f"/* === TEMA {args.tema}: injetado por scaffold.py. "
+        f"/* === TEMA {tema}: injetado por scaffold.py. "
         f"NAO regurgitar; editar so a camada [DIRECAO] se o parti pedir. === */"
     )
     html = marker.sub(lambda _m: banner + "\n" + theme, html, count=1)
@@ -89,7 +101,7 @@ def main():
 
     kb = len(html.encode("utf-8")) // 1024
     print(f"OK  esqueleto montado: {out}  (~{kb} KB ja prontos -- NAO passaram pelo LLM)")
-    print(f"    tema '{args.tema}' injetado no <style>; engine+layout de '{args.modelo}' ja vem do template.")
+    print(f"    tema '{tema}' injetado no <style>; engine+layout de '{args.modelo}' ja vem do template.")
     print("    Agora preencha com EDITS PEQUENOS (NUNCA o documento inteiro numa resposta):")
     print("      1) kit no slot SLIDELESS:TYPE-KIT (<link> de references/type-kits.md) + :root --kit-* antes do tema")
     print("      2) bloco <!-- slideless:parti --> no <head>")
