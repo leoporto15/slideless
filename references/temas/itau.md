@@ -1,10 +1,23 @@
-# Tema `itau`
+# Temas `itau` — família (6 registros oficiais)
 
-Tema corporativo Itaú. Default da skill quando o usuário não especificar tema.
+Sistema de cor da marca (Guia de Marca Itaú, Dez 2023, V1). São **6 temas itau**, todos com a **laranja `#FF6200` como fio condutor**, + o `neutro` (white-label). Registro/fonte única: [../../assets/temas/temas.json](../../assets/temas/temas.json).
 
-**CSS:** [../../assets/temas/itau.css](../../assets/temas/itau.css).
+| Tema | Canvas | Uso (guia) |
+|---|---|---|
+| **itau-padrao** *(default; alias `itau`)* | branco + cool gray (p.74-75) | institucional padrão |
+| **itau-cream** | cream `#faf7f5` + preto quente | leitura editorial cálida (fora da base fria) |
+| **itau-laranja** | laranja `#FF6200` (texto preto, AA 6.99) | varejo/energético (p.20) |
+| **itau-navy** | navy `#000D3C` + laranja | alta renda/Personnalité (p.20) |
+| **itau-preto** | preto `#000000` + laranja | private/cinematográfico (p.20) |
+| **itau-verde** | verde profundo `#0A3B00` + laranja/lime | ESG/impacto (p.84, p.10) |
 
-> **v4: o tema tem DUAS CAMADAS.** Ver "Duas camadas" abaixo — copiar a camada **[MARCA]** sempre, **compor** a camada **[DIREÇÃO]** conforme o parti. Nunca mais "copiar inteiro e pronto".
+Cada tema é um arquivo completo em `assets/temas/<tema>.css`, gerado da base provada **`itau-cream.css`** trocando só os tokens de canvas (bg/fg/border/accent) — todos compartilham a mesma estrutura/tokens. O `scaffold.py` injeta o tema escolhido.
+
+**Brand-safety (Guia p.88):** vermelho e roxo = concorrentes (proibidos como identidade); laranja inegociável; ≤3 cores complementares por peça; sem gradiente. `validar.py` checa via `B-brand`.
+
+**CSS base (estrutura/tokens, vale p/ os 6):** [../../assets/temas/itau-cream.css](../../assets/temas/itau-cream.css).
+
+> **v4: cada tema tem DUAS CAMADAS** — **[MARCA]** inviolável (copiar) + **[DIREÇÃO]** composta conforme o parti. A seção "Identidade" abaixo descreve a base cálida (itau-cream); o `itau-padrao` usa a base fria oficial (branco + cool gray).
 
 ---
 
@@ -32,7 +45,7 @@ Dois documentos `itau` compartilham **marca**, nunca **fingerprint**.
 
 ## Tokens (resumo)
 
-Definição completa em [../../assets/temas/itau.css](../../assets/temas/itau.css). Tokens-chave:
+Definição completa em [../../assets/temas/itau-cream.css](../../assets/temas/itau-cream.css). Tokens-chave:
 
 | Token | Light | Dark |
 |---|---|---|
@@ -75,7 +88,7 @@ Cor é **informação, não decoração** (anti-pattern C14): cada cor só entra
 
 Toda geração com tema `itau` deve:
 
-1. O tema entra via `scaffold.py` (injeta `assets/temas/itau.css` no marker `SLIDELESS:THEME` — camada `[MARCA]` intacta). **Não regurgitar nem redeclarar o tema** — já está inline no `<style>`. Apenas compor a camada `[DIREÇÃO]` conforme o parti, com edits pequenos se necessário.
+1. O tema entra via `scaffold.py` (injeta `assets/temas/itau-cream.css` no marker `SLIDELESS:THEME` — camada `[MARCA]` intacta). **Não regurgitar nem redeclarar o tema** — já está inline no `<style>`. Apenas compor a camada `[DIREÇÃO]` conforme o parti, com edits pequenos se necessário.
 2. Carregar o kit tipográfico do documento via Google Fonts (escolhido em [../type-kits.md](../type-kits.md), decisão do parti — [../direcao-de-arte.md](../direcao-de-arte.md)): `<link>` no slot `SLIDELESS:TYPE-KIT` + bloco `:root` do kit ANTES do tema. Dentro da rede Itaú, `Itau Display`/`Itau Text` prevalecem; o kit é o fallback desenhado fora da rede. **Inter como display é proibido.**
 3. Boot script de tema no `<head>` (ver [../design-system.md](../design-system.md#boot-script)).
 4. Theme toggle no header.

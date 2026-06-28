@@ -13,7 +13,7 @@ Você foi invocado para trocar tema.
    - Bloco `:root { … }` (do primeiro `--itau-orange` ou `--color-bg` até a `}` correspondente).
    - Bloco `[data-theme="dark"] { … }`.
    - Reset/base, callouts, code, toggle, theme-toggle, cards, métricas, timeline — **manter** (são compartilhados, só usam `var(--…)`).
-4. Substituir pelo conteúdo do tema-alvo, vindo de [../assets/temas/itau.css](../../assets/temas/itau.css) ou [../assets/temas/neutro.css](../../assets/temas/neutro.css).
+4. Substituir pelo conteúdo do tema-alvo (um dos 7 em `assets/temas/<tema>.css` — ver `assets/temas/temas.json`).
 5. **Fontes:** trocar tema NÃO troca o kit tipográfico do documento — o kit é decisão de direção de arte ([../references/type-kits.md](../type-kits.md)), independente do tema. Manter o `<link>` do kit existente. Se o documento for legado (Inter como display, sem kit), avisar o usuário e sugerir `/slideless polir` com escolha de kit.
 6. **Logo:** se tema = `itau`, manter logo Itaú no topbar; se `neutro`, considerar remover ou substituir.
 7. Rodar validador.

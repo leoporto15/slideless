@@ -1049,6 +1049,51 @@ def stats_mode(folder: Path) -> int:
     return 0
 
 
+def check_brand_safety(html: str, report: Report) -> None:
+    """Brand-safety (Guia de Marca Itaú, p.88): vermelho e roxo são cores de
+    concorrentes (Santander/Bradesco; Nubank) e PROIBIDAS como identidade.
+    Dispara (WARN) se --color-accent / --color-bg for um hex de matiz vermelho
+    ou roxo saturado. Laranja (#FF6200 ~24°), azul e neutros NÃO disparam;
+    `var(--itau-orange)` é ignorado (resolve p/ laranja)."""
+
+    def hue(hexv: str):
+        m = re.fullmatch(r"#([0-9a-fA-F]{6})", hexv.strip())
+        if not m:
+            return None
+        h6 = m.group(1)
+        r, g, b = (int(h6[i:i + 2], 16) / 255 for i in (0, 2, 4))
+        mx, mn = max(r, g, b), min(r, g, b)
+        d = mx - mn
+        if d < 0.12:                       # quase-neutro (cream/cinza/preto) — ignora
+            return None
+        if mx == r:
+            hh = ((g - b) / d) % 6
+        elif mx == g:
+            hh = (b - r) / d + 2
+        else:
+            hh = (r - g) / d + 4
+        return hh * 60
+
+    flagged = set()
+    for tok, val in re.findall(r"(--color-(?:accent|bg))\s*:\s*([^;]+);", html):
+        val = val.strip()
+        if val in flagged:
+            continue
+        h = hue(val)
+        if h is None:
+            continue
+        if h >= 345 or h <= 12:
+            flagged.add(val)
+            report.issues.append(Issue(SEVERITY_WARN, "B-brand-vermelho",
+                f"{tok}={val} é matiz VERMELHO — cor de concorrente (Santander/Bradesco), "
+                f"proibida como identidade (Guia de Marca p.88). Vermelho só como --color-danger."))
+        elif 265 <= h <= 320:
+            flagged.add(val)
+            report.issues.append(Issue(SEVERITY_WARN, "B-brand-roxo",
+                f"{tok}={val} é matiz ROXO — cor de concorrente (Nubank), proibida "
+                f"(Guia de Marca p.88; também banido pelo anti-slop)."))
+
+
 # ─── Orquestração ────────────────────────────────────────────────────────
 
 
@@ -1079,6 +1124,7 @@ def validate(html_path: Path, strict: bool = False) -> Report:
     check_canvas_autosize(html, report)
     check_kit_vars(html, report)
     check_nested_script(html, report)
+    check_brand_safety(html, report)        # cores de concorrente (vermelho/roxo) — Guia p.88
 
     # Categoria P — Pasteurização / AI-tells (v4)
     run_p_checks(html, report)

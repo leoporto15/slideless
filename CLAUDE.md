@@ -29,7 +29,7 @@ Não carregar inline. Abrir só quando o trabalho exigir:
 - Sem conteúdo real, sem geração: [references/protocolo-sem-conteudo.md](references/protocolo-sem-conteudo.md)
 - Workflow passo-a-passo: [references/workflow.md](references/workflow.md)
 - Spec detalhada por modelo: [references/modelos/](references/modelos/)
-- Temas (itau / neutro): [references/temas/](references/temas/)
+- Temas (7: família itau + neutro): [references/temas/](references/temas/) · registro [assets/temas/temas.json](assets/temas/temas.json)
 
 ## Estrutura do projeto
 
