@@ -55,7 +55,7 @@ def main():
     )
     ap.add_argument("modelo", choices=MODELOS, help="modelo do documento")
     ap.add_argument("tema", choices=TEMA_CHOICES,
-                    help="tema (ver assets/temas/temas.json; ex.: itau-padrao, itau-cream, itau-navy, neutro)")
+                    help="tema (ver assets/temas/temas.json; ex.: itau-padrao, itau-navy, itau-grafite, neutro)")
     ap.add_argument("saida", help="caminho do HTML de saida (ex.: outputs/pitch.html)")
     ap.add_argument("--force", action="store_true", help="sobrescrever se ja existir")
     args = ap.parse_args()

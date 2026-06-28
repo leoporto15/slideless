@@ -1,6 +1,7 @@
+/* slideless — tema itau-grafite — dark quente — carvao/espresso #1E1C1A.
+   Gerado de itau-base.css; accent laranja (#FF6200) no light E dark. NAO editar a mao: regenerar. */
 /*
- * slideless — tema itau-grafite — canvas dark quente carvao/espresso #1E1C1A (soft dark premium)
- * Gerado de itau-cream; so os tokens de canvas mudam.
+ * slideless — tema itau v4 (duas camadas)
  *
  * O tema é dividido em DUAS CAMADAS, marcadas grupo a grupo:
  *
@@ -73,7 +74,7 @@
   --color-bg-sunken:     #161412;
   --color-fg:            #ECE6DD;   /* warm dark (não preto puro)      */
   --color-fg-muted:      #B0A79B;
-  --color-fg-subtle:     #7C7468;
+  --color-fg-subtle:     #7F7669;
   --color-border:        rgba(236,230,221,0.12);
   --color-border-strong: rgba(236,230,221,0.22);
   --color-accent-hover:  var(--itau-orange-2);
@@ -176,11 +177,11 @@
 [data-theme="dark"] {
   /* Backgrounds em preto quente Itaú (NÃO preto puro) */
   --color-bg:            #161412;
-  --color-bg-elevated:   #1E1C1A;
+  --color-bg-elevated:   #1F1C18;
   --color-bg-sunken:     #100E0C;
   --color-fg:            #ECE6DD;
   --color-fg-muted:      #B0A79B;
-  --color-fg-subtle:     #7C7468;
+  --color-fg-subtle:     #7F7669;
   --color-border:        rgba(236,230,221,0.14);
   --color-border-strong: rgba(236,230,221,0.24);
 
@@ -206,9 +207,9 @@
   --color-danger-dim:    rgba(248, 113, 113, 0.10);
 
   /* Glow mais saturado no dark (preto absorve luz, glow precisa empurrar) */
-  --glow-warm:    radial-gradient(ellipse 80% 60% at 80% 0%, rgba(250, 159, 9, 0.18) 0%, transparent 55%);
+  --glow-warm:    radial-gradient(ellipse 80% 60% at 80% 0%, rgba(255, 98, 0, 0.18) 0%, transparent 55%);
   --glow-cool:    radial-gradient(ellipse 70% 50% at 20% 100%, rgba(59, 133, 250, 0.14) 0%, transparent 55%);
-  --glow-hero:    radial-gradient(ellipse 90% 70% at 50% 0%, rgba(250, 159, 9, 0.22) 0%, transparent 50%);
+  --glow-hero:    radial-gradient(ellipse 90% 70% at 50% 0%, rgba(255, 98, 0, 0.22) 0%, transparent 50%);
   --vignette:     radial-gradient(ellipse 120% 80% at 50% 50%, transparent 50%, rgba(0, 0, 0, 0.30) 100%);
 
   --syntax-string:   #4ade80;
@@ -222,8 +223,8 @@
   --inset-sm:  inset 0 1px 3px rgba(0,0,0,0.4);
   --inset:     inset 0 2px 8px rgba(0,0,0,0.5);
 
-  --glow-accent-sm: 0 0 0 3px rgba(250, 159, 9, 0.20);
-  --glow-accent:    0 8px 32px rgba(250, 159, 9, 0.30);
+  --glow-accent-sm: 0 0 0 3px rgba(255, 98, 0, 0.20);
+  --glow-accent:    0 8px 32px rgba(255, 98, 0, 0.30);
 }
 
 /* ─── Reset / base ───────────────────────────────────────────────── */

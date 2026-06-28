@@ -73,7 +73,7 @@ A skill tem **um único comando universal**: `/slideless`. O usuário escreve o 
 
 1. **Modelo** — se ambíguo, consulte [decisao-modelo.md](references/decisao-modelo.md) e pergunte.
 2. **Conteúdo real** — texto, MD, PPT, dados. Sem conteúdo, aplique [protocolo-sem-conteudo.md](references/protocolo-sem-conteudo.md).
-3. **Tema** (7 em `assets/temas/temas.json`: `itau-padrao` default + cream/navy/preto/grafite/areia + `neutro`).
+3. **Tema** (7 em `assets/temas/temas.json`: `itau-padrao` default + navy/grafite/aco/areia/bruma + `neutro`).
 4. **Escopo** — quantas seções/cards/slides/views aproximadamente.
 
 ---
