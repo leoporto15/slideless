@@ -24,6 +24,9 @@
 - [Curso: Introduction to Model Context Protocol (Anthropic Academy, gratuito)](https://anthropic.skilljar.com/introduction-to-model-context-protocol) · [Advanced Topics](https://anthropic.skilljar.com/model-context-protocol-advanced-topics)
   Constrói servidor e cliente em Python, cobre as três primitivas. Use para: a trilha prática de MCP (pré-requisito: Python básico).
 
+- [Docs: How to implement the Atlan MCP server (Atlan)](https://docs.atlan.com/product/capabilities/atlan-ai/how-tos/how-to-implement-the-atlan-mcp-server) · [GitHub: atlanhq/agent-toolkit](https://github.com/atlanhq/agent-toolkit)
+  Servidor MCP oficial do catálogo Atlan: busca semântica de ativos, linhagem, atualização de metadados. A busca melhora quanto mais o catálogo estiver enriquecido. Use para: exemplo real de MCP na Fase 5 e ponte entre catálogo de dados e agentes.
+
 ### Copilot Studio e Microsoft 365
 - [Docs: Knowledge sources overview (Microsoft Learn)](https://learn.microsoft.com/microsoft-copilot-studio/knowledge-copilot-studio)
   Fontes de conhecimento de um agente (SharePoint, Dataverse, arquivos, conectores), limites e autenticação. Use para: desenho de KB no Copilot Studio.
