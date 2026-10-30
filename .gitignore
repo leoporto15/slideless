@@ -22,7 +22,10 @@ desktop.ini
 # ─── Claude Code local (configs por maquina, nao do repo) ─────────────
 # .claude/ contem agents customizados, configs locais. Cada dev pode ter o
 # seu — nao versionar. O CLAUDE.md raiz do repo permanece versionado.
-.claude/
+# Excecao: .claude/skills/ e versionado para as skills carregarem nas
+# sessoes do Claude Code na nuvem.
+.claude/*
+!.claude/skills/
 claude.local.md
 
 # ─── Python (scripts/) ────────────────────────────────────────────────
