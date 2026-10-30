@@ -118,10 +118,12 @@
     <li class="check"><input type="checkbox" data-k="f6-b" id="f6-b"><label for="f6-b">Modelagem dimensional para a camada ouro: fato, dimensão, granularidade (<a href="https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/grain/">Kimball</a>)</label></li>
     <li class="check"><input type="checkbox" data-k="f6-c" id="f6-c"><label for="f6-c">Fontes de telemetria: Copilot Studio Analytics e Copilot Studio Kit, <a href="https://learn.microsoft.com/viva/insights/org-team-insights/copilot-dashboard">Copilot Dashboard</a>, custos AWS (tags e relatório de custo)</label></li>
     <li class="check"><input type="checkbox" data-k="f6-d" id="f6-d"><label for="f6-d">QuickSight: dataset sobre Athena, SPICE x consulta direta, dashboard e permissões (<a href="https://aws.amazon.com/blogs/business-intelligence/best-practices-for-amazon-quicksight-spice-and-direct-query-mode/">boas práticas</a>)</label></li>
-    <li class="check"><input type="checkbox" data-k="f6-e" id="f6-e"><label for="f6-e">Painel HTML: a esteira gera um JSON na camada ouro e uma página estática (Chart.js, ou os modelos <code>report</code>/<code>hub</code> do slideless) o consome. Hospedagem e acesso restrito</label></li>
+    <li class="check"><input type="checkbox" data-k="f6-e" id="f6-e"><label for="f6-e">Painel HTML gerado com LLM: a esteira publica um JSON na camada ouro; o LLM escreve a página (Chart.js) a partir de um template e de regras, como faz a skill slideless (modelos <code>report</code>/<code>hub</code>)</label></li>
+    <li class="check"><input type="checkbox" data-k="f6-g" id="f6-g"><label for="f6-g">Regra de ouro do HTML com LLM: o modelo escreve o <em>código</em>, os <em>números</em> vêm só da esteira. Validação automática (totais batem com o Athena, nenhum valor digitado à mão) antes de publicar</label></li>
+    <li class="check"><input type="checkbox" data-k="f6-h" id="f6-h"><label for="f6-h">Automatizar a geração: esteira atualiza o JSON → página recarrega sozinha; LLM só é chamado quando o layout muda. Hospedagem e acesso restrito na AWS</label></li>
     <li class="check"><input type="checkbox" data-k="f6-f" id="f6-f"><label for="f6-f">Quando usar QuickSight e quando usar HTML: público, interatividade, custo, manutenção</label></li>
   </ul>
-  <p class="meta">Entrega: árvore de KPIs da área e um painel v1 (QuickSight ou HTML) alimentado pela esteira da Fase 2, com dados fictícios.</p>
+  <p class="meta">Entrega: árvore de KPIs da área e o mesmo painel v1 em QuickSight e em HTML gerado com LLM, ambos alimentados pela esteira da Fase 2, com dados fictícios.</p>
 
   <h2>Fase 7 · Custo, ROI e priorização <small>(semanas 18–20)</small></h2>
   <ul style="list-style:none;padding:0">
@@ -155,7 +157,7 @@
       <tr><td>Python</td><td>5</td><td>Básico</td><td>Servidor MCP funcional</td></tr>
       <tr><td>MCP (protocolo + segurança)</td><td>5</td><td>Construir</td><td>Servidor publicado e catalogado</td></tr>
       <tr><td>Desenho de KPIs e modelagem dimensional</td><td>6</td><td>Liderar</td><td>Árvore de KPIs aprovada pela área</td></tr>
-      <tr><td>QuickSight / painel HTML</td><td>6</td><td>Construir</td><td>Painel alimentado pela esteira</td></tr>
+      <tr><td>QuickSight e painel HTML com LLM</td><td>6</td><td>Construir</td><td>Painel alimentado pela esteira, números validados</td></tr>
       <tr><td>FinOps e ROI de IA</td><td>7</td><td>Construir</td><td>Business case defendido com finanças</td></tr>
     </tbody>
   </table>

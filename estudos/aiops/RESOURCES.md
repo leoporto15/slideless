@@ -80,7 +80,7 @@
   Datasets, análises, dashboards. O produto agora faz parte do Amazon Quick Suite, e a documentação usa os dois nomes. Use para: painéis gerenciados.
 - [Blog: Best practices for Amazon QuickSight SPICE and direct query mode (AWS BI Blog)](https://aws.amazon.com/blogs/business-intelligence/best-practices-for-amazon-quicksight-spice-and-direct-query-mode/)
   Quando importar para o SPICE (memória) e quando consultar o Athena direto. Use para: custo e latência dos painéis.
-- Painéis em HTML: o próprio repo slideless gera relatórios HTML single-file com Chart.js (modelos `report` e `hub`). A esteira gera um JSON na camada ouro, e a página o consome.
+- Painéis em HTML gerados com LLM: o próprio repo slideless é um exemplo. Uma skill guia o LLM a gerar relatórios HTML single-file com Chart.js (modelos `report` e `hub`), com template, regras e validação (`validar.py`). Padrão: a esteira gera um JSON na camada ouro, o LLM escreve ou atualiza o código da página, e os números vêm sempre do JSON.
 
 ### Governança e segurança de dados para agentes
 - [Docs: Configure data security for Microsoft 365 Copilot (Purview + SharePoint Advanced Management)](https://learn.microsoft.com/en-us/copilot/microsoft-365/configure-data-security-copilot)
