@@ -12,8 +12,11 @@
 - Função do aluno: especialista de dados e indicadores para a governança da área, e quem define como as áreas estruturam KBs e MCPs (incluindo a execução técnica).
 - Stack: AWS + Microsoft 365 (Copilot Studio é o principal; high code eventualmente).
 
+## Calibração
+- Nível (30/10/2026): baixo em tudo (SQL, Python, AWS, QuickSight, Copilot Studio, LLMs). Ver LR 0002.
+- Implicação: explicar sem jargão não definido, um conceito novo por vez, exemplos concretos do mundo bancário/corporativo.
+
 ## A calibrar (perguntar)
-- Nível atual em: SQL, Python, AWS (S3/Glue/Athena), QuickSight, Copilot Studio, conceitos de LLM.
 - Horas por semana e data de início na nova área.
 - Tem acesso a um ambiente com licença de Copilot Studio / conta AWS sandbox?
 

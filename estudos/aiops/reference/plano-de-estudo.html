@@ -13,8 +13,9 @@
   <p class="subtitle">Oito fases, uma entrega concreta por fase. Cada fase existe porque a sua <a href="../MISSION.md">missão</a> pede.</p>
 
   <div class="lesson-meta">
-    <span><strong>Ritmo assumido:</strong> ~6 h/semana (ajustar após o diagnóstico)</span>
-    <span><strong>Duração estimada:</strong> ~20 semanas</span>
+    <span><strong>Ponto de partida:</strong> nível baixo em tudo (diagnóstico de 30/10/2026)</span>
+    <span><strong>Ritmo assumido:</strong> ~6 h/semana (a confirmar)</span>
+    <span><strong>Duração estimada:</strong> ~24 semanas</span>
     <span><strong>Stack:</strong> Microsoft 365 / Copilot Studio + AWS (S3, Glue, Athena, Bedrock, QuickSight)</span>
   </div>
 
@@ -37,8 +38,18 @@
   <h2>Fase 0 · Diagnóstico e mapa <small>(semana 1)</small></h2>
   <ul style="list-style:none;padding:0">
     <li class="check"><input type="checkbox" data-k="f0-l1" id="f0-l1"><label for="f0-l1"><a href="../lessons/0001-kb-mcp-ou-instrucao.html">Lição 0001: KB, MCP ou instrução? Onde mora cada informação de um agente</a></label></li>
-    <li class="check"><input type="checkbox" data-k="f0-diag" id="f0-diag"><label for="f0-diag">Responder ao diagnóstico de nível (SQL, Python, AWS, Copilot Studio, LLMs) para calibrar o ritmo</label></li>
+    <li class="check"><input type="checkbox" data-k="f0-diag" id="f0-diag" checked><label for="f0-diag">Diagnóstico de nível: baixo em SQL, Python, AWS, QuickSight, Copilot Studio e LLMs</label></li>
   </ul>
+
+  <div class="callout">
+    <span class="label">Trilha de base, em paralelo (por partir do zero)</span>
+    <p>Da Fase 1 até a Fase 4, reserve cerca de 1h30 por semana para <strong>SQL do zero</strong> e <strong>Python do zero</strong>, em blocos curtos e frequentes. Assim, quando chegarem a esteira (Fase 2) e o MCP (Fase 5), a sintaxe já não ocupa sua memória de trabalho e sobra espaço para os conceitos.</p>
+    <ul style="list-style:none;padding:0;margin:.5rem 0 0">
+      <li class="check"><input type="checkbox" data-k="b-sql" id="b-sql"><label for="b-sql">SQL do zero: SELECT, WHERE, GROUP BY, JOIN (antes da Fase 2)</label></li>
+      <li class="check"><input type="checkbox" data-k="b-py" id="b-py"><label for="b-py">Python do zero: variáveis, listas, dicionários, funções, ler JSON, chamar uma API (antes da Fase 5)</label></li>
+      <li class="check"><input type="checkbox" data-k="b-aws" id="b-aws"><label for="b-aws">AWS do zero: conta, região, IAM (quem pode o quê), S3 (antes da Fase 2)</label></li>
+    </ul>
+  </div>
 
   <h2>Fase 1 · Como LLMs e agentes funcionam <small>(semanas 2–4)</small></h2>
   <p>Objetivo: entender o motor o bastante para explicar <em>por que</em> um agente erra, custa caro ou alucina. É a base de todas as outras fases.</p>
@@ -102,7 +113,7 @@
 
   <h2>Fase 5 · MCP: dar ferramentas aos agentes <small>(semanas 12–15)</small></h2>
   <ul style="list-style:none;padding:0">
-    <li class="check"><input type="checkbox" data-k="f5-a" id="f5-a"><label for="f5-a">Python básico para APIs (se o diagnóstico indicar)</label></li>
+    <li class="check"><input type="checkbox" data-k="f5-a" id="f5-a"><label for="f5-a">Python para APIs: requisições HTTP, JSON, tratamento de erro (continuação da trilha de base)</label></li>
     <li class="check"><input type="checkbox" data-k="f5-b" id="f5-b"><label for="f5-b">Protocolo: host/cliente/servidor, tools/resources/prompts, transporte Streamable HTTP (<a href="https://modelcontextprotocol.io">spec</a>)</label></li>
     <li class="check"><input type="checkbox" data-k="f5-c" id="f5-c"><label for="f5-c">Construir um servidor (<a href="https://anthropic.skilljar.com/introduction-to-model-context-protocol">curso gratuito da Anthropic</a>)</label></li>
     <li class="check"><input type="checkbox" data-k="f5-d" id="f5-d"><label for="f5-d">Conectar ao Copilot Studio (<a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/agents-experience/tools-add-mcp-server">wizard MCP</a>) e autenticação</label></li>
@@ -169,7 +180,7 @@
   // Progresso local (só conveniência; se o storage falhar, a página funciona igual)
   document.querySelectorAll('.check input[data-k]').forEach(function (cb) {
     var key = 'aiops-plano:' + cb.dataset.k;
-    try { cb.checked = localStorage.getItem(key) === '1'; } catch (e) {}
+    try { var v = localStorage.getItem(key); if (v !== null) cb.checked = v === '1'; } catch (e) {}
     cb.addEventListener('change', function () { try { localStorage.setItem(key, cb.checked ? '1' : '0'); } catch (e) {} });
   });
 </script>
