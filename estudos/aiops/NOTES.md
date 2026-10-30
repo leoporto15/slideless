@@ -13,12 +13,12 @@
 - Stack: AWS + Microsoft 365 (Copilot Studio é o principal; high code eventualmente).
 
 ## Calibração
+- Acesso (30/10/2026): tem Copilot Studio e AWS. Exercícios práticos são reais, não simulados (sempre com dados fictícios e cuidado com custo/permissões em ambiente corporativo).
 - Nível (30/10/2026): baixo em tudo (SQL, Python, AWS, QuickSight, Copilot Studio, LLMs). Ver LR 0002.
 - Implicação: explicar sem jargão não definido, um conceito novo por vez, exemplos concretos do mundo bancário/corporativo.
 
 ## A calibrar (perguntar)
 - Horas por semana e data de início na nova área.
-- Tem acesso a um ambiente com licença de Copilot Studio / conta AWS sandbox?
 
 ## Notas operacionais
 - Workspace em `estudos/aiops/` dentro do repo slideless (escolha do aluno).
