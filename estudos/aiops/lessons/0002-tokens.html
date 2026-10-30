@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tokens de um agente</title>
+<link rel="stylesheet" href="../assets/estilo.css">
+</head>
+<body>
+<main>
+  <p class="kicker">Lição 0002 · Fase 1: como LLMs e agentes funcionam</p>
+  <h1>Tokens: a moeda de um agente</h1>
+  <p class="subtitle">Por que limite de contexto, custo e velocidade são medidos na mesma unidade.</p>
+
+  <div class="lesson-meta">
+    <span><strong>Tempo:</strong> ~20 min + 10 min no console da AWS</span>
+    <span><strong>Pré-requisito:</strong> <a href="0001-kb-mcp-ou-instrucao.html">Lição 0001</a></span>
+    <span><strong>Plano:</strong> <a href="../reference/plano-de-estudo.html">voltar ao plano de estudo</a></span>
+  </div>
+
+  <div class="callout win">
+    <span class="label">O ganho desta lição</span>
+    <p>Ao final, você estima quantos tokens uma conversa de agente consome, explica por que a entrada pesa mais do que parece e sabe que Copilot Studio e Bedrock cobram de formas diferentes. É a base do indicador "custo por conversa" que você vai construir na Fase 7.</p>
+  </div>
+
+  <h2>Revisão rápida da lição 0001</h2>
+  <details class="recall">
+    <summary>Uma área quer que o agente saiba a regra de elegibilidade de um produto, que muda toda semana e é mantida num sistema da área de produtos. KB, MCP ou instrução? Por quê?</summary>
+    <textarea aria-label="Sua resposta de memória" placeholder="Responda de memória antes de abrir a resposta."></textarea>
+    <p class="meta">Resposta: MCP. A regra muda com frequência e a fonte da verdade é um sistema governado por outra área. Copiar para uma KB criaria uma versão desatualizada.</p>
+  </details>
+
+  <h2>O que é um token</h2>
+  <p>Um modelo de linguagem não lê letras nem palavras inteiras. Ele lê <strong>tokens</strong>: pedaços de texto que podem ser uma palavra curta, parte de uma palavra, um sinal de pontuação ou um espaço. Antes de qualquer coisa, o texto passa por um <em>tokenizador</em>, que o corta nesses pedaços e troca cada um por um número.<span class="sidenote">A explicação mais clara que conheço está no vídeo <a href="https://www.youtube.com/watch?v=7xTGNNLPyMI">Deep Dive into LLMs like ChatGPT</a>, de Andrej Karpathy, no trecho sobre tokenização (logo no início).</span></p>
+  <p>A regra prática mais citada: em inglês, um token tem em média uns 4 caracteres, cerca de três quartos de uma palavra. Cada modelo tem seu próprio tokenizador, então a contagem exata muda de um modelo para outro.</p>
+
+  <div class="callout">
+    <span class="label">Português custa mais</span>
+    <p>Os tokenizadores foram treinados com muito mais texto em inglês, então cortam o português em mais pedaços. Num estudo, o mesmo texto jurídico em português precisou de mais de 50% de tokens a mais que em inglês com um tokenizador antigo.<span class="sidenote"><a href="https://arxiv.org/abs/2308.11878">Cabrita: closing the gap for foreign languages</a> (arXiv, 2023). Tokenizadores mais novos reduzem essa diferença, mas ela continua existindo. Você vai medir isso no exercício.</span> Para um banco que atende em português, isso entra direto no custo.</p>
+  </div>
+
+  <h2>Três coisas medidas em tokens</h2>
+  <div class="flow">
+    <div><strong>Limite de contexto</strong>A janela de contexto é o máximo de tokens que o modelo consegue considerar de uma vez. Ela precisa caber a entrada <em>e</em> a resposta.</div>
+    <div><strong>Custo</strong>Quando a cobrança é por uso de modelo, você paga por token de entrada e por token de saída. O token de saída costuma ser bem mais caro.</div>
+    <div><strong>Velocidade</strong>A resposta é gerada um token de cada vez. Resposta longa demora mais, e o tempo até a primeira palavra cresce com o tamanho da entrada.</div>
+  </div>
+
+  <h2>O detalhe que quase todo mundo esquece</h2>
+  <p>O modelo não tem memória entre uma chamada e outra. Para "lembrar" da conversa, o agente <strong>reenvia tudo a cada turno</strong>: as instruções, os trechos que a KB trouxe, o resultado das ferramentas e o histórico inteiro. Então o turno 8 de uma conversa lê muito mais tokens que o turno 1, mesmo que a pergunta seja curta.</p>
+  <p>Mexa na calculadora abaixo. Os preços são <strong>valores de exemplo</strong>, não a tabela de nenhum modelo: troque pelos preços reais do modelo que a sua área usar.</p>
+
+  <div class="calc" data-calc></div>
+  <p class="meta">Modelo simplificado: ignora cache, chamadas extras do agente para usar ferramentas e resumos de histórico. Serve para entender a ordem de grandeza.</p>
+
+  <p>Com os valores padrão, <strong>95% dos tokens são de entrada</strong>. Por isso, as alavancas de custo de um agente são: instruções enxutas, trechos de KB menores e mais certeiros, e resultados de ferramenta que devolvem só o necessário. Seu trabalho de curadoria de KB (Fase 4) e de desenho de MCP (Fase 5) também é trabalho de custo.</p>
+
+  <h2>Dois jeitos de cobrar</h2>
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th></th><th>Copilot Studio</th><th>Amazon Bedrock</th></tr></thead>
+    <tbody>
+      <tr><td>Unidade de cobrança</td><td>Copilot Credits, por tipo de evento</td><td>Tokens de entrada e de saída</td></tr>
+      <tr><td>Exemplos</td><td>Resposta clássica: 1 crédito. Resposta generativa: 2. Ação de agente: 5. Grounding no Microsoft Graph do tenant: 10.</td><td>Preço por milhão de tokens, diferente para cada modelo</td></tr>
+      <tr><td>Observação</td><td>Esses eventos não são cobrados quando o usuário tem licença do Microsoft 365 Copilot</td><td>O console mostra os tokens de cada resposta no playground</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="meta">Fonte: <a href="https://learn.microsoft.com/microsoft-copilot-studio/requirements-messages-management">Copilot Studio billing rates and management</a> (Microsoft Learn). As taxas mudam: confira a página antes de usar num cálculo de verdade.</p>
+  <p>No Copilot Studio, tokens não aparecem na fatura, mas continuam importando: são eles que estouram o limite de contexto e deixam a resposta lenta. Para os seus indicadores, isso significa que "custo por conversa" vai ter <strong>duas fórmulas</strong>, uma para agentes em Copilot Studio (créditos) e outra para agentes em AWS (tokens).</p>
+
+  <h2>Recupere antes de praticar</h2>
+  <details class="recall">
+    <summary>Sem rolar a página: por que o turno 8 de uma conversa custa mais que o turno 1? E quais são as três coisas medidas em tokens?</summary>
+    <textarea aria-label="Sua resposta de memória" placeholder="Escreva de memória, depois compare com o texto acima."></textarea>
+  </details>
+
+  <h2>Pratique</h2>
+  <div class="quiz" data-quiz="q0002"></div>
+  <script type="application/json" id="q0002">
+  [
+    { "prompt": "Um agente responde em português. Comparado ao mesmo texto em inglês, ele tende a usar:",
+      "options": ["mais tokens e custar mais", "menos tokens e custar menos", "os mesmos tokens e custo"], "answer": 0,
+      "why": "Os tokenizadores cortam o português em mais pedaços, porque foram treinados com mais texto em inglês. Mais tokens significa mais custo e mais espaço ocupado no contexto." },
+    { "prompt": "Um modelo tem janela de contexto de 200 mil tokens. O que precisa caber nela?",
+      "options": ["só a pergunta do usuário", "entrada e saída, somadas juntas", "só a resposta do modelo"], "answer": 1,
+      "why": "A janela é o orçamento total da chamada: instruções, histórico, trechos de KB, resultados de ferramenta e também a resposta que o modelo vai gerar." },
+    { "prompt": "Numa conversa de 10 turnos, por que o 10º turno costuma custar mais que o 1º?",
+      "options": ["o preço por token sobe", "a resposta sempre fica maior", "o histórico inteiro é reenviado"], "answer": 2,
+      "why": "O modelo não guarda memória entre chamadas. O agente reenvia instruções e histórico a cada turno, então a entrada cresce a cada troca de mensagens." },
+    { "prompt": "No Copilot Studio, uma resposta generativa é cobrada principalmente por:",
+      "options": ["tokens de entrada e saída", "créditos por tipo de resposta", "minutos de conversa com usuário"], "answer": 1,
+      "why": "O Copilot Studio cobra em Copilot Credits por tipo de evento (resposta clássica, generativa, ação de agente). Na AWS, o Bedrock cobra por token." },
+    { "prompt": "Uma área colou um manual de 50 páginas inteiro na instrução do agente. O efeito mais provável:",
+      "options": ["o agente fica mais preciso", "nada muda no custo final", "custo e latência sobem muito"], "answer": 2,
+      "why": "A instrução é reenviada em todo turno. 50 páginas viram dezenas de milhares de tokens por chamada, e ainda podem diluir a atenção do modelo. Lugar de manual é a KB (lição 0001)." }
+  ]
+  </script>
+
+  <h2>Leve para o mundo real: meça na sua AWS</h2>
+  <p>O playground do Amazon Bedrock mostra, depois de cada resposta, a seção <em>Model metrics</em>, com tokens de entrada, tokens de saída, latência e custo.<span class="sidenote"><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/playgrounds.html">Generate responses in the console using playgrounds</a>, Amazon Bedrock. Os rótulos exatos podem variar com a versão do console.</span> São 10 minutos e centavos de custo.</p>
+  <ol>
+    <li>No console da AWS, abra o Amazon Bedrock, vá em <em>Playgrounds → Chat</em> e escolha um modelo pequeno e barato que esteja liberado na sua conta. Se nenhum estiver liberado, peça acesso ao time estruturante.</li>
+    <li>Envie esta pergunta em português e anote os tokens de entrada e de saída: <code>Explique em três frases o que é uma base de conhecimento para um agente de IA.</code></li>
+    <li>Abra um chat novo e envie a mesma pergunta em inglês: <code>Explain in three sentences what a knowledge base for an AI agent is.</code> Anote de novo.</li>
+    <li>Ainda no chat em português, mande mais duas perguntas curtas de continuação. Observe o que acontece com os tokens de entrada a cada turno.</li>
+  </ol>
+  <p><strong>Traga para o chat:</strong> os seis números (entrada e saída, nas duas línguas) e o que você viu acontecer com a entrada nos turnos seguintes. Use só texto fictício como este, nunca dados internos.</p>
+
+  <div class="callout">
+    <span class="label">Fonte primária recomendada</span>
+    <p><a href="https://www.youtube.com/watch?v=7xTGNNLPyMI">Deep Dive into LLMs like ChatGPT</a>, de Andrej Karpathy. Assista só ao trecho de tokenização, no começo do vídeo. O resto do vídeo será material das próximas lições da Fase 1.</p>
+  </div>
+
+  <p class="meta">Alguma parte não ficou clara, ou a calculadora mostrou algo que você não esperava? Pergunte no chat: eu sou o seu professor nesta trilha e explico de outro jeito sempre que precisar.</p>
+
+  <nav class="lesson-nav">
+    <a href="0001-kb-mcp-ou-instrucao.html">← Lição 0001</a>
+    <a href="../reference/plano-de-estudo.html">Plano de estudo</a>
+  </nav>
+</main>
+<script src="../assets/quiz.js"></script>
+<script src="../assets/calculadora-contexto.js"></script>
+</body>
+</html>

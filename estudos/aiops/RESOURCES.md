@@ -8,6 +8,9 @@
 - [Vídeo: "Transformers, the tech behind LLMs" — 3Blue1Brown (Deep Learning, cap. 5)](https://www.youtube.com/@3blue1brown) + "Attention in transformers, step-by-step"
   Explicação visual de embeddings, atenção e previsão do próximo token. Use para: intuição de embeddings (base de toda busca semântica em KB).
 
+- [Artigo: "Cabrita: closing the gap for foreign languages" (arXiv, 2023)](https://arxiv.org/abs/2308.11878)
+  Mede quantos tokens a mais o português usa em relação ao inglês. Use para: explicar por que agentes em português custam mais.
+
 ### Agentes e contexto (conceitos)
 - [Artigo: "Building effective agents" (Anthropic Engineering)](https://www.anthropic.com/engineering/building-effective-agents)
   Distinção entre workflow e agente e padrões de composição. Use para: vocabulário base de agentes.
@@ -17,6 +20,12 @@
   Lições curtas com código sobre padrões de agentes (uso de ferramentas, planejamento, multiagente, RAG agêntico). Use para: a parte "high code" de agentes.
 - [Curso: Hugging Face Agents Course (gratuito, com certificado)](https://huggingface.co/learn/agents-course)
   Fundamentos de agentes com exercícios e comunidade no Discord. Use para: alternativa/complemento ao curso da Microsoft.
+
+### Custo de uso de modelos
+- [Docs: Copilot Studio billing rates and management (Microsoft Learn)](https://learn.microsoft.com/microsoft-copilot-studio/requirements-messages-management)
+  Cobrança em Copilot Credits por tipo de evento (resposta clássica, generativa, ação de agente, grounding). Use para: fórmula de custo por conversa de agentes em Copilot Studio. As taxas mudam: conferir sempre.
+- [Docs: Generate responses in the console using playgrounds (Amazon Bedrock)](https://docs.aws.amazon.com/bedrock/latest/userguide/playgrounds.html)
+  O playground mostra tokens de entrada, de saída, latência e custo de cada resposta. Use para: medir tokens na prática.
 
 ### MCP (Model Context Protocol)
 - [Especificação oficial: modelcontextprotocol.io](https://modelcontextprotocol.io) · [repositório da spec no GitHub](https://github.com/modelcontextprotocol/modelcontextprotocol)

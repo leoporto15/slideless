@@ -5,3 +5,5 @@ O aluno aplicou o teste das três perguntas da lição 0001 a três casos reais 
 **Evidence**: tarefa "leve para o mundo real" da lição 0001 (30/10/2026), com casos escolhidos pelo próprio aluno, sem ajuda.
 
 **Implications**: falta testar os casos de fronteira (informação que parece documento mas muda ou depende da pessoa, e guia de estilo longo demais para instrução). Retomar com prática espaçada nas próximas lições. Atlan tem servidor MCP oficial (agent-toolkit), um bom exemplo concreto para a Fase 5.
+
+**Update (30/10/2026)**: acertou também um caso de fronteira (glossário de negócio do Atlan → MCP) com a justificativa "muda constantemente e outras áreas são donas". Correção dada: definições de glossário mudam pouco. O critério decisivo é a fonte da verdade governada por outra área (copiar cria duplicata desatualizada), não a frequência de mudança. Revisitar com prática espaçada.

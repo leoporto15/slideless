@@ -26,4 +26,5 @@
 - Versões navegáveis (artifacts privados do Claude, republicar ao mudar o HTML):
   - Plano: https://claude.ai/artifact/HHzRiQphhAogBUCQara2cZ
   - Lição 0001: https://claude.ai/artifact/LYY4RPuKBHaWc3GMK9ZTdN
-  - Artifacts não carregam CSS/JS por caminho relativo: gerar versão com `assets/` embutido e links trocados pelas URLs dos artifacts.
+  - Lição 0002: https://claude.ai/artifact/Tcs7KV5a6jX7KL4sreGRA4
+  - Montar com `python3 tools/montar_artifacts.py <pasta>` (embute `assets/`, troca links pelas URLs de `<pasta>/urls.json`) e republicar cada arquivo na mesma URL. Lição nova: incluir no script e no urls.json.
