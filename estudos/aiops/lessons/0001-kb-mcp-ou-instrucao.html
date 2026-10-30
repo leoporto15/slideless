@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KB, MCP ou instrução</title>
+<link rel="stylesheet" href="../assets/estilo.css">
+</head>
+<body>
+<main>
+  <p class="kicker">Lição 0001 · Fase 0: o mapa</p>
+  <h1>KB, MCP ou instrução?</h1>
+  <p class="subtitle">Onde deve morar cada informação de que um agente precisa.</p>
+
+  <div class="lesson-meta">
+    <span><strong>Tempo:</strong> ~15 min</span>
+    <span><strong>Pré-requisito:</strong> nenhum</span>
+    <span><strong>Plano:</strong> <a href="../reference/plano-de-estudo.html">voltar ao plano de estudo</a></span>
+  </div>
+
+  <div class="callout win">
+    <span class="label">O ganho desta lição</span>
+    <p>Ao final, você classifica qualquer informação de um agente em um de três lugares e justifica a escolha. É a primeira pergunta que cada área vai te trazer quando quiser "colocar o conhecimento dela no agente".</p>
+  </div>
+
+  <h2>Por que isso é o centro da sua função</h2>
+  <p>A Anthropic resume um agente como <em>um modelo de linguagem usando ferramentas em loop</em>, e trata o contexto (o que o modelo "vê" a cada passo) como um recurso finito, que precisa ser gasto com cuidado.<span class="sidenote">Fonte: <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Effective context engineering for AI agents</a>, Anthropic Engineering.</span> Tudo o que o agente sabe chega a ele por um de três caminhos. Escolher o caminho errado gera os problemas clássicos: respostas desatualizadas, vazamento de dado de uma pessoa para outra, ou um agente lento e caro com contexto inchado.</p>
+
+  <h2>Os três lugares</h2>
+  <div class="flow">
+    <div class="instr"><strong>Instrução</strong>Regras de comportamento que valem para <em>toda</em> conversa: tom, escopo, o que não fazer, quando encaminhar. Sempre presentes no contexto, então precisam ser curtas.</div>
+    <div class="kb"><strong>Base de conhecimento (KB)</strong>Documentos estáveis (políticas, manuais, FAQs). O agente <em>busca</em> os trechos relevantes antes de responder: é o RAG.</div>
+    <div class="mcp"><strong>Ferramenta via MCP</strong>Dados que mudam a toda hora ou por pessoa, e <em>ações</em> em sistemas. O agente chama uma função e recebe a resposta na hora.</div>
+  </div>
+
+  <p><span class="tag kb">KB</span> No Copilot Studio isso é uma <em>fonte de conhecimento</em>: SharePoint, Dataverse, arquivos enviados ou conectores.<span class="sidenote"><a href="https://learn.microsoft.com/microsoft-copilot-studio/knowledge-copilot-studio">Knowledge sources overview</a>, Microsoft Learn. Na AWS, o equivalente é o <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/kb-chunking.html">Amazon Bedrock Knowledge Bases</a>.</span> O conteúdo é indexado e quebrado em pedaços (<em>chunks</em>), e a busca traz só os pedaços relevantes para a pergunta.</p>
+
+  <p><span class="tag mcp">MCP</span> O Model Context Protocol é um padrão aberto para um agente descobrir e chamar ferramentas de um servidor. O Copilot Studio adiciona um servidor MCP como <em>ferramenta</em> do agente: ele lê a lista de ferramentas que o servidor expõe e passa a chamá-las.<span class="sidenote"><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/agents-experience/tools-add-mcp-server">Add an MCP server to your agent as a tool</a>, Microsoft Learn. Na AWS, o <a href="https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/gateway-core-concepts.html">AgentCore Gateway</a> expõe APIs e funções como ferramentas MCP.</span> A resposta é calculada na hora da chamada. Quando a conexão usa a identidade do usuário (o Copilot Studio pede que ele se conecte ao servidor), o dado devolvido é o daquela pessoa, naquele momento. Como configurar essa autenticação é assunto da Fase 5.</p>
+
+  <p><span class="tag instr">Instrução</span> É o texto fixo que define o papel do agente. Como entra em todo turno, cada linha custa contexto: regras sim, conteúdo de manual não.</p>
+
+  <h3>O teste das três perguntas</h3>
+  <p>Uma regra prática (minha, não da documentação) para decidir, na ordem:</p>
+  <ol>
+    <li><strong>É regra de comportamento que vale para toda conversa?</strong> Então é <span class="tag instr">Instrução</span>.</li>
+    <li><strong>A resposta muda com o tempo ou com a pessoa, ou exige <em>fazer</em> algo num sistema?</strong> Então é <span class="tag mcp">MCP</span>.</li>
+    <li><strong>Está escrita num documento e muda pouco?</strong> Então é <span class="tag kb">KB</span>.</li>
+  </ol>
+
+  <div class="callout">
+    <span class="label">Nuance: a fronteira técnica é borrada</span>
+    <p>Os Copilot connectors do Microsoft 365 têm dois modos: <em>synced</em>, que indexa o conteúdo no Microsoft Graph (comportamento de KB), e <em>federated</em>, que busca em tempo real via MCP sem indexar.<span class="sidenote"><a href="https://learn.microsoft.com/en-us/training/modules/choose-microsoft-365-copilot-extensibility-path/4-extend-copilot-knowledge-copilot-connectors">Extend Copilot's knowledge with Copilot connectors</a>, Microsoft Learn.</span> A AWS permite expor uma Knowledge Base como alvo do AgentCore Gateway, ou seja, como ferramenta MCP.<span class="sidenote"><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/kb-gateway-target.html">Connect a knowledge base to a gateway</a>, Amazon Bedrock.</span> Por isso, decida primeiro pela <strong>natureza da informação</strong> (estável ou viva, geral ou por pessoa, saber ou fazer) e só depois escolha a tecnologia.</p>
+  </div>
+
+  <h2>Recupere antes de praticar</h2>
+  <details class="recall">
+    <summary>Sem rolar a página para cima: quais são os três lugares e qual pergunta decide cada um?</summary>
+    <textarea aria-label="Sua resposta de memória" placeholder="Escreva de memória, depois compare com o texto acima."></textarea>
+    <p class="meta">Escrever de memória cansa mais que reler, e é justamente isso que faz o conteúdo ficar. Não pule.</p>
+  </details>
+
+  <h2>Pratique: classifique</h2>
+  <p>Para cada informação de um agente interno hipotético, escolha onde ela deve morar. O feedback é imediato.</p>
+  <div class="quiz" data-quiz="q0001"></div>
+  <script type="application/json" id="q0001">
+  [
+    { "prompt": "A política de reembolso de despesas de viagem, publicada como PDF no SharePoint e revisada uma vez por ano.",
+      "options": ["Ferramenta via MCP", "Instrução do agente", "Base de conhecimento"], "answer": 2,
+      "why": "Documento estável, igual para todos, com volume grande demais para ficar sempre no contexto: buscar o trecho relevante quando perguntarem é exatamente o papel de uma KB." },
+    { "prompt": "O saldo de férias do funcionário que está fazendo a pergunta.",
+      "options": ["Ferramenta via MCP", "Base de conhecimento", "Instrução do agente"], "answer": 0,
+      "why": "Muda com o tempo e é diferente para cada pessoa. Precisa ser consultado ao vivo, com a identidade de quem pergunta. Numa KB, ficaria desatualizado ou, pior, visível para a pessoa errada." },
+    { "prompt": "Responder sempre em português formal e nunca dar orientação jurídica.",
+      "options": ["Base de conhecimento", "Instrução do agente", "Ferramenta via MCP"], "answer": 1,
+      "why": "É regra de comportamento que vale para toda conversa. Se ficasse numa KB, só valeria quando a busca por acaso trouxesse esse trecho." },
+    { "prompt": "Abrir um chamado no sistema de TI quando o usuário pedir.",
+      "options": ["Instrução do agente", "Base de conhecimento", "Ferramenta via MCP"], "answer": 2,
+      "why": "É uma ação num sistema, não uma informação. Ações só acontecem por ferramenta. A instrução pode dizer quando usar a ferramenta, mas não executa nada." },
+    { "prompt": "Um manual de 300 páginas com os procedimentos operacionais de uma área.",
+      "options": ["Base de conhecimento", "Instrução do agente", "Ferramenta via MCP"], "answer": 0,
+      "why": "Conteúdo documental e estável. Na instrução, 300 páginas estourariam o contexto em todo turno. Seu trabalho aqui vai ser curadoria e estrutura do manual para a busca funcionar bem (Fases 3 e 4)." },
+    { "prompt": "Se a pergunta for sobre investimentos pessoais, não responder e indicar o canal oficial.",
+      "options": ["Ferramenta via MCP", "Base de conhecimento", "Instrução do agente"], "answer": 2,
+      "why": "Regra de escopo e encaminhamento que precisa valer sempre, mesmo quando nenhum documento é recuperado. Lugar de instrução." },
+    { "prompt": "Quantos chamados a área abriu hoje, segundo o sistema de atendimento.",
+      "options": ["Instrução do agente", "Ferramenta via MCP", "Base de conhecimento"], "answer": 1,
+      "why": "É um número que muda ao longo do dia: precisa de consulta ao vivo. Esse é o tipo de MCP que você vai desenhar também para os seus próprios indicadores." }
+  ]
+  </script>
+
+  <h2>Leve para o mundo real</h2>
+  <p>Pense em três informações que um agente da sua futura área precisaria (por exemplo: o regulamento de um processo, o status de um projeto, uma regra de priorização). Classifique cada uma com o teste das três perguntas e <strong>traga a classificação para o chat</strong>. Eu dou o feedback e, se ficar claro que você domina, registro isso no seu histórico de aprendizado.</p>
+
+  <div class="callout">
+    <span class="label">Fonte primária recomendada</span>
+    <p><a href="https://learn.microsoft.com/microsoft-copilot-studio/knowledge-copilot-studio">Knowledge sources overview (Copilot Studio, Microsoft Learn)</a>: leia a visão geral para ver quais fontes de conhecimento o seu principal ambiente aceita e quais limites elas têm. Depois, se tiver tempo: <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Effective context engineering for AI agents</a>.</p>
+  </div>
+
+  <p class="meta">Ficou alguma dúvida, ou alguma resposta do quiz não convenceu? Pergunte no chat: eu sou o seu professor nesta trilha e posso explicar de outro jeito, dar mais exemplos ou aprofundar qualquer ponto.</p>
+
+  <nav class="lesson-nav">
+    <a href="../reference/plano-de-estudo.html">← Plano de estudo</a>
+    <span class="meta">Próxima lição: definida pelo seu diagnóstico</span>
+  </nav>
+</main>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>
