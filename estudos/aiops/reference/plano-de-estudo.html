@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plano de estudo AIOps</title>
+<link rel="stylesheet" href="../assets/estilo.css">
+</head>
+<body>
+<main class="wide">
+  <p class="kicker">Referência · Plano de estudo</p>
+  <h1>Do zero a especialista de dados, KBs e MCPs para agentes</h1>
+  <p class="subtitle">Seis fases, uma entrega concreta por fase. Cada fase existe porque a sua <a href="../MISSION.md">missão</a> pede.</p>
+
+  <div class="lesson-meta">
+    <span><strong>Ritmo assumido:</strong> ~6 h/semana (ajustar após o diagnóstico)</span>
+    <span><strong>Duração estimada:</strong> ~16 semanas</span>
+    <span><strong>Stack:</strong> Microsoft 365 / Copilot Studio + AWS</span>
+  </div>
+
+  <div class="callout">
+    <span class="label">Como usar</span>
+    <p>As fases 2 (dados) e 3–4 (KB e MCP) podem correr em paralelo: uma é a sua metade "governança", a outra é a metade "conhecimento para agentes". Marque o que for concluindo: o progresso fica salvo neste navegador. Toda lição nova aparece aqui com link.</p>
+  </div>
+
+  <h2>O mapa da função</h2>
+  <p>A sua cadeira tem duas metades que se alimentam: você <em>constrói o insumo</em> dos agentes (KBs e MCPs) e <em>mede o que eles entregam</em> (indicadores e ROI). A qualidade de uma KB aparece nos seus indicadores, e os indicadores dizem qual KB consertar primeiro.</p>
+  <div class="flow">
+    <div class="kb"><strong>KBs</strong>Conhecimento documental das áreas, curado e com permissão certa.</div>
+    <div class="mcp"><strong>MCPs</strong>Acesso padronizado a sistemas e dados vivos (consultas e ações).</div>
+    <div><strong>Agentes</strong>Copilot Studio (principal) e high code em AWS, construídos pelos outros times.</div>
+    <div><strong>Indicadores</strong>Adoção, qualidade, custo e valor: como a área se governa.</div>
+    <div><strong>ROI e priorização</strong>Insumo para o time de finanças decidir onde investir.</div>
+  </div>
+
+  <h2>Fase 0 · Diagnóstico e mapa <small>(semana 1)</small></h2>
+  <ul style="list-style:none;padding:0">
+    <li class="check"><input type="checkbox" data-k="f0-l1" id="f0-l1"><label for="f0-l1"><a href="../lessons/0001-kb-mcp-ou-instrucao.html">Lição 0001: KB, MCP ou instrução? Onde mora cada informação de um agente</a></label></li>
+    <li class="check"><input type="checkbox" data-k="f0-diag" id="f0-diag"><label for="f0-diag">Responder ao diagnóstico de nível (SQL, Python, Power BI, AWS, Copilot Studio, LLMs) para calibrar o ritmo</label></li>
+  </ul>
+
+  <h2>Fase 1 · Fundamentos de IA generativa e agentes <small>(semanas 2–3)</small></h2>
+  <p>Objetivo: entender o motor o bastante para explicar <em>por que</em> um agente erra, custa caro ou alucina.</p>
+  <ul style="list-style:none;padding:0">
+    <li class="check"><input type="checkbox" data-k="f1-a" id="f1-a"><label for="f1-a">LLM, token, janela de contexto, temperatura, alucinação, custo por token</label></li>
+    <li class="check"><input type="checkbox" data-k="f1-b" id="f1-b"><label for="f1-b">Grounding e RAG: recuperar antes de responder (<a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">context engineering</a>)</label></li>
+    <li class="check"><input type="checkbox" data-k="f1-c" id="f1-c"><label for="f1-c">Uso de ferramentas e agente vs. workflow (<a href="https://www.anthropic.com/engineering/building-effective-agents">Building effective agents</a>)</label></li>
+    <li class="check"><input type="checkbox" data-k="f1-d" id="f1-d"><label for="f1-d">Prática: primeiro agente no Copilot Studio com uma fonte de conhecimento (<a href="https://microsoft.github.io/agent-academy">Agent Academy</a>, nível Recruit)</label></li>
+  </ul>
+  <p class="meta">Entrega: um agente de teste respondendo sobre um documento fictício, mais uma nota sobre onde ele errou e por quê.</p>
+
+  <h2>Fase 2 · Dados para governar <small>(semanas 3–6, em paralelo)</small></h2>
+  <p>Objetivo: transformar telemetria crua em indicador confiável.</p>
+  <ul style="list-style:none;padding:0">
+    <li class="check"><input type="checkbox" data-k="f2-a" id="f2-a"><label for="f2-a">SQL do essencial ao intermediário: joins, agregações, janelas (window functions), CTEs</label></li>
+    <li class="check"><input type="checkbox" data-k="f2-b" id="f2-b"><label for="f2-b">Modelagem dimensional: fato, dimensão, granularidade (<a href="https://learn.microsoft.com/power-bi/guidance/star-schema">star schema no Power BI</a>)</label></li>
+    <li class="check"><input type="checkbox" data-k="f2-c" id="f2-c"><label for="f2-c">Power BI: modelo, medidas DAX básicas, painel</label></li>
+    <li class="check"><input type="checkbox" data-k="f2-d" id="f2-d"><label for="f2-d">Anatomia de um KPI: definição, fórmula, fonte, dono, frequência, meta; árvore de métricas</label></li>
+    <li class="check"><input type="checkbox" data-k="f2-e" id="f2-e"><label for="f2-e">Qualidade de dados: completude, atraso, deduplicação, grupo mínimo (privacidade)</label></li>
+  </ul>
+  <p class="meta">Entrega: modelo estrela (dados fictícios) de conversas de agentes, com 5 medidas e 1 painel.</p>
+
+  <h2>Fase 3 · Bases de conhecimento (KBs) <small>(semanas 6–9)</small></h2>
+  <p>Objetivo: definir o padrão de KB da empresa e saber medir se uma KB está boa.</p>
+  <ul style="list-style:none;padding:0">
+    <li class="check"><input type="checkbox" data-k="f3-a" id="f3-a"><label for="f3-a">Curadoria: fonte da verdade, dono do conteúdo, ciclo de atualização, versões obsoletas</label></li>
+    <li class="check"><input type="checkbox" data-k="f3-b" id="f3-b"><label for="f3-b">Escrever para recuperação: estrutura, títulos, metadados, um assunto por documento</label></li>
+    <li class="check"><input type="checkbox" data-k="f3-c" id="f3-c"><label for="f3-c">Permissões e oversharing: Purview e SharePoint Advanced Management (<a href="https://learn.microsoft.com/en-us/copilot/microsoft-365/configure-data-security-copilot">guia</a>)</label></li>
+    <li class="check"><input type="checkbox" data-k="f3-d" id="f3-d"><label for="f3-d">Copilot Studio: fontes de conhecimento (SharePoint, Dataverse, arquivos) e Copilot connectors synced vs. federated (<a href="https://learn.microsoft.com/microsoft-copilot-studio/knowledge-copilot-studio">docs</a>)</label></li>
+    <li class="check"><input type="checkbox" data-k="f3-e" id="f3-e"><label for="f3-e">AWS: Bedrock Knowledge Bases, embeddings e estratégias de <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/kb-chunking.html">chunking</a></label></li>
+    <li class="check"><input type="checkbox" data-k="f3-f" id="f3-f"><label for="f3-f">Avaliação de RAG: golden set, fidelidade, relevância de contexto, context recall (<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base-eval-retrieve-generate.html">Bedrock</a>, <a href="https://docs.ragas.io/">Ragas</a>)</label></li>
+  </ul>
+  <p class="meta">Entrega: "Padrão de KB v0" (1–2 páginas) e um golden set de 30 perguntas com nota de qualidade de uma KB de teste.</p>
+
+  <h2>Fase 4 · MCP: dar ferramentas aos agentes <small>(semanas 9–12)</small></h2>
+  <p>Objetivo: construir, publicar e governar servidores MCP.</p>
+  <ul style="list-style:none;padding:0">
+    <li class="check"><input type="checkbox" data-k="f4-a" id="f4-a"><label for="f4-a">Python básico para APIs (se o diagnóstico indicar)</label></li>
+    <li class="check"><input type="checkbox" data-k="f4-b" id="f4-b"><label for="f4-b">Protocolo: host/cliente/servidor, tools/resources/prompts, transporte Streamable HTTP (<a href="https://modelcontextprotocol.io">spec</a>)</label></li>
+    <li class="check"><input type="checkbox" data-k="f4-c" id="f4-c"><label for="f4-c">Construir um servidor (<a href="https://anthropic.skilljar.com/introduction-to-model-context-protocol">curso gratuito da Anthropic</a>)</label></li>
+    <li class="check"><input type="checkbox" data-k="f4-d" id="f4-d"><label for="f4-d">Conectar ao Copilot Studio (<a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/agents-experience/tools-add-mcp-server">wizard MCP</a>) e autenticação</label></li>
+    <li class="check"><input type="checkbox" data-k="f4-e" id="f4-e"><label for="f4-e">AWS: AgentCore Gateway como ponto único de MCP (<a href="https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/gateway-core-concepts.html">conceitos</a>)</label></li>
+    <li class="check"><input type="checkbox" data-k="f4-f" id="f4-f"><label for="f4-f">Segurança: menor privilégio, descrição de ferramenta como superfície de ataque, auditoria, catálogo de MCPs aprovados</label></li>
+  </ul>
+  <p class="meta">Entrega: servidor MCP com dados fictícios, conectado a um agente de teste, com uma ficha de catálogo (dono, escopo, dados, auth).</p>
+
+  <h2>Fase 5 · Indicadores de IA, custo e ROI <small>(semanas 12–15)</small></h2>
+  <p>Objetivo: a área se governa pelos seus números.</p>
+  <ul style="list-style:none;padding:0">
+    <li class="check"><input type="checkbox" data-k="f5-a" id="f5-a"><label for="f5-a">Fontes de telemetria: Copilot Studio Analytics e Copilot Studio Kit, <a href="https://learn.microsoft.com/viva/insights/org-team-insights/copilot-dashboard">Copilot Dashboard</a>, custos AWS (tags e relatório de custo)</label></li>
+    <li class="check"><input type="checkbox" data-k="f5-b" id="f5-b"><label for="f5-b">Framework de valor de agentes da Microsoft: eficiência, qualidade, adoção (<a href="https://learn.microsoft.com/en-gb/microsoft-Copilot-studio/guidance/agent-business-value-metrics-reference">métricas</a>)</label></li>
+    <li class="check"><input type="checkbox" data-k="f5-c" id="f5-c"><label for="f5-c">Unit economics de IA: custo por conversa, por tarefa resolvida; rateio por time e por agente</label></li>
+    <li class="check"><input type="checkbox" data-k="f5-d" id="f5-d"><label for="f5-d">ROI honesto: baseline, contrafactual, premissas explícitas, faixa de incerteza (<a href="https://learn.microsoft.com/microsoft-copilot-studio/analytics-cost-savings">limites da calculadora</a>)</label></li>
+    <li class="check"><input type="checkbox" data-k="f5-e" id="f5-e"><label for="f5-e">Priorização de portfólio: valor × esforço × risco; como apresentar ao time de finanças</label></li>
+  </ul>
+  <p class="meta">Entrega: árvore de KPIs da área, painel v1 e business case de um projeto (dados fictícios).</p>
+
+  <h2>Fase 6 · Governança e escala <small>(semana 16 em diante)</small></h2>
+  <ul style="list-style:none;padding:0">
+    <li class="check"><input type="checkbox" data-k="f6-a" id="f6-a"><label for="f6-a">Ciclo de vida de KB e MCP: onboarding de área, revisão periódica, desativação</label></li>
+    <li class="check"><input type="checkbox" data-k="f6-b" id="f6-b"><label for="f6-b">Risco e regulação para IA em banco: com as áreas internas de risco e compliance</label></li>
+    <li class="check"><input type="checkbox" data-k="f6-c" id="f6-c"><label for="f6-c">Capstone: playbook "como uma área prepara KB + MCP para seus agentes", com indicadores de sucesso</label></li>
+  </ul>
+
+  <h2>Matriz de habilidades</h2>
+  <div class="table-wrap">
+  <table class="data-table">
+    <thead><tr><th>Habilidade</th><th>Fase</th><th>Nível-alvo</th><th>Prova de domínio</th></tr></thead>
+    <tbody>
+      <tr><td>Conceitos de LLM e agentes</td><td>1</td><td>Explicar</td><td>Diagnosticar por que um agente errou</td></tr>
+      <tr><td>Copilot Studio</td><td>1, 3, 4</td><td>Construir</td><td>Agente com conhecimento + ferramenta MCP</td></tr>
+      <tr><td>SQL</td><td>2</td><td>Fluente</td><td>Consultas com janelas e CTEs sem consulta a material</td></tr>
+      <tr><td>Modelagem dimensional + Power BI</td><td>2</td><td>Construir</td><td>Painel de indicadores em star schema</td></tr>
+      <tr><td>Desenho de KPIs</td><td>2, 5</td><td>Liderar</td><td>Árvore de KPIs aprovada pela área</td></tr>
+      <tr><td>Curadoria e arquitetura de KB</td><td>3</td><td>Liderar</td><td>Padrão de KB adotado por uma área</td></tr>
+      <tr><td>Avaliação de RAG</td><td>3</td><td>Construir</td><td>Golden set + métricas de uma KB</td></tr>
+      <tr><td>Permissões / Purview</td><td>3</td><td>Explicar</td><td>Checklist de prontidão de KB com segurança</td></tr>
+      <tr><td>Python</td><td>4</td><td>Básico</td><td>Servidor MCP funcional</td></tr>
+      <tr><td>MCP (protocolo + segurança)</td><td>4</td><td>Construir</td><td>Servidor publicado e catalogado</td></tr>
+      <tr><td>AWS (Bedrock KB, AgentCore)</td><td>3, 4</td><td>Explicar</td><td>Desenhar a arquitetura com o time estruturante</td></tr>
+      <tr><td>FinOps e ROI de IA</td><td>5</td><td>Construir</td><td>Business case defendido com finanças</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p class="meta">Fontes completas e anotadas em <code>RESOURCES.md</code>. Dúvidas em qualquer ponto: pergunte ao seu professor (o agente) no chat.</p>
+</main>
+<script>
+  // Progresso local (só conveniência; se o storage falhar, a página funciona igual)
+  document.querySelectorAll('.check input[data-k]').forEach(function (cb) {
+    var key = 'aiops-plano:' + cb.dataset.k;
+    try { cb.checked = localStorage.getItem(key) === '1'; } catch (e) {}
+    cb.addEventListener('change', function () { try { localStorage.setItem(key, cb.checked ? '1' : '0'); } catch (e) {} });
+  });
+</script>
+</body>
+</html>

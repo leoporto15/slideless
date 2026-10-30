@@ -1,0 +1,125 @@
+/* estudos/aiops — folha de estilo compartilhada (lições + referências).
+   Tufte-ish: texto serifado legível, coluna estreita, notas na margem, imprime bem. */
+@import url("https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Inter:wght@400;600&family=JetBrains+Mono:wght@400&display=swap");
+
+:root {
+  --bg: #fffdf8;
+  --surface: #f6f2ea;
+  --ink: #1d1b18;
+  --muted: #6b655c;
+  --rule: #e2dcd0;
+  --accent: #c2410c;      /* laranja queimado */
+  --accent-soft: #fde8dc;
+  --ok: #15803d;
+  --ok-soft: #dcfce7;
+  --bad: #b91c1c;
+  --bad-soft: #fee2e2;
+  --kb: #1d4ed8;          /* cores fixas por conceito, reusadas em todas as lições */
+  --mcp: #7c3aed;
+  --instr: #b45309;
+  --serif: "Source Serif 4", Georgia, serif;
+  --sans: "Inter", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #171614; --surface: #211f1c; --ink: #ece7de; --muted: #a39b8f; --rule: #37332d;
+    --accent: #fb923c; --accent-soft: #3b2417; --ok: #4ade80; --ok-soft: #14301f;
+    --bad: #f87171; --bad-soft: #3a1717; --kb: #93b4ff; --mcp: #c4a5ff; --instr: #f5b85c;
+  }
+}
+
+* { box-sizing: border-box; }
+html { font-size: 18px; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font-family: var(--serif); line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+main { max-width: 42rem; margin: 0 auto; padding: 3rem 1rem 5rem; position: relative; }
+main.wide { max-width: 60rem; }
+
+/* Cabeçalho */
+.kicker { font-family: var(--sans); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin: 0 0 .5rem; }
+h1 { font-size: 2.1rem; line-height: 1.15; margin: 0 0 .75rem; font-weight: 600; }
+.subtitle { font-size: 1.15rem; color: var(--muted); font-style: italic; margin: 0 0 2rem; }
+h2 { font-size: 1.35rem; margin: 2.75rem 0 .75rem; font-weight: 600; border-top: 1px solid var(--rule); padding-top: 1.25rem; }
+h3 { font-size: 1.05rem; margin: 1.75rem 0 .5rem; font-weight: 600; }
+p, li { hyphens: auto; }
+a { color: var(--accent); text-underline-offset: 2px; }
+a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+code { font-family: var(--mono); font-size: .85em; background: var(--surface); padding: .1em .35em; border-radius: 4px; }
+small, .meta { font-family: var(--sans); font-size: .78rem; color: var(--muted); }
+
+/* Meta da lição */
+.lesson-meta { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; font-family: var(--sans); font-size: .8rem; color: var(--muted); margin-bottom: 2rem; }
+.lesson-meta strong { color: var(--ink); font-weight: 600; }
+
+/* Notas na margem (Tufte). No mobile viram blocos inline. */
+.sidenote { display: block; font-family: var(--sans); font-size: .78rem; line-height: 1.45; color: var(--muted); margin: .5rem 0 1rem; padding-left: .75rem; border-left: 2px solid var(--rule); }
+@media (min-width: 1440px) {
+  .sidenote { float: right; clear: right; width: 15rem; margin: .2rem -18rem 1rem 0; padding-left: 0; border-left: 0; }
+}
+
+/* Caixas */
+.callout { background: var(--surface); border-left: 3px solid var(--accent); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 6px 6px 0; }
+.callout > :first-child { margin-top: 0; } .callout > :last-child { margin-bottom: 0; }
+.callout.win { border-color: var(--ok); }
+.callout .label { font-family: var(--sans); font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: .35rem; }
+
+/* Tags de conceito, mesma cor em todo o curso */
+.tag { font-family: var(--sans); font-size: .75rem; font-weight: 600; padding: .1rem .5rem; border-radius: 999px; border: 1px solid currentColor; white-space: nowrap; }
+.tag.kb { color: var(--kb); } .tag.mcp { color: var(--mcp); } .tag.instr { color: var(--instr); }
+
+/* Tabelas */
+.data-table { width: 100%; border-collapse: collapse; font-family: var(--sans); font-size: .82rem; margin: 1.25rem 0; }
+.data-table th, .data-table td { text-align: left; vertical-align: top; padding: .55rem .6rem; border-bottom: 1px solid var(--rule); }
+.data-table th { font-weight: 600; color: var(--muted); font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; }
+.table-wrap { overflow-x: auto; }
+
+/* Recall (prática de recuperação) */
+details.recall { background: var(--surface); border-radius: 6px; padding: .9rem 1.1rem; margin: 1.5rem 0; }
+details.recall summary { cursor: pointer; font-family: var(--sans); font-weight: 600; font-size: .9rem; }
+details.recall textarea { width: 100%; min-height: 5rem; margin: .75rem 0; font: inherit; font-size: .95rem; padding: .6rem; border: 1px solid var(--rule); border-radius: 4px; background: var(--bg); color: var(--ink); }
+
+/* Quiz (ver assets/quiz.js) */
+.quiz { margin: 1.5rem 0; }
+.q { border: 1px solid var(--rule); border-radius: 8px; padding: 1rem 1.15rem; margin: 1rem 0; }
+.q-prompt { margin: 0 0 .75rem; }
+.q-num { font-family: var(--sans); font-size: .72rem; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; display: block; margin-bottom: .25rem; }
+.q-options { display: grid; gap: .5rem; }
+.q-options button { font-family: var(--sans); font-size: .9rem; text-align: left; padding: .6rem .8rem; border: 1px solid var(--rule); border-radius: 6px; background: var(--bg); color: var(--ink); cursor: pointer; }
+.q-options button:hover:not(:disabled) { border-color: var(--accent); }
+.q-options button:disabled { cursor: default; }
+.q-options button.correct { background: var(--ok-soft); border-color: var(--ok); }
+.q-options button.wrong { background: var(--bad-soft); border-color: var(--bad); }
+.q-feedback { font-family: var(--sans); font-size: .85rem; margin: .75rem 0 0; }
+.q-feedback strong.ok { color: var(--ok); } .q-feedback strong.bad { color: var(--bad); }
+.quiz-score { font-family: var(--sans); font-size: .9rem; padding: .75rem 1rem; background: var(--accent-soft); border-radius: 6px; }
+
+/* Diagrama simples em caixas */
+.flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: .75rem; margin: 1.5rem 0; font-family: var(--sans); font-size: .82rem; }
+.flow > div { border: 1.5px solid var(--rule); border-radius: 8px; padding: .75rem; background: var(--surface); }
+.flow > div strong { display: block; margin-bottom: .25rem; font-size: .9rem; }
+.flow .kb { border-color: var(--kb); } .flow .mcp { border-color: var(--mcp); } .flow .instr { border-color: var(--instr); }
+
+/* Navegação entre lições */
+nav.lesson-nav { display: flex; justify-content: space-between; gap: 1rem; font-family: var(--sans); font-size: .85rem; margin-top: 3rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); }
+
+/* Checklist de progresso (plano) */
+.check { display: flex; gap: .6rem; align-items: flex-start; }
+.check input { margin-top: .35rem; accent-color: var(--accent); width: 1rem; height: 1rem; flex: none; }
+
+@media (max-width: 600px) { html { font-size: 17px; } h1 { font-size: 1.7rem; } main { padding-top: 2rem; } }
+@media print {
+  @page { margin: 16mm; }
+  html { font-size: 11pt; }
+  body { background: #fff; color: #000; }
+  main, main.wide { max-width: none; padding: 0; }
+  .sidenote { float: none; width: auto; margin: .25rem 0 .75rem; }
+  details.recall, .no-print, nav.lesson-nav { display: none; }
+  details { display: block; }
+  a { color: #000; }
+  a[href^="http"]::after { content: " (" attr(href) ")"; font-size: .75em; color: #555; word-break: break-all; }
+  h2 { break-after: avoid; } .q, .callout, tr { break-inside: avoid; }
+}
