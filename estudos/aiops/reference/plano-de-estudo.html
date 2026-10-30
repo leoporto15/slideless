@@ -8,98 +8,135 @@
 </head>
 <body>
 <main class="wide">
-  <p class="kicker">Referência · Plano de estudo</p>
+  <p class="kicker">Referência · Plano de estudo · v2</p>
   <h1>Do zero a especialista de dados, KBs e MCPs para agentes</h1>
-  <p class="subtitle">Seis fases, uma entrega concreta por fase. Cada fase existe porque a sua <a href="../MISSION.md">missão</a> pede.</p>
+  <p class="subtitle">Oito fases, uma entrega concreta por fase. Cada fase existe porque a sua <a href="../MISSION.md">missão</a> pede.</p>
 
   <div class="lesson-meta">
     <span><strong>Ritmo assumido:</strong> ~6 h/semana (ajustar após o diagnóstico)</span>
-    <span><strong>Duração estimada:</strong> ~16 semanas</span>
-    <span><strong>Stack:</strong> Microsoft 365 / Copilot Studio + AWS</span>
+    <span><strong>Duração estimada:</strong> ~20 semanas</span>
+    <span><strong>Stack:</strong> Microsoft 365 / Copilot Studio + AWS (S3, Glue, Athena, Bedrock, QuickSight)</span>
   </div>
 
   <div class="callout">
     <span class="label">Como usar</span>
-    <p>As fases 2 (dados) e 3–4 (KB e MCP) podem correr em paralelo: uma é a sua metade "governança", a outra é a metade "conhecimento para agentes". Marque o que for concluindo: o progresso fica salvo neste navegador. Toda lição nova aparece aqui com link.</p>
+    <p>Há duas trilhas que correm em paralelo depois da Fase 1. <strong>Trilha A, insumo dos agentes:</strong> dados AI-ready, KBs e MCP. <strong>Trilha B, governança:</strong> ingestão, indicadores, painéis e ROI. A Fase 2 (ingestão) é base das duas. Marque o que for concluindo: o progresso fica salvo neste navegador.</p>
   </div>
 
   <h2>O mapa da função</h2>
-  <p>A sua cadeira tem duas metades que se alimentam: você <em>constrói o insumo</em> dos agentes (KBs e MCPs) e <em>mede o que eles entregam</em> (indicadores e ROI). A qualidade de uma KB aparece nos seus indicadores, e os indicadores dizem qual KB consertar primeiro.</p>
+  <p>A sua cadeira tem duas metades que se alimentam: você <em>prepara o insumo</em> dos agentes (dados, KBs, MCPs) e <em>mede o que eles entregam</em> (indicadores e ROI). A mesma esteira de dados na AWS serve às duas.</p>
   <div class="flow">
-    <div class="kb"><strong>KBs</strong>Conhecimento documental das áreas, curado e com permissão certa.</div>
-    <div class="mcp"><strong>MCPs</strong>Acesso padronizado a sistemas e dados vivos (consultas e ações).</div>
-    <div><strong>Agentes</strong>Copilot Studio (principal) e high code em AWS, construídos pelos outros times.</div>
-    <div><strong>Indicadores</strong>Adoção, qualidade, custo e valor: como a área se governa.</div>
-    <div><strong>ROI e priorização</strong>Insumo para o time de finanças decidir onde investir.</div>
+    <div><strong>Fontes</strong>Documentos das áreas (SharePoint), sistemas, telemetria do Copilot Studio e custos AWS.</div>
+    <div><strong>Ingestão</strong>Esteira na AWS: S3 em camadas, Glue, Athena.</div>
+    <div class="kb"><strong>KBs</strong>Conhecimento curado, AI-ready, com permissão certa.</div>
+    <div class="mcp"><strong>MCPs</strong>Acesso padronizado a dados vivos e ações.</div>
+    <div><strong>Agentes</strong>Copilot Studio e high code, construídos pelos outros times.</div>
+    <div><strong>Indicadores e ROI</strong>QuickSight ou HTML: como a área se governa e prioriza.</div>
   </div>
 
   <h2>Fase 0 · Diagnóstico e mapa <small>(semana 1)</small></h2>
   <ul style="list-style:none;padding:0">
     <li class="check"><input type="checkbox" data-k="f0-l1" id="f0-l1"><label for="f0-l1"><a href="../lessons/0001-kb-mcp-ou-instrucao.html">Lição 0001: KB, MCP ou instrução? Onde mora cada informação de um agente</a></label></li>
-    <li class="check"><input type="checkbox" data-k="f0-diag" id="f0-diag"><label for="f0-diag">Responder ao diagnóstico de nível (SQL, Python, Power BI, AWS, Copilot Studio, LLMs) para calibrar o ritmo</label></li>
+    <li class="check"><input type="checkbox" data-k="f0-diag" id="f0-diag"><label for="f0-diag">Responder ao diagnóstico de nível (SQL, Python, AWS, Copilot Studio, LLMs) para calibrar o ritmo</label></li>
   </ul>
 
-  <h2>Fase 1 · Fundamentos de IA generativa e agentes <small>(semanas 2–3)</small></h2>
-  <p>Objetivo: entender o motor o bastante para explicar <em>por que</em> um agente erra, custa caro ou alucina.</p>
+  <h2>Fase 1 · Como LLMs e agentes funcionam <small>(semanas 2–4)</small></h2>
+  <p>Objetivo: entender o motor o bastante para explicar <em>por que</em> um agente erra, custa caro ou alucina. É a base de todas as outras fases.</p>
+  <h3>1a. O LLM por dentro</h3>
   <ul style="list-style:none;padding:0">
-    <li class="check"><input type="checkbox" data-k="f1-a" id="f1-a"><label for="f1-a">LLM, token, janela de contexto, temperatura, alucinação, custo por token</label></li>
-    <li class="check"><input type="checkbox" data-k="f1-b" id="f1-b"><label for="f1-b">Grounding e RAG: recuperar antes de responder (<a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">context engineering</a>)</label></li>
-    <li class="check"><input type="checkbox" data-k="f1-c" id="f1-c"><label for="f1-c">Uso de ferramentas e agente vs. workflow (<a href="https://www.anthropic.com/engineering/building-effective-agents">Building effective agents</a>)</label></li>
-    <li class="check"><input type="checkbox" data-k="f1-d" id="f1-d"><label for="f1-d">Prática: primeiro agente no Copilot Studio com uma fonte de conhecimento (<a href="https://microsoft.github.io/agent-academy">Agent Academy</a>, nível Recruit)</label></li>
+    <li class="check"><input type="checkbox" data-k="f1-a" id="f1-a"><label for="f1-a">Tokens e tokenização: por que custo, limite de contexto e preço são medidos em tokens</label></li>
+    <li class="check"><input type="checkbox" data-k="f1-b" id="f1-b"><label for="f1-b">Pré-treino → pós-treino: de "completador de texto" a assistente (<a href="https://www.youtube.com/watch?v=7xTGNNLPyMI">Karpathy, Deep Dive into LLMs</a>)</label></li>
+    <li class="check"><input type="checkbox" data-k="f1-c" id="f1-c"><label for="f1-c">Inferência: previsão do próximo token, temperatura e amostragem, por que a mesma pergunta dá respostas diferentes</label></li>
+    <li class="check"><input type="checkbox" data-k="f1-d" id="f1-d"><label for="f1-d">Embeddings e atenção: significado como vetor, base da busca semântica (<a href="https://www.youtube.com/@3blue1brown">3Blue1Brown, Transformers</a>)</label></li>
+    <li class="check"><input type="checkbox" data-k="f1-e" id="f1-e"><label for="f1-e">Janela de contexto e "context rot"; alucinação: de onde vem e o que reduz</label></li>
   </ul>
-  <p class="meta">Entrega: um agente de teste respondendo sobre um documento fictício, mais uma nota sobre onde ele errou e por quê.</p>
-
-  <h2>Fase 2 · Dados para governar <small>(semanas 3–6, em paralelo)</small></h2>
-  <p>Objetivo: transformar telemetria crua em indicador confiável.</p>
+  <h3>1b. O agente por dentro</h3>
   <ul style="list-style:none;padding:0">
-    <li class="check"><input type="checkbox" data-k="f2-a" id="f2-a"><label for="f2-a">SQL do essencial ao intermediário: joins, agregações, janelas (window functions), CTEs</label></li>
-    <li class="check"><input type="checkbox" data-k="f2-b" id="f2-b"><label for="f2-b">Modelagem dimensional: fato, dimensão, granularidade (<a href="https://learn.microsoft.com/power-bi/guidance/star-schema">star schema no Power BI</a>)</label></li>
-    <li class="check"><input type="checkbox" data-k="f2-c" id="f2-c"><label for="f2-c">Power BI: modelo, medidas DAX básicas, painel</label></li>
-    <li class="check"><input type="checkbox" data-k="f2-d" id="f2-d"><label for="f2-d">Anatomia de um KPI: definição, fórmula, fonte, dono, frequência, meta; árvore de métricas</label></li>
-    <li class="check"><input type="checkbox" data-k="f2-e" id="f2-e"><label for="f2-e">Qualidade de dados: completude, atraso, deduplicação, grupo mínimo (privacidade)</label></li>
+    <li class="check"><input type="checkbox" data-k="f1-f" id="f1-f"><label for="f1-f">Uso de ferramentas (tool calling): o loop pensar → chamar → observar → responder</label></li>
+    <li class="check"><input type="checkbox" data-k="f1-g" id="f1-g"><label for="f1-g">Workflow vs. agente; padrões de composição (<a href="https://www.anthropic.com/engineering/building-effective-agents">Building effective agents</a>)</label></li>
+    <li class="check"><input type="checkbox" data-k="f1-h" id="f1-h"><label for="f1-h">Engenharia de contexto: instruções, memória, recuperação (<a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Anthropic</a>)</label></li>
+    <li class="check"><input type="checkbox" data-k="f1-i" id="f1-i"><label for="f1-i">Planejamento, multiagente e orquestração; quando não usar agente</label></li>
+    <li class="check"><input type="checkbox" data-k="f1-j" id="f1-j"><label for="f1-j">Avaliação de agentes: como saber se um agente está bom (base dos indicadores de qualidade)</label></li>
+    <li class="check"><input type="checkbox" data-k="f1-k" id="f1-k"><label for="f1-k">Prática low code: primeiro agente no Copilot Studio (<a href="https://microsoft.github.io/agent-academy">Agent Academy</a>, Recruit). Prática high code: <a href="https://github.com/microsoft/ai-agents-for-beginners">AI Agents for Beginners</a>, lições iniciais</label></li>
   </ul>
-  <p class="meta">Entrega: modelo estrela (dados fictícios) de conversas de agentes, com 5 medidas e 1 painel.</p>
+  <p class="meta">Entrega: explicar em uma página, com diagrama, o que acontece entre a pergunta do usuário e a resposta de um agente com uma KB e uma ferramenta. Inclui onde estão os custos e os pontos de falha.</p>
 
-  <h2>Fase 3 · Bases de conhecimento (KBs) <small>(semanas 6–9)</small></h2>
+  <h2>Fase 2 · Engenharia de dados e ingestão na AWS <small>(semanas 4–7)</small></h2>
+  <p>Objetivo: saber desenhar e discutir a esteira que leva dados das fontes até KBs e indicadores.</p>
+  <ul style="list-style:none;padding:0">
+    <li class="check"><input type="checkbox" data-k="f2-a" id="f2-a"><label for="f2-a">Ciclo de vida dos dados: geração → ingestão → armazenamento → transformação → servir (<a href="https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/">Reis &amp; Housley</a>)</label></li>
+    <li class="check"><input type="checkbox" data-k="f2-b" id="f2-b"><label for="f2-b">Decisões de ingestão: batch x streaming, push x pull, carga total x incremental (CDC), ETL x ELT, frequência e atraso</label></li>
+    <li class="check"><input type="checkbox" data-k="f2-c" id="f2-c"><label for="f2-c">Data lake no S3 em camadas (bruto → curado → consumo / bronze-prata-ouro), Parquet e particionamento (<a href="https://docs.aws.amazon.com/glue/latest/dg/aws-glue-programming-etl-partitions.html">Glue</a>)</label></li>
+    <li class="check"><input type="checkbox" data-k="f2-d" id="f2-d"><label for="f2-d">Glue: Data Catalog, crawlers e jobs; Athena para consultar o lake com SQL (<a href="https://aws.amazon.com/blogs/big-data/top-10-performance-tuning-tips-for-amazon-athena/">tuning</a>)</label></li>
+    <li class="check"><input type="checkbox" data-k="f2-e" id="f2-e"><label for="f2-e">SQL do essencial ao intermediário (no Athena): joins, agregações, window functions, CTEs</label></li>
+    <li class="check"><input type="checkbox" data-k="f2-f" id="f2-f"><label for="f2-f">Orquestração e confiabilidade: agendamento, reprocessamento, idempotência, alertas de falha e de atraso</label></li>
+    <li class="check"><input type="checkbox" data-k="f2-g" id="f2-g"><label for="f2-g">Qualidade de dados: completude, unicidade, frescor, contratos de dados com as áreas</label></li>
+  </ul>
+  <p class="meta">Entrega: diagrama da esteira (fontes → S3 → Glue → Athena) para telemetria de agentes fictícia, com 5 consultas SQL respondendo perguntas de negócio.</p>
+
+  <h2>Fase 3 · Dados AI-ready <small>(semanas 7–9)</small></h2>
+  <p>Objetivo: avaliar se o dado de uma área está pronto para um agente e dizer o que falta.</p>
+  <ul style="list-style:none;padding:0">
+    <li class="check"><input type="checkbox" data-k="f3-a" id="f3-a"><label for="f3-a">O conceito: prontidão depende do caso de uso. Qualidade tradicional não basta, e metadados são o centro (<a href="https://alation.com/blog/metadata-maturity-ai-ready-data-gartner">resumo do Gartner</a>)</label></li>
+    <li class="check"><input type="checkbox" data-k="f3-b" id="f3-b"><label for="f3-b">Estruturado x não estruturado: o que vai para KB, o que vai para tabela consultável via MCP</label></li>
+    <li class="check"><input type="checkbox" data-k="f3-c" id="f3-c"><label for="f3-c">Parsing de documentos: texto, tabelas, imagens, PDFs escaneados (<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/kb-advanced-parsing.html">parsers do Bedrock</a>)</label></li>
+    <li class="check"><input type="checkbox" data-k="f3-d" id="f3-d"><label for="f3-d">Metadados e taxonomia: dono, data de validade, área, tipo, sensibilidade, público</label></li>
+    <li class="check"><input type="checkbox" data-k="f3-e" id="f3-e"><label for="f3-e">Permissões e oversharing: o agente vê o que o usuário vê (<a href="https://learn.microsoft.com/en-us/copilot/microsoft-365/configure-data-security-copilot">Purview + SAM</a>)</label></li>
+    <li class="check"><input type="checkbox" data-k="f3-f" id="f3-f"><label for="f3-f">Linhagem, versão e fonte da verdade: eliminar duplicatas e versões obsoletas</label></li>
+  </ul>
+  <p class="meta">Entrega: "Checklist de prontidão de dados para IA" (1 página) aplicado a um conjunto de documentos fictício, com a nota e o plano de correção.</p>
+
+  <h2>Fase 4 · KBs: estruturas e padrões <small>(semanas 9–12)</small></h2>
   <p>Objetivo: definir o padrão de KB da empresa e saber medir se uma KB está boa.</p>
   <ul style="list-style:none;padding:0">
-    <li class="check"><input type="checkbox" data-k="f3-a" id="f3-a"><label for="f3-a">Curadoria: fonte da verdade, dono do conteúdo, ciclo de atualização, versões obsoletas</label></li>
-    <li class="check"><input type="checkbox" data-k="f3-b" id="f3-b"><label for="f3-b">Escrever para recuperação: estrutura, títulos, metadados, um assunto por documento</label></li>
-    <li class="check"><input type="checkbox" data-k="f3-c" id="f3-c"><label for="f3-c">Permissões e oversharing: Purview e SharePoint Advanced Management (<a href="https://learn.microsoft.com/en-us/copilot/microsoft-365/configure-data-security-copilot">guia</a>)</label></li>
-    <li class="check"><input type="checkbox" data-k="f3-d" id="f3-d"><label for="f3-d">Copilot Studio: fontes de conhecimento (SharePoint, Dataverse, arquivos) e Copilot connectors synced vs. federated (<a href="https://learn.microsoft.com/microsoft-copilot-studio/knowledge-copilot-studio">docs</a>)</label></li>
-    <li class="check"><input type="checkbox" data-k="f3-e" id="f3-e"><label for="f3-e">AWS: Bedrock Knowledge Bases, embeddings e estratégias de <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/kb-chunking.html">chunking</a></label></li>
-    <li class="check"><input type="checkbox" data-k="f3-f" id="f3-f"><label for="f3-f">Avaliação de RAG: golden set, fidelidade, relevância de contexto, context recall (<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base-eval-retrieve-generate.html">Bedrock</a>, <a href="https://docs.ragas.io/">Ragas</a>)</label></li>
+    <li class="check"><input type="checkbox" data-k="f4-a" id="f4-a"><label for="f4-a">Escrever para recuperação: um assunto por documento, títulos descritivos, perguntas que o documento responde, glossário de siglas</label></li>
+    <li class="check"><input type="checkbox" data-k="f4-b" id="f4-b"><label for="f4-b">Chunking: tamanho fixo, hierárquico (pai/filho), semântico; trade-offs (<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/kb-chunking.html">Bedrock</a>)</label></li>
+    <li class="check"><input type="checkbox" data-k="f4-c" id="f4-c"><label for="f4-c">Recuperação: busca vetorial, por palavra-chave e híbrida; reranking; filtro por metadados</label></li>
+    <li class="check"><input type="checkbox" data-k="f4-d" id="f4-d"><label for="f4-d">Topologia: KB única x KB por domínio x KB por agente; quem é dono de quê</label></li>
+    <li class="check"><input type="checkbox" data-k="f4-e" id="f4-e"><label for="f4-e">No Microsoft 365: fontes de conhecimento do Copilot Studio, Copilot connectors synced x federated (<a href="https://learn.microsoft.com/microsoft-copilot-studio/knowledge-copilot-studio">docs</a>)</label></li>
+    <li class="check"><input type="checkbox" data-k="f4-f" id="f4-f"><label for="f4-f">Na AWS: Bedrock Knowledge Bases e quando partir para RAG customizado (<a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/retrieval-augmented-generation-options/choosing-option.html">guia de escolha</a>)</label></li>
+    <li class="check"><input type="checkbox" data-k="f4-g" id="f4-g"><label for="f4-g">Avaliação de RAG: conjunto de perguntas de referência, fidelidade, relevância de contexto, context recall (<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base-eval-retrieve-generate.html">Bedrock</a>, <a href="https://docs.ragas.io/">Ragas</a>)</label></li>
+    <li class="check"><input type="checkbox" data-k="f4-h" id="f4-h"><label for="f4-h">Ciclo de vida: ingestão contínua, sincronização, revisão periódica, desativação</label></li>
   </ul>
-  <p class="meta">Entrega: "Padrão de KB v0" (1–2 páginas) e um golden set de 30 perguntas com nota de qualidade de uma KB de teste.</p>
+  <p class="meta">Entrega: "Padrão de KB v0" (estrutura de documento, metadados obrigatórios, chunking, topologia) e uma KB de teste avaliada com 30 perguntas de referência.</p>
 
-  <h2>Fase 4 · MCP: dar ferramentas aos agentes <small>(semanas 9–12)</small></h2>
-  <p>Objetivo: construir, publicar e governar servidores MCP.</p>
+  <h2>Fase 5 · MCP: dar ferramentas aos agentes <small>(semanas 12–15)</small></h2>
   <ul style="list-style:none;padding:0">
-    <li class="check"><input type="checkbox" data-k="f4-a" id="f4-a"><label for="f4-a">Python básico para APIs (se o diagnóstico indicar)</label></li>
-    <li class="check"><input type="checkbox" data-k="f4-b" id="f4-b"><label for="f4-b">Protocolo: host/cliente/servidor, tools/resources/prompts, transporte Streamable HTTP (<a href="https://modelcontextprotocol.io">spec</a>)</label></li>
-    <li class="check"><input type="checkbox" data-k="f4-c" id="f4-c"><label for="f4-c">Construir um servidor (<a href="https://anthropic.skilljar.com/introduction-to-model-context-protocol">curso gratuito da Anthropic</a>)</label></li>
-    <li class="check"><input type="checkbox" data-k="f4-d" id="f4-d"><label for="f4-d">Conectar ao Copilot Studio (<a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/agents-experience/tools-add-mcp-server">wizard MCP</a>) e autenticação</label></li>
-    <li class="check"><input type="checkbox" data-k="f4-e" id="f4-e"><label for="f4-e">AWS: AgentCore Gateway como ponto único de MCP (<a href="https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/gateway-core-concepts.html">conceitos</a>)</label></li>
-    <li class="check"><input type="checkbox" data-k="f4-f" id="f4-f"><label for="f4-f">Segurança: menor privilégio, descrição de ferramenta como superfície de ataque, auditoria, catálogo de MCPs aprovados</label></li>
+    <li class="check"><input type="checkbox" data-k="f5-a" id="f5-a"><label for="f5-a">Python básico para APIs (se o diagnóstico indicar)</label></li>
+    <li class="check"><input type="checkbox" data-k="f5-b" id="f5-b"><label for="f5-b">Protocolo: host/cliente/servidor, tools/resources/prompts, transporte Streamable HTTP (<a href="https://modelcontextprotocol.io">spec</a>)</label></li>
+    <li class="check"><input type="checkbox" data-k="f5-c" id="f5-c"><label for="f5-c">Construir um servidor (<a href="https://anthropic.skilljar.com/introduction-to-model-context-protocol">curso gratuito da Anthropic</a>)</label></li>
+    <li class="check"><input type="checkbox" data-k="f5-d" id="f5-d"><label for="f5-d">Conectar ao Copilot Studio (<a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/agents-experience/tools-add-mcp-server">wizard MCP</a>) e autenticação</label></li>
+    <li class="check"><input type="checkbox" data-k="f5-e" id="f5-e"><label for="f5-e">AWS: AgentCore Gateway como ponto único de MCP, inclusive expondo KBs e Athena (<a href="https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/gateway-core-concepts.html">conceitos</a>)</label></li>
+    <li class="check"><input type="checkbox" data-k="f5-f" id="f5-f"><label for="f5-f">Segurança: menor privilégio, descrição de ferramenta como superfície de ataque, auditoria, catálogo de MCPs aprovados</label></li>
   </ul>
-  <p class="meta">Entrega: servidor MCP com dados fictícios, conectado a um agente de teste, com uma ficha de catálogo (dono, escopo, dados, auth).</p>
+  <p class="meta">Entrega: servidor MCP que consulta dados fictícios (ex.: uma tabela no Athena), conectado a um agente de teste, com uma ficha de catálogo (dono, escopo, dados, auth).</p>
 
-  <h2>Fase 5 · Indicadores de IA, custo e ROI <small>(semanas 12–15)</small></h2>
-  <p>Objetivo: a área se governa pelos seus números.</p>
+  <h2>Fase 6 · Indicadores e painéis <small>(semanas 15–18)</small></h2>
+  <p>Objetivo: a área se governa pelos seus números, servidos por uma esteira automatizada.</p>
   <ul style="list-style:none;padding:0">
-    <li class="check"><input type="checkbox" data-k="f5-a" id="f5-a"><label for="f5-a">Fontes de telemetria: Copilot Studio Analytics e Copilot Studio Kit, <a href="https://learn.microsoft.com/viva/insights/org-team-insights/copilot-dashboard">Copilot Dashboard</a>, custos AWS (tags e relatório de custo)</label></li>
-    <li class="check"><input type="checkbox" data-k="f5-b" id="f5-b"><label for="f5-b">Framework de valor de agentes da Microsoft: eficiência, qualidade, adoção (<a href="https://learn.microsoft.com/en-gb/microsoft-Copilot-studio/guidance/agent-business-value-metrics-reference">métricas</a>)</label></li>
-    <li class="check"><input type="checkbox" data-k="f5-c" id="f5-c"><label for="f5-c">Unit economics de IA: custo por conversa, por tarefa resolvida; rateio por time e por agente</label></li>
-    <li class="check"><input type="checkbox" data-k="f5-d" id="f5-d"><label for="f5-d">ROI honesto: baseline, contrafactual, premissas explícitas, faixa de incerteza (<a href="https://learn.microsoft.com/microsoft-copilot-studio/analytics-cost-savings">limites da calculadora</a>)</label></li>
-    <li class="check"><input type="checkbox" data-k="f5-e" id="f5-e"><label for="f5-e">Priorização de portfólio: valor × esforço × risco; como apresentar ao time de finanças</label></li>
+    <li class="check"><input type="checkbox" data-k="f6-a" id="f6-a"><label for="f6-a">Anatomia de um KPI: definição, fórmula, fonte, dono, frequência, meta; árvore de métricas (adoção → qualidade → custo → valor)</label></li>
+    <li class="check"><input type="checkbox" data-k="f6-b" id="f6-b"><label for="f6-b">Modelagem dimensional para a camada ouro: fato, dimensão, granularidade (<a href="https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/grain/">Kimball</a>)</label></li>
+    <li class="check"><input type="checkbox" data-k="f6-c" id="f6-c"><label for="f6-c">Fontes de telemetria: Copilot Studio Analytics e Copilot Studio Kit, <a href="https://learn.microsoft.com/viva/insights/org-team-insights/copilot-dashboard">Copilot Dashboard</a>, custos AWS (tags e relatório de custo)</label></li>
+    <li class="check"><input type="checkbox" data-k="f6-d" id="f6-d"><label for="f6-d">QuickSight: dataset sobre Athena, SPICE x consulta direta, dashboard e permissões (<a href="https://aws.amazon.com/blogs/business-intelligence/best-practices-for-amazon-quicksight-spice-and-direct-query-mode/">boas práticas</a>)</label></li>
+    <li class="check"><input type="checkbox" data-k="f6-e" id="f6-e"><label for="f6-e">Painel HTML: a esteira gera um JSON na camada ouro e uma página estática (Chart.js, ou os modelos <code>report</code>/<code>hub</code> do slideless) o consome. Hospedagem e acesso restrito</label></li>
+    <li class="check"><input type="checkbox" data-k="f6-f" id="f6-f"><label for="f6-f">Quando usar QuickSight e quando usar HTML: público, interatividade, custo, manutenção</label></li>
   </ul>
-  <p class="meta">Entrega: árvore de KPIs da área, painel v1 e business case de um projeto (dados fictícios).</p>
+  <p class="meta">Entrega: árvore de KPIs da área e um painel v1 (QuickSight ou HTML) alimentado pela esteira da Fase 2, com dados fictícios.</p>
 
-  <h2>Fase 6 · Governança e escala <small>(semana 16 em diante)</small></h2>
+  <h2>Fase 7 · Custo, ROI e priorização <small>(semanas 18–20)</small></h2>
   <ul style="list-style:none;padding:0">
-    <li class="check"><input type="checkbox" data-k="f6-a" id="f6-a"><label for="f6-a">Ciclo de vida de KB e MCP: onboarding de área, revisão periódica, desativação</label></li>
-    <li class="check"><input type="checkbox" data-k="f6-b" id="f6-b"><label for="f6-b">Risco e regulação para IA em banco: com as áreas internas de risco e compliance</label></li>
-    <li class="check"><input type="checkbox" data-k="f6-c" id="f6-c"><label for="f6-c">Capstone: playbook "como uma área prepara KB + MCP para seus agentes", com indicadores de sucesso</label></li>
+    <li class="check"><input type="checkbox" data-k="f7-a" id="f7-a"><label for="f7-a">Framework de valor de agentes: eficiência, qualidade, adoção (<a href="https://learn.microsoft.com/en-gb/microsoft-Copilot-studio/guidance/agent-business-value-metrics-reference">Microsoft</a>)</label></li>
+    <li class="check"><input type="checkbox" data-k="f7-b" id="f7-b"><label for="f7-b">Unit economics de IA: custo por conversa, por tarefa resolvida; rateio por time e por agente</label></li>
+    <li class="check"><input type="checkbox" data-k="f7-c" id="f7-c"><label for="f7-c">ROI honesto: baseline, contrafactual, premissas explícitas, faixa de incerteza (<a href="https://learn.microsoft.com/microsoft-copilot-studio/analytics-cost-savings">limites da calculadora</a>)</label></li>
+    <li class="check"><input type="checkbox" data-k="f7-d" id="f7-d"><label for="f7-d">Priorização de portfólio: valor × esforço × risco; como apresentar ao time de finanças</label></li>
+  </ul>
+  <p class="meta">Entrega: business case de um projeto (dados fictícios) com custo unitário, ROI em faixa e premissas, pronto para o time de finanças.</p>
+
+  <h2>Fase 8 · Governança e escala <small>(semana 20 em diante)</small></h2>
+  <ul style="list-style:none;padding:0">
+    <li class="check"><input type="checkbox" data-k="f8-a" id="f8-a"><label for="f8-a">Onboarding de uma área: do inventário de dados à KB e ao MCP em produção</label></li>
+    <li class="check"><input type="checkbox" data-k="f8-b" id="f8-b"><label for="f8-b">Risco e regulação para IA em banco: com as áreas internas de risco e compliance</label></li>
+    <li class="check"><input type="checkbox" data-k="f8-c" id="f8-c"><label for="f8-c">Capstone: playbook "como uma área prepara dados, KB e MCP para seus agentes", com os indicadores de sucesso</label></li>
   </ul>
 
   <h2>Matriz de habilidades</h2>
@@ -107,18 +144,19 @@
   <table class="data-table">
     <thead><tr><th>Habilidade</th><th>Fase</th><th>Nível-alvo</th><th>Prova de domínio</th></tr></thead>
     <tbody>
-      <tr><td>Conceitos de LLM e agentes</td><td>1</td><td>Explicar</td><td>Diagnosticar por que um agente errou</td></tr>
-      <tr><td>Copilot Studio</td><td>1, 3, 4</td><td>Construir</td><td>Agente com conhecimento + ferramenta MCP</td></tr>
-      <tr><td>SQL</td><td>2</td><td>Fluente</td><td>Consultas com janelas e CTEs sem consulta a material</td></tr>
-      <tr><td>Modelagem dimensional + Power BI</td><td>2</td><td>Construir</td><td>Painel de indicadores em star schema</td></tr>
-      <tr><td>Desenho de KPIs</td><td>2, 5</td><td>Liderar</td><td>Árvore de KPIs aprovada pela área</td></tr>
-      <tr><td>Curadoria e arquitetura de KB</td><td>3</td><td>Liderar</td><td>Padrão de KB adotado por uma área</td></tr>
-      <tr><td>Avaliação de RAG</td><td>3</td><td>Construir</td><td>Golden set + métricas de uma KB</td></tr>
-      <tr><td>Permissões / Purview</td><td>3</td><td>Explicar</td><td>Checklist de prontidão de KB com segurança</td></tr>
-      <tr><td>Python</td><td>4</td><td>Básico</td><td>Servidor MCP funcional</td></tr>
-      <tr><td>MCP (protocolo + segurança)</td><td>4</td><td>Construir</td><td>Servidor publicado e catalogado</td></tr>
-      <tr><td>AWS (Bedrock KB, AgentCore)</td><td>3, 4</td><td>Explicar</td><td>Desenhar a arquitetura com o time estruturante</td></tr>
-      <tr><td>FinOps e ROI de IA</td><td>5</td><td>Construir</td><td>Business case defendido com finanças</td></tr>
+      <tr><td>Funcionamento de LLMs</td><td>1</td><td>Explicar</td><td>Explicar tokens, contexto, embeddings e alucinação sem consulta</td></tr>
+      <tr><td>Funcionamento de agentes</td><td>1</td><td>Explicar</td><td>Diagnosticar por que um agente errou</td></tr>
+      <tr><td>Copilot Studio</td><td>1, 4, 5</td><td>Construir</td><td>Agente com conhecimento + ferramenta MCP</td></tr>
+      <tr><td>Ingestão e esteira AWS (S3, Glue, Athena)</td><td>2</td><td>Construir</td><td>Esteira de telemetria em camadas, funcionando</td></tr>
+      <tr><td>SQL (Athena)</td><td>2</td><td>Fluente</td><td>Consultas com janelas e CTEs sem consulta a material</td></tr>
+      <tr><td>Dados AI-ready</td><td>3</td><td>Liderar</td><td>Checklist de prontidão aplicado a uma área</td></tr>
+      <tr><td>Estrutura e padrões de KB</td><td>4</td><td>Liderar</td><td>Padrão de KB adotado por uma área</td></tr>
+      <tr><td>Avaliação de RAG</td><td>4</td><td>Construir</td><td>Perguntas de referência + métricas de uma KB</td></tr>
+      <tr><td>Python</td><td>5</td><td>Básico</td><td>Servidor MCP funcional</td></tr>
+      <tr><td>MCP (protocolo + segurança)</td><td>5</td><td>Construir</td><td>Servidor publicado e catalogado</td></tr>
+      <tr><td>Desenho de KPIs e modelagem dimensional</td><td>6</td><td>Liderar</td><td>Árvore de KPIs aprovada pela área</td></tr>
+      <tr><td>QuickSight / painel HTML</td><td>6</td><td>Construir</td><td>Painel alimentado pela esteira</td></tr>
+      <tr><td>FinOps e ROI de IA</td><td>7</td><td>Construir</td><td>Business case defendido com finanças</td></tr>
     </tbody>
   </table>
   </div>
