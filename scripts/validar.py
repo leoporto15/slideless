@@ -813,7 +813,7 @@ def check_premium_sobrio(html: str, report: Report) -> None:
     if not any(s in registro for s in SOBER_REGISTERS):
         return
     # data-overdrive = showcase ao vivo opt-in; data-showcase = peça de DEMONSTRAÇÃO da skill
-    # (o corpus demos/ existe para exibir o palette inteiro, premium incluso, em todo registro).
+    # (vitrines existem para exibir o palette inteiro, premium incluso, em todo registro).
     # Em geração real (sem esses flags) a regra continua: documento sóbrio não recebe premium.
     if re.search(r"data-overdrive|data-showcase", html):
         return

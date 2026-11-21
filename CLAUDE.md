@@ -45,7 +45,8 @@ slideless/
     temas/                    ← itau.css (laranja #FF6200), neutro.css (azul)
   commands/                   ← só slideless.md (roteador fino do Claude Code → references/comandos/)
   references/                 ← doc técnica + comandos/ (specs dos 31 subcomandos, FONTE ÚNICA)
-  demos/                      ← exemplos pareados (3 famílias × 7 documentos: os 6 modelos + deck-overdrive)
+    exemplos/                 ← showcases canônicos (1 por modelo)
+  scripts/                    ← scaffold.py, validar.py, smoke.py, exportar_pdf.py
 ```
 
 ## Comandos principais

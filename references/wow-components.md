@@ -1033,7 +1033,7 @@ document.querySelectorAll('[data-flip-in]').forEach(el => {
 **Brief de uma linha:** *um herói pinned, dois sistemas ambientes na mesma mola, três-a-quatro momentos rank-4 espaçados, um spice opcional — e proteja o silêncio entre eles.*
 
 
-> **`data-showcase` (corpus de demos):** os documentos em `demos/` existem para EXIBIR o palette inteiro. O atributo `data-showcase` no `<body>` libera a camada premium em qualquer registro (o validador trata igual a `data-overdrive`: `P-premium-sobrio` e `P10` não disparam). **Em geração real, NÃO use `data-showcase`** — a regra de que registro sóbrio (report/regulatório) não recebe premium continua valendo.
+> **`data-showcase` (peças de demonstração):** documentos de vitrine da skill existem para EXIBIR o palette inteiro. O atributo `data-showcase` no `<body>` libera a camada premium em qualquer registro (o validador trata igual a `data-overdrive`: `P-premium-sobrio` e `P10` não disparam). **Em geração real, NÃO use `data-showcase`** — a regra de que registro sóbrio (report/regulatório) não recebe premium continua valendo.
 
 ---
 

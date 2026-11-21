@@ -53,7 +53,6 @@ Usuário descreveu objetivo ("quero um handbook sobre onboarding de pessoa dados
 |---|---|
 | Showcase em `assets/exemplos/` | Permite fictício, pois é vitrine declarada. Conteúdo gira em torno de "Plataforma de Dados Itaú" (fictício de uso permanente da skill). |
 | Template em `assets/templates/` | Permite placeholders neutros (`<h1>Título</h1>`, `<h2>Seção 1</h2>`, `<p>Texto da seção…</p>`). Não usar dados do Itaú nem números. |
-| Demo isolada em `demos/` | Permite fictício se claramente rotulado como demo. |
 | `/slideless distill` sobre conteúdo real existente | Permite — está reescrevendo o que já existe, não inventando. |
 
 ---

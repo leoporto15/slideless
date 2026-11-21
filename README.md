@@ -183,8 +183,9 @@ slideless/
 │   ├── scaffold.py                ← monta o esqueleto (template + tema) FORA do LLM — geração rápida, sem 502/timeout (Copilot)
 │   ├── validar.py                 ← validador determinístico de ESTRUTURA (stdlib)
 │   ├── smoke.py                   ← gate de RENDER headless (Playwright): overflow, texto-por-caractere, número duplicado, slide curto, etc.
-│   └── exportar_pdf.py            ← PDF/PNG via Playwright
-└── demos/                         ← 4 famílias: 3 temáticas (itau-1T26 · asset · trump — 7 docs cada: 6 modelos + deck-overdrive) + slideless-skill (a própria skill se demonstrando nos 6 formatos)
+│   ├── exportar_pdf.py            ← PDF/PNG via Playwright
+│   ├── colorkit.py                ← matemática de cor OKLCH (usada por validar/gen_temas)
+│   └── gen_temas.py               ← regenera assets/temas/*.css (manutenção)
 ```
 
 ---

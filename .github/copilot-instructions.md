@@ -51,7 +51,8 @@ slideless/
   assets/temas/                     ← itau.css, neutro.css
   commands/                         ← só slideless.md (roteador fino → references/comandos/)
   references/                       ← doc técnica + comandos/ (specs dos 31 subcomandos)
-  demos/                            ← 3 famílias × 7 documentos (os 6 modelos + deck-overdrive)
+  assets/exemplos/                  ← showcases canônicos (1 por modelo)
+  scripts/                          ← scaffold.py, validar.py, smoke.py, exportar_pdf.py
 ```
 
 ## Comando — um só: `/slideless <subcomando>`
